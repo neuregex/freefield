@@ -69,7 +69,7 @@ def check_modal() -> None:
     except json.JSONDecodeError:
         names = set(re.findall(r"\b(freefield|huggingface)\b", out))
     fixes = {
-        "freefield": 'modal secret create freefield FREEFIELD_TOKEN=$(python -c "import secrets;print(secrets.token_urlsafe(32))")',
+        "freefield": "python tools/setup_token.py   (same token in the secret and in .env)",
         "huggingface": "modal secret create huggingface HF_TOKEN=hf_...",
     }
     for name, fix in fixes.items():
@@ -140,7 +140,8 @@ def check_hf(packs: list[str], with_lab: bool) -> None:
 def check_env() -> None:
     env = ROOT / ".env"
     if not env.exists():
-        report(BAD, ".env missing (the web app reads COMFY_BASE_URL and FREEFIELD_TOKEN from it)", "cp .env.example .env")
+        report(BAD, ".env missing (the web app reads COMFY_BASE_URL and FREEFIELD_TOKEN from it)",
+               "python tools/setup_token.py   (creates .env with the same token as the Modal secret)")
         return
     values = dict(re.findall(r"^\s*([A-Z_]+)\s*=\s*(.*?)\s*$", env.read_text(encoding="utf-8"), flags=re.M))
     base, token = values.get("COMFY_BASE_URL", ""), values.get("FREEFIELD_TOKEN", "")
@@ -148,7 +149,7 @@ def check_env() -> None:
         report(BAD, "COMFY_BASE_URL not set in .env", "paste the URL printed by: modal deploy infra/modal_app.py")
         return
     if not token:
-        report(BAD, "FREEFIELD_TOKEN empty in .env", "use the same value as the Modal secret \"freefield\"")
+        report(BAD, "FREEFIELD_TOKEN empty in .env", "python tools/setup_token.py   (writes one token to .env and the Modal secret)")
     try:
         with urllib.request.urlopen(f"{base.rstrip('/')}/health", timeout=20) as r:
             report(OK, f"backend answers at {base} (HTTP {r.status})")
@@ -162,7 +163,8 @@ def check_env() -> None:
             with urllib.request.urlopen(req, timeout=20) as r:
                 report(OK, f"gateway accepts the token (HTTP {r.status})")
         except urllib.error.HTTPError as e:
-            report(BAD, f"gateway refused the token (HTTP {e.code})", "FREEFIELD_TOKEN must match the Modal secret \"freefield\"")
+            report(BAD, f"gateway refused the token (HTTP {e.code})",
+                   "python tools/setup_token.py, then modal deploy infra/modal_app.py so the backend gets the new token")
         except Exception as e:
             report(WARN, f"could not reach /freefield/status ({type(e).__name__})")
 

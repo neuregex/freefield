@@ -105,7 +105,7 @@ export function applyInputs(
 }
 
 export type RunnerOptions = {
-  /** Gateway in front of comfy-api-proxy, e.g. https://you--freefield-backend.modal.run */
+  /** Gateway in front of comfy-api-proxy, e.g. https://you--freefield-serve.modal.run */
   baseUrl?: string;
   /** Token the gateway expects; sent by the SDK as a bearer token. */
   token?: string;

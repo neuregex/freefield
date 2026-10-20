@@ -1,7 +1,7 @@
 """Freefield backend on Modal: ComfyUI + comfy-api-proxy behind a token gateway.
 
 One-time setup (in your terminal, from the repo root):
-    modal secret create freefield FREEFIELD_TOKEN=$(python -c "import secrets;print(secrets.token_urlsafe(32))")
+    python tools/setup_token.py                               # gateway token, same value in the secret and in .env
     modal secret create huggingface HF_TOKEN=hf_...          # accept the LTX-2.5 and FLUX 3 Klein licenses on the Hub first
     python tools/catalog.py packs
 

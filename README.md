@@ -65,7 +65,7 @@ You need Node 22.6+, Python 3.10+ and a [Modal](https://modal.com) account.
 python tools/doctor.py
 
 # 1. secrets (once)
-modal secret create freefield FREEFIELD_TOKEN=$(python -c "import secrets;print(secrets.token_urlsafe(32))")
+python tools/setup_token.py                       # gateway token: Modal secret "freefield" and .env get the same value
 modal secret create huggingface HF_TOKEN=hf_...   # accept the LTX-2.5 and FLUX 3 Klein licenses on the Hub first
 
 # 2. models into the "freefield-models" volume, per pack (see packs/index.json)
@@ -77,10 +77,12 @@ modal deploy infra/modal_app.py                   # FREEFIELD_GPU=A10G to try th
 
 # 4. web app
 npm install
-cp .env.example .env                              # COMFY_BASE_URL = the URL from step 3, FREEFIELD_TOKEN = same token
+# in .env (made by step 1): COMFY_BASE_URL = the URL printed by step 3
 npm run serve                                     # http://127.0.0.1:3000
 npm run app -- z-image --set prompt="a red bicycle against a white wall"   # or from the terminal
 ```
+
+On Windows PowerShell, environment variables go before the command as `$env:FREEFIELD_GPU = "A10G"; modal deploy ...`.
 
 Any ComfyUI works as the backend: run `comfy-api-proxy` next to it and `python infra/gateway.py` in front, and point
 `COMFY_BASE_URL` at the gateway. Pointing it straight at a `comfy-api-proxy` (or another Comfy API v2 endpoint) works
