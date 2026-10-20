@@ -19,7 +19,7 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 |---|---|
 | Apps | 29 manifests, each with a workflow: 21 *ready* (an official template with only the edits listed in its recipe) and 8 *drafts* (models or LoRAs combined in ways a GPU run still has to confirm) |
 | Workflows | Built from official sources by `tools/build_apps.py` (the two smoke apps are hand-written) and accepted by ComfyUI's validator: ComfyUI `e3bee7f` (0.42.0), ComfyUI-LTXVideo `44c8a36`, ComfyUI-CrossViewWarp `fbb1e93` |
-| LoRA lab | 46 cases, at least one per app; the prompt each one would queue (values, overrides and inserted LoRAs) passes the same validator |
+| LoRA lab | 47 cases, one showcase per app; the prompt each one would queue (values, overrides and inserted LoRAs) passes the same validator |
 | End to end | Web UI → server → gateway → comfy-api-proxy → ComfyUI tested with the model-free smoke apps; lab chaining tested the same way |
 | CI | `.github/workflows/validate.yml` runs all of the above on every push, including a CPU-only ComfyUI that checks every workflow and lab case (about 3 minutes) |
 | GPU runs | Not yet. VRAM figures below are weight sizes, not measurements |
@@ -89,31 +89,33 @@ Any ComfyUI works as the backend: run `comfy-api-proxy` next to it and `python i
 too; only the unload-between-apps step is skipped. Draft apps stay locked in the UI and the CLI until you set
 `FREEFIELD_DRAFTS=1` (or pass `--draft` to `npm run app`).
 
-## The LoRA lab
+## The LoRA lab and the gallery
 
-`lab/cases.json` lists LoRA experiments: reference clips are generated first, then every LoRA runs on them with a
-fixed seed. The lab downloads missing models, records time and peak VRAM per case, and keeps going when one fails;
-a case whose model could not be downloaded (say, a license not yet accepted) is skipped with the reason.
+`lab/cases.json` lists experiments: reference images, clips and a song are generated first, then every app and LoRA
+runs on them with a fixed seed. Each app has a *showcase* case, so one command makes an example of every app:
 
 ```sh
-python tools/comfy_validate.py --comfy-dir /path/to/ComfyUI --placeholders --lab lab/cases.json   # free, CPU: every case's prompt is valid
-modal run lab/lab_modal.py                        # all cases on an L40S
-modal run lab/lab_modal.py --apps camera-moves,relight   # only these apps (their reference cases come along)
-FREEFIELD_GPU=A10G modal run lab/lab_modal.py --only ic-clean-plate
-modal volume get freefield-lab <run_id> lab/results/<run_id>
-python lab/review.py lab/results/<run_id> --apply-peaks   # review page + measured VRAM into app.json
+modal run --detach lab/lab_modal.py --showcase    # one example per app + the references they need (36 cases)
+modal run lab/lab_modal.py --pull <run_id>        # only if the terminal closed before the end: copy back and publish
 ```
 
-Every app has at least one case, so a full run measures the peak VRAM of the whole catalog (46 cases, close to 300 GB
-of models). Suggested order for the first GPU runs, smallest downloads first so problems show up cheaply:
+`--detach` keeps the GPU job running if the terminal closes; the run id is printed at the start. Missing models are
+downloaded first on a CPU container, so no GPU is billed while they arrive (the whole catalog is
+close to 300 GB). Then one GPU container runs the cases, recording time and peak VRAM, and keeps going when one fails;
+a case whose model could not be downloaded (say, a license not yet accepted) is skipped with the reason. Every output
+also gets small web versions (a card, a poster for videos, a web-sized copy). At the end the run is copied to
+`lab/results/<run_id>`, `review.html` is built there for rating, and `lab/publish.py` copies one example per app into
+`web/examples/`: the web UI shows it as the app's thumbnail, as an *Example* block (inputs → output, with the settings
+and a *Use these settings* button) and in the **gallery** tab.
 
-1. `python tools/doctor.py` until nothing blocking is left.
-2. Image apps (about 80 GB): `modal run lab/lab_modal.py --apps edit,character,product-shot,cinema-studio,styles,style-reference,relight,remove-bg,upscale`.
-3. LTX-2.5 and audio (48 + 29 GB): `--apps video-t2v,video,speak,talking,music,sfx,smooth,upscale-video`, then
-   `--apps vfx-clean-plate,vfx-day-to-night,vfx-water,camera-copy,transitions`.
-4. Wan and SCAIL (40 + 29 + 25 GB): `--apps camera-moves,recast,motion-transfer`.
-5. Re-shoot (55 GB, needs the 48 GB card): `--apps reshoot`.
-6. Review, apply the measured peaks, and set `"status": "ready"` on the drafts that passed.
+```sh
+modal run lab/lab_modal.py                        # every case (LoRA comparisons included) on an L40S
+modal run lab/lab_modal.py --apps camera-moves,relight   # only these apps (their reference cases come along)
+FREEFIELD_GPU=A10G modal run lab/lab_modal.py --only ic-clean-plate    # 24 GB parity check
+python lab/publish.py lab/results/<run_id>        # republish examples from a run you already have
+python lab/review.py lab/results/<run_id> --apply-peaks   # measured VRAM into each app.json
+python tools/comfy_validate.py --comfy-dir /path/to/ComfyUI --placeholders --lab lab/cases.json   # free, CPU: every case's prompt is valid
+```
 
 ## Add an app
 

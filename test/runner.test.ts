@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { loadRegistry } from "../server/registry.ts";
-import { applyInputs, InputError, renderTemplate, resolveValues, Runner, type Settable } from "../server/runner.ts";
+import { applyInputs, explainSubmitError, InputError, renderTemplate, resolveValues, Runner, type Settable } from "../server/runner.ts";
 
 const { apps } = loadRegistry();
 const byId = (id: string) => apps.find((a) => a.id === id)!;
@@ -64,6 +64,22 @@ test("a select option writes its extra fields (style → LoRA file)", () => {
   assert.equal(wf.sets["30:27.string_b"], "monochrome ink wash style");
   assert.equal(wf.sets["30:15.lora_name"], "krea2_darkbrush.safetensors");
   assert.throws(() => resolveValues(app, { prompt: "a fox", style: "not a style" }), InputError);
+});
+
+test("validation errors name the node and, for a missing model file, the pack to download", () => {
+  const app = byId("edit");
+  // the shape ComfyUI returns (captured from a real /prompt rejection), relayed by comfy-api-proxy
+  const nodeErrors = {
+    "1": { class_type: "UNETLoader", errors: [{ type: "value_not_in_list", message: "Value not in list",
+      details: "unet_name: 'flux3-image-klein-int8-convrot.safetensors' not in (list of length 74)",
+      extra_info: { input_name: "unet_name", received_value: "flux3-image-klein-int8-convrot.safetensors" } }] },
+    "7": { class_type: "KSampler", errors: [{ type: "value_bigger_than_max", message: "Value bigger than max", details: "steps: 999" }] },
+  };
+  const msg = explainSubmitError(app, { code: "invalid_workflow", message: "Prompt outputs failed validation", details: { node_errors: nodeErrors } })!;
+  assert.match(msg, /UNETLoader \(node 1\): model file flux3-image-klein-int8-convrot\.safetensors is not on the backend/);
+  assert.match(msg, /KSampler \(node 7\): Value bigger than max \(steps: 999\)/);
+  assert.match(msg, /--pack image-flux3/);
+  assert.equal(explainSubmitError(app, new Error("network down")), null);
 });
 
 test("renderTemplate tidies empty placeholders", () => {

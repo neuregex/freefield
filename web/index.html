@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Freefield</title>
 <style>
-  /* Minimal menu + auto-generated forms. Everything on screen comes from /api/apps (the app.json files). */
+  /* Menu + auto-generated forms + gallery. Everything on screen comes from /api/apps (the app.json files)
+     and web/examples/index.json (one lab result per app, written by lab/publish.py). */
   :root { --bg:#0e1116; --panel:#161b22; --line:#2b333d; --ink:#e9edf2; --dim:#93a0ae; --accent:#e8ff5a; --bad:#ff7a6b; }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
@@ -15,12 +16,20 @@
   nav { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
   nav button { background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
   nav button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
-  main { display: grid; grid-template-columns: minmax(260px, 360px) 1fr; min-height: calc(100vh - 70px); }
+  nav button.gallery-tab { border-color: var(--accent); }
+  main { display: grid; grid-template-columns: minmax(280px, 380px) 1fr; min-height: calc(100vh - 70px); }
   @media (max-width: 760px) { main { grid-template-columns: 1fr; } }
+  [hidden] { display: none !important; }
   #menu { border-right: 1px solid var(--line); padding: 12px; display: grid; gap: 8px; align-content: start; }
-  .item { text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; color: var(--ink); cursor: pointer; display: grid; gap: 2px; }
+  .item { text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px; color: var(--ink); cursor: pointer;
+          display: grid; grid-template-columns: 72px 1fr; gap: 10px; align-items: start; }
+  .item.nothumb { grid-template-columns: 1fr; padding: 10px 12px; }
   .item[aria-current="true"] { border-color: var(--accent); }
+  .item .txt { display: grid; gap: 2px; min-width: 0; }
   .item small { color: var(--dim); }
+  .thumb { width: 72px; height: 72px; object-fit: cover; border-radius: 7px; background: #000; display: block; }
+  .thumb.audio { object-fit: contain; background: #0b0f14; }
+  img.alpha { background: repeating-conic-gradient(#232a33 0% 25%, #151a20 0% 50%) 50% / 16px 16px; }   /* transparency shows as a checkerboard */
   .badge { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); }
   #app { padding: 20px max(16px, env(safe-area-inset-right)) 40px 24px; display: grid; gap: 16px; align-content: start; min-width: 0; }
   #app h2 { margin: 0; font-size: 22px; }
@@ -33,8 +42,9 @@
   .row { display: flex; gap: 10px; align-items: center; }
   button.run { justify-self: start; background: var(--accent); color: #11140a; border: 0; border-radius: 8px; padding: 10px 18px; font-weight: 700; cursor: pointer; }
   button.run:disabled { opacity: .45; cursor: not-allowed; }
+  button.ghost { background: none; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer; font: inherit; }
   #status { color: var(--dim); min-height: 1.5em; }
-  #status.err { color: var(--bad); }
+  #status.err { color: var(--bad); white-space: pre-wrap; }
   #outputs { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
   #outputs img, #outputs video { width: 100%; border-radius: 10px; background: #000; }
   .note { margin: 0; max-width: 640px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--panel); border-radius: 0 8px 8px 0; color: var(--dim); font-size: 14px; }
@@ -44,6 +54,35 @@
   details summary { cursor: pointer; font-weight: 600; }
   details ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; }
   details li small { color: var(--dim); }
+  /* example: what the app made in the lab, from which inputs, with which settings */
+  .example { max-width: 860px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); padding: 12px; display: grid; gap: 10px; }
+  .example h3 { margin: 0; font-size: 15px; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .example h3 small { font-weight: 400; color: var(--dim); }
+  .flow { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 2fr); gap: 12px; align-items: center; }
+  .flow.solo { grid-template-columns: 1fr; }
+  @media (max-width: 760px) { .flow { grid-template-columns: 1fr; } .flow .arrow { transform: rotate(90deg); justify-self: center; } }
+  .ins { display: grid; gap: 8px; }
+  figure { margin: 0; display: grid; gap: 4px; }
+  figure img, figure video { width: 100%; border-radius: 8px; background: #000; display: block; }
+  figure audio { width: 100%; }
+  figcaption { font-size: 12px; color: var(--dim); }
+  .arrow { color: var(--accent); font-size: 22px; }
+  dl.vals { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 2px 12px; font-size: 13px; }
+  dl.vals dt { color: var(--dim); } dl.vals dd { margin: 0; overflow-wrap: anywhere; }
+  /* gallery */
+  #gallery { padding: 16px max(16px, env(safe-area-inset-right)) 40px max(16px, env(safe-area-inset-left)); display: grid; gap: 14px; align-content: start; }
+  #gallery .lead { margin: 0; color: var(--dim); }
+  .tiles { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+  .tile { text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 0; overflow: hidden; color: var(--ink); cursor: pointer; display: grid; font: inherit; }
+  .tile:hover { border-color: var(--accent); }
+  .tile .media { aspect-ratio: 16 / 10; background: #000; display: grid; place-items: center; overflow: hidden; }
+  .tile .media img, .tile .media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tile .media img.audio { object-fit: contain; padding: 12px; }
+  .tile .meta { padding: 10px 12px; display: grid; gap: 4px; }
+  .tile .from { display: flex; gap: 6px; align-items: center; color: var(--dim); font-size: 12px; }
+  .tile .from img { width: 34px; height: 34px; object-fit: cover; border-radius: 5px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chips span { font-size: 12px; color: var(--dim); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 </style>
 </head>
@@ -53,17 +92,18 @@
   <p>Open-source Higgsfield on ComfyUI. Every app is one folder.</p>
   <nav id="sections"></nav>
 </header>
-<main>
+<main id="main">
   <div id="menu" aria-label="Apps"></div>
   <section id="app" aria-live="polite"><p class="badge">Pick an app</p></section>
 </main>
+<section id="gallery" aria-label="Gallery" hidden></section>
 <script>
-let apps = [], section = "all", current = null;
+let apps = [], section = "all", current = null, view = "apps";
 
 function el(tag, attrs = {}, ...kids) {
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
-    if (k === "class") e.className = v; else if (k.startsWith("on")) e[k] = v; else if (v !== undefined && v !== null) e.setAttribute(k, v);
+    if (k === "class") e.className = v; else if (k.startsWith("on")) e[k] = v; else if (v !== undefined && v !== null && v !== false) e.setAttribute(k, v);
   }
   for (const k of kids.flat()) e.append(k?.nodeType ? k : document.createTextNode(k ?? ""));
   return e;
@@ -72,7 +112,18 @@ function el(tag, attrs = {}, ...kids) {
 function drawSections() {
   const names = ["all", ...new Set(apps.map(a => a.section))];
   const nav = document.getElementById("sections");
-  nav.replaceChildren(...names.map(n => el("button", { "aria-pressed": String(n === section), onclick: () => { section = n; drawSections(); drawMenu(); } }, n)));
+  const shown = apps.filter(a => a.example).length;
+  nav.replaceChildren(
+    ...names.map(n => el("button", { "aria-pressed": String(view === "apps" && n === section), onclick: () => { section = n; show("apps"); } }, n)),
+    el("button", { class: "gallery-tab", "aria-pressed": String(view === "gallery"), onclick: () => show("gallery") }, `gallery${shown ? ` · ${shown}` : ""}`));
+}
+
+function show(v) {
+  view = v;
+  document.getElementById("main").hidden = v !== "apps";
+  document.getElementById("gallery").hidden = v !== "gallery";
+  drawSections();
+  if (v === "apps") drawMenu(); else drawGallery();
 }
 
 // what the VRAM verdict means on one 24 GB card (tools/catalog.py vram)
@@ -94,11 +145,97 @@ function modelsPanel(a) {
     a.credits.length ? el("p", {}, el("small", {}, a.credits.join(" · "))) : "");
 }
 
+// a still or a muted loop for a card; videos play while hovered (menu) or visible (gallery)
+function preview(ex, cls) {
+  if (!ex || !(ex.card || ex.poster)) return null;
+  if (ex.type === "video" && ex.card) {
+    const v = el("video", { class: cls, src: ex.card, poster: ex.poster, loop: "", playsinline: "", preload: "none" });
+    v.muted = true;
+    return v;
+  }
+  const src = ex.card || ex.poster;
+  const extra = ex.type === "audio" ? " audio" : ex.type === "image" && /\.png$/i.test(src) ? " alpha" : "";
+  return el("img", { class: `${cls}${extra}`, src, alt: "", loading: "lazy" });
+}
+const hoverPlay = (node, media) => {
+  if (media?.tagName !== "VIDEO") return;
+  node.onmouseenter = () => media.play().catch(() => {});
+  node.onmouseleave = () => media.pause();
+};
+
 function drawMenu() {
   const list = apps.filter(a => section === "all" || a.section === section);
-  document.getElementById("menu").replaceChildren(...list.map(a =>
-    el("button", { class: "item", "aria-current": String(current?.id === a.id), onclick: () => open(a) },
-      el("span", { class: "badge" }, `${a.section} · ${a.status}`), el("strong", {}, a.name), el("small", {}, a.summary), fit(a))));
+  document.getElementById("menu").replaceChildren(...list.map(a => {
+    const media = preview(a.example, "thumb");
+    const item = el("button", { class: `item${media ? "" : " nothumb"}`, "aria-current": String(current?.id === a.id), onclick: () => open(a) },
+      media || "", el("span", { class: "txt" }, el("span", { class: "badge" }, `${a.section} · ${a.status}`), el("strong", {}, a.name), el("small", {}, a.summary), fit(a)));
+    hoverPlay(item, media);
+    return item;
+  }));
+}
+
+function media(type, src, poster) {
+  if (!src) return poster ? el("img", { src: poster, alt: "" }) : el("span", { class: "badge" }, "missing");
+  if (type === "video") return el("video", { src, poster, controls: "", loop: "", playsinline: "", preload: "metadata" });
+  if (type === "audio") return el("div", {}, poster ? el("img", { src: poster, alt: "" }) : "", el("audio", { src, controls: "", preload: "none" }));
+  return el("img", { src, alt: "", class: /\.png$/i.test(src) ? "alpha" : null });
+}
+
+function exampleBlock(a, form) {
+  const ex = a.example;
+  if (!ex) return "";
+  const labels = Object.fromEntries(a.inputs.map(i => [i.id, i]));
+  const ins = (ex.inputs || []).map(i => el("figure", {},
+    i.type === "image" || !i.full ? (i.src ? el("img", { src: i.src, alt: "", class: i.type === "image" && /\.png$/i.test(i.src) ? "alpha" : null }) : el("span", { class: "badge" }, String(i.from ?? "upload")))
+      : media(i.type, i.full, i.src),
+    el("figcaption", {}, i.label)));
+  const stats = [ex.seconds != null ? `${Math.round(ex.seconds)} s` : "", ex.gpu ? `on ${ex.gpu.split(",")[0]}` : "",
+    ex.peak_vram_gb != null ? `peak ${ex.peak_vram_gb} GB` : ""].filter(Boolean).join(" · ");
+  const values = Object.entries(ex.values || {}).filter(([k]) => labels[k] && !["image", "video", "audio"].includes(labels[k].type));
+  const use = el("button", { class: "ghost", type: "button", onclick: () => {
+    for (const [k, v] of values) {
+      const f = form.elements[k]; if (!f) continue;
+      if (f.type === "checkbox") f.checked = v === true || v === "true"; else { f.value = String(v); f.dispatchEvent(new Event("input")); }
+    }
+  } }, "Use these settings");
+  return el("section", { class: "example" },
+    el("h3", {}, "Example", el("small", {}, [stats, ex.run ? `lab run ${ex.run}` : ""].filter(Boolean).join(" · "))),
+    el("div", { class: `flow${ins.length ? "" : " solo"}` }, ins.length ? el("div", { class: "ins" }, ...ins) : "", ins.length ? el("span", { class: "arrow" }, "→") : "",
+      el("figure", {}, media(ex.type, ex.full, ex.type === "audio" ? ex.card : ex.poster))),
+    values.length ? el("dl", { class: "vals" }, ...values.flatMap(([k, v]) => {
+      const opt = (labels[k].options || []).find(o => String(o.value) === String(v));
+      return [el("dt", {}, labels[k].label), el("dd", {}, opt ? opt.label : String(v))];
+    })) : "",
+    values.length ? use : "");
+}
+
+function drawGallery() {
+  const withEx = apps.filter(a => a.example);
+  const without = apps.filter(a => !a.example && !a.id.startsWith("smoke"));
+  const g = document.getElementById("gallery");
+  if (!withEx.length) {
+    g.replaceChildren(el("h2", {}, "Gallery"), el("p", { class: "lead" }, "No examples yet. Run one case per app on Modal, then come back:"),
+      el("pre", {}, "modal run lab/lab_modal.py --showcase"));
+    return;
+  }
+  const run = withEx.find(a => a.example.run)?.example;
+  const tiles = withEx.map(a => {
+    const m = preview(a.example, "") || el("span", { class: "badge" }, a.example.type);
+    const tile = el("button", { class: "tile", onclick: () => { show("apps"); open(a); } },
+      el("div", { class: "media" }, m),
+      el("div", { class: "meta" }, el("span", { class: "badge" }, `${a.section} · ${a.higgsfield_feature || a.name}`), el("strong", {}, a.name),
+        (a.example.inputs || []).some(i => i.src) ? el("span", { class: "from" }, "from",
+          ...(a.example.inputs || []).filter(i => i.src).map(i => el("img", { src: i.src, alt: i.label, title: i.label }))) : ""));
+    return tile;
+  });
+  g.replaceChildren(
+    el("h2", {}, "Gallery"),
+    el("p", { class: "lead" }, `${withEx.length} of ${withEx.length + without.length} apps, each from its showcase case${run?.run ? ` in lab run ${run.run}` : ""}${run?.gpu ? ` on ${run.gpu.split(",")[0]}` : ""}. Click one to open the app.`),
+    el("div", { class: "tiles" }, ...tiles),
+    without.length ? el("div", { class: "chips" }, el("span", {}, "no example yet:"), ...without.map(a => el("span", {}, a.name))) : "");
+  // play the loops that are on screen, pause the rest
+  const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), { threshold: 0.4 });
+  g.querySelectorAll(".tile video").forEach(v => io.observe(v));
 }
 
 function field(inp) {
@@ -155,7 +292,8 @@ function open(a) {
     } catch (e) { status.className = "err"; status.textContent = e.message; }
     finally { run.disabled = !a.runnable; }
   };
-  document.getElementById("app").replaceChildren(el("p", { class: "badge" }, `${a.section} · ${a.pack} · ${a.status}`), el("h2", {}, a.name), el("p", {}, a.summary), a.notes ? el("p", { class: "note" }, a.notes) : "", fit(a), modelsPanel(a), form, status, outputs);
+  document.getElementById("app").replaceChildren(el("p", { class: "badge" }, `${a.section} · ${a.pack} · ${a.status}`), el("h2", {}, a.name), el("p", {}, a.summary),
+    a.notes ? el("p", { class: "note" }, a.notes) : "", fit(a), exampleBlock(a, form), modelsPanel(a), form, status, outputs);
   if (matchMedia("(max-width: 760px)").matches) document.getElementById("app").scrollIntoView({ behavior: "smooth" });
 }
 

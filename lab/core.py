@@ -181,6 +181,73 @@ def models_for_cases(cases: list[dict], apps_dir: Path) -> list[dict]:
     return out
 
 
+# ---------------------------------------------------------------- web versions
+IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp"}
+VIDEO_EXT = {".mp4", ".webm", ".mov", ".mkv", ".gif"}
+AUDIO_EXT = {".flac", ".mp3", ".wav", ".ogg", ".opus", ".m4a"}
+ALPHA_PIX = re.compile(r"^(rgba|bgra|argb|abgr|ya\d|yuva|gbrap|pal8)")
+
+
+def media_kind(path: Path) -> str | None:
+    ext = path.suffix.lower()
+    return "image" if ext in IMAGE_EXT else "video" if ext in VIDEO_EXT else "audio" if ext in AUDIO_EXT else None
+
+
+def _ffmpeg(*args: str) -> bool:
+    try:
+        return subprocess.run(["ffmpeg", "-y", "-v", "error", *args], capture_output=True, timeout=600).returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+
+
+def _has_alpha(path: Path) -> bool:
+    try:
+        out = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=pix_fmt",
+                              "-of", "csv=p=0", str(path)], capture_output=True, text=True, timeout=60).stdout.strip()
+    except (OSError, subprocess.TimeoutExpired):
+        return path.suffix.lower() == ".png"
+    return bool(ALPHA_PIX.match(out))
+
+
+def web_versions(src: Path, dest: Path) -> dict:
+    """Small files for the gallery: a card (thumbnail), a poster for videos and a web-sized full version.
+
+    Images become JPEG (PNG when they have transparency), videos H.264 MP4 (the card muted, 5 s,
+    360 p), audio MP3 with a waveform picture as its card. Needs ffmpeg (the Modal image has it);
+    without it the original file stands in for every version. Paths are relative to dest.parent.
+    """
+    kind = media_kind(src)
+    out = {"type": kind, "card": None, "poster": None, "full": None, "source": src.name}
+    if kind is None:
+        return out
+    dest.mkdir(parents=True, exist_ok=True)
+    rel = lambda p: f"{dest.name}/{p.name}"   # noqa: E731
+    if kind == "image":
+        ext = ".png" if _has_alpha(src) else ".jpg"
+        q = [] if ext == ".png" else ["-q:v", "3"]
+        if _ffmpeg("-i", str(src), "-vf", "scale='min(640,iw)':-2", *q, str(dest / f"card{ext}")):
+            out["card"] = rel(dest / f"card{ext}")
+        if _ffmpeg("-i", str(src), "-vf", "scale='min(1600,iw)':-2", *q, str(dest / f"full{ext}")):
+            out["full"] = rel(dest / f"full{ext}")
+    elif kind == "video":
+        if _ffmpeg("-i", str(src), "-t", "5", "-vf", "scale=-2:'min(360,ih)'", "-an", "-c:v", "libx264", "-preset", "medium",
+                   "-crf", "30", "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(dest / "card.mp4")):
+            out["card"] = rel(dest / "card.mp4")
+        if _ffmpeg("-i", str(src), "-vf", "thumbnail,scale='min(640,iw)':-2", "-frames:v", "1", "-q:v", "3", str(dest / "poster.jpg")):
+            out["poster"] = rel(dest / "poster.jpg")
+        if _ffmpeg("-i", str(src), "-vf", "scale=-2:'min(720,ih)'", "-c:v", "libx264", "-preset", "medium", "-crf", "26",
+                   "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", str(dest / "full.mp4")):
+            out["full"] = rel(dest / "full.mp4")
+    else:
+        if _ffmpeg("-i", str(src), "-filter_complex", "showwavespic=s=640x160:colors=#e8ff5a:scale=sqrt", "-frames:v", "1", str(dest / "card.png")):
+            out["card"] = rel(dest / "card.png")
+        if _ffmpeg("-i", str(src), "-c:a", "libmp3lame", "-b:a", "160k", str(dest / "full.mp3")):
+            out["full"] = rel(dest / "full.mp3")
+    if out["full"] is None:   # no ffmpeg: the original is the full version
+        out["full"] = src.name
+    return out
+
+
 # ---------------------------------------------------------------- runner
 class Lab:
     def __init__(self, url: str, input_dir: Path, output_dir: Path, results_dir: Path,
@@ -216,10 +283,13 @@ class Lab:
     def run_case(self, case: dict) -> dict:
         cid = case["id"]
         res = {"id": cid, "app": case["app"], "status": "error", "seconds": None, "peak_vram_gb": None,
-               "files": [], "error": None, "values": {}, "loras": case.get("loras", []),
-               "overrides": case.get("overrides", []), "note": case.get("note", "")}
+               "files": [], "error": None, "values": {}, "inputs": {}, "web": None, "loras": case.get("loras", []),
+               "overrides": case.get("overrides", []), "note": case.get("note", ""), "showcase": bool(case.get("showcase"))}
         try:
             manifest, api, res["values"] = build_case(self.apps_dir, case, self._file_value)
+            # where each file input came from ("@case:<id>", "asset:<name>" or a path), for the gallery
+            types = {i["id"]: i["type"] for i in manifest.get("inputs", [])}
+            res["inputs"] = {k: v for k, v in case.get("values", {}).items() if types.get(k) in FILE_TYPES}
             # skip, with the reason, when a file this exact prompt loads could not be downloaded
             used = {v for n in api.values() for v in n["inputs"].values() if isinstance(v, str)}
             lacking = sorted(used & set(self.missing))
@@ -271,8 +341,11 @@ class Lab:
                                 shutil.copy(src, dst)
                                 saved.append(dst)
             self.outputs[cid] = saved
-            res["files"] = [str(p.relative_to(self.results_dir)) for p in saved]
+            res["files"] = [p.relative_to(self.results_dir).as_posix() for p in saved]
             res["status"] = "ok" if saved else "no-output"
+            if saved:
+                web = web_versions(saved[0], out_dir / "web")
+                res["web"] = {k: (f"{cid}/{v}" if k in ("card", "poster", "full") and v else v) for k, v in web.items()}
         except Exception as e:  # keep going: one broken LoRA must not stop the batch
             res["error"] = f"{type(e).__name__}: {e}"
         return res

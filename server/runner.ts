@@ -104,6 +104,41 @@ export function applyInputs(
   }
 }
 
+type NodeError = { type?: string; message?: string; details?: string; extra_info?: { input_name?: string; received_value?: unknown } };
+type NodeErrors = Record<string, { class_type?: string; errors?: NodeError[] } | NodeError[]>;
+
+/**
+ * Turn ComfyUI's validation errors (relayed by the proxy as details.node_errors) into lines a
+ * person can act on. When a loader asks for a model file the backend does not have, say which
+ * pack to download. Returns null for errors that are not workflow validation errors.
+ */
+export function explainSubmitError(app: App, e: unknown): string | null {
+  const err = e as { code?: string; details?: { node_errors?: NodeErrors } | null; message?: string };
+  if (err?.code !== "invalid_workflow") return null;
+  const modelFiles = new Set(app.models.map((m) => m.file.split("/").pop()));
+  const lines: string[] = [];
+  let missingModel = false;
+  for (const [node, entry] of Object.entries(err.details?.node_errors ?? {})) {
+    const errors = Array.isArray(entry) ? entry : entry.errors ?? [];
+    const cls = Array.isArray(entry) ? "" : entry.class_type ?? "";
+    for (const x of errors) {
+      const received = x.extra_info?.received_value ?? /'([^']+)' not in/.exec(x.details ?? "")?.[1];
+      if (x.type === "value_not_in_list" && typeof received === "string" && modelFiles.has(received)) {
+        missingModel = true;
+        lines.push(`${cls || "node"} (node ${node}): model file ${received} is not on the backend`);
+      } else {
+        const detail = (x.details ?? "").replace(/ not in \[.*$/s, " is not one of the allowed values");
+        lines.push(`${cls || "node"} (node ${node}): ${x.message ?? x.type ?? "invalid"}${detail ? ` (${detail.slice(0, 200)})` : ""}`);
+      }
+    }
+  }
+  if (!lines.length) lines.push(err.message ?? "workflow rejected");
+  if (missingModel) {
+    lines.push(`Download the "${app.pack}" pack first:  modal run infra/modal_app.py::download --pack ${app.pack}`);
+  }
+  return `ComfyUI rejected the workflow:\n${lines.map((l) => `  ${l}`).join("\n")}`;
+}
+
 export type RunnerOptions = {
   /** Gateway in front of comfy-api-proxy, e.g. https://you--freefield-serve.modal.run */
   baseUrl?: string;

@@ -5,7 +5,7 @@
 import { mkdirSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { loadRegistry } from "./registry.ts";
-import { Runner, type Values } from "./runner.ts";
+import { explainSubmitError, Runner, type Values } from "./runner.ts";
 
 const [cmd, ...rest] = process.argv.slice(2);
 const { apps, problems } = loadRegistry();
@@ -60,7 +60,7 @@ if (cmd === "validate") {
   try {
     job = await runner.submit(app, values, preset);
   } catch (e) {
-    console.error(`could not submit ${app.id}: ${(e as Error).message}`);
+    console.error(`could not submit ${app.id}: ${explainSubmitError(app, e) ?? (e as Error).message}`);
     process.exit(1);
   }
   console.log(`submitted ${app.id} → job ${job.id}`);

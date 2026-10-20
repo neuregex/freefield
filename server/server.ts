@@ -3,12 +3,13 @@
 //   POST /api/apps/:id/run                 multipart form: one field per input id, optional "preset"
 //   GET  /api/jobs/:id                     status and outputs
 //   GET  /api/jobs/:id/outputs/:outputId   output bytes
-// Everything else is served from web/ when it exists.
+// Everything else is served from web/ when it exists (with byte ranges, so videos seek everywhere).
+// web/examples/ holds one example per app, written by lab/publish.py; /api/apps carries it along.
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
-import { existsSync, readFileSync, statSync } from "node:fs";
+import { createReadStream, existsSync, readFileSync, statSync } from "node:fs";
 import { extname, join, normalize } from "node:path";
 import { loadRegistry, repoRoot, isFileInput, type App } from "./registry.ts";
-import { InputError, Runner, type Values } from "./runner.ts";
+import { explainSubmitError, InputError, Runner, type Values } from "./runner.ts";
 
 const root = repoRoot();
 const { apps, problems } = loadRegistry(root);
@@ -27,8 +28,19 @@ const draftsAllowed = process.env.FREEFIELD_DRAFTS === "1";
 
 const MIME: Record<string, string> = {
   ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".json": "application/json",
-  ".svg": "image/svg+xml", ".png": "image/png", ".webp": "image/webp", ".jpg": "image/jpeg", ".mp4": "video/mp4",
+  ".svg": "image/svg+xml", ".png": "image/png", ".webp": "image/webp", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
+  ".gif": "image/gif", ".mp4": "video/mp4", ".webm": "video/webm", ".mp3": "audio/mpeg",
 };
+
+// one example per app (lab/publish.py); read on every catalog request so a new publish shows up without a restart
+const examplesFile = join(root, "web", "examples", "index.json");
+function loadExamples(): Record<string, unknown> {
+  try {
+    return existsSync(examplesFile) ? (JSON.parse(readFileSync(examplesFile, "utf-8")).apps ?? {}) : {};
+  } catch {
+    return {};
+  }
+}
 
 function publicApp(a: App) {
   return {
@@ -104,14 +116,22 @@ const server = createServer(async (req, res) => {
         const order = { image: 0, video: 1, audio: 2, utility: 3 } as Record<string, number>;
         const sorted = [...apps].sort((a, b) => order[a.section] - order[b.section]
           || Number(b.status === "ready") - Number(a.status === "ready") || a.name.localeCompare(b.name));
-        return send(res, 200, { apps: sorted.map(publicApp) });
+        const examples = loadExamples();
+        return send(res, 200, { apps: sorted.map((a) => ({ ...publicApp(a), example: examples[a.id] ?? null })) });
       }
       if (req.method === "POST" && parts[1] === "apps" && parts[3] === "run") {
         const app = byId.get(parts[2]);
         if (!app) return send(res, 404, { error: "unknown app" });
         const { values, preset } = await readValues(app, await toRequest(req));
-        const job = await getRunner().submit(app, values, preset);
-        return send(res, 202, { id: job.id, status: job.status });
+        try {
+          const job = await getRunner().submit(app, values, preset);
+          return send(res, 202, { id: job.id, status: job.status });
+        } catch (e) {
+          const explained = explainSubmitError(app, e);
+          if (!explained) throw e;
+          console.error(`[${app.id}] ${explained}`);
+          return send(res, 422, { error: explained });
+        }
       }
       if (req.method === "GET" && parts[1] === "jobs" && parts.length === 3) {
         return send(res, 200, await jobView(parts[2]));
@@ -131,8 +151,21 @@ const server = createServer(async (req, res) => {
     const rel = normalize(url.pathname === "/" ? "index.html" : url.pathname.slice(1)).replace(/^(\.\.[/\\])+/, "");
     const file = join(webRoot, rel);
     if (file.startsWith(webRoot) && existsSync(file) && statSync(file).isFile()) {
-      res.writeHead(200, { "content-type": MIME[extname(file)] ?? "application/octet-stream" });
-      return res.end(readFileSync(file));
+      const size = statSync(file).size;
+      const type = MIME[extname(file).toLowerCase()] ?? "application/octet-stream";
+      const range = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range ?? "");
+      if (range && (range[1] || range[2])) {
+        const start = range[1] ? Number(range[1]) : Math.max(0, size - Number(range[2]));
+        const end = range[1] && range[2] ? Math.min(Number(range[2]), size - 1) : size - 1;
+        if (start > end || start >= size) {
+          res.writeHead(416, { "content-range": `bytes */${size}` });
+          return res.end();
+        }
+        res.writeHead(206, { "content-type": type, "content-length": end - start + 1, "content-range": `bytes ${start}-${end}/${size}`, "accept-ranges": "bytes" });
+        return createReadStream(file, { start, end }).pipe(res);
+      }
+      res.writeHead(200, { "content-type": type, "content-length": size, "accept-ranges": "bytes" });
+      return createReadStream(file).pipe(res);
     }
     return send(res, 404, { error: "not found" });
   } catch (e) {
