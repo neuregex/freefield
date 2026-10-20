@@ -35,6 +35,13 @@ def main(argv: list[str] | None = None) -> int:
     token = secrets.token_urlsafe(32)
 
     if not a.env_only:
+        sys.path.insert(0, str(ROOT))
+        from infra.modal_profile import check
+        active, pinned, ok = check(ROOT)
+        if not ok:
+            print(f'Modal profile "{active}" is active, but .env pins "{pinned}"; nothing changed. '
+                  f"Switch with:  modal profile activate {pinned}", file=sys.stderr)
+            return 1
         cmd = [sys.executable, "-m", "modal", "secret", "create", "freefield", f"FREEFIELD_TOKEN={token}", "--force"]
         try:
             r = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
@@ -45,7 +52,7 @@ def main(argv: list[str] | None = None) -> int:
             print((r.stderr or r.stdout).strip(), file=sys.stderr)
             print('the Modal secret "freefield" was not updated, so .env was left as it was', file=sys.stderr)
             return 1
-        print('stored the token in the Modal secret "freefield"')
+        print(f'stored the token in the Modal secret "freefield" of profile "{active}"')
 
     text = env.read_text(encoding="utf-8")
     line = f"FREEFIELD_TOKEN={token}"

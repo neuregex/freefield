@@ -64,7 +64,7 @@ You need Node 22.6+, Python 3.10+ and a [Modal](https://modal.com) account.
 # 0. what is missing: Node, Modal login and secrets, Hugging Face license access per model, .env
 python tools/doctor.py
 
-# 1. secrets (once)
+# 1. secrets (once). Pick the Modal workspace first: in .env, FREEFIELD_MODAL_PROFILE=<profile from `modal profile list`>
 python tools/setup_token.py                       # gateway token: Modal secret "freefield" and .env get the same value
 modal secret create huggingface HF_TOKEN=hf_...   # accept the LTX-2.5 and FLUX 3 Klein licenses on the Hub first
 

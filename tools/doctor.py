@@ -60,6 +60,17 @@ def check_modal() -> None:
         report(BAD, "Modal CLI not installed for this Python", f"{Path(sys.executable).name} -m pip install modal")
         return
     report(OK, f"Modal CLI {out.split()[-1] if out else ''}".strip())
+    sys.path.insert(0, str(ROOT))
+    from infra.modal_profile import check
+    active, pinned, ok = check(ROOT)
+    if not ok:
+        report(BAD, f'Modal profile "{active}" is active, but .env pins "{pinned}"', f"modal profile activate {pinned}")
+        return   # the secrets below would be the wrong workspace's
+    if pinned:
+        report(OK, f'Modal profile "{active or pinned}" (pinned in .env)')
+    else:
+        report(WARN, f'Modal profile "{active}" is active and nothing pins this repo to it',
+               "add FREEFIELD_MODAL_PROFILE=<profile> to .env (modal profile list shows them)")
     code, out = run([sys.executable, "-m", "modal", "secret", "list", "--json"], timeout=90)
     if code != 0:
         report(BAD, "Modal is not logged in (or unreachable)", "modal setup")
@@ -74,9 +85,9 @@ def check_modal() -> None:
     }
     for name, fix in fixes.items():
         if name in names:
-            report(OK, f'Modal secret "{name}"')
+            report(OK, f'Modal secret "{name}" in profile "{active}"')
         else:
-            report(BAD, f'Modal secret "{name}" missing', fix)
+            report(BAD, f'Modal secret "{name}" missing in profile "{active}"', fix)
 
 
 def hf_token() -> str | None:

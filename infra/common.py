@@ -16,7 +16,11 @@ from pathlib import Path
 
 import modal
 
+from infra.modal_profile import enforce as _enforce_profile
+
 ROOT = Path(__file__).resolve().parent.parent
+if modal.is_local():   # on your machine, before modal run/deploy creates anything; never inside containers
+    _enforce_profile(ROOT)
 COMFYUI_COMMIT = "e3bee7ffcb7d6547ed0bcd15221792f3b8646b17"   # 2026-10-19, ComfyUI 0.42.0+
 COMFY_API_PROXY = "comfy-api-proxy==0.1.6"
 COMFY_DIR = "/comfyui"
