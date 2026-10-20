@@ -1,0 +1,681 @@
+{
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "asian_model_in_white_clothes.png"
+    },
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "155": {
+    "class_type": "LoadVideo",
+    "inputs": {
+      "file": "girl_eats_apple.mp4"
+    },
+    "_meta": {
+      "title": "Load Video"
+    }
+  },
+  "201": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "213:6",
+        0
+      ],
+      "audio": [
+        "215",
+        1
+      ],
+      "fps": [
+        "215",
+        2
+      ],
+      "bit_depth": 8
+    },
+    "_meta": {
+      "title": "Create Video"
+    }
+  },
+  "202": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "201",
+        0
+      ],
+      "filename_prefix": "freefield/recast",
+      "format": "auto",
+      "format.codec": "auto"
+    },
+    "_meta": {
+      "title": "Save Video (First Segement)"
+    }
+  },
+  "213:3": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "213:9",
+        0
+      ],
+      "text": "A young East Asian woman with dark hair neatly pulled back, wearing a white sleeveless ribbed mock-neck top, is standing in a lush apple orchard. She holds a large glossy red apple with both hands, using a white paper handkerchief to wipe and clean the apple before smelling and eating it with her eyes closed and a blissful expression. Ripe red and yellow apples hang from leafy branches in the foreground, with rows of green apple trees softly blurred in the background under natural daylight."
+    },
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "213:4": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "213:9",
+        0
+      ],
+      "text": ""
+    },
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "213:6": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "213:19",
+        1
+      ],
+      "vae": [
+        "213:7",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "213:7": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "Wan2_1_VAE_bf16.safetensors"
+    },
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "213:9": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan",
+      "device": "default"
+    },
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "213:11": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "213:318",
+        0
+      ],
+      "lora_name": "lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors",
+      "strength_model": 0.8
+    },
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  },
+  "213:18": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "213:11",
+        0
+      ],
+      "steps": [
+        "213:170",
+        0
+      ],
+      "scheduler": "simple",
+      "denoise": 1
+    },
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "213:19": {
+    "class_type": "SamplerCustom",
+    "inputs": {
+      "model": [
+        "213:95",
+        0
+      ],
+      "positive": [
+        "213:114",
+        0
+      ],
+      "negative": [
+        "213:114",
+        1
+      ],
+      "sampler": [
+        "213:27",
+        0
+      ],
+      "sigmas": [
+        "213:18",
+        0
+      ],
+      "latent_image": [
+        "213:114",
+        2
+      ],
+      "cfg": [
+        "213:171",
+        0
+      ],
+      "add_noise": true,
+      "noise_seed": 1
+    },
+    "_meta": {
+      "title": "SamplerCustom"
+    }
+  },
+  "213:27": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "213:75": {
+    "class_type": "CLIPVisionLoader",
+    "inputs": {
+      "clip_name": "clip_vision_h.safetensors"
+    },
+    "_meta": {
+      "title": "Load CLIP Vision"
+    }
+  },
+  "213:76": {
+    "class_type": "CLIPVisionEncode",
+    "inputs": {
+      "clip_vision": [
+        "213:75",
+        0
+      ],
+      "image": [
+        "30",
+        0
+      ],
+      "crop": "none"
+    },
+    "_meta": {
+      "title": "CLIP Vision Encode"
+    }
+  },
+  "213:95": {
+    "class_type": "ModelSamplingSD3",
+    "inputs": {
+      "model": [
+        "213:169",
+        0
+      ],
+      "shift": 5
+    },
+    "_meta": {
+      "title": "ModelSamplingSD3"
+    }
+  },
+  "213:114": {
+    "class_type": "WanSCAILToVideo",
+    "inputs": {
+      "positive": [
+        "213:3",
+        0
+      ],
+      "negative": [
+        "213:4",
+        0
+      ],
+      "vae": [
+        "213:7",
+        0
+      ],
+      "pose_video": [
+        "213:156",
+        0
+      ],
+      "pose_video_mask": [
+        "213:197",
+        0
+      ],
+      "reference_image": [
+        "30",
+        0
+      ],
+      "reference_image_mask": [
+        "213:197",
+        1
+      ],
+      "clip_vision_output": [
+        "213:76",
+        0
+      ],
+      "width": [
+        "213:163",
+        0
+      ],
+      "height": [
+        "213:163",
+        1
+      ],
+      "length": [
+        "213:163",
+        2
+      ],
+      "replacement_mode": [
+        "213:203",
+        0
+      ],
+      "batch_size": 1,
+      "pose_strength": 1,
+      "pose_start": 0,
+      "pose_end": 1,
+      "video_frame_offset": 0,
+      "previous_frame_count": 5
+    },
+    "_meta": {
+      "title": "WanSCAILToVideo"
+    }
+  },
+  "213:154": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "wan2.1_14B_SCAIL_2_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    },
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "213:156": {
+    "class_type": "ResizeImageMaskNode",
+    "inputs": {
+      "input": [
+        "213:177",
+        0
+      ],
+      "resize_type.width": [
+        "213:180",
+        1
+      ],
+      "resize_type.height": [
+        "213:182",
+        1
+      ],
+      "resize_type": "scale dimensions",
+      "resize_type.crop": "center",
+      "scale_method": "area"
+    },
+    "_meta": {
+      "title": "Resize Image/Mask"
+    }
+  },
+  "213:157": {
+    "class_type": "GetVideoComponents",
+    "inputs": {
+      "video": [
+        "155",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Video Components"
+    }
+  },
+  "213:163": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "213:156",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Image Size"
+    }
+  },
+  "213:165": {
+    "class_type": "PrimitiveInt",
+    "inputs": {
+      "value": 40
+    },
+    "_meta": {
+      "title": "Int (Steps)"
+    }
+  },
+  "213:166": {
+    "class_type": "PrimitiveFloat",
+    "inputs": {
+      "value": 5
+    },
+    "_meta": {
+      "title": "Float (CFG)"
+    }
+  },
+  "213:167": {
+    "class_type": "PrimitiveFloat",
+    "inputs": {
+      "value": 1
+    },
+    "_meta": {
+      "title": "Float (CFG)"
+    }
+  },
+  "213:168": {
+    "class_type": "PrimitiveInt",
+    "inputs": {
+      "value": 6
+    },
+    "_meta": {
+      "title": "Int (Steps)"
+    }
+  },
+  "213:169": {
+    "class_type": "ComfySwitchNode",
+    "inputs": {
+      "on_false": [
+        "213:318",
+        0
+      ],
+      "on_true": [
+        "213:11",
+        0
+      ],
+      "switch": [
+        "213:172",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Switch (Model)"
+    }
+  },
+  "213:170": {
+    "class_type": "ComfySwitchNode",
+    "inputs": {
+      "on_false": [
+        "213:165",
+        0
+      ],
+      "on_true": [
+        "213:168",
+        0
+      ],
+      "switch": [
+        "213:172",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Switch (Steps)"
+    }
+  },
+  "213:171": {
+    "class_type": "ComfySwitchNode",
+    "inputs": {
+      "on_false": [
+        "213:166",
+        0
+      ],
+      "on_true": [
+        "213:167",
+        0
+      ],
+      "switch": [
+        "213:172",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Switch (Steps)"
+    }
+  },
+  "213:172": {
+    "class_type": "PrimitiveBoolean",
+    "inputs": {
+      "value": true
+    },
+    "_meta": {
+      "title": "Boolean (Enable Distill LoRA?)"
+    }
+  },
+  "213:177": {
+    "class_type": "ImageFromBatch",
+    "inputs": {
+      "image": [
+        "213:157",
+        0
+      ],
+      "batch_index": [
+        "213:184",
+        1
+      ],
+      "length": 81
+    },
+    "_meta": {
+      "title": "Get Image from Batch"
+    }
+  },
+  "213:178": {
+    "class_type": "PrimitiveInt",
+    "inputs": {
+      "value": 896
+    },
+    "_meta": {
+      "title": "Int (Width)"
+    }
+  },
+  "213:179": {
+    "class_type": "PrimitiveInt",
+    "inputs": {
+      "value": 512
+    },
+    "_meta": {
+      "title": "Int (Height)"
+    }
+  },
+  "213:180": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "values.a": [
+        "213:178",
+        0
+      ],
+      "expression": "(a // 32) * 32"
+    },
+    "_meta": {
+      "title": "Math Expression"
+    }
+  },
+  "213:182": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "values.a": [
+        "213:179",
+        0
+      ],
+      "expression": "(a // 32) * 32"
+    },
+    "_meta": {
+      "title": "Math Expression"
+    }
+  },
+  "213:183": {
+    "class_type": "PrimitiveInt",
+    "inputs": {
+      "value": 1
+    },
+    "_meta": {
+      "title": "Int (segment index)"
+    }
+  },
+  "213:184": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "values.a": [
+        "213:183",
+        0
+      ],
+      "expression": "(b - c) * (a - 1)"
+    },
+    "_meta": {
+      "title": "Math Expression"
+    }
+  },
+  "213:191": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "213:193",
+        1
+      ],
+      "text": "girl, handkerchief"
+    },
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "213:193": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "sam3.1_multiplex_fp16.safetensors"
+    },
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "213:196": {
+    "class_type": "SAM3_VideoTrack",
+    "inputs": {
+      "images": [
+        "213:156",
+        0
+      ],
+      "model": [
+        "213:193",
+        0
+      ],
+      "conditioning": [
+        "213:191",
+        0
+      ],
+      "detection_threshold": 0.5,
+      "max_objects": 4,
+      "detect_interval": 1
+    },
+    "_meta": {
+      "title": "Run SAM3 Video Track"
+    }
+  },
+  "213:197": {
+    "class_type": "SCAIL2ColoredMask",
+    "inputs": {
+      "driving_track_data": [
+        "213:196",
+        0
+      ],
+      "ref_track_data": [
+        "213:198",
+        0
+      ],
+      "replacement_mode": [
+        "213:203",
+        0
+      ],
+      "object_indices": "",
+      "sort_by": "left_to_right"
+    },
+    "_meta": {
+      "title": "Create SCAIL-2 Colored Mask"
+    }
+  },
+  "213:198": {
+    "class_type": "SAM3_VideoTrack",
+    "inputs": {
+      "images": [
+        "30",
+        0
+      ],
+      "model": [
+        "213:193",
+        0
+      ],
+      "conditioning": [
+        "213:212",
+        0
+      ],
+      "detection_threshold": 0.5,
+      "max_objects": 4,
+      "detect_interval": 1
+    },
+    "_meta": {
+      "title": "Run SAM3 Video Track"
+    }
+  },
+  "213:203": {
+    "class_type": "PrimitiveBoolean",
+    "inputs": {
+      "value": true
+    },
+    "_meta": {
+      "title": "Boolean （Replace Mode）"
+    }
+  },
+  "213:212": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "213:193",
+        1
+      ],
+      "text": "human"
+    },
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "213:318": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "213:154",
+        0
+      ],
+      "lora_name": "wan2.1_SCAIL_2_DPO_lora_bf16.safetensors",
+      "strength_model": 1
+    },
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  },
+  "215": {
+    "class_type": "GetVideoComponents",
+    "inputs": {
+      "video": [
+        "155",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Video Components"
+    }
+  }
+}

@@ -1,0 +1,270 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "recast",
+  "name": "Recast",
+  "section": "video",
+  "pack": "video-scail",
+  "status": "ready",
+  "higgsfield_feature": "Character swap",
+  "summary": "Puts your character into a video in place of the person there, keeping their motion (SCAIL-2 with SAM 3.1 tracking).",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "video_wan21_scail2_character_replacement_int8.json",
+    "comfyui": "0.42.0",
+    "notes": "First segment only (81 frames): the template's extend subgraph needs 157+ frames and is removed."
+  },
+  "inputs": [
+    {
+      "id": "clip",
+      "type": "video",
+      "label": "Video",
+      "required": true,
+      "limits": {
+        "max_mb": 200
+      },
+      "help": "Uses the first 81 frames, so give it at least that many (about 3 s at 30 fps)",
+      "bind": [
+        {
+          "node": "155",
+          "field": "file"
+        }
+      ]
+    },
+    {
+      "id": "character",
+      "type": "image",
+      "label": "Your character",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "help": "One person, full body if the video shows the full body",
+      "bind": [
+        {
+          "node": "30",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "Describe the result",
+      "required": true,
+      "default": "A person in a red jacket walks through a sunny park, natural light, realistic",
+      "bind": [
+        {
+          "node": "213:3",
+          "field": "text"
+        }
+      ]
+    },
+    {
+      "id": "target",
+      "type": "text",
+      "label": "Who to replace in the video",
+      "default": "person",
+      "help": "What SAM 3.1 should track, e.g. \"woman\", \"man in a hat\"",
+      "bind": [
+        {
+          "node": "213:191",
+          "field": "text"
+        }
+      ]
+    },
+    {
+      "id": "mode",
+      "type": "select",
+      "label": "Mode",
+      "default": true,
+      "options": [
+        {
+          "value": true,
+          "label": "Replace: your character takes their place in the video"
+        },
+        {
+          "value": false,
+          "label": "Animate: your character's own image moves like the video"
+        }
+      ],
+      "bind": [
+        {
+          "node": "213:203",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "fast",
+      "type": "toggle",
+      "label": "Fast (6 steps with the Lightx2v LoRA)",
+      "default": true,
+      "help": "Off: 40 steps, slower and a little finer",
+      "bind": [
+        {
+          "node": "213:172",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "width",
+      "type": "select",
+      "label": "Width",
+      "default": 896,
+      "options": [
+        {
+          "value": 512,
+          "label": "512 px"
+        },
+        {
+          "value": 640,
+          "label": "640 px"
+        },
+        {
+          "value": 832,
+          "label": "832 px"
+        },
+        {
+          "value": 896,
+          "label": "896 px"
+        },
+        {
+          "value": 1024,
+          "label": "1024 px"
+        }
+      ],
+      "bind": [
+        {
+          "node": "213:178",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "height",
+      "type": "select",
+      "label": "Height",
+      "default": 512,
+      "options": [
+        {
+          "value": 512,
+          "label": "512 px"
+        },
+        {
+          "value": 640,
+          "label": "640 px"
+        },
+        {
+          "value": 832,
+          "label": "832 px"
+        },
+        {
+          "value": 896,
+          "label": "896 px"
+        },
+        {
+          "value": 1024,
+          "label": "1024 px"
+        }
+      ],
+      "bind": [
+        {
+          "node": "213:179",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "213:19",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "202",
+      "type": "video",
+      "label": "Video"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/SCAIL-2",
+      "file": "diffusion_models/wan2.1_14B_SCAIL_2_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 16.65,
+      "phase": "denoise",
+      "license": "MIT"
+    },
+    {
+      "repo": "Comfy-Org/SCAIL-2",
+      "file": "loras/wan2.1_SCAIL_2_DPO_lora_bf16.safetensors",
+      "dir": "loras",
+      "gb": 1.23,
+      "phase": "denoise",
+      "license": "MIT"
+    },
+    {
+      "repo": "Kijai/WanVideo_comfy",
+      "file": "Lightx2v/lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors",
+      "dir": "loras",
+      "gb": 0.74,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
+      "file": "split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "dir": "text_encoders",
+      "gb": 6.74,
+      "phase": "encode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
+      "file": "split_files/clip_vision/clip_vision_h.safetensors",
+      "dir": "clip_vision",
+      "gb": 1.26,
+      "phase": "encode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Kijai/WanVideo_comfy",
+      "file": "Wan2_1_VAE_bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.25,
+      "phase": "decode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/sam3.1",
+      "file": "checkpoints/sam3.1_multiplex_fp16.safetensors",
+      "dir": "checkpoints",
+      "gb": 1.75,
+      "phase": "aux",
+      "license": "SAM License"
+    }
+  ],
+  "notes": "Use footage and photos of yourself, fictional characters, or people who agreed to it.",
+  "credits": [
+    "SCAIL-2 by Zhipu AI / zai-org (MIT)",
+    "SAM 3.1 by Meta (SAM License)",
+    "Lightx2v distill LoRA",
+    "Workflow: ComfyUI official template"
+  ],
+  "test": {
+    "clip": "test/clip.mp4",
+    "character": "test/portrait.png",
+    "width": 512,
+    "height": 512
+  }
+}

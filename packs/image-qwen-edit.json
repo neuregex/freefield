@@ -1,0 +1,71 @@
+{
+  "pack": "image-qwen-edit",
+  "apps": [
+    "relight"
+  ],
+  "download_gb": 31.15,
+  "needs_hf_token": false,
+  "custom_nodes": [],
+  "models": [
+    {
+      "repo": "Comfy-Org/Qwen-Image-Edit_ComfyUI",
+      "file": "split_files/diffusion_models/qwen_image_edit_2509_fp8_e4m3fn.safetensors",
+      "dir": "diffusion_models",
+      "gb": 20.43,
+      "name": "qwen_image_edit_2509_fp8_e4m3fn.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "relight"
+      ]
+    },
+    {
+      "repo": "lightx2v/Qwen-Image-Lightning",
+      "file": "Qwen-Image-Edit-2509/Qwen-Image-Edit-2509-Lightning-4steps-V1.0-bf16.safetensors",
+      "dir": "loras",
+      "gb": 0.85,
+      "name": "Qwen-Image-Edit-2509-Lightning-4steps-V1.0-bf16.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "relight"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Qwen-Image-Edit_ComfyUI",
+      "file": "split_files/loras/Qwen-Image-Edit-2509-Relight.safetensors",
+      "dir": "loras",
+      "gb": 0.24,
+      "name": "Qwen-Image-Edit-2509-Relight.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "relight"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Qwen-Image_ComfyUI",
+      "file": "split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "dir": "text_encoders",
+      "gb": 9.38,
+      "name": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "relight"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Qwen-Image_ComfyUI",
+      "file": "split_files/vae/qwen_image_vae.safetensors",
+      "dir": "vae",
+      "gb": 0.25,
+      "name": "qwen_image_vae.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "relight"
+      ]
+    }
+  ]
+}

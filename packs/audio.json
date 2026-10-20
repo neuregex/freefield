@@ -1,0 +1,84 @@
+{
+  "pack": "audio",
+  "apps": [
+    "music",
+    "sfx"
+  ],
+  "download_gb": 29.29,
+  "needs_hf_token": false,
+  "custom_nodes": [],
+  "models": [
+    {
+      "repo": "Comfy-Org/stable-audio-3",
+      "file": "checkpoints/stable_audio_3_medium.safetensors",
+      "dir": "checkpoints",
+      "gb": 9.22,
+      "name": "stable_audio_3_medium.safetensors",
+      "gated": false,
+      "license": "Stable Audio Community License",
+      "used_by": [
+        "sfx"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-Music-3",
+      "file": "diffusion_models/minimax_music3_dit_fp16.safetensors",
+      "dir": "diffusion_models",
+      "gb": 4.91,
+      "name": "minimax_music3_dit_fp16.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "music"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-Music-3",
+      "file": "text_encoders/minimax_music3_text_encoder_pruned_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 9.2,
+      "name": "minimax_music3_text_encoder_pruned_int8_convrot.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "music"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Qwen3.5",
+      "file": "text_encoders/qwen3.5_2b_bf16.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.55,
+      "name": "qwen3.5_2b_bf16.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "sfx"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/stable-audio-3",
+      "file": "text_encoders/t5gemma_b_b_ul2.safetensors",
+      "dir": "text_encoders",
+      "gb": 1.19,
+      "name": "t5gemma_b_b_ul2.safetensors",
+      "gated": false,
+      "license": "Stable Audio Community License",
+      "used_by": [
+        "sfx"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-Music-3",
+      "file": "vae/minimax_music3_dav.safetensors",
+      "dir": "vae",
+      "gb": 0.22,
+      "name": "minimax_music3_dav.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "music"
+      ]
+    }
+  ]
+}

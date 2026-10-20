@@ -1,0 +1,41 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "smoke-invert",
+  "name": "Smoke test (file input)",
+  "section": "utility",
+  "pack": "core",
+  "status": "ready",
+  "summary": "Inverts an uploaded image. Needs no models; proves uploads and downloads work.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "notes": "Hand-written: LoadImage → ImageInvert → SaveImage."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Image",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "1",
+          "field": "image"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "3",
+      "type": "image",
+      "label": "Inverted"
+    }
+  ],
+  "models": [],
+  "test": {
+    "image": "test/portrait.png"
+  }
+}

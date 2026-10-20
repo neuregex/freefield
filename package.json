@@ -1,0 +1,27 @@
+{
+  "name": "freefield",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Open-source Higgsfield on ComfyUI: every app is one folder, every model is open weights.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "scripts": {
+    "validate": "node --experimental-strip-types --disable-warning=ExperimentalWarning server/cli.ts validate",
+    "apps": "node --experimental-strip-types --disable-warning=ExperimentalWarning server/cli.ts apps",
+    "app": "node --env-file-if-exists=.env --experimental-strip-types --disable-warning=ExperimentalWarning server/cli.ts app",
+    "serve": "node --env-file-if-exists=.env --experimental-strip-types --disable-warning=ExperimentalWarning server/server.ts",
+    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test test/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@comfyorg/sdk": "0.5.0",
+    "ajv": "^8.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2"
+  }
+}

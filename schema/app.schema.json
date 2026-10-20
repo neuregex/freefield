@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/neuregex/freefield/schema/app.schema.json",
+  "title": "Freefield app manifest (app.json)",
+  "description": "One app = one folder in apps/ with this manifest and a ComfyUI workflow in API format. The web UI, the runner, the model packs and the tests are all derived from this file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "section", "pack", "status", "inputs", "outputs", "models"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Must match the folder name."
+    },
+    "name": { "type": "string", "minLength": 1, "maxLength": 40 },
+    "section": { "enum": ["image", "video", "audio", "utility"] },
+    "summary": { "type": "string", "maxLength": 160 },
+    "higgsfield_feature": {
+      "type": "string",
+      "description": "The Higgsfield feature this app rebuilds, as named in their menu."
+    },
+    "pack": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Apps that share models live in the same pack; each pack downloads and deploys on its own."
+    },
+    "status": {
+      "enum": ["draft", "ready"],
+      "description": "draft: planned, workflow may be missing. ready: workflow present and every binding resolves."
+    },
+    "workflow": {
+      "type": "string",
+      "pattern": "\\.api\\.json$",
+      "description": "ComfyUI workflow in API format, relative to the app folder."
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "template": { "type": "string", "description": "Official ComfyUI template it was converted from." },
+        "comfyui": { "type": "string", "description": "ComfyUI version the workflow was validated against." },
+        "notes": { "type": "string" }
+      }
+    },
+    "inputs": { "type": "array", "items": { "$ref": "#/$defs/input" } },
+    "presets": { "type": "array", "items": { "$ref": "#/$defs/preset" } },
+    "outputs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/output" } },
+    "models": { "type": "array", "items": { "$ref": "#/$defs/model" } },
+    "custom_nodes": { "type": "array", "items": { "$ref": "#/$defs/customNode" } },
+    "vram": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "peak_gb": { "type": ["number", "null"], "description": "Measured peak, written by the smoke test or the lab." },
+        "measured_on": { "type": ["string", "null"], "description": "GPU and date of the measurement." }
+      }
+    },
+    "test": {
+      "type": "object",
+      "description": "Sample values for the smoke test, keyed by input id. File inputs are paths relative to the app folder.",
+      "additionalProperties": true
+    },
+    "credits": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  },
+  "$defs": {
+    "bind": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "field"],
+      "properties": {
+        "node": { "type": "string", "description": "Node id in the API workflow, e.g. \"27\" or \"57:27\" inside a subgraph." },
+        "field": { "type": "string", "description": "Input name on that node." },
+        "template": {
+          "type": "string",
+          "description": "Optional. Writes this string instead of the raw value; {input_id} placeholders are filled with any input's value."
+        }
+      }
+    },
+    "option": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "label"],
+      "properties": {
+        "value": {},
+        "label": { "type": "string" },
+        "sets": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/set" },
+          "description": "Extra node fields written when this option is chosen, e.g. the LoRA file that goes with a style."
+        }
+      }
+    },
+    "set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "field", "value"],
+      "properties": {
+        "node": { "type": "string" },
+        "field": { "type": "string" },
+        "value": {}
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "label"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "type": { "enum": ["text", "textarea", "number", "slider", "select", "toggle", "seed", "image", "video", "audio"] },
+        "label": { "type": "string" },
+        "help": { "type": "string" },
+        "default": {},
+        "required": { "type": "boolean" },
+        "min": { "type": "number" },
+        "max": { "type": "number" },
+        "step": { "type": "number" },
+        "options": { "type": "array", "items": { "$ref": "#/$defs/option" } },
+        "limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "max_mb": { "type": "number" },
+            "seconds": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 }
+          }
+        },
+        "bind": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/bind" },
+          "description": "Where the value goes. May be empty when the input is only used inside another bind's template."
+        }
+      }
+    },
+    "preset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "sets"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "label": { "type": "string" },
+        "sets": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/set" } }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "type"],
+      "properties": {
+        "node": { "type": "string" },
+        "type": { "enum": ["image", "video", "audio"] },
+        "label": { "type": "string" }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repo", "file", "dir", "gb", "phase"],
+      "properties": {
+        "repo": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$", "description": "Hugging Face repo id." },
+        "file": { "type": "string", "description": "Path inside the repo. ComfyUI sees it by its base name." },
+        "dir": {
+          "enum": [
+            "diffusion_models", "text_encoders", "vae", "loras", "checkpoints", "clip_vision",
+            "latent_upscale_models", "upscale_models", "model_patches", "geometry_estimation",
+            "background_removal", "frame_interpolation", "audio_encoders"
+          ],
+          "description": "ComfyUI models/ subfolder."
+        },
+        "gb": { "type": "number", "exclusiveMinimum": 0, "description": "File size in GB (10^9 bytes), from the Hub." },
+        "phase": {
+          "enum": ["encode", "denoise", "denoise2", "decode", "aux", "all"],
+          "description": "When it has to be on the GPU. encode = text/image encoders; denoise = DiT and its LoRAs; denoise2 = a second DiT that takes over after the first (Wan 2.2's low-noise expert) and its LoRAs; decode = VAEs; aux = runs on its own step; all = single checkpoint used throughout."
+        },
+        "gated": { "type": "boolean", "description": "Needs accepting a license on Hugging Face and an HF token." },
+        "license": { "type": "string" },
+        "optional": { "type": "boolean" }
+      }
+    },
+    "customNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repo", "commit"],
+      "properties": {
+        "repo": { "type": "string", "pattern": "^https://" },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{7,40}$" }
+      }
+    }
+  }
+}

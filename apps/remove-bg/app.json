@@ -1,0 +1,55 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "remove-bg",
+  "name": "Remove Background",
+  "section": "image",
+  "pack": "upscale",
+  "status": "ready",
+  "summary": "Cuts out the subject with BiRefNet and returns a PNG with transparency.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "utility_birefnet_remove_background.json",
+    "comfyui": "0.42.0",
+    "notes": "Preview nodes replaced by SaveImage."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Image",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "17",
+          "field": "image"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "18",
+      "type": "image",
+      "label": "Cutout"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/BiRefNet",
+      "file": "background_removal/birefnet.safetensors",
+      "dir": "background_removal",
+      "gb": 0.44,
+      "phase": "all",
+      "license": "MIT"
+    }
+  ],
+  "credits": [
+    "BiRefNet (MIT)"
+  ],
+  "test": {
+    "image": "test/portrait.png"
+  }
+}

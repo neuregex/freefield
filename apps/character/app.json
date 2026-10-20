@@ -1,0 +1,119 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "character",
+  "name": "Consistent Character",
+  "section": "image",
+  "pack": "image-flux3",
+  "status": "ready",
+  "higgsfield_feature": "Soul ID",
+  "summary": "Puts the person from your reference photo into a new scene and keeps their look (FLUX 3 Image Klein).",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_flux3_klein_distilled_image_edit.json",
+    "comfyui": "0.42.0",
+    "notes": "Same pipeline as edit; the scene is wrapped in an identity-preserving template. Wording still to tune in the lab."
+  },
+  "inputs": [
+    {
+      "id": "reference",
+      "type": "image",
+      "label": "Reference photo",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "11",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "scene",
+      "type": "textarea",
+      "label": "New scene",
+      "required": true,
+      "default": "walking through a night market in Mexico City, string lights, light rain",
+      "bind": [
+        {
+          "node": "4",
+          "field": "text",
+          "template": "The same person as in <ref_image_0>, {scene}. Keep the face, hairstyle and build identical."
+        }
+      ]
+    },
+    {
+      "id": "steps",
+      "type": "slider",
+      "label": "Steps",
+      "min": 8,
+      "max": 32,
+      "step": 1,
+      "default": 16,
+      "bind": [
+        {
+          "node": "7",
+          "field": "steps"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "7",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "9",
+      "type": "image",
+      "label": "New scene"
+    }
+  ],
+  "models": [
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "phase": "denoise",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "phase": "encode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "decode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    }
+  ],
+  "notes": "Use footage and photos of yourself, fictional characters, or people who agreed to it.",
+  "credits": [
+    "FLUX 3 Image Klein by Black Forest Labs (FLUX Kommunity License)"
+  ],
+  "test": {
+    "reference": "test/portrait.png",
+    "scene": "on a beach at sunset"
+  }
+}

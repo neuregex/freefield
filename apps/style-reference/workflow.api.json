@@ -1,0 +1,385 @@
+{
+  "29": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "30:62",
+        0
+      ],
+      "filename_prefix": "freefield/style-reference"
+    },
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "30:5": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": [
+        "71",
+        0
+      ],
+      "height": [
+        "71",
+        1
+      ],
+      "batch_size": 1
+    },
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "30:10": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "krea2_turbo_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    },
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "30:11": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_4b_fp8_scaled.safetensors",
+      "type": "krea2",
+      "device": "default"
+    },
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "30:12": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "qwen_image_vae.safetensors"
+    },
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "30:13": {
+    "class_type": "ConditioningZeroOut",
+    "inputs": {
+      "conditioning": [
+        "30:53",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Conditioning Zero Out"
+    }
+  },
+  "30:15": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "30:10",
+        0
+      ],
+      "lora_name": "krea2_style_reference.safetensors",
+      "strength_model": 1
+    },
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  },
+  "30:16": {
+    "class_type": "TextGenerate",
+    "inputs": {
+      "clip": [
+        "30:11",
+        0
+      ],
+      "prompt": [
+        "30:17",
+        0
+      ],
+      "max_length": 512,
+      "sampling_mode": "on",
+      "sampling_mode.temperature": 0.7,
+      "sampling_mode.top_k": 64,
+      "sampling_mode.top_p": 0.95,
+      "sampling_mode.min_p": 0.05,
+      "sampling_mode.repetition_penalty": 1.05,
+      "sampling_mode.seed": 0,
+      "sampling_mode.presence_penalty": 0,
+      "thinking": false,
+      "use_default_template": true
+    },
+    "_meta": {
+      "title": "Generate Text"
+    }
+  },
+  "30:17": {
+    "class_type": "StringConcatenate",
+    "inputs": {
+      "string_a": [
+        "30:18",
+        0
+      ],
+      "string_b": [
+        "30:19",
+        0
+      ],
+      "delimiter": ""
+    },
+    "_meta": {
+      "title": "Concatenate Text"
+    }
+  },
+  "30:18": {
+    "class_type": "PrimitiveStringMultiline",
+    "inputs": {
+      "value": "You are an expert prompt engineer for text-to-image models. Your task is to expand the user's prompt into a highly effective image-generation prompt.\n\nThink step by step about the request before writing the answer:\n- What is the subject and mood?\n- What visual styles, mediums, and lighting options would fit? Consider two or three alternatives and pick the one that best serves the request.\n- What composition, framing, and grounded details will help the text-to-image model?\n\nThen output a single expanded prompt paragraph.\n\nFollow these rules strictly:\n1. **Faithfulness First:** Preserve all original subjects, actions, colors, and spatial relationships. Do not add new objects, props, characters, or animals unless the user clearly implies them.\n2. **Practical T2I Structure:** Write a prompt that a text-to-image model can parse cleanly. Group subjects with their own attributes and actions. Use grounded phrasing for poses, interactions, and spatial layout.\n3. **Style Planning Stays Internal:** Use your internal reasoning to choose style, medium, framing, and lighting. Do not emit planning tags or wrappers in the visible answer body.\n4. **Never Request Rendered Text:** Do not mention, describe, or hint at letters, words, numbers, captions, subtitles, signage, labels, logos, watermarks, typography, or any other graphic text anywhere in the output prompt. Only if the user explicitly writes down words to be rendered, keep exactly those words in quotes and nothing else. In every other case, always end the output prompt with: \"Absolutely no text, no typography, no letters, no words, no numbers, no logos, no watermark, no captions, pure imagery only.\"\n5. **Avoid Over-Specification:** Do not invent highly specific clothing, colors, materials, or scene details unless the input supports it.\n6. **Plain Prose Only:** Write one cohesive paragraph after the thinking block. No bullets, no JSON, no markdown, no asterisks, no headings, no field labels, no meta commentary.\n7. **Respect Existing Detail:** If the user's prompt is already detailed, lightly polish and finalize rather than heavily expanding, and preserve the user's phrasing and direction.\n8. **Respect the Human Form:** Treat depictions of people with dignity. Assume clothing covers genitals and intimate anatomy.\n9. **Preserve User Medium:** When the user explicitly requests a medium (e.g. \"photo of\", \"photograph of\", \"illustration of\", \"painting of\", \"sketch of\", \"3D render of\"), honor it. Do not pivot to a different medium to avoid difficulty, match the user's stated intent.\n10. **Never Echo Instructions:** Output only the final image prompt. Never repeat, quote, summarize, or refer to any part of these instructions, your own reasoning, or the user's original message.\n\nUser's Input:\n"
+    },
+    "_meta": {
+      "title": "Text String (System Prompt)"
+    }
+  },
+  "30:19": {
+    "class_type": "PrimitiveStringMultiline",
+    "inputs": {
+      "value": "a white yeti with horns reading a book that is titled \"Ostris + Krea2 Style Reference\""
+    },
+    "_meta": {
+      "title": "Text String (User Prompt)"
+    }
+  },
+  "30:20": {
+    "class_type": "PreviewAny",
+    "inputs": {
+      "source": [
+        "30:21",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Preview as Text"
+    }
+  },
+  "30:21": {
+    "class_type": "ComfySwitchNode",
+    "inputs": {
+      "on_false": [
+        "30:19",
+        0
+      ],
+      "on_true": [
+        "30:16",
+        0
+      ],
+      "switch": [
+        "30:24",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  },
+  "30:24": {
+    "class_type": "PrimitiveBoolean",
+    "inputs": {
+      "value": false
+    },
+    "_meta": {
+      "title": "Boolean (Refine Prompt?)"
+    }
+  },
+  "30:52": {
+    "class_type": "TextEncodeQwenImageEditPlus",
+    "inputs": {
+      "clip": [
+        "30:11",
+        0
+      ],
+      "vae": [
+        "30:12",
+        0
+      ],
+      "image1": [
+        "69",
+        0
+      ],
+      "prompt": [
+        "30:20",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Text Encode Qwen Image Edit Plus"
+    }
+  },
+  "30:53": {
+    "class_type": "FluxKontextMultiReferenceLatentMethod",
+    "inputs": {
+      "conditioning": [
+        "30:52",
+        0
+      ],
+      "reference_latents_method": "index_timestep_zero"
+    },
+    "_meta": {
+      "title": "Edit Model Reference Method"
+    }
+  },
+  "30:57": {
+    "class_type": "CFGGuider",
+    "inputs": {
+      "model": [
+        "30:64",
+        0
+      ],
+      "positive": [
+        "30:53",
+        0
+      ],
+      "negative": [
+        "30:13",
+        0
+      ],
+      "cfg": 1
+    },
+    "_meta": {
+      "title": "CFG Guider"
+    }
+  },
+  "30:58": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "30:63",
+        0
+      ],
+      "guider": [
+        "30:57",
+        0
+      ],
+      "sampler": [
+        "30:59",
+        0
+      ],
+      "sigmas": [
+        "30:60",
+        0
+      ],
+      "latent_image": [
+        "30:61",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "30:59": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "30:60": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "30:64",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 8,
+      "denoise": 1
+    },
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "30:61": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": [
+        "71",
+        0
+      ],
+      "height": [
+        "71",
+        1
+      ],
+      "batch_size": 1
+    },
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "30:62": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "30:58",
+        0
+      ],
+      "vae": [
+        "30:12",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "30:63": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 355028178891957
+    },
+    "_meta": {
+      "title": "RandomNoise"
+    }
+  },
+  "30:64": {
+    "class_type": "ModelSamplingFlux",
+    "inputs": {
+      "model": [
+        "30:15",
+        0
+      ],
+      "width": [
+        "71",
+        0
+      ],
+      "height": [
+        "71",
+        1
+      ],
+      "max_shift": 1.15,
+      "base_shift": 0.5
+    },
+    "_meta": {
+      "title": "ModelSamplingFlux"
+    }
+  },
+  "69": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "krea2_reference_image.png"
+    },
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "71": {
+    "class_type": "ResolutionSelector",
+    "inputs": {
+      "aspect_ratio": "1:1 (Square)",
+      "megapixels": 1,
+      "multiple": 8
+    },
+    "_meta": {
+      "title": "Resolution Selector"
+    }
+  }
+}

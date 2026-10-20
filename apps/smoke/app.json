@@ -1,0 +1,71 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "smoke",
+  "name": "Smoke test",
+  "section": "utility",
+  "pack": "core",
+  "status": "ready",
+  "summary": "Draws a solid color. Needs no models; proves the whole chain works end to end.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "notes": "Hand-written: EmptyImage → SaveImage."
+  },
+  "inputs": [
+    {
+      "id": "width",
+      "type": "slider",
+      "label": "Width",
+      "min": 64,
+      "max": 1024,
+      "step": 64,
+      "default": 256,
+      "bind": [
+        {
+          "node": "1",
+          "field": "width"
+        }
+      ]
+    },
+    {
+      "id": "height",
+      "type": "slider",
+      "label": "Height",
+      "min": 64,
+      "max": 1024,
+      "step": 64,
+      "default": 256,
+      "bind": [
+        {
+          "node": "1",
+          "field": "height"
+        }
+      ]
+    },
+    {
+      "id": "color",
+      "type": "number",
+      "label": "Color (0xRRGGBB as integer)",
+      "min": 0,
+      "max": 16777215,
+      "default": 2781079,
+      "bind": [
+        {
+          "node": "1",
+          "field": "color"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "2",
+      "type": "image",
+      "label": "Image"
+    }
+  ],
+  "models": [],
+  "test": {
+    "width": 128,
+    "height": 128
+  }
+}

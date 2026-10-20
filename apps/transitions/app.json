@@ -1,0 +1,175 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "transitions",
+  "name": "Transitions",
+  "section": "video",
+  "pack": "video-ltx25",
+  "status": "draft",
+  "higgsfield_feature": "Effects / Transitions",
+  "summary": "Morphs a first frame into a last frame with a transition LoRA on LTX-2.5.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "video_ltx2_5_flf2v.json",
+    "comfyui": "0.42.0",
+    "notes": "LoRA inserted after the diffusion model. Trained on LTX-2.3; Lightricks says most 2.3 LoRAs run on 2.5. Not run yet."
+  },
+  "inputs": [
+    {
+      "id": "first",
+      "type": "image",
+      "label": "First frame",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "31",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "last",
+      "type": "image",
+      "label": "Last frame",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "39",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "Prompt",
+      "default": "a smooth magical transition, particles swirl and reform",
+      "bind": [
+        {
+          "node": "251:252",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "strength",
+      "type": "slider",
+      "label": "Effect strength",
+      "min": 0,
+      "max": 1.5,
+      "step": 0.05,
+      "default": 1.0,
+      "bind": [
+        {
+          "node": "ff_lora",
+          "field": "strength_model"
+        }
+      ]
+    },
+    {
+      "id": "duration",
+      "type": "slider",
+      "label": "Seconds",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 5,
+      "bind": [
+        {
+          "node": "251:198",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "251:196",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "68",
+      "type": "video",
+      "label": "Video"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 21.5,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 15.37,
+      "phase": "encode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-video-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 1.47,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-audio-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.36,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Comfy-Org/gemma-4",
+      "file": "text_encoders/gemma4_e2b_it_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.2,
+      "phase": "encode",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "joyfox/LTX-2.3-Transition-LORA",
+      "file": "ltx2.3-transition.safetensors",
+      "dir": "loras",
+      "gb": 0.39,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    }
+  ],
+  "credits": [
+    "LTX-2.5 by Lightricks",
+    "Workflow adapted from ComfyUI's official LTX-2.5 template",
+    "Transition LoRA by joyfox (Apache-2.0)"
+  ],
+  "test": {
+    "first": "test/portrait.png",
+    "last": "test/portrait.png",
+    "duration": 2
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "sfx",
+  "name": "Sound Effects",
+  "section": "audio",
+  "pack": "audio",
+  "status": "ready",
+  "higgsfield_feature": "Audio",
+  "summary": "Music beds, instruments, ambiences and one-shots with Stable Audio 3.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "audio_stable_audio_3_medium.json",
+    "comfyui": "0.42.0"
+  },
+  "inputs": [
+    {
+      "id": "description",
+      "type": "textarea",
+      "label": "Describe the sound",
+      "required": true,
+      "default": "heavy rain on a tin roof with distant thunder",
+      "bind": [
+        {
+          "node": "52:31",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "category",
+      "type": "select",
+      "label": "Category",
+      "default": "SFX",
+      "options": [
+        {
+          "value": "Music",
+          "label": "Music"
+        },
+        {
+          "value": "Instrument",
+          "label": "Instrument"
+        },
+        {
+          "value": "SFX",
+          "label": "SFX"
+        },
+        {
+          "value": "One-shot",
+          "label": "One-shot"
+        }
+      ],
+      "bind": [
+        {
+          "node": "52:43",
+          "field": "choice"
+        }
+      ]
+    },
+    {
+      "id": "seconds",
+      "type": "slider",
+      "label": "Seconds",
+      "min": 1,
+      "max": 180,
+      "step": 1,
+      "default": 20,
+      "bind": [
+        {
+          "node": "52:36",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "reprompt",
+      "type": "toggle",
+      "label": "Expand description",
+      "default": true,
+      "help": "A small Qwen 3.5 model rewrites the description first",
+      "bind": [
+        {
+          "node": "52:35",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "52:3",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "57",
+      "type": "audio",
+      "label": "Sound"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/stable-audio-3",
+      "file": "checkpoints/stable_audio_3_medium.safetensors",
+      "dir": "checkpoints",
+      "gb": 9.22,
+      "phase": "all",
+      "license": "Stable Audio Community License"
+    },
+    {
+      "repo": "Comfy-Org/stable-audio-3",
+      "file": "text_encoders/t5gemma_b_b_ul2.safetensors",
+      "dir": "text_encoders",
+      "gb": 1.19,
+      "phase": "encode",
+      "license": "Stable Audio Community License"
+    },
+    {
+      "repo": "Comfy-Org/Qwen3.5",
+      "file": "text_encoders/qwen3.5_2b_bf16.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.55,
+      "phase": "encode",
+      "license": "Apache-2.0",
+      "optional": true
+    }
+  ],
+  "credits": [
+    "Stable Audio 3 by Stability AI (Stable Audio Community License)"
+  ],
+  "test": {
+    "description": "a door slam",
+    "seconds": 3
+  }
+}

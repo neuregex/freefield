@@ -1,0 +1,59 @@
+{
+  "pack": "video-wan",
+  "apps": [
+    "motion-transfer"
+  ],
+  "download_gb": 24.9,
+  "needs_hf_token": false,
+  "custom_nodes": [],
+  "models": [
+    {
+      "repo": "Comfy-Org/Wan-Animate-2",
+      "file": "clip_vision/clip_vision_h.safetensors",
+      "dir": "clip_vision",
+      "gb": 1.26,
+      "name": "clip_vision_h.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "motion-transfer"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Wan-Animate-2",
+      "file": "diffusion_models/wan_animate_2_distill_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 16.65,
+      "name": "wan_animate_2_distill_int8_convrot.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "motion-transfer"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Wan-Animate-2",
+      "file": "text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "dir": "text_encoders",
+      "gb": 6.74,
+      "name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "motion-transfer"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Wan-Animate-2",
+      "file": "vae/Wan2_1_VAE_bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.25,
+      "name": "Wan2_1_VAE_bf16.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "motion-transfer"
+      ]
+    }
+  ]
+}

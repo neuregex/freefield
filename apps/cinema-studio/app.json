@@ -1,0 +1,221 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "cinema-studio",
+  "name": "Cinema Studio",
+  "section": "image",
+  "pack": "image",
+  "status": "ready",
+  "higgsfield_feature": "Cinematic Cameras",
+  "summary": "Pick a camera body, lens, focal length and aperture; they become part of the prompt.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_z_image_turbo_int8.json",
+    "comfyui": "0.42.0",
+    "notes": "Camera and lens vocabulary from open-higgsfield-ai (MIT), src/lib/promptUtils.js."
+  },
+  "inputs": [
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "Scene",
+      "required": true,
+      "default": "A detective lighting a cigarette under a streetlamp",
+      "bind": [
+        {
+          "node": "57:27",
+          "field": "text",
+          "template": "{prompt}, shot on a {camera}, using a {lens} at {focal}, {aperture}, cinematic lighting, natural color science, high dynamic range, professional photography, ultra-detailed"
+        }
+      ]
+    },
+    {
+      "id": "camera",
+      "type": "select",
+      "label": "Camera",
+      "default": "full-frame digital cinema camera",
+      "options": [
+        {
+          "value": "modular 8K digital cinema camera",
+          "label": "Modular 8K Digital"
+        },
+        {
+          "value": "full-frame digital cinema camera",
+          "label": "Full-Frame Cine Digital"
+        },
+        {
+          "value": "grand format 70mm film camera",
+          "label": "Grand Format 70mm Film"
+        },
+        {
+          "value": "Super 35 studio digital camera",
+          "label": "Studio Digital S35"
+        },
+        {
+          "value": "classic 16mm film camera",
+          "label": "Classic 16mm Film"
+        },
+        {
+          "value": "premium large-format digital cinema camera",
+          "label": "Premium Large Format Digital"
+        }
+      ]
+    },
+    {
+      "id": "lens",
+      "type": "select",
+      "label": "Lens",
+      "default": "classic anamorphic lens",
+      "options": [
+        {
+          "value": "creative tilt lens effect",
+          "label": "Creative Tilt Lens"
+        },
+        {
+          "value": "compact anamorphic lens",
+          "label": "Compact Anamorphic"
+        },
+        {
+          "value": "extreme macro lens",
+          "label": "Extreme Macro"
+        },
+        {
+          "value": "1970s cinema prime lens",
+          "label": "70s Cinema Prime"
+        },
+        {
+          "value": "classic anamorphic lens",
+          "label": "Classic Anamorphic"
+        },
+        {
+          "value": "premium modern prime lens",
+          "label": "Premium Modern Prime"
+        },
+        {
+          "value": "warm-toned cinema prime lens",
+          "label": "Warm Cinema Prime"
+        },
+        {
+          "value": "swirl bokeh portrait lens",
+          "label": "Swirl Bokeh Portrait"
+        },
+        {
+          "value": "vintage prime lens",
+          "label": "Vintage Prime"
+        },
+        {
+          "value": "halation diffusion filter",
+          "label": "Halation Diffusion"
+        },
+        {
+          "value": "ultra-sharp clinical prime lens",
+          "label": "Clinical Sharp Prime"
+        }
+      ]
+    },
+    {
+      "id": "focal",
+      "type": "select",
+      "label": "Focal length",
+      "default": "35mm (natural cinematic perspective)",
+      "options": [
+        {
+          "value": "8mm (ultra-wide perspective)",
+          "label": "8 mm"
+        },
+        {
+          "value": "14mm (wide-angle perspective)",
+          "label": "14 mm"
+        },
+        {
+          "value": "24mm (wide-angle dynamic perspective)",
+          "label": "24 mm"
+        },
+        {
+          "value": "35mm (natural cinematic perspective)",
+          "label": "35 mm"
+        },
+        {
+          "value": "50mm (standard portrait perspective)",
+          "label": "50 mm"
+        },
+        {
+          "value": "85mm (classic portrait perspective)",
+          "label": "85 mm"
+        }
+      ]
+    },
+    {
+      "id": "aperture",
+      "type": "select",
+      "label": "Aperture",
+      "default": "aperture f/1.4, shallow depth of field, creamy bokeh",
+      "options": [
+        {
+          "value": "aperture f/1.4, shallow depth of field, creamy bokeh",
+          "label": "f/1.4"
+        },
+        {
+          "value": "aperture f/4, balanced depth of field",
+          "label": "f/4"
+        },
+        {
+          "value": "aperture f/11, deep focus clarity, sharp foreground to background",
+          "label": "f/11"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "57:3",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "9",
+      "type": "image",
+      "label": "Still"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/z_image_turbo",
+      "file": "split_files/diffusion_models/z_image_turbo_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 6.2,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/z_image_turbo",
+      "file": "split_files/text_encoders/qwen_3_4b_fp8_mixed.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.63,
+      "phase": "encode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/z_image_turbo",
+      "file": "split_files/vae/ae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "decode",
+      "license": "Apache-2.0"
+    }
+  ],
+  "credits": [
+    "Z-Image Turbo by Tongyi-MAI (Apache-2.0)",
+    "Camera presets from open-higgsfield-ai (MIT)"
+  ],
+  "test": {
+    "prompt": "a lighthouse in a storm"
+  }
+}

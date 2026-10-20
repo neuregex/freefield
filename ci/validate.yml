@@ -1,0 +1,46 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  manifests:
+    name: manifests, tests, generated files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run validate
+      - run: npm test
+      - run: npm run typecheck
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m compileall -q infra lab tools
+      - name: packs and VRAM map match the manifests
+        run: |
+          python tools/catalog.py all
+          git diff --exit-code packs docs
+
+  comfyui:
+    name: ComfyUI accepts every workflow and lab case (CPU)
+    needs: manifests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: bash tools/ci_comfyui.sh "$RUNNER_TEMP/comfyui"
+      - run: python tools/comfy_validate.py --comfy-dir "$RUNNER_TEMP/comfyui" --placeholders
+      - run: python tools/comfy_validate.py --comfy-dir "$RUNNER_TEMP/comfyui" --placeholders --lab lab/cases.json
+      - if: failure()
+        run: tail -100 "$RUNNER_TEMP/comfyui/comfyui.log"

@@ -1,0 +1,130 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "motion-transfer",
+  "name": "Motion Transfer",
+  "section": "video",
+  "pack": "video-wan",
+  "status": "draft",
+  "higgsfield_feature": "Character swap / Genjutsu-style motion",
+  "summary": "Animates a character image with the motion of a driving clip, with Wan Animate 2.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "video_wan_animate2_distilled.json",
+    "comfyui": "0.42.0",
+    "notes": "Draft: only with footage and characters you own; Comfy is also preparing its own Openjutsu."
+  },
+  "inputs": [
+    {
+      "id": "character",
+      "type": "image",
+      "label": "Character",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "189",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "motion",
+      "type": "video",
+      "label": "Driving clip",
+      "required": true,
+      "limits": {
+        "max_mb": 200,
+        "seconds": [
+          2,
+          10
+        ]
+      },
+      "bind": [
+        {
+          "node": "240",
+          "field": "file"
+        }
+      ]
+    },
+    {
+      "id": "character_prompt",
+      "type": "textarea",
+      "label": "Character description",
+      "default": "Character appearance description: a stylized clay robot with round eyes",
+      "bind": [
+        {
+          "node": "605",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "action_prompt",
+      "type": "textarea",
+      "label": "Action",
+      "default": "dancing energetically in the street",
+      "bind": [
+        {
+          "node": "604",
+          "field": "value"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "246",
+      "type": "video",
+      "label": "Result"
+    },
+    {
+      "node": "292",
+      "type": "video",
+      "label": "Second pass"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/Wan-Animate-2",
+      "file": "diffusion_models/wan_animate_2_distill_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 16.65,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan-Animate-2",
+      "file": "text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "dir": "text_encoders",
+      "gb": 6.74,
+      "phase": "encode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan-Animate-2",
+      "file": "clip_vision/clip_vision_h.safetensors",
+      "dir": "clip_vision",
+      "gb": 1.26,
+      "phase": "encode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan-Animate-2",
+      "file": "vae/Wan2_1_VAE_bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.25,
+      "phase": "decode",
+      "license": "Apache-2.0"
+    }
+  ],
+  "notes": "Use footage and photos of yourself, fictional characters, or people who agreed to it.",
+  "credits": [
+    "Wan Animate 2 by Alibaba Wan (Apache-2.0)"
+  ],
+  "test": {
+    "character": "test/portrait.png",
+    "motion": "test/clip.mp4"
+  }
+}

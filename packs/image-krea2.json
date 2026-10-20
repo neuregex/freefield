@@ -1,0 +1,171 @@
+{
+  "pack": "image-krea2",
+  "apps": [
+    "style-reference",
+    "styles"
+  ],
+  "download_gb": 23.67,
+  "needs_hf_token": false,
+  "custom_nodes": [],
+  "models": [
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "diffusion_models/krea2_turbo_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 13.49,
+      "name": "krea2_turbo_int8_convrot.safetensors",
+      "gated": false,
+      "license": "Krea 2 Community License",
+      "used_by": [
+        "style-reference",
+        "styles"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_darkbrush.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "name": "krea2_darkbrush.safetensors",
+      "gated": false,
+      "license": "Krea 2 Community License",
+      "used_by": [
+        "styles"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_dotmatrix.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "name": "krea2_dotmatrix.safetensors",
+      "gated": false,
+      "license": "Krea 2 Community License",
+      "used_by": [
+        "styles"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_kidsdrawing.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "name": "krea2_kidsdrawing.safetensors",
+      "gated": false,
+      "license": "Krea 2 Community License",
+      "used_by": [
+        "styles"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_neondrip.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "name": "krea2_neondrip.safetensors",
+      "gated": false,
+      "license": "Krea 2 Community License",
+      "used_by": [
+        "styles"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_rainywindow.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "name": "krea2_rainywindow.safetensors",
+      "gated": false,
+      "license": "Krea 2 Community License",
+      "used_by": [
+        "styles"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_retroanime.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "name": "krea2_retroanime.safetensors",
+      "gated": false,
+      "license": "Krea 2 Community License",
+      "used_by": [
+        "styles"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_softwatercolor.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "name": "krea2_softwatercolor.safetensors",
+      "gated": false,
+      "license": "Krea 2 Community License",
+      "used_by": [
+        "styles"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_style_reference.safetensors",
+      "dir": "loras",
+      "gb": 0.46,
+      "name": "krea2_style_reference.safetensors",
+      "gated": false,
+      "license": "Krea 2 Community License",
+      "used_by": [
+        "style-reference"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_sunsetblur.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "name": "krea2_sunsetblur.safetensors",
+      "gated": false,
+      "license": "Krea 2 Community License",
+      "used_by": [
+        "styles"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_vintagetarot.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "name": "krea2_vintagetarot.safetensors",
+      "gated": false,
+      "license": "Krea 2 Community License",
+      "used_by": [
+        "styles"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "text_encoders/qwen3vl_4b_fp8_scaled.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.24,
+      "name": "qwen3vl_4b_fp8_scaled.safetensors",
+      "gated": false,
+      "license": "Krea 2 Community License",
+      "used_by": [
+        "style-reference",
+        "styles"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "vae/qwen_image_vae.safetensors",
+      "dir": "vae",
+      "gb": 0.25,
+      "name": "qwen_image_vae.safetensors",
+      "gated": false,
+      "license": "Krea 2 Community License",
+      "used_by": [
+        "style-reference",
+        "styles"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "relight",
+  "name": "Relight",
+  "section": "image",
+  "pack": "image-qwen-edit",
+  "status": "ready",
+  "higgsfield_feature": "Relight",
+  "summary": "Relights a photo: golden hour, neon, studio softbox or any light you describe, keeping the scene intact.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_qwen_image_edit_2509_relight.json",
+    "comfyui": "0.42.0",
+    "notes": "Unchanged official template (Qwen Image Edit 2509 fp8 + Relight LoRA + 4-step Lightning LoRA). The Relight trigger is prepended by the workflow."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Photo",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "11",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "light",
+      "type": "select",
+      "label": "Light",
+      "default": "golden hour sunlight through a low window, warm color temperature, long soft shadows",
+      "options": [
+        {
+          "value": "golden hour sunlight through a low window, warm color temperature, long soft shadows",
+          "label": "Golden hour"
+        },
+        {
+          "value": "twilight blue-hour light with warm practical lamps, soft light and blurred shadows",
+          "label": "Blue hour"
+        },
+        {
+          "value": "neon night lighting, magenta and cyan rim light, dark moody background",
+          "label": "Neon night"
+        },
+        {
+          "value": "soft studio light from a large softbox on the left, gentle fill, clean shadows",
+          "label": "Studio softbox"
+        },
+        {
+          "value": "dramatic chiaroscuro, a single hard key light from the side, deep shadows",
+          "label": "Dramatic key light"
+        },
+        {
+          "value": "overcast daylight, soft and even, no hard shadows",
+          "label": "Overcast"
+        },
+        {
+          "value": "warm candlelight, flickering amber glow, deep shadows",
+          "label": "Candlelight"
+        }
+      ],
+      "bind": [
+        {
+          "node": "15",
+          "field": "value",
+          "template": " relight the image using {light}. {details}"
+        }
+      ]
+    },
+    {
+      "id": "details",
+      "type": "textarea",
+      "label": "Anything else about the light (optional)",
+      "default": "",
+      "help": "e.g. light coming from the right, a red glow from a sign"
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "10:3",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "12",
+      "type": "image",
+      "label": "Relit photo"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/Qwen-Image-Edit_ComfyUI",
+      "file": "split_files/diffusion_models/qwen_image_edit_2509_fp8_e4m3fn.safetensors",
+      "dir": "diffusion_models",
+      "gb": 20.43,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Qwen-Image_ComfyUI",
+      "file": "split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "dir": "text_encoders",
+      "gb": 9.38,
+      "phase": "encode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Qwen-Image_ComfyUI",
+      "file": "split_files/vae/qwen_image_vae.safetensors",
+      "dir": "vae",
+      "gb": 0.25,
+      "phase": "decode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "lightx2v/Qwen-Image-Lightning",
+      "file": "Qwen-Image-Edit-2509/Qwen-Image-Edit-2509-Lightning-4steps-V1.0-bf16.safetensors",
+      "dir": "loras",
+      "gb": 0.85,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Qwen-Image-Edit_ComfyUI",
+      "file": "split_files/loras/Qwen-Image-Edit-2509-Relight.safetensors",
+      "dir": "loras",
+      "gb": 0.24,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    }
+  ],
+  "credits": [
+    "Qwen-Image-Edit-2509 by Alibaba Qwen (Apache-2.0)",
+    "Relight LoRA by dx8152 (Apache-2.0)",
+    "Lightning LoRA by lightx2v",
+    "Workflow: ComfyUI official template"
+  ],
+  "test": {
+    "image": "test/portrait.png"
+  }
+}

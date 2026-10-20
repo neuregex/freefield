@@ -1,0 +1,237 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "speak",
+  "name": "Speak",
+  "section": "video",
+  "pack": "video-ltx25",
+  "status": "ready",
+  "higgsfield_feature": "Speak",
+  "summary": "A photo says your line out loud: LTX-2.5 makes the voice, the lip sync and the motion in one pass, no TTS model needed.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "video_ltx2_5_i2v.json",
+    "comfyui": "0.42.0",
+    "notes": "Unchanged official image-to-video template; the prompt quotes the line, which LTX-2.5 voices with synchronized audio. Voice quality still to check in the lab."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Portrait",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "395",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "line",
+      "type": "textarea",
+      "label": "What they say",
+      "required": true,
+      "default": "Hi! I am talking to you from a single photo. My voice and my lips come from an open model.",
+      "help": "One or two sentences fit in five seconds"
+    },
+    {
+      "id": "voice",
+      "type": "select",
+      "label": "Voice",
+      "default": "a warm, friendly female voice",
+      "options": [
+        {
+          "value": "a warm, friendly female voice",
+          "label": "Warm, female"
+        },
+        {
+          "value": "a calm, deep male voice",
+          "label": "Calm, male"
+        },
+        {
+          "value": "an excited, energetic voice",
+          "label": "Excited"
+        },
+        {
+          "value": "a soft, close whisper",
+          "label": "Whisper"
+        },
+        {
+          "value": "the clear, confident voice of a news anchor",
+          "label": "News anchor"
+        },
+        {
+          "value": "a relaxed voice with a slight smile",
+          "label": "Relaxed"
+        }
+      ]
+    },
+    {
+      "id": "scene",
+      "type": "textarea",
+      "label": "Shot (optional)",
+      "default": "Medium close-up, natural head movement and blinking, soft window light",
+      "bind": [
+        {
+          "node": "398:376",
+          "field": "value",
+          "template": "{scene}. The person looks into the camera and speaks in {voice}, with natural lip movement, saying: \"{line}\""
+        }
+      ]
+    },
+    {
+      "id": "duration",
+      "type": "slider",
+      "label": "Seconds",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "bind": [
+        {
+          "node": "398:362",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "enhance",
+      "type": "toggle",
+      "label": "Enhance prompt",
+      "default": false,
+      "help": "Off by default: the enhancer may rephrase your line",
+      "bind": [
+        {
+          "node": "398:383",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "aspect",
+      "type": "select",
+      "label": "Aspect ratio",
+      "default": "9:16 (Portrait Widescreen)",
+      "options": [
+        {
+          "value": "16:9 (Widescreen)",
+          "label": "16:9"
+        },
+        {
+          "value": "9:16 (Portrait Widescreen)",
+          "label": "9:16"
+        },
+        {
+          "value": "1:1 (Square)",
+          "label": "1:1"
+        },
+        {
+          "value": "4:3 (Standard)",
+          "label": "4:3"
+        },
+        {
+          "value": "3:4 (Portrait Standard)",
+          "label": "3:4"
+        },
+        {
+          "value": "21:9 (Ultrawide)",
+          "label": "21:9"
+        }
+      ],
+      "bind": [
+        {
+          "node": "403",
+          "field": "aspect_ratio"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "398:339",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "75",
+      "type": "video",
+      "label": "Video"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 21.5,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 15.37,
+      "phase": "encode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-video-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 1.47,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-audio-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.36,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors",
+      "dir": "latent_upscale_models",
+      "gb": 1.0,
+      "phase": "aux",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Comfy-Org/gemma-4",
+      "file": "text_encoders/gemma4_e2b_it_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.2,
+      "phase": "encode",
+      "license": "Apache-2.0",
+      "optional": true
+    }
+  ],
+  "notes": "Use footage and photos of yourself, fictional characters, or people who agreed to it.",
+  "credits": [
+    "LTX-2.5 by Lightricks",
+    "Workflow adapted from ComfyUI's official LTX-2.5 template"
+  ],
+  "test": {
+    "image": "test/portrait.png",
+    "duration": 3
+  }
+}

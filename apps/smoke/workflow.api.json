@@ -1,0 +1,27 @@
+{
+  "1": {
+    "class_type": "EmptyImage",
+    "inputs": {
+      "width": 256,
+      "height": 256,
+      "batch_size": 1,
+      "color": 2781079
+    },
+    "_meta": {
+      "title": "Solid color"
+    }
+  },
+  "2": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "1",
+        0
+      ],
+      "filename_prefix": "freefield/smoke"
+    },
+    "_meta": {
+      "title": "Save Image"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+node_modules/
+out/
+.env
+.env.local
+lab/results/
+lab/assets/*.mp4
+lab/assets/*.png
+__pycache__/
+*.pyc
+.venv/

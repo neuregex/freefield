@@ -1,0 +1,10 @@
+{
+  "_about": "Runs on any ComfyUI, even CPU-only: no models needed. Checks uploads, outputs and case chaining.",
+  "cases": [
+    {"id": "smoke-red", "app": "smoke", "values": {"width": 128, "height": 96, "color": 16711680}},
+    {"id": "smoke-invert-chain", "app": "smoke-invert", "values": {"image": "@case:smoke-red"},
+     "note": "Should be cyan: the red square from the previous case, inverted."},
+    {"id": "smoke-missing-asset", "app": "smoke-invert", "values": {"image": "asset:does-not-exist.png"},
+     "note": "Expected to fail cleanly without stopping the batch."}
+  ]
+}

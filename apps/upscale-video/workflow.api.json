@@ -1,0 +1,322 @@
+{
+  "66:48": {
+    "class_type": "VAEEncodeTiled",
+    "inputs": {
+      "pixels": [
+        "66:58",
+        0
+      ],
+      "vae": [
+        "66:51",
+        0
+      ],
+      "tile_size": 512,
+      "overlap": 128,
+      "temporal_size": 64,
+      "temporal_overlap": 8
+    },
+    "_meta": {
+      "title": "VAE Encode (Tiled)"
+    }
+  },
+  "66:51": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "seedvr2_ema_vae_fp16.safetensors"
+    },
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "66:52": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "seedvr2_3b_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    },
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "66:54": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": [
+        "66:52",
+        0
+      ],
+      "positive": [
+        "66:61",
+        0
+      ],
+      "negative": [
+        "66:61",
+        1
+      ],
+      "latent_image": [
+        "66:102",
+        0
+      ],
+      "seed": 959948902156062,
+      "steps": 1,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1
+    },
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "66:55": {
+    "class_type": "VAEDecodeTiled",
+    "inputs": {
+      "samples": [
+        "66:103",
+        0
+      ],
+      "vae": [
+        "66:51",
+        0
+      ],
+      "tile_size": 512,
+      "overlap": 128,
+      "temporal_size": 64,
+      "temporal_overlap": 8
+    },
+    "_meta": {
+      "title": "VAE Decode (Tiled)"
+    }
+  },
+  "66:57": {
+    "class_type": "ResizeImageMaskNode",
+    "inputs": {
+      "input": [
+        "66:74",
+        0
+      ],
+      "resize_type": "scale by multiplier",
+      "resize_type.multiplier": 2,
+      "scale_method": "lanczos"
+    },
+    "_meta": {
+      "title": "Resize Image/Mask"
+    }
+  },
+  "66:58": {
+    "class_type": "SeedVR2Preprocess",
+    "inputs": {
+      "resized_images": [
+        "66:57",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Pre-Process SeedVR2 Input"
+    }
+  },
+  "66:59": {
+    "class_type": "SeedVR2PostProcessing",
+    "inputs": {
+      "images": [
+        "66:55",
+        0
+      ],
+      "original_resized_images": [
+        "66:57",
+        0
+      ],
+      "color_correction_method": "none"
+    },
+    "_meta": {
+      "title": "Post-Process SeedVR2 Output"
+    }
+  },
+  "66:61": {
+    "class_type": "SeedVR2Conditioning",
+    "inputs": {
+      "model": [
+        "66:52",
+        0
+      ],
+      "vae_conditioning": [
+        "66:102",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Apply SeedVR2 Conditioning"
+    }
+  },
+  "66:74": {
+    "class_type": "GetVideoComponents",
+    "inputs": {
+      "video": [
+        "66:81",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Video Components"
+    }
+  },
+  "66:75": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "66:59",
+        0
+      ],
+      "audio": [
+        "66:74",
+        1
+      ],
+      "fps": [
+        "66:74",
+        2
+      ],
+      "bit_depth": [
+        "66:74",
+        3
+      ]
+    },
+    "_meta": {
+      "title": "Create Video"
+    }
+  },
+  "66:79": {
+    "class_type": "Video Slice",
+    "inputs": {
+      "video": [
+        "73",
+        0
+      ],
+      "start_time": 0,
+      "duration": 0,
+      "strict_duration": false
+    },
+    "_meta": {
+      "title": "Trim Video"
+    }
+  },
+  "66:81": {
+    "class_type": "ComfySwitchNode",
+    "inputs": {
+      "on_false": [
+        "73",
+        0
+      ],
+      "on_true": [
+        "66:79",
+        0
+      ],
+      "switch": false
+    },
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  },
+  "66:99": {
+    "class_type": "SeedVR2TemporalChunk",
+    "inputs": {
+      "latent": [
+        "66:48",
+        0
+      ],
+      "temporal_overlap": 0,
+      "chunking_mode": "auto"
+    },
+    "_meta": {
+      "title": "Split SeedVR2 Latent"
+    }
+  },
+  "66:100": {
+    "class_type": "SeedVR2TemporalMerge",
+    "inputs": {
+      "latents": [
+        "66:54",
+        0
+      ],
+      "temporal_overlap": [
+        "66:99",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "Merge SeedVR2 Latents"
+    }
+  },
+  "66:102": {
+    "class_type": "ComfySwitchNode",
+    "inputs": {
+      "on_false": [
+        "66:48",
+        0
+      ],
+      "on_true": [
+        "66:99",
+        0
+      ],
+      "switch": [
+        "66:105",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  },
+  "66:103": {
+    "class_type": "ComfySwitchNode",
+    "inputs": {
+      "on_false": [
+        "66:54",
+        0
+      ],
+      "on_true": [
+        "66:100",
+        0
+      ],
+      "switch": [
+        "66:105",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  },
+  "66:105": {
+    "class_type": "PrimitiveBoolean",
+    "inputs": {
+      "value": false
+    },
+    "_meta": {
+      "title": "Boolean (Split Latent)"
+    }
+  },
+  "73": {
+    "class_type": "LoadVideo",
+    "inputs": {
+      "file": "grainy_perfume_shot_crf32.mp4"
+    },
+    "_meta": {
+      "title": "Load Video"
+    }
+  },
+  "76": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "66:75",
+        0
+      ],
+      "filename_prefix": "freefield/upscale-video",
+      "format": "auto",
+      "format.codec": "auto"
+    },
+    "_meta": {
+      "title": "Save Video"
+    }
+  }
+}

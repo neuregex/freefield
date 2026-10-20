@@ -1,0 +1,211 @@
+{
+  "pack": "video-ltx25",
+  "apps": [
+    "camera-copy",
+    "speak",
+    "talking",
+    "transitions",
+    "vfx-clean-plate",
+    "vfx-day-to-night",
+    "vfx-water",
+    "video",
+    "video-t2v"
+  ],
+  "download_gb": 47.94,
+  "needs_hf_token": true,
+  "custom_nodes": [
+    {
+      "repo": "https://github.com/Lightricks/ComfyUI-LTXVideo",
+      "commit": "44c8a36b7c31ee00b4271daed11dc2a4aa481140"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 21.5,
+      "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "gated": true,
+      "license": "LTX-2.x Community License",
+      "used_by": [
+        "camera-copy",
+        "speak",
+        "talking",
+        "transitions",
+        "vfx-clean-plate",
+        "vfx-day-to-night",
+        "vfx-water",
+        "video",
+        "video-t2v"
+      ]
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors",
+      "dir": "latent_upscale_models",
+      "gb": 1.0,
+      "name": "ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors",
+      "gated": true,
+      "license": "LTX-2.x Community License",
+      "used_by": [
+        "speak",
+        "talking",
+        "video",
+        "video-t2v"
+      ]
+    },
+    {
+      "repo": "elix3r/LTX-2.3-22b-AV-LoRA-talking-head",
+      "file": "LTX-2.3-22b-AV-LoRA-talking-head-v1.safetensors",
+      "dir": "loras",
+      "gb": 0.43,
+      "name": "LTX-2.3-22b-AV-LoRA-talking-head-v1.safetensors",
+      "gated": false,
+      "license": "OpenRAIL",
+      "used_by": [
+        "talking"
+      ]
+    },
+    {
+      "repo": "Cseti/LTX2.3-22B_IC-LoRA-Cameraman_v2",
+      "file": "LTX2.3-22B_IC-LoRA-Cameraman_v2_14000.safetensors",
+      "dir": "loras",
+      "gb": 0.65,
+      "name": "LTX2.3-22B_IC-LoRA-Cameraman_v2_14000.safetensors",
+      "gated": false,
+      "license": "Research only, non-commercial (see model card)",
+      "used_by": [
+        "camera-copy"
+      ]
+    },
+    {
+      "repo": "Lightricks/LTX-2.5-22b-IC-LoRA-Clean-Plate",
+      "file": "ltx-2.5-22b-ic-lora-clean-plate-1.0.safetensors",
+      "dir": "loras",
+      "gb": 0.33,
+      "name": "ltx-2.5-22b-ic-lora-clean-plate-1.0.safetensors",
+      "gated": true,
+      "license": "LTX-2.x Community License",
+      "used_by": [
+        "vfx-clean-plate"
+      ]
+    },
+    {
+      "repo": "Lightricks/LTX-2.5-22b-IC-LoRA-Day-To-Night",
+      "file": "ltx-2.5-22b-ic-lora-day-to-night-0.9.safetensors",
+      "dir": "loras",
+      "gb": 0.33,
+      "name": "ltx-2.5-22b-ic-lora-day-to-night-0.9.safetensors",
+      "gated": true,
+      "license": "LTX-2.x Community License",
+      "used_by": [
+        "vfx-day-to-night"
+      ]
+    },
+    {
+      "repo": "Lightricks/LTX-2.5-22b-IC-LoRA-Water-Simulation",
+      "file": "ltx-2.5-22b-ic-lora-water-simulation-0.9.safetensors",
+      "dir": "loras",
+      "gb": 0.91,
+      "name": "ltx-2.5-22b-ic-lora-water-simulation-0.9.safetensors",
+      "gated": true,
+      "license": "LTX-2.x Community License",
+      "used_by": [
+        "vfx-water"
+      ]
+    },
+    {
+      "repo": "joyfox/LTX-2.3-Transition-LORA",
+      "file": "ltx2.3-transition.safetensors",
+      "dir": "loras",
+      "gb": 0.39,
+      "name": "ltx2.3-transition.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "transitions"
+      ]
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 15.37,
+      "name": "gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+      "gated": true,
+      "license": "LTX-2.x Community License",
+      "used_by": [
+        "camera-copy",
+        "speak",
+        "talking",
+        "transitions",
+        "vfx-clean-plate",
+        "vfx-day-to-night",
+        "vfx-water",
+        "video",
+        "video-t2v"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/gemma-4",
+      "file": "text_encoders/gemma4_e2b_it_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.2,
+      "name": "gemma4_e2b_it_int8_convrot.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "camera-copy",
+        "speak",
+        "talking",
+        "transitions",
+        "vfx-clean-plate",
+        "vfx-day-to-night",
+        "vfx-water",
+        "video",
+        "video-t2v"
+      ]
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-audio-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.36,
+      "name": "ltx-2.5-audio-vae-bf16.safetensors",
+      "gated": true,
+      "license": "LTX-2.x Community License",
+      "used_by": [
+        "camera-copy",
+        "speak",
+        "talking",
+        "transitions",
+        "vfx-clean-plate",
+        "vfx-day-to-night",
+        "vfx-water",
+        "video",
+        "video-t2v"
+      ]
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-video-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 1.47,
+      "name": "ltx-2.5-video-vae-bf16.safetensors",
+      "gated": true,
+      "license": "LTX-2.x Community License",
+      "used_by": [
+        "camera-copy",
+        "speak",
+        "talking",
+        "transitions",
+        "vfx-clean-plate",
+        "vfx-day-to-night",
+        "vfx-water",
+        "video",
+        "video-t2v"
+      ]
+    }
+  ]
+}

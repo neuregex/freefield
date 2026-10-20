@@ -1,0 +1,51 @@
+{
+  "pack": "image",
+  "apps": [
+    "cinema-studio",
+    "z-image"
+  ],
+  "download_gb": 12.17,
+  "needs_hf_token": false,
+  "custom_nodes": [],
+  "models": [
+    {
+      "repo": "Comfy-Org/z_image_turbo",
+      "file": "split_files/diffusion_models/z_image_turbo_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 6.2,
+      "name": "z_image_turbo_int8_convrot.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "cinema-studio",
+        "z-image"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/z_image_turbo",
+      "file": "split_files/text_encoders/qwen_3_4b_fp8_mixed.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.63,
+      "name": "qwen_3_4b_fp8_mixed.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "cinema-studio",
+        "z-image"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/z_image_turbo",
+      "file": "split_files/vae/ae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "name": "ae.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "cinema-studio",
+        "z-image"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,332 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "camera-moves",
+  "name": "Camera Moves",
+  "section": "video",
+  "pack": "video-wan-camera",
+  "status": "ready",
+  "higgsfield_feature": "Camera Controls",
+  "summary": "Animates your image with a precise camera move: pans, zooms and rolls at the speed you pick (Wan 2.2 Fun Camera).",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "video_wan2_2_14B_fun_camera.json",
+    "comfyui": "0.42.0",
+    "notes": "The template's bypassed 4-step Lightning LoRAs are re-added at strength 0 (a no-op); the fast preset switches them on with the template's own 4-step settings."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Start image",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "97",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "What happens in the shot",
+      "required": true,
+      "default": "A quiet harbor at dawn, fishing boats rocking gently, gulls flying over the water, soft golden light",
+      "bind": [
+        {
+          "node": "107",
+          "field": "text"
+        }
+      ]
+    },
+    {
+      "id": "camera",
+      "type": "select",
+      "label": "Camera move",
+      "default": "Zoom In",
+      "options": [
+        {
+          "value": "Static",
+          "label": "Static (no move)"
+        },
+        {
+          "value": "Pan Up",
+          "label": "Pan up"
+        },
+        {
+          "value": "Pan Down",
+          "label": "Pan down"
+        },
+        {
+          "value": "Pan Left",
+          "label": "Pan left"
+        },
+        {
+          "value": "Pan Right",
+          "label": "Pan right"
+        },
+        {
+          "value": "Zoom In",
+          "label": "Zoom in"
+        },
+        {
+          "value": "Zoom Out",
+          "label": "Zoom out"
+        },
+        {
+          "value": "Anti Clockwise (ACW)",
+          "label": "Rotate counter-clockwise"
+        },
+        {
+          "value": "ClockWise (CW)",
+          "label": "Rotate clockwise"
+        }
+      ],
+      "bind": [
+        {
+          "node": "108",
+          "field": "camera_pose"
+        }
+      ]
+    },
+    {
+      "id": "speed",
+      "type": "slider",
+      "label": "Move speed",
+      "min": 0.2,
+      "max": 3.0,
+      "step": 0.1,
+      "default": 1.0,
+      "bind": [
+        {
+          "node": "108",
+          "field": "speed"
+        }
+      ]
+    },
+    {
+      "id": "width",
+      "type": "select",
+      "label": "Width",
+      "default": 640,
+      "options": [
+        {
+          "value": 480,
+          "label": "480 px"
+        },
+        {
+          "value": 640,
+          "label": "640 px"
+        },
+        {
+          "value": 720,
+          "label": "720 px"
+        },
+        {
+          "value": 832,
+          "label": "832 px"
+        },
+        {
+          "value": 960,
+          "label": "960 px"
+        }
+      ],
+      "bind": [
+        {
+          "node": "108",
+          "field": "width"
+        }
+      ]
+    },
+    {
+      "id": "height",
+      "type": "select",
+      "label": "Height",
+      "default": 640,
+      "options": [
+        {
+          "value": 480,
+          "label": "480 px"
+        },
+        {
+          "value": 640,
+          "label": "640 px"
+        },
+        {
+          "value": 720,
+          "label": "720 px"
+        },
+        {
+          "value": 832,
+          "label": "832 px"
+        },
+        {
+          "value": 960,
+          "label": "960 px"
+        }
+      ],
+      "bind": [
+        {
+          "node": "108",
+          "field": "height"
+        }
+      ]
+    },
+    {
+      "id": "frames",
+      "type": "select",
+      "label": "Length",
+      "default": 81,
+      "options": [
+        {
+          "value": 49,
+          "label": "3 s"
+        },
+        {
+          "value": 81,
+          "label": "5 s"
+        }
+      ],
+      "bind": [
+        {
+          "node": "108",
+          "field": "length"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "102",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "id": "fast",
+      "label": "Fast: 4 steps with the Lightning LoRAs (less motion, about 5x quicker)",
+      "sets": [
+        {
+          "node": "ff_lora_high",
+          "field": "strength_model",
+          "value": 1.0
+        },
+        {
+          "node": "ff_lora_low",
+          "field": "strength_model",
+          "value": 1.0
+        },
+        {
+          "node": "102",
+          "field": "steps",
+          "value": 4
+        },
+        {
+          "node": "102",
+          "field": "cfg",
+          "value": 1.0
+        },
+        {
+          "node": "102",
+          "field": "end_at_step",
+          "value": 2
+        },
+        {
+          "node": "103",
+          "field": "steps",
+          "value": 4
+        },
+        {
+          "node": "103",
+          "field": "cfg",
+          "value": 1.0
+        },
+        {
+          "node": "103",
+          "field": "start_at_step",
+          "value": 2
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "106",
+      "type": "video",
+      "label": "Video"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/Wan_2.2_ComfyUI_Repackaged",
+      "file": "split_files/diffusion_models/wan2.2_fun_camera_high_noise_14B_fp8_scaled.safetensors",
+      "dir": "diffusion_models",
+      "gb": 15.3,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan_2.2_ComfyUI_Repackaged",
+      "file": "split_files/diffusion_models/wan2.2_fun_camera_low_noise_14B_fp8_scaled.safetensors",
+      "dir": "diffusion_models",
+      "gb": 15.3,
+      "phase": "denoise2",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
+      "file": "split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "dir": "text_encoders",
+      "gb": 6.74,
+      "phase": "encode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan_2.2_ComfyUI_Repackaged",
+      "file": "split_files/vae/wan_2.1_vae.safetensors",
+      "dir": "vae",
+      "gb": 0.25,
+      "phase": "decode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan_2.2_ComfyUI_Repackaged",
+      "file": "split_files/loras/wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors",
+      "dir": "loras",
+      "gb": 1.23,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Comfy-Org/Wan_2.2_ComfyUI_Repackaged",
+      "file": "split_files/loras/wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors",
+      "dir": "loras",
+      "gb": 1.23,
+      "phase": "denoise2",
+      "license": "Apache-2.0",
+      "optional": true
+    }
+  ],
+  "credits": [
+    "Wan 2.2 Fun Camera by Alibaba PAI (Apache-2.0)",
+    "Lightning LoRAs by lightx2v",
+    "Workflow: ComfyUI official template"
+  ],
+  "test": {
+    "image": "test/portrait.png",
+    "width": 480,
+    "height": 480,
+    "frames": 49
+  }
+}

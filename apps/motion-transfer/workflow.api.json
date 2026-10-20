@@ -1,0 +1,792 @@
+{
+  "189": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "ref_doll_realistic.png"
+    },
+    "_meta": {
+      "title": "Load Image (Reference Image)"
+    }
+  },
+  "240": {
+    "class_type": "LoadVideo",
+    "inputs": {
+      "file": "drive_doll_street_dance.mp4"
+    },
+    "_meta": {
+      "title": "Load Video (Pose Video)"
+    }
+  },
+  "245": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "289",
+        0
+      ],
+      "audio": [
+        "288",
+        1
+      ],
+      "fps": [
+        "288",
+        2
+      ],
+      "bit_depth": 8
+    },
+    "_meta": {
+      "title": "Create Video"
+    }
+  },
+  "246": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "245",
+        0
+      ],
+      "filename_prefix": "freefield/motion-transfer",
+      "format": "auto",
+      "format.codec": "auto"
+    },
+    "_meta": {
+      "title": "Save Video"
+    }
+  },
+  "261:3": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "261:9",
+        0
+      ],
+      "text": [
+        "605",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "CLIP Text Encode (Positive Prompt)"
+    }
+  },
+  "261:4": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "261:9",
+        0
+      ],
+      "text": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走"
+    },
+    "_meta": {
+      "title": "CLIP Text Encode (Negative Prompt)"
+    }
+  },
+  "261:6": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "261:223",
+        0
+      ],
+      "vae": [
+        "261:7",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "261:7": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "Wan2_1_VAE_bf16.safetensors"
+    },
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "261:9": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan",
+      "device": "default"
+    },
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "261:18": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "261:224",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 10,
+      "denoise": 1
+    },
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "261:19": {
+    "class_type": "SamplerCustom",
+    "inputs": {
+      "model": [
+        "261:95",
+        0
+      ],
+      "positive": [
+        "261:247",
+        0
+      ],
+      "negative": [
+        "261:247",
+        1
+      ],
+      "sampler": [
+        "261:27",
+        0
+      ],
+      "sigmas": [
+        "261:18",
+        0
+      ],
+      "latent_image": [
+        "261:247",
+        2
+      ],
+      "add_noise": true,
+      "noise_seed": 2,
+      "cfg": 1
+    },
+    "_meta": {
+      "title": "SamplerCustom"
+    }
+  },
+  "261:27": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "lcm"
+    },
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "261:75": {
+    "class_type": "CLIPVisionLoader",
+    "inputs": {
+      "clip_name": "clip_vision_h.safetensors"
+    },
+    "_meta": {
+      "title": "Load CLIP Vision"
+    }
+  },
+  "261:76": {
+    "class_type": "CLIPVisionEncode",
+    "inputs": {
+      "clip_vision": [
+        "261:75",
+        0
+      ],
+      "image": [
+        "261:244",
+        0
+      ],
+      "crop": "none"
+    },
+    "_meta": {
+      "title": "CLIP Vision Encode"
+    }
+  },
+  "261:95": {
+    "class_type": "ModelSamplingSD3",
+    "inputs": {
+      "model": [
+        "261:224",
+        0
+      ],
+      "shift": 5
+    },
+    "_meta": {
+      "title": "ModelSamplingSD3"
+    }
+  },
+  "261:220": {
+    "class_type": "CLIPVisionEncode",
+    "inputs": {
+      "clip_vision": [
+        "261:75",
+        0
+      ],
+      "image": [
+        "261:236",
+        0
+      ],
+      "crop": "none"
+    },
+    "_meta": {
+      "title": "CLIP Vision Encode"
+    }
+  },
+  "261:222": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "261:9",
+        0
+      ],
+      "text": [
+        "604",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "261:223": {
+    "class_type": "TrimVideoLatent",
+    "inputs": {
+      "samples": [
+        "261:19",
+        0
+      ],
+      "trim_amount": [
+        "261:247",
+        3
+      ]
+    },
+    "_meta": {
+      "title": "Trim Video Latent"
+    }
+  },
+  "261:224": {
+    "class_type": "WanAnimate2Cache",
+    "inputs": {
+      "model": [
+        "261:258",
+        0
+      ],
+      "device": "gpu",
+      "dtype": "int8"
+    },
+    "_meta": {
+      "title": "WanAnimate2Cache"
+    }
+  },
+  "261:236": {
+    "class_type": "ImageFromBatch",
+    "inputs": {
+      "image": [
+        "261:243",
+        0
+      ],
+      "batch_index": 0,
+      "length": 1
+    },
+    "_meta": {
+      "title": "Get Image from Batch"
+    }
+  },
+  "261:239": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "wan_animate_2_distill_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    },
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "261:241": {
+    "class_type": "GetVideoComponents",
+    "inputs": {
+      "video": [
+        "240",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Video Components"
+    }
+  },
+  "261:243": {
+    "class_type": "ResizeImageMaskNode",
+    "inputs": {
+      "input": [
+        "261:241",
+        0
+      ],
+      "resize_type": "scale dimensions",
+      "resize_type.width": 482,
+      "resize_type.height": 854,
+      "resize_type.crop": "center",
+      "scale_method": "area"
+    },
+    "_meta": {
+      "title": "Resize Image/Mask"
+    }
+  },
+  "261:244": {
+    "class_type": "ResizeImageMaskNode",
+    "inputs": {
+      "input": [
+        "189",
+        0
+      ],
+      "resize_type.width": [
+        "261:256",
+        0
+      ],
+      "resize_type.height": [
+        "261:256",
+        1
+      ],
+      "resize_type": "scale dimensions",
+      "resize_type.crop": "center",
+      "scale_method": "area"
+    },
+    "_meta": {
+      "title": "Resize Image/Mask"
+    }
+  },
+  "261:247": {
+    "class_type": "WanAnimate2ToVideo",
+    "inputs": {
+      "positive": [
+        "261:3",
+        0
+      ],
+      "negative": [
+        "261:4",
+        0
+      ],
+      "vae": [
+        "261:7",
+        0
+      ],
+      "reference_image": [
+        "261:244",
+        0
+      ],
+      "pose_video": [
+        "261:243",
+        0
+      ],
+      "clip_vision_output": [
+        "261:76",
+        0
+      ],
+      "positive_pose": [
+        "261:222",
+        0
+      ],
+      "clip_vision_output_pose": [
+        "261:220",
+        0
+      ],
+      "width": [
+        "261:256",
+        0
+      ],
+      "height": [
+        "261:256",
+        1
+      ],
+      "length": 81,
+      "batch_size": 1,
+      "video_frame_offset": 0,
+      "pose_strength": 1,
+      "pose_start_percent": 0,
+      "pose_end_percent": 1,
+      "reference_image_strength": 1
+    },
+    "_meta": {
+      "title": "WanAnimate2ToVideo"
+    }
+  },
+  "261:256": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "261:243",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Image Size"
+    }
+  },
+  "261:257": {
+    "class_type": "ContextWindowsManual",
+    "inputs": {
+      "model": [
+        "261:239",
+        0
+      ],
+      "context_length": 21,
+      "context_overlap": 8,
+      "context_schedule": "standard_static",
+      "context_stride": 1,
+      "closed_loop": false,
+      "fuse_method": "pyramid",
+      "dim": 2,
+      "freenoise": true,
+      "cond_retain_index_list": "0",
+      "split_conds_to_windows": false,
+      "latent_retain_index_list": "",
+      "causal_window_fix": true
+    },
+    "_meta": {
+      "title": "Context Windows (Manual)"
+    }
+  },
+  "261:258": {
+    "class_type": "ComfySwitchNode",
+    "inputs": {
+      "on_false": [
+        "261:239",
+        0
+      ],
+      "on_true": [
+        "261:257",
+        0
+      ],
+      "switch": false
+    },
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  },
+  "261:297": {
+    "class_type": "PrimitiveBoolean",
+    "inputs": {
+      "value": false
+    },
+    "_meta": {
+      "title": "Boolean"
+    }
+  },
+  "261:298": {
+    "class_type": "ImageFromBatch",
+    "inputs": {
+      "image": [
+        "261:6",
+        0
+      ],
+      "batch_index": 1,
+      "length": 4096
+    },
+    "_meta": {
+      "title": "Get Image from Batch"
+    }
+  },
+  "261:299": {
+    "class_type": "ComfySwitchNode",
+    "inputs": {
+      "on_false": [
+        "261:6",
+        0
+      ],
+      "on_true": [
+        "261:298",
+        0
+      ],
+      "switch": [
+        "261:297",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  },
+  "288": {
+    "class_type": "GetVideoComponents",
+    "inputs": {
+      "video": [
+        "240",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Video Components"
+    }
+  },
+  "289": {
+    "class_type": "BatchImagesNode",
+    "inputs": {
+      "images.image0": [
+        "261:299",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Batch Images"
+    }
+  },
+  "291:77": {
+    "class_type": "GetVideoComponents",
+    "inputs": {
+      "video": [
+        "246",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Video Components"
+    }
+  },
+  "291:78": {
+    "class_type": "GetVideoComponents",
+    "inputs": {
+      "video": [
+        "240",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Video Components"
+    }
+  },
+  "291:79": {
+    "class_type": "ImageStitch",
+    "inputs": {
+      "image1": [
+        "291:417",
+        0
+      ],
+      "image2": [
+        "291:573",
+        0
+      ],
+      "direction": "right",
+      "match_image_size": true,
+      "spacing_width": 0,
+      "spacing_color": "white"
+    },
+    "_meta": {
+      "title": "Stitch Images"
+    }
+  },
+  "291:80": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "291:97",
+        0
+      ],
+      "audio": [
+        "291:77",
+        1
+      ],
+      "fps": [
+        "291:77",
+        2
+      ],
+      "bit_depth": 8
+    },
+    "_meta": {
+      "title": "Create Video"
+    }
+  },
+  "291:90": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "291:79",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Image Size"
+    }
+  },
+  "291:96": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "values.a": [
+        "291:90",
+        1
+      ],
+      "expression": "a & ~1"
+    },
+    "_meta": {
+      "title": "Math Expression"
+    }
+  },
+  "291:97": {
+    "class_type": "ResizeImageMaskNode",
+    "inputs": {
+      "input": [
+        "291:79",
+        0
+      ],
+      "resize_type.width": [
+        "291:290",
+        1
+      ],
+      "resize_type.height": [
+        "291:96",
+        1
+      ],
+      "resize_type": "scale dimensions",
+      "resize_type.crop": "center",
+      "scale_method": "area"
+    },
+    "_meta": {
+      "title": "Resize Image/Mask"
+    }
+  },
+  "291:290": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "values.a": [
+        "291:90",
+        0
+      ],
+      "expression": "a & ~1"
+    },
+    "_meta": {
+      "title": "Math Expression"
+    }
+  },
+  "291:416": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "291:77",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Image Size"
+    }
+  },
+  "291:417": {
+    "class_type": "ImageFromBatch",
+    "inputs": {
+      "image": [
+        "291:77",
+        0
+      ],
+      "length": [
+        "291:572",
+        1
+      ],
+      "batch_index": 0
+    },
+    "_meta": {
+      "title": "Get Image from Batch"
+    }
+  },
+  "291:571": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "291:78",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Image Size"
+    }
+  },
+  "291:572": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "values.a": [
+        "291:416",
+        2
+      ],
+      "values.b": [
+        "291:571",
+        2
+      ],
+      "expression": "min(a,b)"
+    },
+    "_meta": {
+      "title": "Math Expression"
+    }
+  },
+  "291:573": {
+    "class_type": "ImageFromBatch",
+    "inputs": {
+      "image": [
+        "291:78",
+        0
+      ],
+      "length": [
+        "291:572",
+        1
+      ],
+      "batch_index": 0
+    },
+    "_meta": {
+      "title": "Get Image from Batch"
+    }
+  },
+  "292": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "291:80",
+        0
+      ],
+      "filename_prefix": "freefield/motion-transfer",
+      "format": "auto",
+      "format.codec": "auto"
+    },
+    "_meta": {
+      "title": "Save Video"
+    }
+  },
+  "536": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "values.a": [
+        "537",
+        2
+      ],
+      "expression": "a / 81"
+    },
+    "_meta": {
+      "title": "Math Expression"
+    }
+  },
+  "537": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "288",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Image Size"
+    }
+  },
+  "604": {
+    "class_type": "PrimitiveStringMultiline",
+    "inputs": {
+      "value": "A man doing energetic street dance with popping body waves and fast spinning moves, rain falling around him."
+    },
+    "_meta": {
+      "title": "Text (Multiline - Post Prompt)"
+    }
+  },
+  "605": {
+    "class_type": "PrimitiveStringMultiline",
+    "inputs": {
+      "value": "Character appearance description: A realistic premium collectible action figure of a male street dancer, lifelike matte vinyl and resin material with realistic skin-like paint finish, detailed fabric folds on a black hoodie, dark cargo pants, white sneakers, subtle articulated joints, premium designer toy craftsmanship, standing in a relaxed confident pose facing the camera, full body from head to toe.\nBackground description: rainy neon-lit city street corner at night, wet asphalt reflecting purple-blue and red neon signs, light mist, cinematic night photography."
+    },
+    "_meta": {
+      "title": "Text (Multiline - Character Prompt)"
+    }
+  }
+}

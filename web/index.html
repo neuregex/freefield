@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Freefield</title>
+<style>
+  /* Minimal menu + auto-generated forms. Everything on screen comes from /api/apps (the app.json files). */
+  :root { --bg:#0e1116; --panel:#161b22; --line:#2b333d; --ink:#e9edf2; --dim:#93a0ae; --accent:#e8ff5a; --bad:#ff7a6b; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { display: flex; align-items: baseline; gap: 18px; padding: 18px max(16px, env(safe-area-inset-left)); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  header h1 { margin: 0; font-size: 22px; letter-spacing: -0.01em; }
+  header p { margin: 0; color: var(--dim); }
+  nav { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+  nav button { background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
+  nav button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+  main { display: grid; grid-template-columns: minmax(260px, 360px) 1fr; min-height: calc(100vh - 70px); }
+  @media (max-width: 760px) { main { grid-template-columns: 1fr; } }
+  #menu { border-right: 1px solid var(--line); padding: 12px; display: grid; gap: 8px; align-content: start; }
+  .item { text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; color: var(--ink); cursor: pointer; display: grid; gap: 2px; }
+  .item[aria-current="true"] { border-color: var(--accent); }
+  .item small { color: var(--dim); }
+  .badge { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); }
+  #app { padding: 20px max(16px, env(safe-area-inset-right)) 40px 24px; display: grid; gap: 16px; align-content: start; min-width: 0; }
+  #app h2 { margin: 0; font-size: 22px; }
+  form { display: grid; gap: 14px; max-width: 640px; }
+  label { display: grid; gap: 6px; font-weight: 600; }
+  label span.help { font-weight: 400; color: var(--dim); font-size: 13px; }
+  input, textarea, select { width: 100%; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font: inherit; }
+  textarea { min-height: 90px; resize: vertical; }
+  input[type=checkbox] { width: auto; }
+  .row { display: flex; gap: 10px; align-items: center; }
+  button.run { justify-self: start; background: var(--accent); color: #11140a; border: 0; border-radius: 8px; padding: 10px 18px; font-weight: 700; cursor: pointer; }
+  button.run:disabled { opacity: .45; cursor: not-allowed; }
+  #status { color: var(--dim); min-height: 1.5em; }
+  #status.err { color: var(--bad); }
+  #outputs { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  #outputs img, #outputs video { width: 100%; border-radius: 10px; background: #000; }
+  .note { margin: 0; max-width: 640px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--panel); border-radius: 0 8px 8px 0; color: var(--dim); font-size: 14px; }
+  .fit { font-size: 11px; color: var(--dim); }
+  .fit.ok { color: #9be27a; } .fit.tight { color: #ffc861; } .fit.big { color: var(--bad); }
+  details { max-width: 640px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; background: var(--panel); }
+  details summary { cursor: pointer; font-weight: 600; }
+  details ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; }
+  details li small { color: var(--dim); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Freefield</h1>
+  <p>Open-source Higgsfield on ComfyUI. Every app is one folder.</p>
+  <nav id="sections"></nav>
+</header>
+<main>
+  <div id="menu" aria-label="Apps"></div>
+  <section id="app" aria-live="polite"><p class="badge">Pick an app</p></section>
+</main>
+<script>
+let apps = [], section = "all", current = null;
+
+function el(tag, attrs = {}, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") e.className = v; else if (k.startsWith("on")) e[k] = v; else if (v !== undefined && v !== null) e.setAttribute(k, v);
+  }
+  for (const k of kids.flat()) e.append(k?.nodeType ? k : document.createTextNode(k ?? ""));
+  return e;
+}
+
+function drawSections() {
+  const names = ["all", ...new Set(apps.map(a => a.section))];
+  const nav = document.getElementById("sections");
+  nav.replaceChildren(...names.map(n => el("button", { "aria-pressed": String(n === section), onclick: () => { section = n; drawSections(); drawMenu(); } }, n)));
+}
+
+// what the VRAM verdict means on one 24 GB card (tools/catalog.py vram)
+const FIT = { "fits whole": ["fits 24 GB", "ok"], "fits by phases": ["fits 24 GB by phases", "ok"],
+  "tight (by phases)": ["tight on 24 GB", "tight"], "needs Modal": ["needs 48 GB", "big"], "no models": ["no models", ""] };
+function fit(a) {
+  if (!a.vram) return "";
+  const [text, cls] = FIT[a.vram.verdict] || [a.vram.verdict, ""];
+  const measured = a.vram.measured_gb != null ? ` · measured ${a.vram.measured_gb} GB` : "";
+  return el("span", { class: `fit ${cls}` }, text + measured);
+}
+
+function modelsPanel(a) {
+  if (!a.models.length) return "";
+  const total = a.models.filter(m => !m.optional).reduce((s, m) => s + m.gb, 0);
+  return el("details", {}, el("summary", {}, `Open-weight models · ${total.toFixed(1)} GB`),
+    el("ul", {}, ...a.models.map(m => el("li", {}, m.name, " ",
+      el("small", {}, [`${m.gb} GB`, m.license, m.gated ? "accept the license on Hugging Face" : "", m.optional ? "optional" : ""].filter(Boolean).join(" · "))))),
+    a.credits.length ? el("p", {}, el("small", {}, a.credits.join(" · "))) : "");
+}
+
+function drawMenu() {
+  const list = apps.filter(a => section === "all" || a.section === section);
+  document.getElementById("menu").replaceChildren(...list.map(a =>
+    el("button", { class: "item", "aria-current": String(current?.id === a.id), onclick: () => open(a) },
+      el("span", { class: "badge" }, `${a.section} · ${a.status}`), el("strong", {}, a.name), el("small", {}, a.summary), fit(a))));
+}
+
+function field(inp) {
+  const id = `in-${inp.id}`;
+  let control;
+  if (inp.type === "textarea") control = el("textarea", { id, name: inp.id }, inp.default ?? "");
+  else if (inp.type === "select") {
+    control = el("select", { id, name: inp.id }, ...(inp.options || []).map(o => el("option", { value: String(o.value) }, o.label)));
+    if (inp.default !== undefined) control.value = String(inp.default);
+  } else if (inp.type === "toggle") control = el("input", { id, name: inp.id, type: "checkbox", ...(inp.default ? { checked: "" } : {}) });
+  else if (["image", "video", "audio"].includes(inp.type)) control = el("input", { id, name: inp.id, type: "file", accept: `${inp.type}/*` });
+  else if (inp.type === "slider") control = el("input", { id, name: inp.id, type: "range", min: inp.min, max: inp.max, step: inp.step ?? 1, value: inp.default });
+  else if (inp.type === "number" || inp.type === "seed") control = el("input", { id, name: inp.id, type: "number", min: inp.min, max: inp.max, step: inp.step, value: inp.default ?? "" });
+  else control = el("input", { id, name: inp.id, type: "text", value: inp.default ?? "" });
+  const out = inp.type === "slider" ? el("output", { for: id }, String(inp.default ?? "")) : null;
+  if (out) control.oninput = () => (out.value = control.value);
+  return el("label", { for: id }, inp.label, inp.type === "toggle" || out ? el("div", { class: "row" }, control, out) : control, inp.help ? el("span", { class: "help" }, inp.help) : "");
+}
+
+function open(a) {
+  current = a; drawMenu();
+  const status = el("p", { id: "status" });
+  const outputs = el("div", { id: "outputs" });
+  const form = el("form", {}, ...a.inputs.map(field));
+  if (a.presets.length) form.append(el("label", { for: "in-preset" }, "Preset", el("select", { id: "in-preset", name: "preset" }, el("option", { value: "" }, "None"), ...a.presets.map(p => el("option", { value: p.id }, p.label)))));
+  const run = el("button", { class: "run", type: "submit", ...(!a.runnable ? { disabled: "" } : {}) },
+    !a.runnable ? "Draft: not enabled" : a.status === "ready" ? "Generate" : "Generate (draft)");
+  form.append(run);
+  form.onsubmit = async (ev) => {
+    ev.preventDefault();
+    const fd = new FormData(form);
+    for (const inp of a.inputs) if (inp.type === "toggle") fd.set(inp.id, form.elements[inp.id].checked ? "true" : "false");
+    for (const [k, v] of [...fd.entries()]) if (v instanceof File && !v.size) fd.delete(k);
+    run.disabled = true; status.className = ""; status.textContent = "Submitting…"; outputs.replaceChildren();
+    try {
+      const r = await fetch(`/api/apps/${a.id}/run`, { method: "POST", body: fd });
+      const job = await r.json();
+      if (!r.ok) throw new Error(job.error || r.statusText);
+      const t0 = Date.now();
+      for (;;) {
+        await new Promise(res => setTimeout(res, 1500));
+        const s = await (await fetch(`/api/jobs/${job.id}`)).json();
+        status.textContent = `${s.status} · ${Math.round((Date.now() - t0) / 1000)} s`;
+        if (["succeeded", "failed", "canceled", "expired"].includes(s.status)) {
+          if (s.status !== "succeeded") {
+            const err = s.error || {};
+            throw new Error(`${s.status}${err.class_type ? ` in ${err.class_type}` : ""}: ${(err.message || JSON.stringify(err)).trim()}`);
+          }
+          outputs.replaceChildren(...s.outputs.map(o => o.type === "video" ? el("video", { src: o.url, controls: "", loop: "", playsinline: "" })
+            : o.type === "audio" ? el("audio", { src: o.url, controls: "" }) : el("img", { src: o.url, alt: o.name })));
+          break;
+        }
+      }
+    } catch (e) { status.className = "err"; status.textContent = e.message; }
+    finally { run.disabled = !a.runnable; }
+  };
+  document.getElementById("app").replaceChildren(el("p", { class: "badge" }, `${a.section} · ${a.pack} · ${a.status}`), el("h2", {}, a.name), el("p", {}, a.summary), a.notes ? el("p", { class: "note" }, a.notes) : "", fit(a), modelsPanel(a), form, status, outputs);
+  if (matchMedia("(max-width: 760px)").matches) document.getElementById("app").scrollIntoView({ behavior: "smooth" });
+}
+
+fetch("/api/apps").then(r => r.json()).then(d => { apps = d.apps; drawSections(); drawMenu(); });
+</script>
+</body>
+</html>

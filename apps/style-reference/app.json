@@ -1,0 +1,182 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "style-reference",
+  "name": "Style Reference",
+  "section": "image",
+  "pack": "image-krea2",
+  "status": "ready",
+  "higgsfield_feature": "Style transfer",
+  "summary": "Paints anything you describe in the style of a reference image (Krea 2 Turbo with a style-reference LoRA).",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_krea2_turbo_int8_image_style_reference.json",
+    "comfyui": "0.42.0"
+  },
+  "inputs": [
+    {
+      "id": "style",
+      "type": "image",
+      "label": "Style reference",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "help": "Only its look is used: palette, medium, texture",
+      "bind": [
+        {
+          "node": "69",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "What to paint",
+      "required": true,
+      "default": "a lighthouse on a cliff during a storm, waves crashing",
+      "bind": [
+        {
+          "node": "30:19",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "enhance",
+      "type": "toggle",
+      "label": "Enhance prompt",
+      "default": false,
+      "help": "Rewrites your prompt with the Qwen3-VL text encoder first",
+      "bind": [
+        {
+          "node": "30:24",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "aspect",
+      "type": "select",
+      "label": "Aspect ratio",
+      "default": "1:1 (Square)",
+      "options": [
+        {
+          "value": "1:1 (Square)",
+          "label": "1:1 (Square)"
+        },
+        {
+          "value": "2:3 (Portrait Photo)",
+          "label": "2:3 (Portrait Photo)"
+        },
+        {
+          "value": "3:2 (Photo)",
+          "label": "3:2 (Photo)"
+        },
+        {
+          "value": "3:4 (Portrait Standard)",
+          "label": "3:4 (Portrait Standard)"
+        },
+        {
+          "value": "4:3 (Standard)",
+          "label": "4:3 (Standard)"
+        },
+        {
+          "value": "9:16 (Portrait Widescreen)",
+          "label": "9:16 (Portrait Widescreen)"
+        },
+        {
+          "value": "16:9 (Widescreen)",
+          "label": "16:9 (Widescreen)"
+        },
+        {
+          "value": "21:9 (Ultrawide)",
+          "label": "21:9 (Ultrawide)"
+        }
+      ],
+      "bind": [
+        {
+          "node": "71",
+          "field": "aspect_ratio"
+        }
+      ]
+    },
+    {
+      "id": "megapixels",
+      "type": "slider",
+      "label": "Megapixels",
+      "min": 0.5,
+      "max": 2.0,
+      "step": 0.25,
+      "default": 1.0,
+      "bind": [
+        {
+          "node": "71",
+          "field": "megapixels"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "30:63",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "29",
+      "type": "image",
+      "label": "Image"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "diffusion_models/krea2_turbo_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 13.49,
+      "phase": "denoise",
+      "license": "Krea 2 Community License"
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "text_encoders/qwen3vl_4b_fp8_scaled.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.24,
+      "phase": "encode",
+      "license": "Krea 2 Community License"
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "vae/qwen_image_vae.safetensors",
+      "dir": "vae",
+      "gb": 0.25,
+      "phase": "decode",
+      "license": "Krea 2 Community License"
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_style_reference.safetensors",
+      "dir": "loras",
+      "gb": 0.46,
+      "phase": "denoise",
+      "license": "Krea 2 Community License"
+    }
+  ],
+  "credits": [
+    "Krea 2 Turbo by Krea (Krea 2 Community License)",
+    "Style reference LoRA by ostris",
+    "Workflow: ComfyUI official template"
+  ],
+  "test": {
+    "style": "test/portrait.png"
+  }
+}

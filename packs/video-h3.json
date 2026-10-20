@@ -1,0 +1,100 @@
+{
+  "pack": "video-h3",
+  "apps": [
+    "reshoot"
+  ],
+  "download_gb": 54.75,
+  "needs_hf_token": false,
+  "custom_nodes": [
+    {
+      "repo": "https://github.com/comfyrob/ComfyUI-CrossViewWarp",
+      "commit": "fbb1e93c7193329ff3ce7c17f95166b539687876"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 20.97,
+      "name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "gated": false,
+      "license": "MiniMax H3 Community License",
+      "used_by": [
+        "reshoot"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MoGe",
+      "file": "geometry_estimation/moge_2_vitl_normal_fp16.safetensors",
+      "dir": "geometry_estimation",
+      "gb": 0.66,
+      "name": "moge_2_vitl_normal_fp16.safetensors",
+      "gated": false,
+      "license": "MIT",
+      "used_by": [
+        "reshoot"
+      ]
+    },
+    {
+      "repo": "Cseti/MiniMax-H3_Ref2VA-LoRA-CrossView-Warp_v1",
+      "file": "MiniMax-H3_Ref2VA-LoRA-CrossView-Warp_v1_3500.safetensors",
+      "dir": "loras",
+      "gb": 0.6,
+      "name": "MiniMax-H3_Ref2VA-LoRA-CrossView-Warp_v1_3500.safetensors",
+      "gated": false,
+      "license": null,
+      "used_by": [
+        "reshoot"
+      ]
+    },
+    {
+      "repo": "lightx2v/Minimax-h3-Turbo",
+      "file": "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+      "dir": "loras",
+      "gb": 1.96,
+      "name": "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+      "gated": false,
+      "license": null,
+      "used_by": [
+        "reshoot"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 27.14,
+      "name": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+      "gated": false,
+      "license": "MiniMax H3 Community License",
+      "used_by": [
+        "reshoot"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "vae/minimax_h3_audio_vae_fp32.safetensors",
+      "dir": "vae",
+      "gb": 0.61,
+      "name": "minimax_h3_audio_vae_fp32.safetensors",
+      "gated": false,
+      "license": "MiniMax H3 Community License",
+      "used_by": [
+        "reshoot"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "vae/minimax_h3_video_vae_int8_convrot.safetensors",
+      "dir": "vae",
+      "gb": 2.81,
+      "name": "minimax_h3_video_vae_int8_convrot.safetensors",
+      "gated": false,
+      "license": "MiniMax H3 Community License",
+      "used_by": [
+        "reshoot"
+      ]
+    }
+  ]
+}

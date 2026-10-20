@@ -1,0 +1,233 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "camera-copy",
+  "name": "Camera Copy",
+  "section": "video",
+  "pack": "video-ltx25",
+  "status": "draft",
+  "higgsfield_feature": "Camera Controls",
+  "summary": "Copies the camera move of any reference clip onto your image: push-ins, pans, orbits, cranes.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "ComfyUI-LTXVideo example_workflows/2.5/LTX-2.5_V2V_ICLoRA_Single_Stage_Distilled.json (44c8a36)",
+    "comfyui": "0.42.0",
+    "notes": "Gemma API text encoder removed (local encoding only), int8 weights. The reference clip is the IC-LoRA guide; your image is the first frame at 0.6 strength. Cameraman v2 was trained on LTX-2.3; not run on 2.5 yet. The clip's audio is still passed as audio reference, as in the example."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Your first frame",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "help": "Same aspect ratio as the reference clip works best",
+      "bind": [
+        {
+          "node": "2004",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "clip",
+      "type": "video",
+      "label": "Camera move to copy",
+      "required": true,
+      "limits": {
+        "max_mb": 200,
+        "seconds": [
+          2,
+          8
+        ]
+      },
+      "help": "Any clip whose camera motion you want; its content is ignored",
+      "bind": [
+        {
+          "node": "5001",
+          "field": "file"
+        }
+      ]
+    },
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "Describe the shot",
+      "required": true,
+      "default": "The camera slowly pushes in toward her face, soft studio light, shallow depth of field",
+      "help": "Naming the camera move helps; an empty prompt sometimes works best",
+      "bind": [
+        {
+          "node": "5508",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "negative",
+      "type": "textarea",
+      "label": "Must not appear",
+      "default": "static camera, frozen frame, blurry, distorted",
+      "bind": [
+        {
+          "node": "5509",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "hold",
+      "type": "slider",
+      "label": "Stick to your image",
+      "min": 0.3,
+      "max": 1.0,
+      "step": 0.05,
+      "default": 0.6,
+      "help": "Lower leaves more room for the camera to move",
+      "bind": [
+        {
+          "node": "9002:3159",
+          "field": "strength"
+        }
+      ]
+    },
+    {
+      "id": "strength",
+      "type": "slider",
+      "label": "Follow the reference move",
+      "min": 0.5,
+      "max": 1.3,
+      "step": 0.05,
+      "default": 1.0,
+      "bind": [
+        {
+          "node": "5004:5606",
+          "field": "strength_model"
+        }
+      ]
+    },
+    {
+      "id": "size",
+      "type": "select",
+      "label": "Resolution (short side)",
+      "default": 544,
+      "options": [
+        {
+          "value": 512,
+          "label": "512 px"
+        },
+        {
+          "value": 544,
+          "label": "544 px"
+        },
+        {
+          "value": 576,
+          "label": "576 px"
+        },
+        {
+          "value": 720,
+          "label": "720 px"
+        }
+      ],
+      "help": "The LoRA follows the move better at higher resolution",
+      "bind": [
+        {
+          "node": "5548:5026",
+          "field": "resize_type.shorter_size"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "5516:4832",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "4852",
+      "type": "video",
+      "label": "Video"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 21.5,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 15.37,
+      "phase": "encode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-video-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 1.47,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-audio-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.36,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Comfy-Org/gemma-4",
+      "file": "text_encoders/gemma4_e2b_it_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.2,
+      "phase": "encode",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Cseti/LTX2.3-22B_IC-LoRA-Cameraman_v2",
+      "file": "LTX2.3-22B_IC-LoRA-Cameraman_v2_14000.safetensors",
+      "dir": "loras",
+      "gb": 0.65,
+      "phase": "denoise",
+      "license": "Research only, non-commercial (see model card)"
+    }
+  ],
+  "custom_nodes": [
+    {
+      "repo": "https://github.com/Lightricks/ComfyUI-LTXVideo",
+      "commit": "44c8a36b7c31ee00b4271daed11dc2a4aa481140"
+    }
+  ],
+  "credits": [
+    "LTX-2.5 by Lightricks",
+    "Cameraman v2 IC-LoRA by Cseti (research, non-commercial)",
+    "Workflow adapted from Lightricks' ComfyUI-LTXVideo examples"
+  ],
+  "test": {
+    "image": "test/portrait.png",
+    "clip": "test/clip.mp4",
+    "size": 512
+  }
+}

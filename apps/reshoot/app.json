@@ -1,0 +1,206 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "reshoot",
+  "name": "Re-shoot",
+  "section": "video",
+  "pack": "video-h3",
+  "status": "draft",
+  "higgsfield_feature": "Camera angles",
+  "summary": "Moves the camera to a new angle on an existing clip (MiniMax H3 + MoGe + CrossView).",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "Comfy-Org/comfy-reshoot workflows/generate.api.json (dc53fc7)",
+    "comfyui": "0.42.0",
+    "notes": "Comfy's own reference app, shown on a 96 GB GPU. Needs an 80 GB Modal GPU; draft until it runs there."
+  },
+  "inputs": [
+    {
+      "id": "clip",
+      "type": "video",
+      "label": "Your clip",
+      "required": true,
+      "limits": {
+        "max_mb": 100,
+        "seconds": [
+          5,
+          15
+        ]
+      },
+      "bind": [
+        {
+          "node": "1",
+          "field": "file"
+        }
+      ]
+    },
+    {
+      "id": "azimuth",
+      "type": "slider",
+      "label": "Orbit (degrees)",
+      "min": -90,
+      "max": 90,
+      "step": 5,
+      "default": -30,
+      "bind": [
+        {
+          "node": "5",
+          "field": "azimuth"
+        }
+      ]
+    },
+    {
+      "id": "elevation",
+      "type": "slider",
+      "label": "Height (degrees)",
+      "min": -30,
+      "max": 60,
+      "step": 5,
+      "default": 20,
+      "bind": [
+        {
+          "node": "5",
+          "field": "elevation"
+        }
+      ]
+    },
+    {
+      "id": "distance",
+      "type": "slider",
+      "label": "Distance",
+      "min": 0.5,
+      "max": 2.0,
+      "step": 0.05,
+      "default": 1.0,
+      "bind": [
+        {
+          "node": "5",
+          "field": "distance"
+        }
+      ]
+    },
+    {
+      "id": "duration",
+      "type": "slider",
+      "label": "Seconds to keep",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "bind": [
+        {
+          "node": "2",
+          "field": "duration"
+        }
+      ]
+    },
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "Extra description (optional)",
+      "default": "",
+      "bind": [
+        {
+          "node": "20",
+          "field": "prompt",
+          "template": "crossview. {prompt}"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "30",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "38",
+      "type": "video",
+      "label": "New angle"
+    },
+    {
+      "node": "41",
+      "type": "video",
+      "label": "Warp guide"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 20.97,
+      "phase": "denoise",
+      "license": "MiniMax H3 Community License"
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 27.14,
+      "phase": "encode",
+      "license": "MiniMax H3 Community License"
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "vae/minimax_h3_video_vae_int8_convrot.safetensors",
+      "dir": "vae",
+      "gb": 2.81,
+      "phase": "decode",
+      "license": "MiniMax H3 Community License"
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "vae/minimax_h3_audio_vae_fp32.safetensors",
+      "dir": "vae",
+      "gb": 0.61,
+      "phase": "decode",
+      "license": "MiniMax H3 Community License"
+    },
+    {
+      "repo": "Comfy-Org/MoGe",
+      "file": "geometry_estimation/moge_2_vitl_normal_fp16.safetensors",
+      "dir": "geometry_estimation",
+      "gb": 0.66,
+      "phase": "aux",
+      "license": "MIT"
+    },
+    {
+      "repo": "Cseti/MiniMax-H3_Ref2VA-LoRA-CrossView-Warp_v1",
+      "file": "MiniMax-H3_Ref2VA-LoRA-CrossView-Warp_v1_3500.safetensors",
+      "dir": "loras",
+      "gb": 0.6,
+      "phase": "denoise"
+    },
+    {
+      "repo": "lightx2v/Minimax-h3-Turbo",
+      "file": "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+      "dir": "loras",
+      "gb": 1.96,
+      "phase": "denoise"
+    }
+  ],
+  "custom_nodes": [
+    {
+      "repo": "https://github.com/comfyrob/ComfyUI-CrossViewWarp",
+      "commit": "fbb1e93c7193329ff3ce7c17f95166b539687876"
+    }
+  ],
+  "credits": [
+    "Comfy-Org/comfy-reshoot (MIT)",
+    "CrossView-Warp node (Apache-2.0) and LoRA by Cseti",
+    "MiniMax H3 (MiniMax H3 Community License)"
+  ],
+  "test": {
+    "clip": "test/clip.mp4",
+    "duration": 5
+  }
+}

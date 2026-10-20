@@ -1,0 +1,64 @@
+{
+  "pack": "upscale",
+  "apps": [
+    "remove-bg",
+    "smooth",
+    "upscale",
+    "upscale-video"
+  ],
+  "download_gb": 4.47,
+  "needs_hf_token": false,
+  "custom_nodes": [],
+  "models": [
+    {
+      "repo": "Comfy-Org/BiRefNet",
+      "file": "background_removal/birefnet.safetensors",
+      "dir": "background_removal",
+      "gb": 0.44,
+      "name": "birefnet.safetensors",
+      "gated": false,
+      "license": "MIT",
+      "used_by": [
+        "remove-bg"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/SeedVR2",
+      "file": "diffusion_models/seedvr2_3b_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 3.46,
+      "name": "seedvr2_3b_int8_convrot.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "upscale",
+        "upscale-video"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/frame_interpolation",
+      "file": "frame_interpolation/film_net_fp16.safetensors",
+      "dir": "frame_interpolation",
+      "gb": 0.07,
+      "name": "film_net_fp16.safetensors",
+      "gated": false,
+      "license": "Apache-2.0 (FILM, Google Research)",
+      "used_by": [
+        "smooth"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/SeedVR2",
+      "file": "vae/seedvr2_ema_vae_fp16.safetensors",
+      "dir": "vae",
+      "gb": 0.5,
+      "name": "seedvr2_ema_vae_fp16.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "upscale",
+        "upscale-video"
+      ]
+    }
+  ]
+}

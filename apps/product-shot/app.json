@@ -1,0 +1,154 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "product-shot",
+  "name": "Product Shot",
+  "section": "image",
+  "pack": "image-flux3",
+  "status": "ready",
+  "higgsfield_feature": "Product placement",
+  "summary": "Turns a plain photo of a product into a styled product shot: pedestal, splash, beach and more.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_flux3_klein_distilled_image_edit.json",
+    "comfyui": "0.42.0",
+    "notes": "Same pipeline as edit; the scene is wrapped in a product-preserving template. Wording still to tune in the lab."
+  },
+  "inputs": [
+    {
+      "id": "product",
+      "type": "image",
+      "label": "Product photo",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "help": "Any clear photo of the product; the background does not matter",
+      "bind": [
+        {
+          "node": "11",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "scene",
+      "type": "select",
+      "label": "Scene",
+      "default": "on a white marble pedestal, soft studio light, clean light grey background, a gentle shadow",
+      "options": [
+        {
+          "value": "on a white marble pedestal, soft studio light, clean light grey background, a gentle shadow",
+          "label": "Marble pedestal"
+        },
+        {
+          "value": "on wet black stone with water droplets, dramatic rim light, dark background",
+          "label": "Wet stone, dramatic"
+        },
+        {
+          "value": "on a sunlit wooden table by a window, morning light, plants softly blurred behind",
+          "label": "Morning table"
+        },
+        {
+          "value": "floating in mid-air with water splashing around it, high-speed photo, blue gradient background",
+          "label": "Splash"
+        },
+        {
+          "value": "on a towel in the sand, bright summer sun, the ocean softly blurred behind",
+          "label": "Beach"
+        },
+        {
+          "value": "in a minimalist pastel set with geometric shapes, soft even light",
+          "label": "Pastel set"
+        },
+        {
+          "value": "held in a hand on a city street at golden hour, shallow depth of field",
+          "label": "In hand, street"
+        }
+      ],
+      "bind": [
+        {
+          "node": "4",
+          "field": "text",
+          "template": "Product photography: the product from <ref_image_0> {scene}. Keep the product identical: shape, label, text and colors. {details}"
+        }
+      ]
+    },
+    {
+      "id": "details",
+      "type": "textarea",
+      "label": "Anything else (optional)",
+      "default": "",
+      "help": "e.g. add fresh lemons around it, top-down view"
+    },
+    {
+      "id": "steps",
+      "type": "slider",
+      "label": "Steps",
+      "min": 8,
+      "max": 32,
+      "step": 1,
+      "default": 16,
+      "bind": [
+        {
+          "node": "7",
+          "field": "steps"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "7",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "9",
+      "type": "image",
+      "label": "Product shot"
+    }
+  ],
+  "models": [
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "phase": "denoise",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "phase": "encode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "decode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    }
+  ],
+  "credits": [
+    "FLUX 3 Image Klein by Black Forest Labs (FLUX Kommunity License)"
+  ],
+  "test": {
+    "product": "test/portrait.png"
+  }
+}

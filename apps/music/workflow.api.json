@@ -1,0 +1,186 @@
+{
+  "35": {
+    "class_type": "SaveAudioAdvanced",
+    "inputs": {
+      "audio": [
+        "37:43",
+        0
+      ],
+      "filename_prefix": "freefield/music",
+      "format": "mp3",
+      "format.quality": "V0"
+    },
+    "_meta": {
+      "title": "Save Audio (Advanced)"
+    }
+  },
+  "37:3": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "minimax_music3_text_encoder_pruned_int8_convrot.safetensors",
+      "type": "minimax",
+      "device": "default"
+    },
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "37:6": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_music3_dit_fp16.safetensors",
+      "weight_dtype": "default"
+    },
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "37:7": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_music3_dav.safetensors"
+    },
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "37:9": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": [
+        "37:6",
+        0
+      ],
+      "positive": [
+        "37:13",
+        0
+      ],
+      "negative": [
+        "37:10",
+        0
+      ],
+      "latent_image": [
+        "37:15",
+        0
+      ],
+      "seed": [
+        "37:38",
+        0
+      ],
+      "steps": 30,
+      "cfg": 1.7,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1
+    },
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "37:10": {
+    "class_type": "ConditioningZeroOut",
+    "inputs": {
+      "conditioning": [
+        "37:13",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Conditioning Zero Out"
+    }
+  },
+  "37:12": {
+    "class_type": "VAEDecodeAudio",
+    "inputs": {
+      "samples": [
+        "37:9",
+        0
+      ],
+      "vae": [
+        "37:7",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "VAE Decode Audio"
+    }
+  },
+  "37:13": {
+    "class_type": "MiniMaxMusic3TextEncode",
+    "inputs": {
+      "clip": [
+        "37:3",
+        0
+      ],
+      "seed": [
+        "37:38",
+        0
+      ],
+      "caption": "",
+      "lyrics": "",
+      "max_duration": 60,
+      "cfg_scale": 1.7,
+      "top_k": 50
+    },
+    "_meta": {
+      "title": "MiniMax Music3 Text Encode"
+    }
+  },
+  "37:15": {
+    "class_type": "EmptyMiniMaxMusic3LatentAudio",
+    "inputs": {
+      "seconds": [
+        "37:13",
+        1
+      ],
+      "batch_size": 1
+    },
+    "_meta": {
+      "title": "Empty MiniMax Music3 Latent Audio"
+    }
+  },
+  "37:38": {
+    "class_type": "SeedNode",
+    "inputs": {
+      "seed": 0
+    },
+    "_meta": {
+      "title": "Seed"
+    }
+  },
+  "37:42": {
+    "class_type": "VAEDecodeAudioTiled",
+    "inputs": {
+      "samples": [
+        "37:9",
+        0
+      ],
+      "vae": [
+        "37:7",
+        0
+      ],
+      "tile_size": 1536,
+      "overlap": 64
+    },
+    "_meta": {
+      "title": "VAE Decode Audio (Tiled)"
+    }
+  },
+  "37:43": {
+    "class_type": "ComfySwitchNode",
+    "inputs": {
+      "on_false": [
+        "37:12",
+        0
+      ],
+      "on_true": [
+        "37:42",
+        0
+      ],
+      "switch": false
+    },
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  }
+}

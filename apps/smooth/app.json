@@ -1,0 +1,107 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "smooth",
+  "name": "Smooth & Slow-mo",
+  "section": "utility",
+  "pack": "upscale",
+  "status": "ready",
+  "summary": "Adds in-between frames with FILM: smoother motion at the same length, or real slow motion.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "utility_video_frame_interpolation.json",
+    "comfyui": "0.42.0"
+  },
+  "inputs": [
+    {
+      "id": "clip",
+      "type": "video",
+      "label": "Clip",
+      "required": true,
+      "limits": {
+        "max_mb": 200
+      },
+      "bind": [
+        {
+          "node": "4",
+          "field": "file"
+        }
+      ]
+    },
+    {
+      "id": "factor",
+      "type": "select",
+      "label": "Frames between frames",
+      "default": 2,
+      "options": [
+        {
+          "value": 2,
+          "label": "2x"
+        },
+        {
+          "value": 3,
+          "label": "3x"
+        },
+        {
+          "value": 4,
+          "label": "4x"
+        },
+        {
+          "value": 8,
+          "label": "8x"
+        }
+      ],
+      "bind": [
+        {
+          "node": "16:9",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "mode",
+      "type": "select",
+      "label": "Result",
+      "default": true,
+      "options": [
+        {
+          "value": true,
+          "label": "Smoother: same length, higher frame rate"
+        },
+        {
+          "value": false,
+          "label": "Slow motion: same frame rate, longer clip"
+        }
+      ],
+      "bind": [
+        {
+          "node": "16:13",
+          "field": "value"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "7",
+      "type": "video",
+      "label": "Video"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/frame_interpolation",
+      "file": "frame_interpolation/film_net_fp16.safetensors",
+      "dir": "frame_interpolation",
+      "gb": 0.07,
+      "phase": "all",
+      "license": "Apache-2.0 (FILM, Google Research)"
+    }
+  ],
+  "credits": [
+    "FILM by Google Research (Apache-2.0)",
+    "Workflow: ComfyUI official template"
+  ],
+  "test": {
+    "clip": "test/clip.mp4"
+  }
+}

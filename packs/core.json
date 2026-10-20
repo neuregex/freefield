@@ -1,0 +1,11 @@
+{
+  "pack": "core",
+  "apps": [
+    "smoke",
+    "smoke-invert"
+  ],
+  "download_gb": 0,
+  "needs_hf_token": false,
+  "custom_nodes": [],
+  "models": []
+}

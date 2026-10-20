@@ -1,0 +1,366 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "styles",
+  "name": "Styles",
+  "section": "image",
+  "pack": "image-krea2",
+  "status": "ready",
+  "higgsfield_feature": "Image styles",
+  "summary": "Text to image in one of Krea's nine official looks: watercolor, ink wash, retro anime, tarot and more.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_krea2_turbo_t2i_int8.json",
+    "comfyui": "0.42.0",
+    "notes": "The template's LoRA switch is turned on; each style option writes its trigger phrase and swaps the LoRA file."
+  },
+  "inputs": [
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "What to draw",
+      "required": true,
+      "default": "a fox reading under a tree at dusk",
+      "bind": [
+        {
+          "node": "30:19",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "style",
+      "type": "select",
+      "label": "Style",
+      "default": "Art Deco watercolor style",
+      "options": [
+        {
+          "value": "Art Deco watercolor style",
+          "label": "Soft watercolor",
+          "sets": [
+            {
+              "node": "30:15",
+              "field": "lora_name",
+              "value": "krea2_softwatercolor.safetensors"
+            }
+          ]
+        },
+        {
+          "value": "monochrome ink wash style",
+          "label": "Ink wash",
+          "sets": [
+            {
+              "node": "30:15",
+              "field": "lora_name",
+              "value": "krea2_darkbrush.safetensors"
+            }
+          ]
+        },
+        {
+          "value": "Monochrome stippling style",
+          "label": "Stippling",
+          "sets": [
+            {
+              "node": "30:15",
+              "field": "lora_name",
+              "value": "krea2_dotmatrix.safetensors"
+            }
+          ]
+        },
+        {
+          "value": "naive expressive sketch style",
+          "label": "Kid's drawing",
+          "sets": [
+            {
+              "node": "30:15",
+              "field": "lora_name",
+              "value": "krea2_kidsdrawing.safetensors"
+            }
+          ]
+        },
+        {
+          "value": "Textured abstract style",
+          "label": "Neon drip",
+          "sets": [
+            {
+              "node": "30:15",
+              "field": "lora_name",
+              "value": "krea2_neondrip.safetensors"
+            }
+          ]
+        },
+        {
+          "value": "rainy window style",
+          "label": "Rainy window",
+          "sets": [
+            {
+              "node": "30:15",
+              "field": "lora_name",
+              "value": "krea2_rainywindow.safetensors"
+            }
+          ]
+        },
+        {
+          "value": "Purple retro anime style",
+          "label": "Retro anime",
+          "sets": [
+            {
+              "node": "30:15",
+              "field": "lora_name",
+              "value": "krea2_retroanime.safetensors"
+            }
+          ]
+        },
+        {
+          "value": "ethereal motion blur style",
+          "label": "Sunset blur",
+          "sets": [
+            {
+              "node": "30:15",
+              "field": "lora_name",
+              "value": "krea2_sunsetblur.safetensors"
+            }
+          ]
+        },
+        {
+          "value": "vintage tarot style",
+          "label": "Vintage tarot",
+          "sets": [
+            {
+              "node": "30:15",
+              "field": "lora_name",
+              "value": "krea2_vintagetarot.safetensors"
+            }
+          ]
+        }
+      ],
+      "bind": [
+        {
+          "node": "30:27",
+          "field": "string_b"
+        }
+      ]
+    },
+    {
+      "id": "strength",
+      "type": "slider",
+      "label": "Style strength",
+      "min": 0.3,
+      "max": 1.2,
+      "step": 0.05,
+      "default": 0.8,
+      "bind": [
+        {
+          "node": "30:15",
+          "field": "strength_model"
+        }
+      ]
+    },
+    {
+      "id": "enhance",
+      "type": "toggle",
+      "label": "Enhance prompt",
+      "default": true,
+      "help": "Rewrites your prompt with the Qwen3-VL text encoder first",
+      "bind": [
+        {
+          "node": "30:24",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "aspect",
+      "type": "select",
+      "label": "Aspect ratio",
+      "default": "1:1 (Square)",
+      "options": [
+        {
+          "value": "1:1 (Square)",
+          "label": "1:1 (Square)"
+        },
+        {
+          "value": "2:3 (Portrait Photo)",
+          "label": "2:3 (Portrait Photo)"
+        },
+        {
+          "value": "3:2 (Photo)",
+          "label": "3:2 (Photo)"
+        },
+        {
+          "value": "3:4 (Portrait Standard)",
+          "label": "3:4 (Portrait Standard)"
+        },
+        {
+          "value": "4:3 (Standard)",
+          "label": "4:3 (Standard)"
+        },
+        {
+          "value": "9:16 (Portrait Widescreen)",
+          "label": "9:16 (Portrait Widescreen)"
+        },
+        {
+          "value": "16:9 (Widescreen)",
+          "label": "16:9 (Widescreen)"
+        },
+        {
+          "value": "21:9 (Ultrawide)",
+          "label": "21:9 (Ultrawide)"
+        }
+      ],
+      "bind": [
+        {
+          "node": "49",
+          "field": "aspect_ratio"
+        }
+      ]
+    },
+    {
+      "id": "megapixels",
+      "type": "slider",
+      "label": "Megapixels",
+      "min": 0.5,
+      "max": 2.0,
+      "step": 0.25,
+      "default": 1.0,
+      "bind": [
+        {
+          "node": "49",
+          "field": "megapixels"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "30:3",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "29",
+      "type": "image",
+      "label": "Image"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "diffusion_models/krea2_turbo_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 13.49,
+      "phase": "denoise",
+      "license": "Krea 2 Community License"
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "text_encoders/qwen3vl_4b_fp8_scaled.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.24,
+      "phase": "encode",
+      "license": "Krea 2 Community License"
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "vae/qwen_image_vae.safetensors",
+      "dir": "vae",
+      "gb": 0.25,
+      "phase": "decode",
+      "license": "Krea 2 Community License"
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_softwatercolor.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "phase": "denoise",
+      "license": "Krea 2 Community License"
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_darkbrush.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "phase": "denoise",
+      "license": "Krea 2 Community License",
+      "optional": true
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_dotmatrix.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "phase": "denoise",
+      "license": "Krea 2 Community License",
+      "optional": true
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_kidsdrawing.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "phase": "denoise",
+      "license": "Krea 2 Community License",
+      "optional": true
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_neondrip.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "phase": "denoise",
+      "license": "Krea 2 Community License",
+      "optional": true
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_rainywindow.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "phase": "denoise",
+      "license": "Krea 2 Community License",
+      "optional": true
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_retroanime.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "phase": "denoise",
+      "license": "Krea 2 Community License",
+      "optional": true
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_sunsetblur.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "phase": "denoise",
+      "license": "Krea 2 Community License",
+      "optional": true
+    },
+    {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "loras/krea2_vintagetarot.safetensors",
+      "dir": "loras",
+      "gb": 0.47,
+      "phase": "denoise",
+      "license": "Krea 2 Community License",
+      "optional": true
+    }
+  ],
+  "credits": [
+    "Krea 2 Turbo and the style LoRAs by Krea (Krea 2 Community License)",
+    "Workflow: ComfyUI official template"
+  ],
+  "test": {
+    "style": "vintage tarot style"
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "music",
+  "name": "Music",
+  "section": "audio",
+  "pack": "audio",
+  "status": "ready",
+  "higgsfield_feature": "Audio",
+  "summary": "A full song from a style description and optional lyrics, with MiniMax Music 3.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "audio_minimax_music_3.json",
+    "comfyui": "0.42.0"
+  },
+  "inputs": [
+    {
+      "id": "style",
+      "type": "textarea",
+      "label": "Style",
+      "required": true,
+      "default": "upbeat cumbia with accordion and modern synths, 100 bpm",
+      "bind": [
+        {
+          "node": "37:13",
+          "field": "caption"
+        }
+      ]
+    },
+    {
+      "id": "lyrics",
+      "type": "textarea",
+      "label": "Lyrics (optional)",
+      "default": "",
+      "bind": [
+        {
+          "node": "37:13",
+          "field": "lyrics"
+        }
+      ]
+    },
+    {
+      "id": "seconds",
+      "type": "slider",
+      "label": "Max seconds",
+      "min": 10,
+      "max": 240,
+      "step": 5,
+      "default": 60,
+      "bind": [
+        {
+          "node": "37:13",
+          "field": "max_duration"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "37:38",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "35",
+      "type": "audio",
+      "label": "Song"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/MiniMax-Music-3",
+      "file": "diffusion_models/minimax_music3_dit_fp16.safetensors",
+      "dir": "diffusion_models",
+      "gb": 4.91,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-Music-3",
+      "file": "text_encoders/minimax_music3_text_encoder_pruned_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 9.2,
+      "phase": "encode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-Music-3",
+      "file": "vae/minimax_music3_dav.safetensors",
+      "dir": "vae",
+      "gb": 0.22,
+      "phase": "decode",
+      "license": "Apache-2.0"
+    }
+  ],
+  "credits": [
+    "MiniMax Music 3 (Apache-2.0)"
+  ],
+  "test": {
+    "style": "lofi piano",
+    "seconds": 10
+  }
+}

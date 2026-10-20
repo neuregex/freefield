@@ -1,0 +1,103 @@
+{
+  "audio": {
+    "apps": [
+      "music",
+      "sfx"
+    ],
+    "download_gb": 29.29,
+    "needs_hf_token": false
+  },
+  "core": {
+    "apps": [
+      "smoke",
+      "smoke-invert"
+    ],
+    "download_gb": 0,
+    "needs_hf_token": false
+  },
+  "image": {
+    "apps": [
+      "cinema-studio",
+      "z-image"
+    ],
+    "download_gb": 12.17,
+    "needs_hf_token": false
+  },
+  "image-flux3": {
+    "apps": [
+      "character",
+      "edit",
+      "product-shot"
+    ],
+    "download_gb": 11.03,
+    "needs_hf_token": true
+  },
+  "image-krea2": {
+    "apps": [
+      "style-reference",
+      "styles"
+    ],
+    "download_gb": 23.67,
+    "needs_hf_token": false
+  },
+  "image-qwen-edit": {
+    "apps": [
+      "relight"
+    ],
+    "download_gb": 31.15,
+    "needs_hf_token": false
+  },
+  "upscale": {
+    "apps": [
+      "remove-bg",
+      "smooth",
+      "upscale",
+      "upscale-video"
+    ],
+    "download_gb": 4.47,
+    "needs_hf_token": false
+  },
+  "video-h3": {
+    "apps": [
+      "reshoot"
+    ],
+    "download_gb": 54.75,
+    "needs_hf_token": false
+  },
+  "video-ltx25": {
+    "apps": [
+      "camera-copy",
+      "speak",
+      "talking",
+      "transitions",
+      "vfx-clean-plate",
+      "vfx-day-to-night",
+      "vfx-water",
+      "video",
+      "video-t2v"
+    ],
+    "download_gb": 47.94,
+    "needs_hf_token": true
+  },
+  "video-scail": {
+    "apps": [
+      "recast"
+    ],
+    "download_gb": 28.62,
+    "needs_hf_token": false
+  },
+  "video-wan": {
+    "apps": [
+      "motion-transfer"
+    ],
+    "download_gb": 24.9,
+    "needs_hf_token": false
+  },
+  "video-wan-camera": {
+    "apps": [
+      "camera-moves"
+    ],
+    "download_gb": 40.05,
+    "needs_hf_token": false
+  }
+}

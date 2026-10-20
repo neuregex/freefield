@@ -1,0 +1,214 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "talking",
+  "name": "Talking Avatar",
+  "section": "video",
+  "pack": "video-ltx25",
+  "status": "draft",
+  "higgsfield_feature": "Lipsync / Speak",
+  "summary": "A portrait speaks or sings along to your audio, with LTX-2.5 audio-to-video in two stages.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "ComfyUI-LTXVideo example_workflows/2.5/LTX-2.5_A2V_Two_Stage_Distilled.json (44c8a36)",
+    "comfyui": "0.42.0",
+    "notes": "Gemma API text encoder removed (local encoding only), int8 weights, portrait conditioning always on. Not run yet."
+  },
+  "inputs": [
+    {
+      "id": "portrait",
+      "type": "image",
+      "label": "Portrait",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "2004",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "audio",
+      "type": "audio",
+      "label": "Voice or song",
+      "required": true,
+      "limits": {
+        "max_mb": 50,
+        "seconds": [
+          2,
+          20
+        ]
+      },
+      "bind": [
+        {
+          "node": "5600",
+          "field": "audio"
+        }
+      ]
+    },
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "Describe the performance",
+      "required": true,
+      "default": "She speaks warmly to the camera with natural head movement and expressive eyes, soft studio light",
+      "bind": [
+        {
+          "node": "5508",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "negative",
+      "type": "textarea",
+      "label": "Must not appear",
+      "default": "blurry, distorted face, warped mouth",
+      "bind": [
+        {
+          "node": "5509",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "start",
+      "type": "number",
+      "label": "Audio start (seconds)",
+      "min": 0,
+      "max": 600,
+      "default": 0,
+      "bind": [
+        {
+          "node": "5601",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "duration",
+      "type": "slider",
+      "label": "Seconds",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "bind": [
+        {
+          "node": "5512",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "enhance",
+      "type": "toggle",
+      "label": "Enhance prompt",
+      "default": false,
+      "help": "Rewrites your prompt with a small Gemma 4 model that also looks at the portrait",
+      "bind": [
+        {
+          "node": "5014:5556",
+          "field": "switch"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "5516:4832",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "4852",
+      "type": "video",
+      "label": "Video"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 21.5,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 15.37,
+      "phase": "encode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-video-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 1.47,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-audio-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.36,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors",
+      "dir": "latent_upscale_models",
+      "gb": 1.0,
+      "phase": "aux",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Comfy-Org/gemma-4",
+      "file": "text_encoders/gemma4_e2b_it_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.2,
+      "phase": "encode",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "elix3r/LTX-2.3-22b-AV-LoRA-talking-head",
+      "file": "LTX-2.3-22b-AV-LoRA-talking-head-v1.safetensors",
+      "dir": "loras",
+      "gb": 0.43,
+      "phase": "denoise",
+      "license": "OpenRAIL",
+      "optional": true
+    }
+  ],
+  "notes": "Use footage and photos of yourself, fictional characters, or people who agreed to it.",
+  "credits": [
+    "LTX-2.5 by Lightricks",
+    "Workflow adapted from Lightricks' ComfyUI-LTXVideo examples"
+  ],
+  "test": {
+    "portrait": "test/portrait.png",
+    "audio": "test/voice.wav",
+    "duration": 2
+  }
+}
