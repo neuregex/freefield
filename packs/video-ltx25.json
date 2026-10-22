@@ -8,11 +8,13 @@
     "camera-copy",
     "chameleon",
     "cloud-surf",
+    "dub",
     "genjutsu",
     "idol",
     "kick-ad",
     "magic-button",
     "melting-doodle",
+    "mixed-media",
     "mukbang",
     "rap-video",
     "reframe",
@@ -30,7 +32,7 @@
     "video-t2v",
     "volcano-ad"
   ],
-  "download_gb": 51.88,
+  "download_gb": 55.0,
   "needs_hf_token": true,
   "custom_nodes": [
     {
@@ -55,11 +57,13 @@
         "camera-copy",
         "chameleon",
         "cloud-surf",
+        "dub",
         "genjutsu",
         "idol",
         "kick-ad",
         "magic-button",
         "melting-doodle",
+        "mixed-media",
         "mukbang",
         "rap-video",
         "reframe",
@@ -109,6 +113,7 @@
         "kick-ad",
         "magic-button",
         "melting-doodle",
+        "mixed-media",
         "mukbang",
         "rap-video",
         "roller-coaster",
@@ -146,6 +151,18 @@
       ]
     },
     {
+      "repo": "Lightricks/LTX-2.3-22b-IC-LoRA-DubIt",
+      "file": "ltx-2.3-22b-ic-lora-dubit-0.9.safetensors",
+      "dir": "loras",
+      "gb": 2.47,
+      "name": "ltx-2.3-22b-ic-lora-dubit-0.9.safetensors",
+      "gated": true,
+      "license": "LTX-2.x Community License",
+      "used_by": [
+        "dub"
+      ]
+    },
+    {
       "repo": "Lightricks/LTX-2.3-22b-IC-LoRA-In-Outpainting",
       "file": "ltx-2.3-22b-ic-lora-in-outpainting-0.9.safetensors",
       "dir": "loras",
@@ -155,6 +172,18 @@
       "license": "LTX-2.x Community License",
       "used_by": [
         "reframe"
+      ]
+    },
+    {
+      "repo": "Lightricks/LTX-2.3-22b-IC-LoRA-Union-Control",
+      "file": "ltx-2.3-22b-ic-lora-union-control-ref0.5.safetensors",
+      "dir": "loras",
+      "gb": 0.65,
+      "name": "ltx-2.3-22b-ic-lora-union-control-ref0.5.safetensors",
+      "gated": true,
+      "license": "LTX-2.x Community License",
+      "used_by": [
+        "mixed-media"
       ]
     },
     {
@@ -245,11 +274,13 @@
         "camera-copy",
         "chameleon",
         "cloud-surf",
+        "dub",
         "genjutsu",
         "idol",
         "kick-ad",
         "magic-button",
         "melting-doodle",
+        "mixed-media",
         "mukbang",
         "rap-video",
         "reframe",
@@ -283,6 +314,7 @@
         "camera-copy",
         "chameleon",
         "cloud-surf",
+        "dub",
         "idol",
         "kick-ad",
         "magic-button",
@@ -319,11 +351,13 @@
         "camera-copy",
         "chameleon",
         "cloud-surf",
+        "dub",
         "genjutsu",
         "idol",
         "kick-ad",
         "magic-button",
         "melting-doodle",
+        "mixed-media",
         "mukbang",
         "rap-video",
         "reframe",
@@ -358,11 +392,13 @@
         "camera-copy",
         "chameleon",
         "cloud-surf",
+        "dub",
         "genjutsu",
         "idol",
         "kick-ad",
         "magic-button",
         "melting-doodle",
+        "mixed-media",
         "mukbang",
         "rap-video",
         "reframe",

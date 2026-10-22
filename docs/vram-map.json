@@ -2303,6 +2303,31 @@
       "measured_peak_gb": null
     },
     {
+      "id": "mixed-media",
+      "name": "Mixed Media",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 40.35,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 22.15,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 22.15,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
       "id": "vfx-water",
       "name": "Water Simulation",
       "section": "video",
@@ -2400,6 +2425,31 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "dub",
+      "name": "Dub",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 41.17,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 23.97,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 23.97,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "needs Modal",
+      "modal_gpu": "L40S (48 GB), whole",
       "measured_peak_gb": null
     },
     {

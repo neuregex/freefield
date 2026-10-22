@@ -1,0 +1,198 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "dub",
+  "name": "Dub",
+  "section": "video",
+  "pack": "video-ltx25",
+  "status": "ready",
+  "higgsfield_feature": "Lipsync Studio (dub a clip)",
+  "summary": "Makes the person in a clip say new words, in any language: new voice track and new lip movement from your text (DubIt IC-LoRA).",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "ComfyUI-LTXVideo example_workflows/2.5/LTX-2.5_V2V_ICLoRA_Single_Stage_Distilled.json (44c8a36)",
+    "comfyui": "0.42.0",
+    "notes": "Lightricks published DubIt only for LTX-2.3 (example_workflows/2.3/LTX-2.3_ICLoRA_DubIt_Two_Stage_Distilled.json: dev checkpoint + distilled LoRA). Its shape is the V2V IC-LoRA one: the clip is the guide, its own audio the speaker reference, the new words come in the prompt. The 2.5 V2V example already freezes the clip's audio as reference tokens, so this is that workflow with the DubIt LoRA: a port, not run yet."
+  },
+  "outputs": [
+    {
+      "node": "4852",
+      "type": "video",
+      "label": "Video"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "clip",
+      "type": "video",
+      "label": "Clip with one person talking",
+      "required": true,
+      "limits": {
+        "max_mb": 200,
+        "seconds": [
+          2,
+          8
+        ]
+      },
+      "bind": [
+        {
+          "node": "5001",
+          "field": "file"
+        }
+      ]
+    },
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "Who speaks and what they say",
+      "required": true,
+      "default": "A woman with short black hair in a denim jacket talks to the camera, speaking in Spanish saying: \"Hola, bienvenidos. Esta es una prueba de doblaje con un modelo abierto.\"",
+      "help": "Write the new words yourself, in the language's own script, about as long as the original line; one speaker only",
+      "bind": [
+        {
+          "node": "5508",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "negative",
+      "type": "textarea",
+      "label": "Must not appear",
+      "default": "blurry, distorted face, warped mouth",
+      "bind": [
+        {
+          "node": "5509",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "size",
+      "type": "select",
+      "label": "Resolution (short side)",
+      "default": 544,
+      "options": [
+        {
+          "value": 448,
+          "label": "448 px"
+        },
+        {
+          "value": 544,
+          "label": "544 px"
+        },
+        {
+          "value": 576,
+          "label": "576 px"
+        },
+        {
+          "value": 720,
+          "label": "720 px"
+        }
+      ],
+      "bind": [
+        {
+          "node": "5548:5026",
+          "field": "resize_type.shorter_size"
+        }
+      ]
+    },
+    {
+      "id": "strength",
+      "type": "slider",
+      "label": "Strength",
+      "min": 0.5,
+      "max": 1.3,
+      "step": 0.05,
+      "default": 1.0,
+      "bind": [
+        {
+          "node": "5004:5606",
+          "field": "strength_model"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "5516:4832",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "models": [
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 21.5,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 15.37,
+      "phase": "encode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-video-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 1.47,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-audio-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.36,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Comfy-Org/gemma-4",
+      "file": "text_encoders/gemma4_e2b_it_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.2,
+      "phase": "encode",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Lightricks/LTX-2.3-22b-IC-LoRA-DubIt",
+      "file": "ltx-2.3-22b-ic-lora-dubit-0.9.safetensors",
+      "dir": "loras",
+      "gb": 2.47,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    }
+  ],
+  "custom_nodes": [
+    {
+      "repo": "https://github.com/Lightricks/ComfyUI-LTXVideo",
+      "commit": "44c8a36b7c31ee00b4271daed11dc2a4aa481140"
+    }
+  ],
+  "credits": [
+    "LTX-2.5 and the DubIt IC-LoRA by Lightricks",
+    "Workflow adapted from Lightricks' ComfyUI-LTXVideo examples"
+  ],
+  "test": {
+    "clip": "test/clip.mp4",
+    "size": 448
+  }
+}

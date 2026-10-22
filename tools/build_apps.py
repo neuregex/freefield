@@ -212,6 +212,56 @@ def ltx_sdr_to_hdr(api: Api) -> None:
 
 INGREDIENTS = "ltx-2.5-22b-ic-lora-ingredients-0.9.safetensors"   # the example names the 2.3 file; the 2.5 one exists
 IN_OUTPAINTING = "ltx-2.3-22b-ic-lora-in-outpainting-0.9.safetensors"   # only a 2.3 file; Lightricks' own 2.5 example uses it
+UNION_CONTROL = "ltx-2.3-22b-ic-lora-union-control-ref0.5.safetensors"   # same: 2.3 file, 2.5 example
+DUBIT = "ltx-2.3-22b-ic-lora-dubit-0.9.safetensors"   # 2.3 file; Lightricks' example is 2.3-only, so this is a port (see ltx_v2v_local)
+
+
+# Custom nodes in Lightricks' Union Control example (Video Depth Anything, comfyui_controlnet_aux): stand-ins
+# with their widget order so the converter can read the graph; ltx_union_control drops them all.
+UNION_STANDINS = {
+    "VideoDepthAnythingProcess": {"input": {"required": {"vda_model": ["VDA_MODEL"], "images": ["IMAGE"], "input_size": ["INT", {}],
+                                                         "max_res": ["INT", {}], "precision": [["fp16", "fp32"]]}},
+                                  "output": ["IMAGE"], "output_name": ["IMAGE"]},
+    "LoadVideoDepthAnythingModel": {"input": {"required": {"model": [["video_depth_anything_vits.pth"]]}},
+                                    "output": ["VDA_MODEL"], "output_name": ["vda_model"]},
+    "VideoDepthAnythingOutput": {"input": {"required": {"depths": ["IMAGE"], "colormap": [["gray"]]}},
+                                 "output": ["IMAGE"], "output_name": ["IMAGE"]},
+    "CannyEdgePreprocessor": {"input": {"required": {"image": ["IMAGE"], "low_threshold": ["INT", {}], "high_threshold": ["INT", {}],
+                                                     "resolution": ["INT", {}]}},
+                              "output": ["IMAGE"], "output_name": ["IMAGE"]},
+    "DWPreprocessor": {"input": {"required": {"image": ["IMAGE"], "detect_hand": [["enable", "disable"]], "detect_body": [["enable", "disable"]],
+                                              "detect_face": [["enable", "disable"]], "resolution": ["INT", {}],
+                                              "bbox_detector": [["yolox_l.onnx"]], "pose_estimator": [["dw-ll_ucoco_384_bs5.torchscript.pt"]],
+                                              "scale_stick_for_xinsr_cn": [["enable", "disable"]]}},
+                       "output": ["IMAGE", "POSE_KEYPOINT"], "output_name": ["IMAGE", "POSE_KEYPOINT"]},
+}
+
+
+def ltx_union_control(api: Api) -> None:
+    """Lightricks' Union Control IC-LoRA example (two stages): local text, no enhancer, edges from the core Canny node.
+
+    The example turns the reference clip into a control signal with an annotator: Video Depth Anything by
+    default, Canny or DWPose as alternatives, all three custom nodes. Core ComfyUI has Canny, so the edge
+    branch is the one wired in; it keeps the clip's structure and leaves the look to the prompt, which is what
+    a restyle needs. The optional first frame stays as in the example ("use image input" off: LoadImage keeps
+    ComfyUI's bundled example.png, which is never read while the switch is off).
+    """
+    ltx_local_text(api)
+    # the prompt is "<look>. <what is in the shot>": the look picker writes ff_style, the text box writes 5508
+    rewire(api, ["5014:5556", 0], ["ff_prompt", 0])
+    drop(api, "5014:5556", "5014:5555", "5014:5546", "5014:9004", "5004:5605")
+    api["ff_style"] = {"class_type": "PrimitiveString", "inputs": {"value": "Japanese anime style, cel shading, clean line art, vibrant flat colors"},
+                       "_meta": {"title": "Look"}}
+    api["ff_prompt"] = {"class_type": "StringConcatenate", "inputs": {"string_a": ["ff_style", 0], "string_b": ["5508", 0], "delimiter": ". "},
+                        "_meta": {"title": "Look + shot"}}
+    frames = find(api, "ResizeImageMaskNode", **{"resize_type": "scale shorter dimension"})
+    guide_out = find(api, "VideoDepthAnythingOutput")
+    api["ff_canny"] = {"class_type": "Canny", "inputs": {"image": [frames, 0], "low_threshold": 0.35, "high_threshold": 0.75},
+                       "_meta": {"title": "Edges of the reference clip"}}
+    rewire(api, [guide_out, 0], ["ff_canny", 0])
+    drop(api, guide_out, find(api, "VideoDepthAnythingProcess"), find(api, "LoadVideoDepthAnythingModel"),
+         find(api, "CannyEdgePreprocessor"), find(api, "DWPreprocessor"))
+    put(api, find(api, "LTXICLoRALoaderModelOnly"), "lora_name", UNION_CONTROL)
 
 
 def ltx_ingredients(api: Api) -> None:
@@ -381,6 +431,15 @@ def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None)
     op = ltxwf("LTX-2.5_ICLoRA_Outpaint_Two_Stage_Distilled.json", {"ImagePadForOutpaintTargetSize": KJ_PAD})
     ltx_outpaint(op)
     out["reframe"] = op
+    uc = ltxwf("LTX-2.5_ICLoRA_Union_Control_Distilled.json", UNION_STANDINS)
+    ltx_union_control(uc)
+    out["mixed-media"] = uc
+    # DubIt on 2.5: Lightricks only published a 2.3 workflow (dev checkpoint + distilled LoRA), but its shape is
+    # the V2V IC-LoRA one: the clip is the guide, its audio the speaker reference, the new words come in the
+    # prompt. The 2.5 V2V example already freezes the clip's audio as reference tokens, so only the LoRA differs.
+    dub = ltxwf("LTX-2.5_V2V_ICLoRA_Single_Stage_Distilled.json")
+    ltx_v2v_local(dub, DUBIT)
+    out["dub"] = dub
 
     cm = tpl("video_wan2_2_14B_fun_camera.json")
     # The template's 4-step Lightning variant is bypassed; its LoRAs come back at strength 0, which
