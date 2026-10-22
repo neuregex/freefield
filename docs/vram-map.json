@@ -2328,6 +2328,81 @@
       "measured_peak_gb": null
     },
     {
+      "id": "genjutsu",
+      "name": "Genjutsu",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 40.01,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 22.81,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 22.81,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "reframe",
+      "name": "Reframe",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 40.01,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 22.81,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 22.81,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "sdr-hdr",
+      "name": "SDR to HDR",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 24.65,
+      "phases_gb": {
+        "encode": 0.01,
+        "denoise": 22.81,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 22.81,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
       "id": "reshoot",
       "name": "Re-shoot",
       "section": "video",

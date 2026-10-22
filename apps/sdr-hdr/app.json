@@ -1,0 +1,182 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "sdr-hdr",
+  "name": "SDR to HDR",
+  "section": "video",
+  "pack": "video-ltx25",
+  "status": "ready",
+  "higgsfield_feature": "SDR to HDR",
+  "summary": "Turns an SDR clip into a 10-bit HLG HDR master with Lightricks' SDR-to-HDR IC-LoRA; a tone-mapped preview comes with it.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "ComfyUI-LTXVideo example_workflows/2.5/HDR_workflows/LTX-2.5_ICLoRA_SDR_to_HDR_Distilled.json (44c8a36)",
+    "comfyui": "0.42.0",
+    "notes": "int8 DiT. No text encoder: the LoRA's scene-embeddings file (models/embeddings) is the conditioning. The example's LTXVSaveHLG (HEVC through PyAV, reports no file to the API) is replaced by core nodes: ImageColorSpace (ACEScct → Rec.2020 HLG) + CreateVideo/SaveVideo in HDR, a 10-bit H.264 file the gateway collects. EXR dump off. A short-side resize was added after the SDR → ACEScct mapping. Not run yet."
+  },
+  "outputs": [
+    {
+      "node": "4852",
+      "type": "video",
+      "label": "Preview (tone-mapped SDR)"
+    },
+    {
+      "node": "ff_hdr_save",
+      "type": "video",
+      "label": "HDR master (HLG, 10-bit)"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "clip",
+      "type": "video",
+      "label": "Your SDR clip",
+      "required": true,
+      "limits": {
+        "max_mb": 200,
+        "seconds": [
+          2,
+          8
+        ]
+      },
+      "help": "An ordinary (sRGB) clip. The HDR master keeps its frame rate and audio",
+      "bind": [
+        {
+          "node": "9102",
+          "field": "file"
+        }
+      ]
+    },
+    {
+      "id": "size",
+      "type": "select",
+      "label": "Resolution (short side)",
+      "default": 720,
+      "options": [
+        {
+          "value": 544,
+          "label": "544 px"
+        },
+        {
+          "value": 720,
+          "label": "720 px"
+        },
+        {
+          "value": 1080,
+          "label": "1080 px"
+        }
+      ],
+      "bind": [
+        {
+          "node": "ff_resize",
+          "field": "resize_type.shorter_size"
+        }
+      ],
+      "help": "The HDR output has this size"
+    },
+    {
+      "id": "exposure",
+      "type": "slider",
+      "label": "Preview exposure",
+      "min": -2,
+      "max": 2,
+      "step": 0.1,
+      "default": 0,
+      "help": "Stops, for the tone-mapped preview only; the HDR master is unchanged",
+      "bind": [
+        {
+          "node": "9012",
+          "field": "exposure"
+        }
+      ]
+    },
+    {
+      "id": "strength",
+      "type": "slider",
+      "label": "Strength",
+      "min": 0.5,
+      "max": 1.3,
+      "step": 0.05,
+      "default": 1.0,
+      "bind": [
+        {
+          "node": "5004:5606",
+          "field": "strength_model"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "5516:4832",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "models": [
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 21.5,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-video-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 1.47,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-audio-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.36,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5-22b-IC-LoRA-SDR-To-HDR",
+      "file": "ltx-2.5-22b-ic-lora-sdr-to-hdr-1.0.safetensors",
+      "dir": "loras",
+      "gb": 1.31,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5-22b-IC-LoRA-SDR-To-HDR",
+      "file": "ltx-2.5-22b-ic-lora-sdr-to-hdr-scene-emb.safetensors",
+      "dir": "embeddings",
+      "gb": 0.01,
+      "phase": "encode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    }
+  ],
+  "custom_nodes": [
+    {
+      "repo": "https://github.com/Lightricks/ComfyUI-LTXVideo",
+      "commit": "44c8a36b7c31ee00b4271daed11dc2a4aa481140"
+    }
+  ],
+  "credits": [
+    "LTX-2.5 and the SDR-to-HDR IC-LoRA by Lightricks",
+    "Workflow adapted from Lightricks' ComfyUI-LTXVideo HDR examples"
+  ],
+  "test": {
+    "clip": "test/clip.mp4",
+    "size": 544
+  }
+}

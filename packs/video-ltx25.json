@@ -8,13 +8,16 @@
     "camera-copy",
     "chameleon",
     "cloud-surf",
+    "genjutsu",
     "idol",
     "kick-ad",
     "magic-button",
     "melting-doodle",
     "mukbang",
     "rap-video",
+    "reframe",
     "roller-coaster",
+    "sdr-hdr",
     "speak",
     "storm-creature",
     "talking",
@@ -27,7 +30,7 @@
     "video-t2v",
     "volcano-ad"
   ],
-  "download_gb": 47.94,
+  "download_gb": 51.88,
   "needs_hf_token": true,
   "custom_nodes": [
     {
@@ -52,13 +55,16 @@
         "camera-copy",
         "chameleon",
         "cloud-surf",
+        "genjutsu",
         "idol",
         "kick-ad",
         "magic-button",
         "melting-doodle",
         "mukbang",
         "rap-video",
+        "reframe",
         "roller-coaster",
+        "sdr-hdr",
         "speak",
         "storm-creature",
         "talking",
@@ -70,6 +76,18 @@
         "video",
         "video-t2v",
         "volcano-ad"
+      ]
+    },
+    {
+      "repo": "Lightricks/LTX-2.5-22b-IC-LoRA-SDR-To-HDR",
+      "file": "ltx-2.5-22b-ic-lora-sdr-to-hdr-scene-emb.safetensors",
+      "dir": "embeddings",
+      "gb": 0.01,
+      "name": "ltx-2.5-22b-ic-lora-sdr-to-hdr-scene-emb.safetensors",
+      "gated": true,
+      "license": "LTX-2.x Community License",
+      "used_by": [
+        "sdr-hdr"
       ]
     },
     {
@@ -128,6 +146,18 @@
       ]
     },
     {
+      "repo": "Lightricks/LTX-2.3-22b-IC-LoRA-In-Outpainting",
+      "file": "ltx-2.3-22b-ic-lora-in-outpainting-0.9.safetensors",
+      "dir": "loras",
+      "gb": 1.31,
+      "name": "ltx-2.3-22b-ic-lora-in-outpainting-0.9.safetensors",
+      "gated": true,
+      "license": "LTX-2.x Community License",
+      "used_by": [
+        "reframe"
+      ]
+    },
+    {
       "repo": "Lightricks/LTX-2.5-22b-IC-LoRA-Clean-Plate",
       "file": "ltx-2.5-22b-ic-lora-clean-plate-1.0.safetensors",
       "dir": "loras",
@@ -149,6 +179,30 @@
       "license": "LTX-2.x Community License",
       "used_by": [
         "vfx-day-to-night"
+      ]
+    },
+    {
+      "repo": "Lightricks/LTX-2.5-22b-IC-LoRA-Ingredients",
+      "file": "ltx-2.5-22b-ic-lora-ingredients-0.9.safetensors",
+      "dir": "loras",
+      "gb": 1.31,
+      "name": "ltx-2.5-22b-ic-lora-ingredients-0.9.safetensors",
+      "gated": true,
+      "license": "LTX-2.x Community License",
+      "used_by": [
+        "genjutsu"
+      ]
+    },
+    {
+      "repo": "Lightricks/LTX-2.5-22b-IC-LoRA-SDR-To-HDR",
+      "file": "ltx-2.5-22b-ic-lora-sdr-to-hdr-1.0.safetensors",
+      "dir": "loras",
+      "gb": 1.31,
+      "name": "ltx-2.5-22b-ic-lora-sdr-to-hdr-1.0.safetensors",
+      "gated": true,
+      "license": "LTX-2.x Community License",
+      "used_by": [
+        "sdr-hdr"
       ]
     },
     {
@@ -191,12 +245,14 @@
         "camera-copy",
         "chameleon",
         "cloud-surf",
+        "genjutsu",
         "idol",
         "kick-ad",
         "magic-button",
         "melting-doodle",
         "mukbang",
         "rap-video",
+        "reframe",
         "roller-coaster",
         "speak",
         "storm-creature",
@@ -263,13 +319,16 @@
         "camera-copy",
         "chameleon",
         "cloud-surf",
+        "genjutsu",
         "idol",
         "kick-ad",
         "magic-button",
         "melting-doodle",
         "mukbang",
         "rap-video",
+        "reframe",
         "roller-coaster",
+        "sdr-hdr",
         "speak",
         "storm-creature",
         "talking",
@@ -299,13 +358,16 @@
         "camera-copy",
         "chameleon",
         "cloud-surf",
+        "genjutsu",
         "idol",
         "kick-ad",
         "magic-button",
         "melting-doodle",
         "mukbang",
         "rap-video",
+        "reframe",
         "roller-coaster",
+        "sdr-hdr",
         "speak",
         "storm-creature",
         "talking",

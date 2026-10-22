@@ -176,6 +176,111 @@ def ltx_a2v_local(api: Api) -> None:
     put(api, use_image, "value", True)
 
 
+def ltx_sdr_to_hdr(api: Api) -> None:
+    """Lightricks' SDR → HDR IC-LoRA example: int8 DiT, no EXR dump, HLG master from core nodes.
+
+    The scene-embeddings file replaces the text encoder, so there is no Gemma at all. The
+    example's LTXVSaveHLG encodes HEVC through PyAV and reports no file to the API, so the
+    gateway could never collect it; the same master (Rec.2020 / HLG, 10-bit) comes out of
+    ImageColorSpace (ACEScct → HLG) + CreateVideo/SaveVideo in HDR, which do report it. The
+    example's tone-mapped sRGB preview stays as the second output.
+    """
+    swap_files(api, LTX_INT8)
+    put(api, "9012", "save_exr", False)
+    drop(api, "9013")
+    # the example keeps the clip's own size; a short-side resize (the app's "Resolution") goes after the
+    # SDR → ACEScct mapping and before the example's round-to-32, where its note says to resize
+    work = find(api, "LTXVSDRToHDRWorkingSpace")
+    rewire(api, [work, 0], ["ff_resize", 0])
+    api["ff_resize"] = {"class_type": "ResizeImageMaskNode",
+                        "inputs": {"input": [work, 0], "resize_type": "scale shorter dimension", "resize_type.shorter_size": 720,
+                                   "scale_method": "lanczos"},
+                        "_meta": {"title": "Resolution (short side)"}}
+    decode, source = "5518:5538", "5548:9006"
+    assert api[decode]["class_type"] == "VAEDecodeTiled" and api[source]["class_type"] == "GetVideoComponents"
+    api["ff_hlg"] = {"class_type": "ImageColorSpace",
+                     "inputs": {"image": [decode, 0], "source": "HDR ACEScct", "destination": "HDR"},
+                     "_meta": {"title": "ACEScct → Rec.2020 HLG"}}
+    api["ff_hdr_video"] = {"class_type": "CreateVideo",
+                           "inputs": {"images": ["ff_hlg", 0], "fps": [source, 2], "audio": [source, 1],
+                                      "bit_depth": "auto", "color_space": "HDR", "codec": "none"},
+                           "_meta": {"title": "HDR video (HLG, 10-bit)"}}
+    preview = find(api, "SaveVideo")
+    api["ff_hdr_save"] = {"class_type": "SaveVideo", "inputs": {**api[preview]["inputs"], "video": ["ff_hdr_video", 0]},
+                          "_meta": {"title": "Save HDR master"}}
+
+
+INGREDIENTS = "ltx-2.5-22b-ic-lora-ingredients-0.9.safetensors"   # the example names the 2.3 file; the 2.5 one exists
+IN_OUTPAINTING = "ltx-2.3-22b-ic-lora-in-outpainting-0.9.safetensors"   # only a 2.3 file; Lightricks' own 2.5 example uses it
+
+
+def ltx_ingredients(api: Api) -> None:
+    """Lightricks' Ingredients IC-LoRA example: local text, the 2.5 LoRA file."""
+    ltx_local_text(api)
+    put(api, find(api, "LTXICLoRALoaderModelOnly"), "lora_name", INGREDIENTS)
+
+
+# KJNodes' ImagePadForOutpaintTargetSize sits in Lightricks' Outpaint example. It is not a core node, so
+# the converter gets this stand-in (its widget order) and ltx_outpaint rebuilds it from core nodes.
+KJ_PAD = {"input": {"required": {"image": ["IMAGE"], "target_width": ["INT", {}], "target_height": ["INT", {}],
+                                 "feathering": ["INT", {}],
+                                 "upscale_method": [["nearest-exact", "bilinear", "area", "bicubic", "lanczos"]]},
+                    "optional": {"mask": ["MASK"]}},
+          "output": ["IMAGE", "MASK"], "output_name": ["IMAGE", "MASK"]}
+
+
+def ltx_outpaint(api: Api) -> None:
+    """Lightricks' Outpaint IC-LoRA example (two stages): local text, no enhancer, no start image,
+    and the KJNodes pad node rebuilt from core nodes.
+
+    KJNodes' ImagePadForOutpaintTargetSize scales the frames down to fit the target (never up),
+    then pads them to it, centred, and returns the padded frames and the mask of the padding.
+    GetImageSize + ComfyMathExpression + ImageScale + ImagePadForOutpaint do the same arithmetic.
+    The optional start image is off in the example; the two nodes that would condition on it
+    pass the latent through when bypassed, so they go with the image chain.
+    """
+    ltx_local_text(api)
+    # enhancer (Gemma 4 E2B) and its switches: the prompt feeds the encoder directly
+    rewire(api, ["5408:5610", 0], ["5404", 0])
+    drop(api, "5408:5610", "5408:5609", "5408:5608", "5408:5406", "5407:5605")
+    # start image chain
+    for node in ("5409:3159", "5413:5213"):
+        assert api[node]["class_type"] == "LTXVImgToVideoConditionOnly", node
+    rewire(api, ["5409:3159", 0], ["5409:3059", 0])
+    rewire(api, ["5413:5213", 0], ["5413:5267", 0])
+    drop(api, "5409:3159", "5413:5213", "5409:5388", "5408:5188", "2004", "5408:9019", "5408:9018", "5408:5022")
+    drop(api, "5407:5604")   # latent upscaler: loaded but unused (stage 2 re-encodes the upscaled pixels)
+    # the pad node
+    pad = find(api, "ImagePadForOutpaintTargetSize")
+    src, tw, th = (api[pad]["inputs"][k] for k in ("image", "target_width", "target_height"))
+    api["ff_size"] = {"class_type": "GetImageSize", "inputs": {"image": src}, "_meta": {"title": "Frame size"}}
+    w, h = ["ff_size", 0], ["ff_size", 1]
+
+    def expr(nid: str, title: str, expression: str, **values) -> None:
+        api[nid] = {"class_type": "ComfyMathExpression",
+                    "inputs": {"expression": expression, **{f"values.{k}": v for k, v in values.items()}},
+                    "_meta": {"title": title}}
+
+    expr("ff_scale", "fit scale (never up)", "min(1, min(c / a, d / b))", a=w, b=h, c=tw, d=th)
+    expr("ff_w", "fitted width", "floor(a * b)", a=w, b=["ff_scale", 0])
+    expr("ff_h", "fitted height", "floor(a * b)", a=h, b=["ff_scale", 0])
+    api["ff_fit"] = {"class_type": "ImageScale",
+                     "inputs": {"image": src, "upscale_method": "lanczos", "width": ["ff_w", 1], "height": ["ff_h", 1], "crop": "disabled"},
+                     "_meta": {"title": "Fit inside the target"}}
+    expr("ff_left", "pad left", "max(0, floor((c - a) / 2))", a=["ff_w", 1], c=tw)
+    expr("ff_right", "pad right", "max(0, c - a - floor((c - a) / 2))", a=["ff_w", 1], c=tw)
+    expr("ff_top", "pad top", "max(0, floor((c - a) / 2))", a=["ff_h", 1], c=th)
+    expr("ff_bottom", "pad bottom", "max(0, c - a - floor((c - a) / 2))", a=["ff_h", 1], c=th)
+    api["ff_pad"] = {"class_type": "ImagePadForOutpaint",
+                     "inputs": {"image": ["ff_fit", 0], "left": ["ff_left", 1], "top": ["ff_top", 1], "right": ["ff_right", 1],
+                                "bottom": ["ff_bottom", 1], "feathering": api[pad]["inputs"].get("feathering", 0)},
+                     "_meta": {"title": "Pad to the target"}}
+    rewire(api, [pad, 0], ["ff_pad", 0])
+    rewire(api, [pad, 1], ["ff_pad", 1])
+    drop(api, pad)
+    put(api, find(api, "LTXICLoRALoaderModelOnly"), "lora_name", IN_OUTPAINTING)
+
+
 # ---------------------------------------------------------------- recipes
 SMOKE: Api = {
     "1": {"class_type": "EmptyImage", "inputs": {"width": 256, "height": 256, "batch_size": 1, "color": 0x2A6F97},
@@ -205,10 +310,10 @@ SMOKE_INVERT: Api = {
 
 
 def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None) -> dict[str, Api]:
-    def load(path: Path) -> Api:
+    def load(path: Path, extra: dict | None = None) -> Api:
         ui = json.loads(path.read_text(encoding="utf-8"))
         _collect_types(ui)
-        api, warnings = convert(ui, info)
+        api, warnings = convert(ui, {**info, **(extra or {})})
         for w in warnings:
             print(f"  [{path.name}] {w}")
         return api
@@ -216,8 +321,8 @@ def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None)
     def tpl(name: str) -> Api:
         return load(templates / name)
 
-    def ltxwf(name: str) -> Api:
-        return load(ltx / name)
+    def ltxwf(name: str, extra: dict | None = None) -> Api:
+        return load(ltx / name, extra)
 
     out: dict[str, Api] = {"smoke": json.loads(json.dumps(SMOKE)), "smoke-invert": json.loads(json.dumps(SMOKE_INVERT))}
 
@@ -266,6 +371,16 @@ def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None)
     talking = ltxwf("LTX-2.5_A2V_Two_Stage_Distilled.json")
     ltx_a2v_local(talking)
     out["talking"] = talking
+
+    hdr = ltxwf("HDR_workflows/LTX-2.5_ICLoRA_SDR_to_HDR_Distilled.json")
+    ltx_sdr_to_hdr(hdr)
+    out["sdr-hdr"] = hdr
+    ing = ltxwf("LTX-2.5_ICLoRA_Ingredients_Single_Stage_Distilled.json")
+    ltx_ingredients(ing)
+    out["genjutsu"] = ing
+    op = ltxwf("LTX-2.5_ICLoRA_Outpaint_Two_Stage_Distilled.json", {"ImagePadForOutpaintTargetSize": KJ_PAD})
+    ltx_outpaint(op)
+    out["reframe"] = op
 
     cm = tpl("video_wan2_2_14B_fun_camera.json")
     # The template's 4-step Lightning variant is bypassed; its LoRAs come back at strength 0, which

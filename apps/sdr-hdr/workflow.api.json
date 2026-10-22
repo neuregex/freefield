@@ -1,0 +1,566 @@
+{
+  "4852": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "9014",
+        0
+      ],
+      "filename_prefix": "freefield/sdr-hdr",
+      "format": "auto",
+      "format.codec": "auto",
+      "codec": "auto"
+    },
+    "_meta": {
+      "title": "Save video (preview)"
+    }
+  },
+  "5004:5600": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "ltx-2.5-audio-vae-bf16.safetensors"
+    },
+    "_meta": {
+      "title": "Load VAE - Audio"
+    }
+  },
+  "5004:5601": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "ltx-2.5-video-vae-bf16.safetensors"
+    },
+    "_meta": {
+      "title": "Load VAE - Video"
+    }
+  },
+  "5004:5602": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "weight_dtype": "default"
+    },
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "5004:5606": {
+    "class_type": "LTXICLoRALoaderModelOnly",
+    "inputs": {
+      "model": [
+        "5004:5602",
+        0
+      ],
+      "lora_name": "ltx-2.5-22b-ic-lora-sdr-to-hdr-1.0.safetensors",
+      "strength_model": 1
+    },
+    "_meta": {
+      "title": "🅛🅣🅧 IC-LoRA Loader Model Only"
+    }
+  },
+  "5516:4828": {
+    "class_type": "CFGGuider",
+    "inputs": {
+      "model": [
+        "5004:5606",
+        0
+      ],
+      "positive": [
+        "9002:5012",
+        0
+      ],
+      "negative": [
+        "9002:5012",
+        1
+      ],
+      "cfg": 1
+    },
+    "_meta": {
+      "title": "CFG Guider"
+    }
+  },
+  "5516:4829": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "5516:4832",
+        0
+      ],
+      "guider": [
+        "5516:4828",
+        0
+      ],
+      "sampler": [
+        "5516:4831",
+        0
+      ],
+      "sigmas": [
+        "5516:4984",
+        0
+      ],
+      "latent_image": [
+        "9002:4528",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "5516:4831": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "5516:4832": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 42
+    },
+    "_meta": {
+      "title": "RandomNoise"
+    }
+  },
+  "5516:4845": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "5516:4829",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Separate AV Latent"
+    }
+  },
+  "5516:4984": {
+    "class_type": "ManualSigmas",
+    "inputs": {
+      "sigmas": "1.0, 0.99375, 0.9875, 0.98125, 0.975, 0.909375, 0.725, 0.421875, 0.0"
+    },
+    "_meta": {
+      "title": "ManualSigmas"
+    }
+  },
+  "5516:5000": {
+    "class_type": "LTXVCropGuides",
+    "inputs": {
+      "positive": [
+        "9002:5012",
+        0
+      ],
+      "negative": [
+        "9002:5012",
+        1
+      ],
+      "latent": [
+        "5516:4845",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "LTXVCropGuides"
+    }
+  },
+  "5518:5538": {
+    "class_type": "VAEDecodeTiled",
+    "inputs": {
+      "samples": [
+        "5516:5000",
+        2
+      ],
+      "vae": [
+        "9011",
+        0
+      ],
+      "tile_size": 512,
+      "overlap": 64,
+      "temporal_size": 64,
+      "temporal_overlap": 8
+    },
+    "_meta": {
+      "title": "VAE Decode (Tiled)"
+    }
+  },
+  "5548:5026": {
+    "class_type": "ResizeImageMaskNode",
+    "inputs": {
+      "input": [
+        "ff_resize",
+        0
+      ],
+      "resize_type": "scale to multiple",
+      "resize_type.multiple": 32,
+      "scale_method": "lanczos"
+    },
+    "_meta": {
+      "title": "Resize Image/Mask"
+    }
+  },
+  "5548:5029": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "5548:5026",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Image Size"
+    }
+  },
+  "5548:9006": {
+    "class_type": "GetVideoComponents",
+    "inputs": {
+      "video": [
+        "9102",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Video Components"
+    }
+  },
+  "5548:9010": {
+    "class_type": "LTXVSDRToHDRWorkingSpace",
+    "inputs": {
+      "image": [
+        "5548:9006",
+        0
+      ],
+      "color_space": "srgb_gamma"
+    },
+    "_meta": {
+      "title": "SDR → ACEScct"
+    }
+  },
+  "9002:3059": {
+    "class_type": "EmptyLTXVLatentVideo",
+    "inputs": {
+      "width": [
+        "5548:5029",
+        0
+      ],
+      "height": [
+        "5548:5029",
+        1
+      ],
+      "length": [
+        "5548:5029",
+        2
+      ],
+      "batch_size": 1
+    },
+    "_meta": {
+      "title": "Empty LTXV Latent Video"
+    }
+  },
+  "9002:3159": {
+    "class_type": "LTXVImgToVideoInplace",
+    "inputs": {
+      "vae": [
+        "9011",
+        0
+      ],
+      "image": [
+        "9002:9100",
+        0
+      ],
+      "latent": [
+        "9002:3059",
+        0
+      ],
+      "strength": 0.7,
+      "bypass": true
+    },
+    "_meta": {
+      "title": "LTXVImgToVideoInplace"
+    }
+  },
+  "9002:4528": {
+    "class_type": "LTXVConcatAVLatent",
+    "inputs": {
+      "video_latent": [
+        "9002:5012",
+        2
+      ],
+      "audio_latent": [
+        "9002:9009",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Concat AV Latent"
+    }
+  },
+  "9002:5012": {
+    "class_type": "LTXAddVideoICLoRAGuide",
+    "inputs": {
+      "positive": [
+        "9002:9005",
+        0
+      ],
+      "negative": [
+        "9002:9005",
+        1
+      ],
+      "vae": [
+        "9011",
+        0
+      ],
+      "latent": [
+        "9002:3159",
+        0
+      ],
+      "image": [
+        "5548:5026",
+        0
+      ],
+      "latent_downscale_factor": [
+        "5004:5606",
+        1
+      ],
+      "frame_idx": 0,
+      "strength": 1,
+      "crop": "disabled",
+      "use_tiled_encode": false,
+      "tile_size": 256,
+      "tile_overlap": 64,
+      "use_streaming": false,
+      "tile_frames": 97
+    },
+    "_meta": {
+      "title": "🅛🅣🅧 Add Video IC-LoRA Guide"
+    }
+  },
+  "9002:9005": {
+    "class_type": "LTXVConditioning",
+    "inputs": {
+      "positive": [
+        "9021",
+        0
+      ],
+      "negative": [
+        "9021",
+        1
+      ],
+      "frame_rate": [
+        "9103",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "LTXVConditioning"
+    }
+  },
+  "9002:9009": {
+    "class_type": "LTXVEmptyLatentAudio",
+    "inputs": {
+      "audio_vae": [
+        "5004:5600",
+        0
+      ],
+      "frames_number": [
+        "5548:5029",
+        2
+      ],
+      "frame_rate": [
+        "5548:9006",
+        2
+      ],
+      "batch_size": 1
+    },
+    "_meta": {
+      "title": "empty audio latent (works with silent video)"
+    }
+  },
+  "9002:9100": {
+    "class_type": "EmptyImage",
+    "inputs": {
+      "width": 64,
+      "height": 9,
+      "batch_size": 57,
+      "color": 0
+    },
+    "_meta": {
+      "title": "I2V unused placeholder"
+    }
+  },
+  "9011": {
+    "class_type": "LTXVVAEForceFloat32",
+    "inputs": {
+      "vae": [
+        "5004:5601",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "VAE float32 (HDR)"
+    }
+  },
+  "9012": {
+    "class_type": "LTXVHDRDecodePostprocess",
+    "inputs": {
+      "image": [
+        "5518:5538",
+        0
+      ],
+      "transfer": "acescct",
+      "exposure": 0,
+      "save_exr": false,
+      "exr_color_space": "acescg",
+      "output_dir": "output/hdr_exr",
+      "filename_prefix": "freefield/sdr-hdr",
+      "half_precision": true
+    },
+    "_meta": {
+      "title": "HDR postprocess"
+    }
+  },
+  "9014": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "9012",
+        0
+      ],
+      "audio": [
+        "5548:9006",
+        1
+      ],
+      "fps": [
+        "5548:9006",
+        2
+      ],
+      "bit_depth": "auto",
+      "color_space": "sRGB",
+      "codec": "none"
+    },
+    "_meta": {
+      "title": "CreateVideo (preview)"
+    }
+  },
+  "9020": {
+    "class_type": "LTXVLoadConditioning",
+    "inputs": {
+      "file_name": "ltx-2.5-22b-ic-lora-sdr-to-hdr-scene-emb.safetensors",
+      "device": "cpu"
+    },
+    "_meta": {
+      "title": "Load scene embeddings"
+    }
+  },
+  "9021": {
+    "class_type": "LTXVConditioning",
+    "inputs": {
+      "positive": [
+        "9020",
+        0
+      ],
+      "negative": [
+        "9020",
+        0
+      ],
+      "frame_rate": [
+        "9103",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "LTXV Conditioning"
+    }
+  },
+  "9102": {
+    "class_type": "LoadVideo",
+    "inputs": {
+      "file": ""
+    },
+    "_meta": {
+      "title": "Load SDR video"
+    }
+  },
+  "9103": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "values.a": [
+        "5548:9006",
+        2
+      ],
+      "expression": "a if a <= 30 else 30"
+    },
+    "_meta": {
+      "title": "Conditioning FPS (≤30 keep, >30 → 30)"
+    }
+  },
+  "ff_resize": {
+    "class_type": "ResizeImageMaskNode",
+    "inputs": {
+      "input": [
+        "5548:9010",
+        0
+      ],
+      "resize_type": "scale shorter dimension",
+      "resize_type.shorter_size": 720,
+      "scale_method": "lanczos"
+    },
+    "_meta": {
+      "title": "Resolution (short side)"
+    }
+  },
+  "ff_hlg": {
+    "class_type": "ImageColorSpace",
+    "inputs": {
+      "image": [
+        "5518:5538",
+        0
+      ],
+      "source": "HDR ACEScct",
+      "destination": "HDR"
+    },
+    "_meta": {
+      "title": "ACEScct → Rec.2020 HLG"
+    }
+  },
+  "ff_hdr_video": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "ff_hlg",
+        0
+      ],
+      "fps": [
+        "5548:9006",
+        2
+      ],
+      "audio": [
+        "5548:9006",
+        1
+      ],
+      "bit_depth": "auto",
+      "color_space": "HDR",
+      "codec": "none"
+    },
+    "_meta": {
+      "title": "HDR video (HLG, 10-bit)"
+    }
+  },
+  "ff_hdr_save": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "ff_hdr_video",
+        0
+      ],
+      "filename_prefix": "freefield/sdr-hdr",
+      "format": "auto",
+      "format.codec": "auto",
+      "codec": "auto"
+    },
+    "_meta": {
+      "title": "Save HDR master"
+    }
+  }
+}

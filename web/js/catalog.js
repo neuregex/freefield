@@ -21,9 +21,9 @@ export async function loadCatalog() {
 /** Apps grouped like a store: a card can only sit in one row. */
 export const CATEGORIES = [
   { id: "create", apps: ["z-image", "cinema-studio", "styles", "video-t2v", "video", "music", "sfx"] },
-  { id: "identity", apps: ["character", "speak", "talking", "recast", "motion-transfer", "character-swap", "face-swap"] },
-  { id: "camera", apps: ["camera-moves", "camera-copy", "reshoot", "transitions", "angles", "shots", "zooms", "whats-next"] },
-  { id: "style", apps: ["relight", "style-reference", "upscale", "upscale-video", "smooth", "remove-bg"] },
+  { id: "identity", apps: ["character", "speak", "talking", "recast", "motion-transfer", "genjutsu", "character-swap", "face-swap"] },
+  { id: "camera", apps: ["camera-moves", "camera-copy", "reshoot", "reframe", "transitions", "angles", "shots", "zooms", "whats-next"] },
+  { id: "style", apps: ["relight", "style-reference", "upscale", "upscale-video", "sdr-hdr", "smooth", "remove-bg"] },
   { id: "vfx", apps: ["effects", "edit", "vfx-clean-plate", "vfx-day-to-night", "vfx-water"] },
   { id: "ads", apps: ["product-shot", "poster", "packshot", "macro-scene", "macro-product", "giant-product", "billboard", "graffiti-ad", "fridge-ad", "ugc-shot",
     "asmr-product", "chameleon", "magic-button", "truck-ad", "kick-ad", "volcano-ad"] },
@@ -38,8 +38,8 @@ export function categoryOf(id) {
 
 /** The video studio's three tabs, like a camera crew: shoot, fix, move. */
 export const VIDEO_TABS = [
-  { id: "create", apps: ["video", "effects", "video-t2v", "speak", "talking", "transitions", "camera-moves"] },
-  { id: "edit", apps: ["recast", "vfx-clean-plate", "vfx-day-to-night", "vfx-water", "upscale-video", "smooth", "reshoot"] },
+  { id: "create", apps: ["video", "effects", "video-t2v", "genjutsu", "speak", "talking", "transitions", "camera-moves"] },
+  { id: "edit", apps: ["recast", "reframe", "vfx-clean-plate", "vfx-day-to-night", "vfx-water", "sdr-hdr", "upscale-video", "smooth", "reshoot"] },
   { id: "motion", apps: ["motion-transfer", "camera-copy"] },
   { id: "templates", apps: ["behind-the-scenes", "asmr-product", "asmr-whisper", "asmr-host", "chameleon", "magic-button", "truck-ad", "kick-ad", "volcano-ad",
     "roller-coaster", "storm-creature", "cloud-surf", "mukbang", "melting-doodle", "rap-video", "idol"] },
@@ -116,6 +116,9 @@ const TAGLINES = {
   "vfx-clean-plate": ["Empty the street", "Vacía la calle"],
   "vfx-day-to-night": ["Day becomes night", "El día se vuelve noche"],
   "vfx-water": ["Add water to any shot", "Agrega agua a cualquier toma"],
+  genjutsu: ["Your cast, props and place in one clip", "Tu elenco, props y lugar en un clip"],
+  reframe: ["Any aspect ratio, nothing cropped", "Cualquier formato, sin recortar"],
+  "sdr-hdr": ["HDR range for an SDR clip", "Rango HDR para un clip SDR"],
   music: ["Write a song", "Compón una canción"],
   sfx: ["Sound for every scene", "Sonido para cada escena"],
 };

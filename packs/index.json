@@ -123,13 +123,16 @@
       "camera-copy",
       "chameleon",
       "cloud-surf",
+      "genjutsu",
       "idol",
       "kick-ad",
       "magic-button",
       "melting-doodle",
       "mukbang",
       "rap-video",
+      "reframe",
       "roller-coaster",
+      "sdr-hdr",
       "speak",
       "storm-creature",
       "talking",
@@ -142,7 +145,7 @@
       "video-t2v",
       "volcano-ad"
     ],
-    "download_gb": 47.94,
+    "download_gb": 51.88,
     "needs_hf_token": true
   },
   "video-scail": {

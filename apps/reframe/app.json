@@ -1,0 +1,267 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "reframe",
+  "name": "Reframe",
+  "section": "video",
+  "pack": "video-ltx25",
+  "status": "ready",
+  "higgsfield_feature": "Reframe",
+  "summary": "Changes a clip's aspect ratio by painting what lies beyond the frame, in two stages (Lightricks' In-Outpainting IC-LoRA).",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "ComfyUI-LTXVideo example_workflows/2.5/LTX-2.5_ICLoRA_Outpaint_Two_Stage_Distilled.json (44c8a36)",
+    "comfyui": "0.42.0",
+    "notes": "Gemma API text encoder removed (local encoding only), int8 weights, prompt enhancer and optional start image removed. The example's ImagePadForOutpaintTargetSize (KJNodes) is rebuilt from core nodes with the same arithmetic: fit the frames inside the target (never upscaled), pad centred, mask the padding. The clip is normalised to a 1024 px short side first, as in the example; the targets are the example's 1920×1088 scale. The LoRA was trained on LTX-2.3; Lightricks' own 2.5 example uses it. Not run yet."
+  },
+  "outputs": [
+    {
+      "node": "5228",
+      "type": "video",
+      "label": "Video"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "clip",
+      "type": "video",
+      "label": "Your clip",
+      "required": true,
+      "limits": {
+        "max_mb": 200,
+        "seconds": [
+          2,
+          8
+        ]
+      },
+      "bind": [
+        {
+          "node": "5368",
+          "field": "file"
+        }
+      ]
+    },
+    {
+      "id": "aspect",
+      "type": "select",
+      "label": "New aspect ratio",
+      "default": "9:16",
+      "help": "The clip is scaled to fit inside the new frame and the rest is painted in",
+      "options": [
+        {
+          "value": "9:16",
+          "label": "9:16  (1088×1920)",
+          "sets": [
+            {
+              "node": "9009",
+              "field": "value",
+              "value": 1088
+            },
+            {
+              "node": "9010",
+              "field": "value",
+              "value": 1920
+            }
+          ]
+        },
+        {
+          "value": "16:9",
+          "label": "16:9  (1920×1088)",
+          "sets": [
+            {
+              "node": "9009",
+              "field": "value",
+              "value": 1920
+            },
+            {
+              "node": "9010",
+              "field": "value",
+              "value": 1088
+            }
+          ]
+        },
+        {
+          "value": "1:1",
+          "label": "1:1  (1408×1408)",
+          "sets": [
+            {
+              "node": "9009",
+              "field": "value",
+              "value": 1408
+            },
+            {
+              "node": "9010",
+              "field": "value",
+              "value": 1408
+            }
+          ]
+        },
+        {
+          "value": "4:5",
+          "label": "4:5  (1216×1536)",
+          "sets": [
+            {
+              "node": "9009",
+              "field": "value",
+              "value": 1216
+            },
+            {
+              "node": "9010",
+              "field": "value",
+              "value": 1536
+            }
+          ]
+        },
+        {
+          "value": "4:3",
+          "label": "4:3  (1472×1088)",
+          "sets": [
+            {
+              "node": "9009",
+              "field": "value",
+              "value": 1472
+            },
+            {
+              "node": "9010",
+              "field": "value",
+              "value": 1088
+            }
+          ]
+        },
+        {
+          "value": "21:9",
+          "label": "21:9  (2048×896)",
+          "sets": [
+            {
+              "node": "9009",
+              "field": "value",
+              "value": 2048
+            },
+            {
+              "node": "9010",
+              "field": "value",
+              "value": 896
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "What lies beyond the frame",
+      "default": "",
+      "help": "Optional. Describe the scene, not the edit; empty just extends what is there",
+      "bind": [
+        {
+          "node": "5404",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "negative",
+      "type": "textarea",
+      "label": "Must not appear",
+      "default": "",
+      "bind": [
+        {
+          "node": "9008",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "strength",
+      "type": "slider",
+      "label": "Strength",
+      "min": 0.5,
+      "max": 1.3,
+      "step": 0.05,
+      "default": 1.0,
+      "bind": [
+        {
+          "node": "5407:5607",
+          "field": "strength_model"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "5410:4832",
+          "field": "noise_seed"
+        },
+        {
+          "node": "5414:5210",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "models": [
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 21.5,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 15.37,
+      "phase": "encode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-video-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 1.47,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-audio-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.36,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.3-22b-IC-LoRA-In-Outpainting",
+      "file": "ltx-2.3-22b-ic-lora-in-outpainting-0.9.safetensors",
+      "dir": "loras",
+      "gb": 1.31,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    }
+  ],
+  "custom_nodes": [
+    {
+      "repo": "https://github.com/Lightricks/ComfyUI-LTXVideo",
+      "commit": "44c8a36b7c31ee00b4271daed11dc2a4aa481140"
+    }
+  ],
+  "credits": [
+    "LTX-2.5 and the In-Outpainting IC-LoRA by Lightricks",
+    "Workflow adapted from Lightricks' ComfyUI-LTXVideo examples"
+  ],
+  "test": {
+    "clip": "test/clip.mp4",
+    "aspect": "9:16"
+  }
+}

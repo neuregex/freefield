@@ -1,0 +1,204 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "genjutsu",
+  "name": "Genjutsu",
+  "section": "video",
+  "pack": "video-ltx25",
+  "status": "ready",
+  "higgsfield_feature": "Genjutsu",
+  "summary": "Composes a clip from one reference sheet: people, props, clothes or a place laid out side by side and named by position in the prompt (Ingredients IC-LoRA).",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "ComfyUI-LTXVideo example_workflows/2.5/LTX-2.5_ICLoRA_Ingredients_Single_Stage_Distilled.json (44c8a36)",
+    "comfyui": "0.42.0",
+    "notes": "Gemma API text encoder removed (local encoding only), int8 weights. The example names the LTX-2.3 LoRA file; the 2.5 one from the same family is used. The sheet is held on every frame as the IC-LoRA guide and is not the first frame (the example's default). Not run yet."
+  },
+  "outputs": [
+    {
+      "node": "4852",
+      "type": "video",
+      "label": "Video"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "sheet",
+      "type": "image",
+      "label": "Reference sheet",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "help": "One image with your elements side by side: people, props, clothes, a place. Name them by position in the prompt",
+      "bind": [
+        {
+          "node": "2004",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "Describe the scene",
+      "required": true,
+      "default": "The man on the left rides the red bicycle in the middle along the beach boardwalk on the right, golden hour, handheld camera following him",
+      "help": "Say which element is which: the woman on the left, the jacket in the middle, the place on the right",
+      "bind": [
+        {
+          "node": "5508",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "negative",
+      "type": "textarea",
+      "label": "Must not appear",
+      "default": "",
+      "bind": [
+        {
+          "node": "5509",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "duration",
+      "type": "slider",
+      "label": "Seconds",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "help": "Rounded so the frame count is 1 + a multiple of 8",
+      "bind": [
+        {
+          "node": "9008",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "size",
+      "type": "select",
+      "label": "Resolution (short side)",
+      "default": 544,
+      "options": [
+        {
+          "value": 448,
+          "label": "448 px"
+        },
+        {
+          "value": 544,
+          "label": "544 px"
+        },
+        {
+          "value": 576,
+          "label": "576 px"
+        },
+        {
+          "value": 720,
+          "label": "720 px"
+        }
+      ],
+      "bind": [
+        {
+          "node": "5014:4990",
+          "field": "resize_type.shorter_size"
+        }
+      ],
+      "help": "The clip takes the sheet's aspect ratio"
+    },
+    {
+      "id": "strength",
+      "type": "slider",
+      "label": "Strength",
+      "min": 0.5,
+      "max": 1.3,
+      "step": 0.05,
+      "default": 1.0,
+      "bind": [
+        {
+          "node": "5004:5606",
+          "field": "strength_model"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "5516:9017",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "models": [
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 21.5,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 15.37,
+      "phase": "encode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-video-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 1.47,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-audio-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.36,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5-22b-IC-LoRA-Ingredients",
+      "file": "ltx-2.5-22b-ic-lora-ingredients-0.9.safetensors",
+      "dir": "loras",
+      "gb": 1.31,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    }
+  ],
+  "custom_nodes": [
+    {
+      "repo": "https://github.com/Lightricks/ComfyUI-LTXVideo",
+      "commit": "44c8a36b7c31ee00b4271daed11dc2a4aa481140"
+    }
+  ],
+  "credits": [
+    "LTX-2.5 and the Ingredients IC-LoRA by Lightricks",
+    "Workflow adapted from Lightricks' ComfyUI-LTXVideo examples"
+  ],
+  "test": {
+    "sheet": "test/sheet.png",
+    "duration": 2,
+    "size": 448
+  }
+}
