@@ -111,6 +111,9 @@ function checkGraph(app: App, problems: Problem[], severity: Problem["severity"]
       has(b.node, b.field, `input "${input.id}"`);
       if (b.template) checkTemplate(b.template, `input "${input.id}"`);
       if (isFileInput(input) && b.template) say(`input "${input.id}": file inputs cannot use templates`);
+      // an optional input with no default is skipped when left empty, and its template with it: the node keeps the
+      // workflow's own text (the 40 template apps' prompts were lost this way in their first lab run)
+      if (b.template && !input.required && input.default === undefined) say(`input "${input.id}": its bind template is only written when the input has a value; give it a default ("" is fine)`);
     }
     // string values an option writes may be templates too (an effect's prompt written around {subject})
     for (const o of input.options ?? []) {

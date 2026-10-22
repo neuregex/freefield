@@ -88,6 +88,19 @@ test("an option's string values are templates: the effect's prompt is written ar
   assert.equal(extra.sets["3.steps"], 6);
 });
 
+test("a template app writes its prompt even when Extra direction is left empty", () => {
+  const app = byId("headshot");
+  const file = { bytes: new Uint8Array([1]), name: "me.png" };
+  const wf = recorder();
+  applyInputs(app, resolveValues(app, { image: file, seed: 1 }), wf, () => null);
+  const text = wf.sets["4.text"] as string;
+  assert.match(text, /^A professional studio headshot of the same person as in <ref_image_0>, plain light grey backdrop, wearing a navy blazer/);
+  assert.match(text, /build identical\.$/, "nothing dangles after the prompt");
+  const more = recorder();
+  applyInputs(app, resolveValues(app, { image: file, backdrop: "dark charcoal backdrop", details: "slight smile", seed: 1 }), more, () => null);
+  assert.match(more.sets["4.text"] as string, /, dark charcoal backdrop, .*identical\. slight smile$/);
+});
+
 test("every effect writes its own LoRA and a prompt with its trigger words", () => {
   const app = byId("effects");
   const effect = app.inputs.find((i) => i.id === "effect")!;

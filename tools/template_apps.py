@@ -319,7 +319,8 @@ def manifest(t: dict) -> dict:
         inputs.append({"id": "image", "type": "image", "label": t["image_label"], "required": True, "limits": {"max_mb": 20},
                        "bind": [{"node": base["image"][0], "field": base["image"][1]}]})
     inputs += t["inputs"]
-    inputs.append({"id": "details", "type": "textarea", "label": "Extra direction", "help": "Added at the end of the app's prompt.",
+    # the default "" matters: an optional input with no value is skipped everywhere, and the template with it
+    inputs.append({"id": "details", "type": "textarea", "label": "Extra direction", "default": "", "help": "Added at the end of the app's prompt.",
                    "bind": [{"node": base["prompt"][0], "field": base["prompt"][1], "template": t["prompt"] + " {details}"}]})
     inputs += [keep[k] for k in base["keep"]]
     test = {"image": "test/portrait.png"} if base["image"] else {}
