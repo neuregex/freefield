@@ -1,0 +1,3207 @@
+{
+  "apps": {
+    "camera-copy": {
+      "case": "camera-copy-pan",
+      "type": "video",
+      "card": "examples/camera-copy/card.mp4",
+      "poster": "examples/camera-copy/poster.jpg",
+      "full": "examples/camera-copy/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your first frame",
+          "type": "image",
+          "src": "examples/camera-copy/input-image.jpg",
+          "full": "examples/camera-copy/input-image-full.jpg",
+          "from_case": "ref-room"
+        },
+        {
+          "id": "clip",
+          "label": "Camera move to copy",
+          "type": "video",
+          "src": "examples/camera-copy/input-clip.jpg",
+          "full": "examples/camera-copy/input-clip-full.mp4",
+          "from_case": "ref-pan"
+        }
+      ],
+      "values": {
+        "prompt": "The camera pans to the right across the library, revealing more bookshelves and lamps",
+        "negative": "static camera, frozen frame, blurry, distorted",
+        "hold": 0.6,
+        "strength": 1.0,
+        "size": 544
+      },
+      "seed": 42,
+      "seconds": 57.1,
+      "peak_vram_gb": 40.64,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "camera-moves": {
+      "case": "camera-moves-quality",
+      "type": "video",
+      "card": "examples/camera-moves/card.mp4",
+      "poster": "examples/camera-moves/poster.jpg",
+      "full": "examples/camera-moves/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Start image",
+          "type": "image",
+          "src": "examples/camera-moves/input-image.jpg",
+          "full": "examples/camera-moves/input-image-full.jpg",
+          "from_case": "ref-room"
+        }
+      ],
+      "values": {
+        "prompt": "A cozy old library, dust floating in the lamp light, pages of an open book stirring",
+        "camera": "Zoom In",
+        "speed": 1.0,
+        "width": 832,
+        "height": 480,
+        "frames": 81
+      },
+      "seed": 42,
+      "seconds": 348.5,
+      "peak_vram_gb": 41.26,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "character": {
+      "case": "character-market",
+      "type": "image",
+      "card": "examples/character/card.jpg",
+      "poster": null,
+      "full": "examples/character/full.jpg",
+      "inputs": [
+        {
+          "id": "reference",
+          "label": "Reference photo",
+          "type": "image",
+          "src": "examples/character/input-reference.jpg",
+          "full": "examples/character/input-reference-full.jpg",
+          "from_case": "ref-face-a"
+        }
+      ],
+      "values": {
+        "scene": "walking through a night market, string lights, light rain",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 6.0,
+      "peak_vram_gb": 11.28,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "cinema-studio": {
+      "case": "cinema-studio-detective",
+      "type": "image",
+      "card": "examples/cinema-studio/card.jpg",
+      "poster": null,
+      "full": "examples/cinema-studio/full.jpg",
+      "inputs": [],
+      "values": {
+        "prompt": "A detective lighting a cigarette under a streetlamp",
+        "camera": "grand format 70mm film camera",
+        "lens": "1970s cinema prime lens",
+        "focal": "35mm (natural cinematic perspective)",
+        "aperture": "aperture f/1.4, shallow depth of field, creamy bokeh"
+      },
+      "seed": 42,
+      "seconds": 9.2,
+      "peak_vram_gb": 12.36,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "edit": {
+      "case": "edit-jacket",
+      "type": "image",
+      "card": "examples/edit/card.jpg",
+      "poster": null,
+      "full": "examples/edit/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Photo",
+          "type": "image",
+          "src": "examples/edit/input-image.jpg",
+          "full": "examples/edit/input-image-full.jpg",
+          "from_case": "ref-face-a"
+        }
+      ],
+      "values": {
+        "instruction": "Change the denim jacket to deep red leather, keep everything else the same.",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 13.2,
+      "peak_vram_gb": 30.89,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "motion-transfer": {
+      "case": "motion-transfer-walk",
+      "type": "video",
+      "card": "examples/motion-transfer/card.mp4",
+      "poster": "examples/motion-transfer/poster.jpg",
+      "full": "examples/motion-transfer/full.mp4",
+      "inputs": [
+        {
+          "id": "character",
+          "label": "Character",
+          "type": "image",
+          "src": "examples/motion-transfer/input-character.jpg",
+          "full": "examples/motion-transfer/input-character-full.jpg",
+          "from_case": "ref-character"
+        },
+        {
+          "id": "motion",
+          "label": "Driving clip",
+          "type": "video",
+          "src": "examples/motion-transfer/input-motion.jpg",
+          "full": "examples/motion-transfer/input-motion-full.mp4",
+          "from_case": "ref-walk"
+        }
+      ],
+      "values": {
+        "character_prompt": "Character appearance description: a man in a red jacket, jeans and white sneakers",
+        "action_prompt": "walking toward the camera on a city sidewalk"
+      },
+      "seed": null,
+      "seconds": 147.7,
+      "peak_vram_gb": 37.34,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "music": {
+      "case": "ref-song",
+      "type": "audio",
+      "card": "examples/music/card.png",
+      "poster": null,
+      "full": "examples/music/full.mp3",
+      "inputs": [],
+      "values": {
+        "style": "warm acoustic folk song, clear female lead vocal, gentle guitar, 92 bpm",
+        "lyrics": "[verse]\nMorning light across the window\nCoffee warm and the city slow\n[chorus]\nSing it out, sing it out\nEvery little thing we know",
+        "seconds": 10
+      },
+      "seed": 42,
+      "seconds": 26.3,
+      "peak_vram_gb": 37.06,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "product-shot": {
+      "case": "product-shot-splash",
+      "type": "image",
+      "card": "examples/product-shot/card.jpg",
+      "poster": null,
+      "full": "examples/product-shot/full.jpg",
+      "inputs": [
+        {
+          "id": "product",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/product-shot/input-product.jpg",
+          "full": "examples/product-shot/input-product-full.jpg",
+          "from_case": "ref-product"
+        }
+      ],
+      "values": {
+        "scene": "floating in mid-air with water splashing around it, high-speed photo, blue gradient background",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 16.1,
+      "peak_vram_gb": 10.99,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "relight": {
+      "case": "relight-neon",
+      "type": "image",
+      "card": "examples/relight/card.jpg",
+      "poster": null,
+      "full": "examples/relight/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Photo",
+          "type": "image",
+          "src": "examples/relight/input-image.jpg",
+          "full": "examples/relight/input-image-full.jpg",
+          "from_case": "ref-face-a"
+        }
+      ],
+      "values": {
+        "light": "neon night lighting, magenta and cyan rim light, dark moody background",
+        "details": ""
+      },
+      "seed": 42,
+      "seconds": 39.9,
+      "peak_vram_gb": 28.66,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "remove-bg": {
+      "case": "remove-bg-product",
+      "type": "image",
+      "card": "examples/remove-bg/card.png",
+      "poster": null,
+      "full": "examples/remove-bg/full.png",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Image",
+          "type": "image",
+          "src": "examples/remove-bg/input-image.jpg",
+          "full": "examples/remove-bg/input-image-full.jpg",
+          "from_case": "ref-product"
+        }
+      ],
+      "values": {},
+      "seed": null,
+      "seconds": 3.0,
+      "peak_vram_gb": 4.96,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "reshoot": {
+      "case": "reshoot-orbit",
+      "type": "video",
+      "card": "examples/reshoot/card.mp4",
+      "poster": "examples/reshoot/poster.jpg",
+      "full": "examples/reshoot/full.mp4",
+      "inputs": [
+        {
+          "id": "clip",
+          "label": "Your clip",
+          "type": "video",
+          "src": "examples/reshoot/input-clip.jpg",
+          "full": "examples/reshoot/input-clip-full.mp4",
+          "from_case": "ref-alley"
+        }
+      ],
+      "values": {
+        "azimuth": -30,
+        "elevation": 15,
+        "distance": 1.0,
+        "duration": 4,
+        "prompt": ""
+      },
+      "seed": 42,
+      "seconds": 196.2,
+      "peak_vram_gb": 44.17,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "sfx": {
+      "case": "sfx-rain",
+      "type": "audio",
+      "card": "examples/sfx/card.png",
+      "poster": null,
+      "full": "examples/sfx/full.mp3",
+      "inputs": [],
+      "values": {
+        "description": "heavy rain on a tin roof with distant thunder",
+        "category": "SFX",
+        "seconds": 10,
+        "reprompt": true
+      },
+      "seed": 42,
+      "seconds": 18.6,
+      "peak_vram_gb": 9.25,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "smooth": {
+      "case": "smooth-slowmo",
+      "type": "video",
+      "card": "examples/smooth/card.mp4",
+      "poster": "examples/smooth/poster.jpg",
+      "full": "examples/smooth/full.mp4",
+      "inputs": [
+        {
+          "id": "clip",
+          "label": "Clip",
+          "type": "video",
+          "src": "examples/smooth/input-clip.jpg",
+          "full": "examples/smooth/input-clip-full.mp4",
+          "from_case": "ref-street"
+        }
+      ],
+      "values": {
+        "factor": 4,
+        "mode": false
+      },
+      "seed": null,
+      "seconds": 28.1,
+      "peak_vram_gb": 27.71,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "speak": {
+      "case": "speak-hello",
+      "type": "video",
+      "card": "examples/speak/card.mp4",
+      "poster": "examples/speak/poster.jpg",
+      "full": "examples/speak/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Portrait",
+          "type": "image",
+          "src": "examples/speak/input-image.jpg",
+          "full": "examples/speak/input-image-full.jpg",
+          "from_case": "ref-face-a"
+        }
+      ],
+      "values": {
+        "line": "Hello! This voice and these lips come from a single photo and an open model.",
+        "voice": "a warm, friendly female voice",
+        "scene": "Medium close-up, natural head movement and blinking, soft window light",
+        "duration": 5,
+        "enhance": false,
+        "aspect": "16:9 (Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 52.6,
+      "peak_vram_gb": 41.58,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "style-reference": {
+      "case": "style-reference-lighthouse",
+      "type": "image",
+      "card": "examples/style-reference/card.jpg",
+      "poster": null,
+      "full": "examples/style-reference/full.jpg",
+      "inputs": [
+        {
+          "id": "style",
+          "label": "Style reference",
+          "type": "image",
+          "src": "examples/style-reference/input-style.jpg",
+          "full": "examples/style-reference/input-style-full.jpg",
+          "from_case": "ref-painting"
+        }
+      ],
+      "values": {
+        "prompt": "a lighthouse on a cliff during a storm, waves crashing",
+        "enhance": false,
+        "aspect": "1:1 (Square)",
+        "megapixels": 1.0
+      },
+      "seed": 42,
+      "seconds": 26.1,
+      "peak_vram_gb": 19.8,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "styles": {
+      "case": "styles-tarot",
+      "type": "image",
+      "card": "examples/styles/card.jpg",
+      "poster": null,
+      "full": "examples/styles/full.jpg",
+      "inputs": [],
+      "values": {
+        "prompt": "a fox reading under a tree at dusk",
+        "style": "vintage tarot style",
+        "strength": 0.8,
+        "enhance": true,
+        "aspect": "1:1 (Square)",
+        "megapixels": 1.0
+      },
+      "seed": 42,
+      "seconds": 8.3,
+      "peak_vram_gb": 19.51,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "talking": {
+      "case": "talking-sing",
+      "type": "video",
+      "card": "examples/talking/card.mp4",
+      "poster": "examples/talking/poster.jpg",
+      "full": "examples/talking/full.mp4",
+      "inputs": [
+        {
+          "id": "portrait",
+          "label": "Portrait",
+          "type": "image",
+          "src": "examples/talking/input-portrait.jpg",
+          "full": "examples/talking/input-portrait-full.jpg",
+          "from_case": "ref-face-a"
+        },
+        {
+          "id": "audio",
+          "label": "Voice or song",
+          "type": "audio",
+          "src": "examples/talking/input-audio.png",
+          "full": "examples/talking/input-audio-full.mp3",
+          "from_case": "ref-song"
+        }
+      ],
+      "values": {
+        "prompt": "She sings along to the song, natural lip movement, subtle head motion, expressive eyes, soft studio light",
+        "negative": "blurry, distorted face, warped mouth",
+        "start": 0,
+        "duration": 5,
+        "enhance": false
+      },
+      "seed": 42,
+      "seconds": 90.4,
+      "peak_vram_gb": 42.85,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "transitions": {
+      "case": "transition-statue",
+      "type": "video",
+      "card": "examples/transitions/card.mp4",
+      "poster": "examples/transitions/poster.jpg",
+      "full": "examples/transitions/full.mp4",
+      "inputs": [
+        {
+          "id": "first",
+          "label": "First frame",
+          "type": "image",
+          "src": "examples/transitions/input-first.jpg",
+          "full": "examples/transitions/input-first-full.jpg",
+          "from_case": "ref-face-a"
+        },
+        {
+          "id": "last",
+          "label": "Last frame",
+          "type": "image",
+          "src": "examples/transitions/input-last.jpg",
+          "full": "examples/transitions/input-last-full.jpg",
+          "from_case": "ref-face-b"
+        }
+      ],
+      "values": {
+        "prompt": "She slowly turns into a bronze statue, a smooth magical transformation",
+        "strength": 1.0,
+        "duration": 4
+      },
+      "seed": 42,
+      "seconds": 66.8,
+      "peak_vram_gb": 44.29,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "upscale": {
+      "case": "upscale-face",
+      "type": "image",
+      "card": "examples/upscale/card.png",
+      "poster": null,
+      "full": "examples/upscale/full.png",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Image",
+          "type": "image",
+          "src": "examples/upscale/input-image.jpg",
+          "full": "examples/upscale/input-image-full.jpg",
+          "from_case": "ref-face-a"
+        }
+      ],
+      "values": {
+        "scale": 2
+      },
+      "seed": 42,
+      "seconds": 8.0,
+      "peak_vram_gb": 5.64,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "upscale-video": {
+      "case": "upscale-video-street",
+      "type": "video",
+      "card": "examples/upscale-video/card.mp4",
+      "poster": "examples/upscale-video/poster.jpg",
+      "full": "examples/upscale-video/full.mp4",
+      "inputs": [
+        {
+          "id": "clip",
+          "label": "Clip",
+          "type": "video",
+          "src": "examples/upscale-video/input-clip.jpg",
+          "full": "examples/upscale-video/input-clip-full.mp4",
+          "from_case": "ref-street"
+        }
+      ],
+      "values": {},
+      "seed": 42,
+      "seconds": 357.7,
+      "peak_vram_gb": 26.11,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "vfx-clean-plate": {
+      "case": "ic-clean-plate",
+      "type": "video",
+      "card": "examples/vfx-clean-plate/card.mp4",
+      "poster": "examples/vfx-clean-plate/poster.jpg",
+      "full": "examples/vfx-clean-plate/full.mp4",
+      "inputs": [
+        {
+          "id": "clip",
+          "label": "Your clip",
+          "type": "video",
+          "src": "examples/vfx-clean-plate/input-clip.jpg",
+          "full": "examples/vfx-clean-plate/input-clip-full.mp4",
+          "from_case": "ref-street"
+        }
+      ],
+      "values": {
+        "prompt": "An empty city street with parked cars and shop fronts, no people anywhere in the frame, natural daylight.",
+        "negative": "people, pedestrians, person, crowd",
+        "strength": 1.0,
+        "size": 544
+      },
+      "seed": 42,
+      "seconds": 56.7,
+      "peak_vram_gb": 40.61,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "vfx-day-to-night": {
+      "case": "ic-day-to-night",
+      "type": "video",
+      "card": "examples/vfx-day-to-night/card.mp4",
+      "poster": "examples/vfx-day-to-night/poster.jpg",
+      "full": "examples/vfx-day-to-night/full.mp4",
+      "inputs": [
+        {
+          "id": "clip",
+          "label": "Your clip",
+          "type": "video",
+          "src": "examples/vfx-day-to-night/input-clip.jpg",
+          "full": "examples/vfx-day-to-night/input-clip-full.mp4",
+          "from_case": "ref-street"
+        }
+      ],
+      "values": {
+        "prompt": "A realistic nighttime scene, photorealistic moonlight, deep natural shadows. Only the lighting changes from day to night; identical composition, framing, camera movement and motion.",
+        "negative": "daytime, bright sunlight, blue sky, overexposed, worst quality, inconsistent motion, blurry, jittery, distorted",
+        "strength": 1.0,
+        "size": 448
+      },
+      "seed": 42,
+      "seconds": 27.2,
+      "peak_vram_gb": 44.05,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "vfx-water": {
+      "case": "ic-water",
+      "type": "video",
+      "card": "examples/vfx-water/card.mp4",
+      "poster": "examples/vfx-water/poster.jpg",
+      "full": "examples/vfx-water/full.mp4",
+      "inputs": [
+        {
+          "id": "clip",
+          "label": "Your clip",
+          "type": "video",
+          "src": "examples/vfx-water/input-clip.jpg",
+          "full": "examples/vfx-water/input-clip-full.mp4",
+          "from_case": "ref-alley"
+        }
+      ],
+      "values": {
+        "prompt": "The street slowly floods with clear rippling water that reflects the buildings, realistic fluid motion.",
+        "negative": "blurry, distorted, low quality",
+        "strength": 1.0,
+        "size": 544
+      },
+      "seed": 42,
+      "seconds": 36.1,
+      "peak_vram_gb": 44.4,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "video": {
+      "case": "i2v-portrait",
+      "type": "video",
+      "card": "examples/video/card.mp4",
+      "poster": "examples/video/poster.jpg",
+      "full": "examples/video/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "First frame",
+          "type": "image",
+          "src": "examples/video/input-image.jpg",
+          "full": "examples/video/input-image-full.jpg",
+          "from_case": "ref-face-a"
+        }
+      ],
+      "values": {
+        "prompt": "She slowly turns her head toward the window light and smiles, hair moving gently, soft natural light",
+        "duration": 4,
+        "enhance": false,
+        "aspect": "16:9 (Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 23.1,
+      "peak_vram_gb": 41.55,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "video-t2v": {
+      "case": "baseline-t2v",
+      "type": "video",
+      "card": "examples/video-t2v/card.mp4",
+      "poster": "examples/video-t2v/poster.jpg",
+      "full": "examples/video-t2v/full.mp4",
+      "inputs": [],
+      "values": {
+        "prompt": "A glass of water tips over on a wooden table and water splashes, macro shot",
+        "duration": 4,
+        "enhance": false,
+        "aspect": "16:9 (Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 47.6,
+      "peak_vram_gb": 41.55,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-133620-l40s"
+    },
+    "z-image": {
+      "case": "ref-face-a",
+      "type": "image",
+      "card": "examples/z-image/card.jpg",
+      "poster": null,
+      "full": "examples/z-image/full.jpg",
+      "inputs": [],
+      "values": {
+        "prompt": "Portrait of a woman with short black hair and a denim jacket, soft studio light, neutral grey background, photorealistic",
+        "width": 1280,
+        "height": 768,
+        "steps": 8
+      },
+      "seed": 42,
+      "seconds": 15.4,
+      "peak_vram_gb": 14.08,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "recast": {
+      "case": "recast-walk",
+      "type": "video",
+      "card": "examples/recast/card.mp4",
+      "poster": "examples/recast/poster.jpg",
+      "full": "examples/recast/full.mp4",
+      "inputs": [
+        {
+          "id": "clip",
+          "label": "Video",
+          "type": "video",
+          "src": "examples/recast/input-clip.jpg",
+          "full": "examples/recast/input-clip-full.mp4",
+          "from_case": "ref-walk"
+        },
+        {
+          "id": "character",
+          "label": "Your character",
+          "type": "image",
+          "src": "examples/recast/input-character.jpg",
+          "full": "examples/recast/input-character-full.jpg",
+          "from_case": "ref-character"
+        }
+      ],
+      "values": {
+        "prompt": "A man in a red jacket and jeans walks toward the camera on a city sidewalk, daylight, realistic",
+        "target": "woman",
+        "mode": true,
+        "fast": true,
+        "width": 512,
+        "height": 896
+      },
+      "seed": 42,
+      "seconds": 144.2,
+      "peak_vram_gb": 30.57,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261020-162214-l40s"
+    },
+    "effects": {
+      "case": "fx-robot-face",
+      "type": "video",
+      "card": "examples/effects/card.mp4",
+      "poster": "examples/effects/poster.jpg",
+      "full": "examples/effects/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/effects/input-image.jpg",
+          "full": "examples/effects/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        }
+      ],
+      "values": {
+        "effect": "robot-face",
+        "subject": "a young man with short curly hair in a mustard yellow hoodie",
+        "strength": 1.0,
+        "aspect": "portrait",
+        "frames": 81
+      },
+      "seed": 42,
+      "seconds": 190.3,
+      "peak_vram_gb": 30.77,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261021-140940-h100",
+      "options": {
+        "effect": {
+          "assassin": {
+            "case": "fx-assassin",
+            "type": "video",
+            "card": "examples/effects/options/effect/assassin/card.mp4",
+            "poster": "examples/effects/options/effect/assassin/poster.jpg",
+            "values": {
+              "effect": "assassin",
+              "subject": "a woman with a short black bob in a navy blazer",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 190.0,
+            "peak_vram_gb": 30.77,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "baby": {
+            "case": "fx-baby",
+            "type": "video",
+            "card": "examples/effects/options/effect/baby/card.mp4",
+            "poster": "examples/effects/options/effect/baby/poster.jpg",
+            "values": {
+              "effect": "baby",
+              "subject": "a man with short dark hair and a trimmed beard in a grey t-shirt",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 206.4,
+            "peak_vram_gb": 30.77,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "bride": {
+            "case": "fx-bride",
+            "type": "video",
+            "card": "examples/effects/options/effect/bride/card.mp4",
+            "poster": "examples/effects/options/effect/bride/poster.jpg",
+            "values": {
+              "effect": "bride",
+              "subject": "a young woman with long wavy brown hair in a cream sweater",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 202.0,
+            "peak_vram_gb": 30.74,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "classy": {
+            "case": "fx-classy",
+            "type": "video",
+            "card": "examples/effects/options/effect/classy/card.mp4",
+            "poster": "examples/effects/options/effect/classy/poster.jpg",
+            "values": {
+              "effect": "classy",
+              "subject": "a woman with a short black bob in a navy blazer",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 166.8,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "mona-lisa": {
+            "case": "fx-mona-lisa",
+            "type": "video",
+            "card": "examples/effects/options/effect/mona-lisa/card.mp4",
+            "poster": "examples/effects/options/effect/mona-lisa/poster.jpg",
+            "values": {
+              "effect": "mona-lisa",
+              "subject": "a young woman with long wavy brown hair in a cream sweater",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 169.2,
+            "peak_vram_gb": 30.64,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "princess": {
+            "case": "fx-princess",
+            "type": "video",
+            "card": "examples/effects/options/effect/princess/card.mp4",
+            "poster": "examples/effects/options/effect/princess/poster.jpg",
+            "values": {
+              "effect": "princess",
+              "subject": "a young woman with long wavy brown hair in a cream sweater",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 169.9,
+            "peak_vram_gb": 30.64,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "robot-face": {
+            "case": "fx-robot-face",
+            "type": "video",
+            "card": "examples/effects/options/effect/robot-face/card.mp4",
+            "poster": "examples/effects/options/effect/robot-face/poster.jpg",
+            "values": {
+              "effect": "robot-face",
+              "subject": "a young man with short curly hair in a mustard yellow hoodie",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 190.3,
+            "peak_vram_gb": 30.77,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "vip": {
+            "case": "fx-vip",
+            "type": "video",
+            "card": "examples/effects/options/effect/vip/card.mp4",
+            "poster": "examples/effects/options/effect/vip/poster.jpg",
+            "values": {
+              "effect": "vip",
+              "subject": "a woman with a short black bob in a navy blazer",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 167.6,
+            "peak_vram_gb": 30.58,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "angry": {
+            "case": "fx-angry",
+            "type": "video",
+            "card": "examples/effects/options/effect/angry/card.mp4",
+            "poster": "examples/effects/options/effect/angry/poster.jpg",
+            "values": {
+              "effect": "angry",
+              "subject": "a man with short dark hair and a trimmed beard in a grey t-shirt",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 177.0,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "crying": {
+            "case": "fx-crying",
+            "type": "video",
+            "card": "examples/effects/options/effect/crying/card.mp4",
+            "poster": "examples/effects/options/effect/crying/poster.jpg",
+            "values": {
+              "effect": "crying",
+              "subject": "a young woman with long wavy brown hair in a cream sweater",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 170.5,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "laughing": {
+            "case": "fx-laughing",
+            "type": "video",
+            "card": "examples/effects/options/effect/laughing/card.mp4",
+            "poster": "examples/effects/options/effect/laughing/poster.jpg",
+            "values": {
+              "effect": "laughing",
+              "subject": "a woman with a short black bob in a navy blazer",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 169.3,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "jaw-drop": {
+            "case": "fx-jaw-drop",
+            "type": "video",
+            "card": "examples/effects/options/effect/jaw-drop/card.mp4",
+            "poster": "examples/effects/options/effect/jaw-drop/poster.jpg",
+            "values": {
+              "effect": "jaw-drop",
+              "subject": "a young man with short curly hair in a mustard yellow hoodie",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 167.4,
+            "peak_vram_gb": 30.58,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "puppies": {
+            "case": "fx-puppies",
+            "type": "video",
+            "card": "examples/effects/options/effect/puppies/card.mp4",
+            "poster": "examples/effects/options/effect/puppies/poster.jpg",
+            "values": {
+              "effect": "puppies",
+              "subject": "a young man with short curly hair in a mustard yellow hoodie",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 173.2,
+            "peak_vram_gb": 30.58,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "selfie-younger": {
+            "case": "fx-selfie-younger",
+            "type": "video",
+            "card": "examples/effects/options/effect/selfie-younger/card.mp4",
+            "poster": "examples/effects/options/effect/selfie-younger/poster.jpg",
+            "values": {
+              "effect": "selfie-younger",
+              "subject": "a woman with a short black bob in a navy blazer",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 166.5,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "cakeify": {
+            "case": "fx-cakeify",
+            "type": "video",
+            "card": "examples/effects/options/effect/cakeify/card.mp4",
+            "poster": "examples/effects/options/effect/cakeify/poster.jpg",
+            "values": {
+              "effect": "cakeify",
+              "subject": "a white sneaker with red details",
+              "strength": 1.0,
+              "aspect": "landscape",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 167.0,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "crush": {
+            "case": "fx-crush",
+            "type": "video",
+            "card": "examples/effects/options/effect/crush/card.mp4",
+            "poster": "examples/effects/options/effect/crush/poster.jpg",
+            "values": {
+              "effect": "crush",
+              "subject": "a red toy car on a workbench",
+              "strength": 1.0,
+              "aspect": "landscape",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 167.3,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "deflate": {
+            "case": "fx-deflate",
+            "type": "video",
+            "card": "examples/effects/options/effect/deflate/card.mp4",
+            "poster": "examples/effects/options/effect/deflate/poster.jpg",
+            "values": {
+              "effect": "deflate",
+              "subject": "a pink inflatable flamingo pool float",
+              "strength": 1.0,
+              "aspect": "landscape",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 167.2,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "electrify": {
+            "case": "fx-electrify",
+            "type": "video",
+            "card": "examples/effects/options/effect/electrify/card.mp4",
+            "poster": "examples/effects/options/effect/electrify/poster.jpg",
+            "values": {
+              "effect": "electrify",
+              "subject": "a lone oak tree on a hill under storm clouds",
+              "strength": 1.0,
+              "aspect": "landscape",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 179.3,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "explode": {
+            "case": "fx-explode",
+            "type": "video",
+            "card": "examples/effects/options/effect/explode/card.mp4",
+            "poster": "examples/effects/options/effect/explode/poster.jpg",
+            "values": {
+              "effect": "explode",
+              "subject": "an abandoned wooden warehouse in the desert",
+              "strength": 1.0,
+              "aspect": "landscape",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 169.0,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "inflate": {
+            "case": "fx-inflate",
+            "type": "video",
+            "card": "examples/effects/options/effect/inflate/card.mp4",
+            "poster": "examples/effects/options/effect/inflate/poster.jpg",
+            "values": {
+              "effect": "inflate",
+              "subject": "a woman in a yellow raincoat on a narrow cobblestone street",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 166.1,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-152107-h100"
+          },
+          "rotate": {
+            "case": "fx-rotate",
+            "type": "video",
+            "card": "examples/effects/options/effect/rotate/card.mp4",
+            "poster": "examples/effects/options/effect/rotate/poster.jpg",
+            "values": {
+              "effect": "rotate",
+              "subject": "a yellow rubber duck",
+              "strength": 1.0,
+              "aspect": "square",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 161.5,
+            "peak_vram_gb": 30.42,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "squish": {
+            "case": "fx-squish",
+            "type": "video",
+            "card": "examples/effects/options/effect/squish/card.mp4",
+            "poster": "examples/effects/options/effect/squish/poster.jpg",
+            "values": {
+              "effect": "squish",
+              "subject": "a small brown plush teddy bear",
+              "strength": 1.0,
+              "aspect": "square",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 159.7,
+            "peak_vram_gb": 30.52,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "orbit-360": {
+            "case": "fx-orbit-360",
+            "type": "video",
+            "card": "examples/effects/options/effect/orbit-360/card.mp4",
+            "poster": "examples/effects/options/effect/orbit-360/poster.jpg",
+            "values": {
+              "effect": "orbit-360",
+              "subject": "a white sneaker with red details",
+              "strength": 1.0,
+              "aspect": "landscape",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 166.4,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "arc-shot": {
+            "case": "fx-arc-shot",
+            "type": "video",
+            "card": "examples/effects/options/effect/arc-shot/card.mp4",
+            "poster": "examples/effects/options/effect/arc-shot/poster.jpg",
+            "values": {
+              "effect": "arc-shot",
+              "subject": "a man in a denim jacket sitting in a busy cafe",
+              "strength": 1.0,
+              "aspect": "landscape",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 166.4,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "bullet-time": {
+            "case": "fx-bullet-time",
+            "type": "video",
+            "card": "examples/effects/options/effect/bullet-time/card.mp4",
+            "poster": "examples/effects/options/effect/bullet-time/poster.jpg",
+            "values": {
+              "effect": "bullet-time",
+              "subject": "a parkour athlete leaping between two rooftops",
+              "strength": 1.0,
+              "aspect": "landscape",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 169.3,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-195731-h100"
+          },
+          "car-chase": {
+            "case": "fx-car-chase",
+            "type": "video",
+            "card": "examples/effects/options/effect/car-chase/card.mp4",
+            "poster": "examples/effects/options/effect/car-chase/poster.jpg",
+            "values": {
+              "effect": "car-chase",
+              "subject": "a red sports car on a winding mountain road at dusk",
+              "strength": 1.0,
+              "aspect": "landscape",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 169.9,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "crane-down": {
+            "case": "fx-crane-down",
+            "type": "video",
+            "card": "examples/effects/options/effect/crane-down/card.mp4",
+            "poster": "examples/effects/options/effect/crane-down/poster.jpg",
+            "values": {
+              "effect": "crane-down",
+              "subject": "a cozy old library with tall wooden bookshelves and a leather armchair",
+              "strength": 1.0,
+              "aspect": "landscape",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 166.4,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "crane-over-head": {
+            "case": "fx-crane-over-head",
+            "type": "video",
+            "card": "examples/effects/options/effect/crane-over-head/card.mp4",
+            "poster": "examples/effects/options/effect/crane-over-head/poster.jpg",
+            "values": {
+              "effect": "crane-over-head",
+              "subject": "a woman in a yellow raincoat on a narrow cobblestone street",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 166.7,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "crane-up": {
+            "case": "fx-crane-up",
+            "type": "video",
+            "card": "examples/effects/options/effect/crane-up/card.mp4",
+            "poster": "examples/effects/options/effect/crane-up/poster.jpg",
+            "values": {
+              "effect": "crane-up",
+              "subject": "a hiker with a red backpack on a rock by a mountain lake",
+              "strength": 1.0,
+              "aspect": "landscape",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 168.3,
+            "peak_vram_gb": 30.58,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "crash-zoom-in": {
+            "case": "fx-crash-zoom-in",
+            "type": "video",
+            "card": "examples/effects/options/effect/crash-zoom-in/card.mp4",
+            "poster": "examples/effects/options/effect/crash-zoom-in/poster.jpg",
+            "values": {
+              "effect": "crash-zoom-in",
+              "subject": "a man in a denim jacket sitting in a busy cafe",
+              "strength": 1.0,
+              "aspect": "landscape",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 166.4,
+            "peak_vram_gb": 30.52,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "dolly-zoom": {
+            "case": "fx-dolly-zoom",
+            "type": "video",
+            "card": "examples/effects/options/effect/dolly-zoom/card.mp4",
+            "poster": "examples/effects/options/effect/dolly-zoom/poster.jpg",
+            "values": {
+              "effect": "dolly-zoom",
+              "subject": "a man in a denim jacket sitting in a busy cafe",
+              "strength": 1.0,
+              "aspect": "landscape",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 167.1,
+            "peak_vram_gb": 30.52,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-195731-h100"
+          },
+          "hero-run": {
+            "case": "fx-hero-run",
+            "type": "video",
+            "card": "examples/effects/options/effect/hero-run/card.mp4",
+            "poster": "examples/effects/options/effect/hero-run/poster.jpg",
+            "values": {
+              "effect": "hero-run",
+              "subject": "a female sprinter in a red and white running outfit on a stadium track",
+              "strength": 1.0,
+              "aspect": "landscape",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 169.0,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-140940-h100"
+          },
+          "steam": {
+            "case": "fx-steam",
+            "type": "video",
+            "card": "examples/effects/options/effect/steam/card.mp4",
+            "poster": "examples/effects/options/effect/steam/poster.jpg",
+            "values": {
+              "effect": "steam",
+              "subject": "a man with short dark hair and a trimmed beard in a grey t-shirt",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 184.8,
+            "peak_vram_gb": 30.77,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-195731-h100"
+          },
+          "money-rain": {
+            "case": "fx-money-rain",
+            "type": "video",
+            "card": "examples/effects/options/effect/money-rain/card.mp4",
+            "poster": "examples/effects/options/effect/money-rain/poster.jpg",
+            "values": {
+              "effect": "money-rain",
+              "subject": "a woman with a short black bob in a navy blazer",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 238.0,
+            "peak_vram_gb": 30.77,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-195731-h100"
+          },
+          "clones": {
+            "case": "fx-clones",
+            "type": "video",
+            "card": "examples/effects/options/effect/clones/card.mp4",
+            "poster": "examples/effects/options/effect/clones/poster.jpg",
+            "values": {
+              "effect": "clones",
+              "subject": "a man in a red jacket, jeans and white sneakers",
+              "strength": 1.0,
+              "aspect": "portrait",
+              "frames": 81
+            },
+            "seed": 42,
+            "seconds": 167.6,
+            "peak_vram_gb": 30.67,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261021-195731-h100"
+          }
+        }
+      }
+    },
+    "billboard": {
+      "case": "tpl-billboard",
+      "type": "image",
+      "card": "examples/billboard/card.jpg",
+      "poster": null,
+      "full": "examples/billboard/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/billboard/input-image.jpg",
+          "full": "examples/billboard/input-image-full.jpg",
+          "from_case": "ref-face-a"
+        }
+      ],
+      "values": {
+        "where": "on a skyscraper at night",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 16.3,
+      "peak_vram_gb": 11.9,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "breakdown": {
+      "case": "tpl-breakdown",
+      "type": "image",
+      "card": "examples/breakdown/card.jpg",
+      "poster": null,
+      "full": "examples/breakdown/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/breakdown/input-image.jpg",
+          "full": "examples/breakdown/input-image-full.jpg",
+          "from_case": "ref-fx-sneaker"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.1,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "brick-toy": {
+      "case": "tpl-brick-toy",
+      "type": "image",
+      "card": "examples/brick-toy/card.jpg",
+      "poster": null,
+      "full": "examples/brick-toy/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/brick-toy/input-image.jpg",
+          "full": "examples/brick-toy/input-image-full.jpg",
+          "from_case": "ref-fx-toycar"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "burning-sunset": {
+      "case": "tpl-burning-sunset",
+      "type": "image",
+      "card": "examples/burning-sunset/card.jpg",
+      "poster": null,
+      "full": "examples/burning-sunset/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/burning-sunset/input-image.jpg",
+          "full": "examples/burning-sunset/input-image-full.jpg",
+          "from_case": "ref-fx-lake"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.3,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "cafe-60s": {
+      "case": "tpl-cafe-60s",
+      "type": "image",
+      "card": "examples/cafe-60s/card.jpg",
+      "poster": null,
+      "full": "examples/cafe-60s/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/cafe-60s/input-image.jpg",
+          "full": "examples/cafe-60s/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 11.3,
+      "peak_vram_gb": 11.14,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "color-grade": {
+      "case": "tpl-color-grade",
+      "type": "image",
+      "card": "examples/color-grade/card.jpg",
+      "poster": null,
+      "full": "examples/color-grade/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/color-grade/input-image.jpg",
+          "full": "examples/color-grade/input-image-full.jpg",
+          "from_case": "ref-fx-cafe"
+        }
+      ],
+      "values": {
+        "look": "teal and orange blockbuster",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.49,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "comic-book": {
+      "case": "tpl-comic-book",
+      "type": "image",
+      "card": "examples/comic-book/card.jpg",
+      "poster": null,
+      "full": "examples/comic-book/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/comic-book/input-image.jpg",
+          "full": "examples/comic-book/input-image-full.jpg",
+          "from_case": "ref-fx-cafe"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "commercial-faces": {
+      "case": "tpl-commercial-faces",
+      "type": "image",
+      "card": "examples/commercial-faces/card.jpg",
+      "poster": null,
+      "full": "examples/commercial-faces/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/commercial-faces/input-image.jpg",
+          "full": "examples/commercial-faces/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        }
+      ],
+      "values": {
+        "use": "a skincare advert, clean beauty lighting",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.2,
+      "peak_vram_gb": 12.86,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "edit-text": {
+      "case": "tpl-edit-text",
+      "type": "image",
+      "card": "examples/edit-text/card.jpg",
+      "poster": null,
+      "full": "examples/edit-text/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Image with text",
+          "type": "image",
+          "src": "examples/edit-text/input-image.jpg",
+          "full": "examples/edit-text/input-image-full.jpg",
+          "from_case": "ref-tpl-sign"
+        }
+      ],
+      "values": {
+        "old": "OPEN",
+        "new": "CLOSED",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "figure-3d": {
+      "case": "tpl-figure-3d",
+      "type": "image",
+      "card": "examples/figure-3d/card.jpg",
+      "poster": null,
+      "full": "examples/figure-3d/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/figure-3d/input-image.jpg",
+          "full": "examples/figure-3d/input-image-full.jpg",
+          "from_case": "ref-character"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "fridge-ad": {
+      "case": "tpl-fridge-ad",
+      "type": "image",
+      "card": "examples/fridge-ad/card.jpg",
+      "poster": null,
+      "full": "examples/fridge-ad/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/fridge-ad/input-image.jpg",
+          "full": "examples/fridge-ad/input-image-full.jpg",
+          "from_case": "ref-product"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.3,
+      "peak_vram_gb": 11.23,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "game-styles": {
+      "case": "tpl-game-styles",
+      "type": "image",
+      "card": "examples/game-styles/card.jpg",
+      "poster": null,
+      "full": "examples/game-styles/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/game-styles/input-image.jpg",
+          "full": "examples/game-styles/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        }
+      ],
+      "values": {
+        "style": "a cel-shaded action game",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.3,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "giallo": {
+      "case": "tpl-giallo",
+      "type": "image",
+      "card": "examples/giallo/card.jpg",
+      "poster": null,
+      "full": "examples/giallo/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/giallo/input-image.jpg",
+          "full": "examples/giallo/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.3,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "giant-product": {
+      "case": "tpl-giant-product",
+      "type": "image",
+      "card": "examples/giant-product/card.jpg",
+      "poster": null,
+      "full": "examples/giant-product/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/giant-product/input-image.jpg",
+          "full": "examples/giant-product/input-image-full.jpg",
+          "from_case": "ref-product"
+        }
+      ],
+      "values": {
+        "time": "at sunset",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.3,
+      "peak_vram_gb": 11.23,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "glitter-sticker": {
+      "case": "tpl-glitter-sticker",
+      "type": "image",
+      "card": "examples/glitter-sticker/card.jpg",
+      "poster": null,
+      "full": "examples/glitter-sticker/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/glitter-sticker/input-image.jpg",
+          "full": "examples/glitter-sticker/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.2,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "graffiti-ad": {
+      "case": "tpl-graffiti-ad",
+      "type": "image",
+      "card": "examples/graffiti-ad/card.jpg",
+      "poster": null,
+      "full": "examples/graffiti-ad/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/graffiti-ad/input-image.jpg",
+          "full": "examples/graffiti-ad/input-image-full.jpg",
+          "from_case": "ref-fx-sneaker"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 12.86,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "headshot": {
+      "case": "tpl-headshot",
+      "type": "image",
+      "card": "examples/headshot/card.jpg",
+      "poster": null,
+      "full": "examples/headshot/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your selfie",
+          "type": "image",
+          "src": "examples/headshot/input-image.jpg",
+          "full": "examples/headshot/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "backdrop": "plain light grey backdrop",
+        "outfit": "a navy blazer over a white shirt",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "image-effects": {
+      "case": "tpl-image-effects",
+      "type": "image",
+      "card": "examples/image-effects/card.jpg",
+      "poster": null,
+      "full": "examples/image-effects/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/image-effects/input-image.jpg",
+          "full": "examples/image-effects/input-image-full.jpg",
+          "from_case": "ref-fx-cafe"
+        }
+      ],
+      "values": {
+        "effect": "glitch distortion with RGB split",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.3,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "j-magazine": {
+      "case": "tpl-j-magazine",
+      "type": "image",
+      "card": "examples/j-magazine/card.jpg",
+      "poster": null,
+      "full": "examples/j-magazine/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/j-magazine/input-image.jpg",
+          "full": "examples/j-magazine/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.2,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "j-poster": {
+      "case": "tpl-j-poster",
+      "type": "image",
+      "card": "examples/j-poster/card.jpg",
+      "poster": null,
+      "full": "examples/j-poster/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/j-poster/input-image.jpg",
+          "full": "examples/j-poster/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.49,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "japanese-show": {
+      "case": "tpl-japanese-show",
+      "type": "image",
+      "card": "examples/japanese-show/card.jpg",
+      "poster": null,
+      "full": "examples/japanese-show/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/japanese-show/input-image.jpg",
+          "full": "examples/japanese-show/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "macro-product": {
+      "case": "tpl-macro-product",
+      "type": "image",
+      "card": "examples/macro-product/card.jpg",
+      "poster": null,
+      "full": "examples/macro-product/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/macro-product/input-image.jpg",
+          "full": "examples/macro-product/input-image-full.jpg",
+          "from_case": "ref-product"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.52,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "macro-scene": {
+      "case": "tpl-macro-scene",
+      "type": "image",
+      "card": "examples/macro-scene/card.jpg",
+      "poster": null,
+      "full": "examples/macro-scene/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/macro-scene/input-image.jpg",
+          "full": "examples/macro-scene/input-image-full.jpg",
+          "from_case": "ref-product"
+        }
+      ],
+      "values": {
+        "setting": "on wet black stone with mist",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.3,
+      "peak_vram_gb": 11.23,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "mascot": {
+      "case": "tpl-mascot",
+      "type": "image",
+      "card": "examples/mascot/card.jpg",
+      "poster": null,
+      "full": "examples/mascot/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/mascot/input-image.jpg",
+          "full": "examples/mascot/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        }
+      ],
+      "values": {
+        "animal": "lion",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.2,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "meme": {
+      "case": "tpl-meme",
+      "type": "image",
+      "card": "examples/meme/card.jpg",
+      "poster": null,
+      "full": "examples/meme/full.jpg",
+      "inputs": [],
+      "values": {
+        "scene": "a golden retriever sitting at a desk in front of three monitors, looking proud",
+        "top": "WHEN THE TESTS",
+        "bottom": "PASS FIRST TRY",
+        "details": "",
+        "width": 1024,
+        "height": 1024,
+        "steps": 8
+      },
+      "seed": 42,
+      "seconds": 13.2,
+      "peak_vram_gb": 12.66,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "micro-beasts": {
+      "case": "tpl-micro-beasts",
+      "type": "image",
+      "card": "examples/micro-beasts/card.jpg",
+      "poster": null,
+      "full": "examples/micro-beasts/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/micro-beasts/input-image.jpg",
+          "full": "examples/micro-beasts/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "animals": "hamsters and kittens",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "mural": {
+      "case": "tpl-mural",
+      "type": "image",
+      "card": "examples/mural/card.jpg",
+      "poster": null,
+      "full": "examples/mural/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/mural/input-image.jpg",
+          "full": "examples/mural/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.2,
+      "peak_vram_gb": 11.21,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "outfit-vending": {
+      "case": "tpl-outfit-vending",
+      "type": "image",
+      "card": "examples/outfit-vending/card.jpg",
+      "poster": null,
+      "full": "examples/outfit-vending/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/outfit-vending/input-image.jpg",
+          "full": "examples/outfit-vending/input-image-full.jpg",
+          "from_case": "ref-character"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 12.86,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "packshot": {
+      "case": "tpl-packshot",
+      "type": "image",
+      "card": "examples/packshot/card.jpg",
+      "poster": null,
+      "full": "examples/packshot/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/packshot/input-image.jpg",
+          "full": "examples/packshot/input-image-full.jpg",
+          "from_case": "ref-product"
+        }
+      ],
+      "values": {
+        "backdrop": "dark charcoal",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.23,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "paint-app": {
+      "case": "tpl-paint-app",
+      "type": "image",
+      "card": "examples/paint-app/card.jpg",
+      "poster": null,
+      "full": "examples/paint-app/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/paint-app/input-image.jpg",
+          "full": "examples/paint-app/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.2,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "pixel-game": {
+      "case": "tpl-pixel-game",
+      "type": "image",
+      "card": "examples/pixel-game/card.jpg",
+      "poster": null,
+      "full": "examples/pixel-game/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/pixel-game/input-image.jpg",
+          "full": "examples/pixel-game/input-image-full.jpg",
+          "from_case": "ref-fx-cafe"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.2,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "plushie": {
+      "case": "tpl-plushie",
+      "type": "image",
+      "card": "examples/plushie/card.jpg",
+      "poster": null,
+      "full": "examples/plushie/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/plushie/input-image.jpg",
+          "full": "examples/plushie/input-image-full.jpg",
+          "from_case": "ref-fx-duck"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.23,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "poster": {
+      "case": "tpl-poster",
+      "type": "image",
+      "card": "examples/poster/card.jpg",
+      "poster": null,
+      "full": "examples/poster/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/poster/input-image.jpg",
+          "full": "examples/poster/input-image-full.jpg",
+          "from_case": "ref-product"
+        }
+      ],
+      "values": {
+        "headline": "NOIR",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 16.1,
+      "peak_vram_gb": 12.02,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "renaissance": {
+      "case": "tpl-renaissance",
+      "type": "image",
+      "card": "examples/renaissance/card.jpg",
+      "poster": null,
+      "full": "examples/renaissance/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/renaissance/input-image.jpg",
+          "full": "examples/renaissance/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "render-3d": {
+      "case": "tpl-render-3d",
+      "type": "image",
+      "card": "examples/render-3d/card.jpg",
+      "poster": null,
+      "full": "examples/render-3d/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/render-3d/input-image.jpg",
+          "full": "examples/render-3d/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.2,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "sketch-to-real": {
+      "case": "tpl-sketch-to-real",
+      "type": "image",
+      "card": "examples/sketch-to-real/card.jpg",
+      "poster": null,
+      "full": "examples/sketch-to-real/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your sketch",
+          "type": "image",
+          "src": "examples/sketch-to-real/input-image.jpg",
+          "full": "examples/sketch-to-real/input-image-full.jpg",
+          "from_case": "ref-tpl-sketch"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.23,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "skin-enhancer": {
+      "case": "tpl-skin-enhancer",
+      "type": "image",
+      "card": "examples/skin-enhancer/card.jpg",
+      "poster": null,
+      "full": "examples/skin-enhancer/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/skin-enhancer/input-image.jpg",
+          "full": "examples/skin-enhancer/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "style-snap": {
+      "case": "tpl-style-snap",
+      "type": "image",
+      "card": "examples/style-snap/card.jpg",
+      "poster": null,
+      "full": "examples/style-snap/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/style-snap/input-image.jpg",
+          "full": "examples/style-snap/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "style": "streetwear",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.2,
+      "peak_vram_gb": 12.86,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "ugc-shot": {
+      "case": "tpl-ugc-shot",
+      "type": "image",
+      "card": "examples/ugc-shot/card.jpg",
+      "poster": null,
+      "full": "examples/ugc-shot/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/ugc-shot/input-image.jpg",
+          "full": "examples/ugc-shot/input-image-full.jpg",
+          "from_case": "ref-product"
+        }
+      ],
+      "values": {
+        "where": "in a bright kitchen",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.23,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "victory-card": {
+      "case": "tpl-victory-card",
+      "type": "image",
+      "card": "examples/victory-card/card.jpg",
+      "poster": null,
+      "full": "examples/victory-card/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/victory-card/input-image.jpg",
+          "full": "examples/victory-card/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.17,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035128-h100"
+    },
+    "angles": {
+      "case": "tpl-angles",
+      "type": "image",
+      "card": "examples/angles/card.jpg",
+      "poster": null,
+      "full": "examples/angles/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/angles/input-image.jpg",
+          "full": "examples/angles/input-image-full.jpg",
+          "from_case": "ref-fx-cafe"
+        }
+      ],
+      "values": {
+        "move": "将镜头向左旋转45度 Rotate the camera 45 degrees to the left.",
+        "details": ""
+      },
+      "seed": 42,
+      "seconds": 47.7,
+      "peak_vram_gb": 38.24,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "asmr-host": {
+      "case": "tpl-asmr-host",
+      "type": "video",
+      "card": "examples/asmr-host/card.mp4",
+      "poster": "examples/asmr-host/poster.jpg",
+      "full": "examples/asmr-host/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/asmr-host/input-image.jpg",
+          "full": "examples/asmr-host/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "9:16 (Portrait Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 29.2,
+      "peak_vram_gb": 46.28,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "asmr-product": {
+      "case": "tpl-asmr-product",
+      "type": "video",
+      "card": "examples/asmr-product/card.mp4",
+      "poster": "examples/asmr-product/poster.jpg",
+      "full": "examples/asmr-product/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/asmr-product/input-image.jpg",
+          "full": "examples/asmr-product/input-image-full.jpg",
+          "from_case": "ref-product"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "9:16 (Portrait Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 95.6,
+      "peak_vram_gb": 46.59,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "asmr-whisper": {
+      "case": "tpl-asmr-whisper",
+      "type": "video",
+      "card": "examples/asmr-whisper/card.mp4",
+      "poster": "examples/asmr-whisper/poster.jpg",
+      "full": "examples/asmr-whisper/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/asmr-whisper/input-image.jpg",
+          "full": "examples/asmr-whisper/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "9:16 (Portrait Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 28.1,
+      "peak_vram_gb": 46.09,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "behind-the-scenes": {
+      "case": "tpl-behind-the-scenes",
+      "type": "video",
+      "card": "examples/behind-the-scenes/card.mp4",
+      "poster": "examples/behind-the-scenes/poster.jpg",
+      "full": "examples/behind-the-scenes/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/behind-the-scenes/input-image.jpg",
+          "full": "examples/behind-the-scenes/input-image-full.jpg",
+          "from_case": "ref-face-a"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "16:9 (Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 89.2,
+      "peak_vram_gb": 46.5,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "chameleon": {
+      "case": "tpl-chameleon",
+      "type": "video",
+      "card": "examples/chameleon/card.mp4",
+      "poster": "examples/chameleon/poster.jpg",
+      "full": "examples/chameleon/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/chameleon/input-image.jpg",
+          "full": "examples/chameleon/input-image-full.jpg",
+          "from_case": "ref-fx-sneaker"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "16:9 (Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 98.3,
+      "peak_vram_gb": 46.5,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "character-swap": {
+      "case": "tpl-character-swap",
+      "type": "image",
+      "card": "examples/character-swap/card.jpg",
+      "poster": null,
+      "full": "examples/character-swap/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Scene photo",
+          "type": "image",
+          "src": "examples/character-swap/input-image.jpg",
+          "full": "examples/character-swap/input-image-full.jpg",
+          "from_case": "ref-fx-cafe"
+        },
+        {
+          "id": "image2",
+          "label": "Photo of the new person",
+          "type": "image",
+          "src": "examples/character-swap/input-image2.jpg",
+          "full": "examples/character-swap/input-image2-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 7.0,
+      "peak_vram_gb": 11.79,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "cloud-surf": {
+      "case": "tpl-cloud-surf",
+      "type": "video",
+      "card": "examples/cloud-surf/card.mp4",
+      "poster": "examples/cloud-surf/poster.jpg",
+      "full": "examples/cloud-surf/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/cloud-surf/input-image.jpg",
+          "full": "examples/cloud-surf/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "16:9 (Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 28.2,
+      "peak_vram_gb": 46.5,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "face-swap": {
+      "case": "tpl-face-swap",
+      "type": "image",
+      "card": "examples/face-swap/card.jpg",
+      "poster": null,
+      "full": "examples/face-swap/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Photo to edit",
+          "type": "image",
+          "src": "examples/face-swap/input-image.jpg",
+          "full": "examples/face-swap/input-image-full.jpg",
+          "from_case": "ref-face-a"
+        },
+        {
+          "id": "image2",
+          "label": "Photo of the face",
+          "type": "image",
+          "src": "examples/face-swap/input-image2.jpg",
+          "full": "examples/face-swap/input-image2-full.jpg",
+          "from_case": "ref-fx-woman-b"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 7.0,
+      "peak_vram_gb": 11.79,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "fashion-factory": {
+      "case": "tpl-fashion-factory",
+      "type": "image",
+      "card": "examples/fashion-factory/card.jpg",
+      "poster": null,
+      "full": "examples/fashion-factory/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/fashion-factory/input-image.jpg",
+          "full": "examples/fashion-factory/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        },
+        {
+          "id": "image2",
+          "label": "Garment photo",
+          "type": "image",
+          "src": "examples/fashion-factory/input-image2.jpg",
+          "full": "examples/fashion-factory/input-image2-full.jpg",
+          "from_case": "ref-tpl-garment"
+        }
+      ],
+      "values": {
+        "scene": "in a white studio cyclorama",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 18.2,
+      "peak_vram_gb": 11.9,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "idol": {
+      "case": "tpl-idol",
+      "type": "video",
+      "card": "examples/idol/card.mp4",
+      "poster": "examples/idol/poster.jpg",
+      "full": "examples/idol/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/idol/input-image.jpg",
+          "full": "examples/idol/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "9:16 (Portrait Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 27.1,
+      "peak_vram_gb": 46.28,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "kick-ad": {
+      "case": "tpl-kick-ad",
+      "type": "video",
+      "card": "examples/kick-ad/card.mp4",
+      "poster": "examples/kick-ad/poster.jpg",
+      "full": "examples/kick-ad/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/kick-ad/input-image.jpg",
+          "full": "examples/kick-ad/input-image-full.jpg",
+          "from_case": "ref-product"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "16:9 (Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 29.1,
+      "peak_vram_gb": 46.5,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "magic-button": {
+      "case": "tpl-magic-button",
+      "type": "video",
+      "card": "examples/magic-button/card.mp4",
+      "poster": "examples/magic-button/poster.jpg",
+      "full": "examples/magic-button/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/magic-button/input-image.jpg",
+          "full": "examples/magic-button/input-image-full.jpg",
+          "from_case": "ref-product"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "9:16 (Portrait Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 29.1,
+      "peak_vram_gb": 46.28,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "melting-doodle": {
+      "case": "tpl-melting-doodle",
+      "type": "video",
+      "card": "examples/melting-doodle/card.mp4",
+      "poster": "examples/melting-doodle/poster.jpg",
+      "full": "examples/melting-doodle/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/melting-doodle/input-image.jpg",
+          "full": "examples/melting-doodle/input-image-full.jpg",
+          "from_case": "ref-fx-street"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "9:16 (Portrait Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 31.1,
+      "peak_vram_gb": 46.09,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "mukbang": {
+      "case": "tpl-mukbang",
+      "type": "video",
+      "card": "examples/mukbang/card.mp4",
+      "poster": "examples/mukbang/poster.jpg",
+      "full": "examples/mukbang/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/mukbang/input-image.jpg",
+          "full": "examples/mukbang/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "9:16 (Portrait Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 29.1,
+      "peak_vram_gb": 46.09,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "outfit-shot": {
+      "case": "tpl-outfit-shot",
+      "type": "image",
+      "card": "examples/outfit-shot/card.jpg",
+      "poster": null,
+      "full": "examples/outfit-shot/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Model photo",
+          "type": "image",
+          "src": "examples/outfit-shot/input-image.jpg",
+          "full": "examples/outfit-shot/input-image-full.jpg",
+          "from_case": "ref-fx-woman-b"
+        },
+        {
+          "id": "image2",
+          "label": "Garment photo",
+          "type": "image",
+          "src": "examples/outfit-shot/input-image2.jpg",
+          "full": "examples/outfit-shot/input-image2-full.jpg",
+          "from_case": "ref-tpl-garment"
+        }
+      ],
+      "values": {
+        "pose": "standing straight, hands relaxed",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 7.0,
+      "peak_vram_gb": 12.39,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "outfit-swap": {
+      "case": "tpl-outfit-swap",
+      "type": "image",
+      "card": "examples/outfit-swap/card.jpg",
+      "poster": null,
+      "full": "examples/outfit-swap/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/outfit-swap/input-image.jpg",
+          "full": "examples/outfit-swap/input-image-full.jpg",
+          "from_case": "ref-face-a"
+        },
+        {
+          "id": "image2",
+          "label": "Photo of the outfit",
+          "type": "image",
+          "src": "examples/outfit-swap/input-image2.jpg",
+          "full": "examples/outfit-swap/input-image2-full.jpg",
+          "from_case": "ref-character"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 7.0,
+      "peak_vram_gb": 11.79,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "rap-video": {
+      "case": "tpl-rap-video",
+      "type": "video",
+      "card": "examples/rap-video/card.mp4",
+      "poster": "examples/rap-video/poster.jpg",
+      "full": "examples/rap-video/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/rap-video/input-image.jpg",
+          "full": "examples/rap-video/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "9:16 (Portrait Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 28.1,
+      "peak_vram_gb": 46.28,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "roller-coaster": {
+      "case": "tpl-roller-coaster",
+      "type": "video",
+      "card": "examples/roller-coaster/card.mp4",
+      "poster": "examples/roller-coaster/poster.jpg",
+      "full": "examples/roller-coaster/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/roller-coaster/input-image.jpg",
+          "full": "examples/roller-coaster/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "9:16 (Portrait Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 28.3,
+      "peak_vram_gb": 46.09,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "shots": {
+      "case": "tpl-shots",
+      "type": "image",
+      "card": "examples/shots/card.jpg",
+      "poster": null,
+      "full": "examples/shots/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/shots/input-image.jpg",
+          "full": "examples/shots/input-image-full.jpg",
+          "from_case": "ref-fx-lake"
+        }
+      ],
+      "values": {
+        "shot": "将镜头转为广角镜头 Turn the camera to a wide-angle lens.",
+        "details": ""
+      },
+      "seed": 42,
+      "seconds": 51.9,
+      "peak_vram_gb": 38.24,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "storm-creature": {
+      "case": "tpl-storm-creature",
+      "type": "video",
+      "card": "examples/storm-creature/card.mp4",
+      "poster": "examples/storm-creature/poster.jpg",
+      "full": "examples/storm-creature/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/storm-creature/input-image.jpg",
+          "full": "examples/storm-creature/input-image-full.jpg",
+          "from_case": "ref-fx-storm"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "16:9 (Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 31.1,
+      "peak_vram_gb": 46.5,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "truck-ad": {
+      "case": "tpl-truck-ad",
+      "type": "video",
+      "card": "examples/truck-ad/card.mp4",
+      "poster": "examples/truck-ad/poster.jpg",
+      "full": "examples/truck-ad/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/truck-ad/input-image.jpg",
+          "full": "examples/truck-ad/input-image-full.jpg",
+          "from_case": "ref-product"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "16:9 (Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 28.3,
+      "peak_vram_gb": 46.47,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "try-on": {
+      "case": "tpl-try-on",
+      "type": "image",
+      "card": "examples/try-on/card.jpg",
+      "poster": null,
+      "full": "examples/try-on/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/try-on/input-image.jpg",
+          "full": "examples/try-on/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        },
+        {
+          "id": "image2",
+          "label": "Garment photo",
+          "type": "image",
+          "src": "examples/try-on/input-image2.jpg",
+          "full": "examples/try-on/input-image2-full.jpg",
+          "from_case": "ref-tpl-garment"
+        }
+      ],
+      "values": {
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 7.0,
+      "peak_vram_gb": 11.82,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "volcano-ad": {
+      "case": "tpl-volcano-ad",
+      "type": "video",
+      "card": "examples/volcano-ad/card.mp4",
+      "poster": "examples/volcano-ad/poster.jpg",
+      "full": "examples/volcano-ad/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Product photo",
+          "type": "image",
+          "src": "examples/volcano-ad/input-image.jpg",
+          "full": "examples/volcano-ad/input-image-full.jpg",
+          "from_case": "ref-product"
+        }
+      ],
+      "values": {
+        "details": "",
+        "duration": 5,
+        "enhance": true,
+        "aspect": "16:9 (Widescreen)"
+      },
+      "seed": 42,
+      "seconds": 27.1,
+      "peak_vram_gb": 46.5,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "whats-next": {
+      "case": "tpl-whats-next",
+      "type": "image",
+      "card": "examples/whats-next/card.jpg",
+      "poster": null,
+      "full": "examples/whats-next/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/whats-next/input-image.jpg",
+          "full": "examples/whats-next/input-image-full.jpg",
+          "from_case": "ref-fx-road"
+        }
+      ],
+      "values": {
+        "next": "the camera pulls back to reveal the wider surroundings",
+        "details": ""
+      },
+      "seed": 42,
+      "seconds": 48.4,
+      "peak_vram_gb": 42.87,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    },
+    "zooms": {
+      "case": "tpl-zooms",
+      "type": "image",
+      "card": "examples/zooms/card.jpg",
+      "poster": null,
+      "full": "examples/zooms/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/zooms/input-image.jpg",
+          "full": "examples/zooms/input-image-full.jpg",
+          "from_case": "ref-fx-street"
+        }
+      ],
+      "values": {
+        "zoom": "将镜头转为特写镜头 Turn the camera to a close-up.",
+        "details": ""
+      },
+      "seed": 42,
+      "seconds": 4.0,
+      "peak_vram_gb": 29.29,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-035829-h100"
+    }
+  },
+  "updated_from": "20261022-035829-h100"
+}
