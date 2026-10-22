@@ -1,0 +1,198 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "asmr-host",
+  "name": "ASMR Host",
+  "section": "video",
+  "summary": "You hosting an ASMR studio with a big microphone and fairy lights.",
+  "higgsfield_feature": "ASMR Host",
+  "pack": "video-ltx25",
+  "status": "ready",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "video_ltx2_5_i2v.json",
+    "comfyui": "0.42.0",
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/video's (built by tools/build_apps.py); the prompt below is fixed and \"Extra direction\" is appended to it."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Your photo",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "395",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "details",
+      "type": "textarea",
+      "label": "Extra direction",
+      "default": "",
+      "help": "Added at the end of the app's prompt.",
+      "bind": [
+        {
+          "node": "398:376",
+          "field": "value",
+          "template": "The person sits in a cozy ASMR studio with a large microphone in front of them, fairy lights behind, and whispers into the mic while gently handling a soft brush; close whispering sound. {details}"
+        }
+      ]
+    },
+    {
+      "id": "duration",
+      "type": "slider",
+      "label": "Seconds",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "bind": [
+        {
+          "node": "398:362",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "enhance",
+      "type": "toggle",
+      "label": "Enhance prompt",
+      "default": true,
+      "help": "Rewrites your prompt with a small Gemma 4 model first",
+      "bind": [
+        {
+          "node": "398:383",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "aspect",
+      "type": "select",
+      "label": "Aspect ratio",
+      "default": "16:9 (Widescreen)",
+      "options": [
+        {
+          "value": "16:9 (Widescreen)",
+          "label": "16:9"
+        },
+        {
+          "value": "9:16 (Portrait Widescreen)",
+          "label": "9:16"
+        },
+        {
+          "value": "1:1 (Square)",
+          "label": "1:1"
+        },
+        {
+          "value": "4:3 (Standard)",
+          "label": "4:3"
+        },
+        {
+          "value": "3:4 (Portrait Standard)",
+          "label": "3:4"
+        },
+        {
+          "value": "21:9 (Ultrawide)",
+          "label": "21:9"
+        }
+      ],
+      "bind": [
+        {
+          "node": "403",
+          "field": "aspect_ratio"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "398:339",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "75",
+      "type": "video",
+      "label": "Result"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 21.5,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 15.37,
+      "phase": "encode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-video-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 1.47,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-audio-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.36,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors",
+      "dir": "latent_upscale_models",
+      "gb": 1.0,
+      "phase": "aux",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Comfy-Org/gemma-4",
+      "file": "text_encoders/gemma4_e2b_it_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.2,
+      "phase": "encode",
+      "license": "Apache-2.0",
+      "optional": true
+    }
+  ],
+  "credits": [
+    "LTX-2.5 by Lightricks",
+    "Workflow adapted from ComfyUI's official LTX-2.5 template"
+  ],
+  "test": {
+    "image": "test/portrait.png",
+    "duration": 2,
+    "aspect": "9:16 (Portrait Widescreen)"
+  }
+}

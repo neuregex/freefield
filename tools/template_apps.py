@@ -7,11 +7,15 @@
     python tools/template_apps.py --lab      # prints the lab command that makes every template's example
 
 Each entry below is a Higgsfield app (its name in `feature`) rebuilt as a prompt template on one of
-three bases: FLUX 3 Image Klein's edit pipeline (apps/edit, one reference image; the same workflow
-behind edit, character and product-shot) or Z-Image Turbo (apps/z-image, text to image). The app
-folder gets a copy of the base workflow (built by tools/build_apps.py) and a manifest whose "details"
-input carries the prompt as a bind template; selects feed {placeholders} in that prompt. The base
-app's models and credits are copied as they are.
+these bases, all workflows built by tools/build_apps.py:
+  edit       FLUX 3 Image Klein's edit pipeline (apps/edit), one reference image
+  edit2      the same with a second reference image (a garment, another person, a face)
+  z-image    Z-Image Turbo (apps/z-image), text to image
+  video      LTX-2.5 image-to-video (apps/video), with its own audio
+  qwen-edit  Qwen-Image-Edit-2509 (apps/relight) with a different LoRA: Multiple Angles or next-scene
+The app folder gets the base workflow (copied, or with the few edits noted in BASES) and a manifest
+whose "details" input carries the prompt as a bind template; selects feed {placeholders} in that
+prompt. The base app's models and credits are copied as they are (qwen-edit swaps the LoRA).
 
 lab/cases.json gets one "tpl-<id>" showcase case per app (the section after the effects cases is
 regenerated in place), on the synthetic references the lab already makes, plus the few new
@@ -27,10 +31,26 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# the pipelines a template can sit on: node ids for the image, the prompt and the settings
+# the pipelines a template can sit on: node ids for the image(s), the prompt and the settings kept from the base app
 BASES = {
-    "edit": {"app": "edit", "pack": "image-flux3", "image": ("11", "image"), "prompt": ("4", "text"), "keep": ("steps", "seed"), "output": {"node": "9", "type": "image"}},
-    "z-image": {"app": "z-image", "pack": "image", "image": None, "prompt": ("57:27", "text"), "keep": ("width", "height", "steps", "seed"), "output": {"node": "9", "type": "image"}},
+    "edit": {"app": "edit", "section": "image", "pack": "image-flux3", "image": ("11", "image"), "prompt": ("4", "text"), "keep": ("steps", "seed"),
+             "output": {"node": "9", "type": "image"}},
+    "edit2": {"app": "edit", "section": "image", "pack": "image-flux3", "image": ("11", "image"), "image2": ("12", "image"), "prompt": ("4", "text"),
+              "keep": ("steps", "seed"), "output": {"node": "9", "type": "image"}},
+    "z-image": {"app": "z-image", "section": "image", "pack": "image", "image": None, "prompt": ("57:27", "text"), "keep": ("width", "height", "steps", "seed"),
+                "output": {"node": "9", "type": "image"}},
+    "video": {"app": "video", "section": "video", "pack": "video-ltx25", "image": ("395", "image"), "prompt": ("398:376", "value"),
+              "keep": ("duration", "enhance", "aspect", "seed"), "output": {"node": "75", "type": "video"}},
+    "qwen-edit": {"app": "relight", "section": "image", "pack": "image-qwen-edit", "image": ("11", "image"), "prompt": ("15", "value"), "keep": ("seed",),
+                  "output": {"node": "12", "type": "image"}},
+}
+
+# LoRAs the qwen-edit templates load instead of Relight (file name as ComfyUI sees it)
+QWEN_LORAS = {
+    "angles": {"repo": "dx8152/Qwen-Edit-2509-Multiple-angles", "file": "镜头转换.safetensors", "gb": 0.24, "license": "Apache-2.0",
+               "credit": "Multiple Angles LoRA by dx8152 (Apache-2.0)"},
+    "next-scene": {"repo": "lovis93/next-scene-qwen-image-lora-2509", "file": "next-scene_lora-v2-3000.safetensors", "gb": 0.3, "license": "MIT",
+                   "credit": "next-scene LoRA v2 by lovis93 (MIT)"},
 }
 
 # new synthetic references the template cases need (the rest come from the effects section)
@@ -40,7 +60,11 @@ REFS = {
     "ref-tpl-sign": ("Photo of a small bakery storefront with a wooden sign above the door that reads OPEN in bold white letters, daylight, photorealistic", 1280, 768,
                      "Reference with legible text for Edit Text."),
 }
+REFS["ref-tpl-garment"] = ("Product photo of a mustard yellow knit cardigan laid flat on a plain white background, top-down, soft even light", 1024, 1024,
+                           "A garment on its own, for the two-reference apps.")
 PERSON, MAN, WOMAN, PRODUCT, SNEAKER, SCENE, LAKE = "ref-face-a", "ref-fx-man-b", "ref-fx-woman-a", "ref-product", "ref-fx-sneaker", "ref-fx-cafe", "ref-fx-lake"
+WOMAN_B, STREET, STORM, ROAD, GARMENT, CHARACTER = "ref-fx-woman-b", "ref-fx-street", "ref-fx-storm", "ref-fx-road", "ref-tpl-garment", "ref-character"
+PORTRAIT = "9:16 (Portrait Widescreen)"
 
 KEEP_PRODUCT = " Keep the product identical: shape, label, text and colors."
 KEEP_FACE = " Keep the face, hairstyle and build identical."
@@ -68,9 +92,9 @@ def txt(id_, label, default="", required=False, help_=None):
 T = []
 
 
-def A(id_, name, feature, cat, base, image_label, summary, prompt, inputs=(), ref=None, values=None, note=""):
+def A(id_, name, feature, cat, base, image_label, summary, prompt, inputs=(), ref=None, values=None, note="", image2_label=None, ref2=None, lora=None, help_=None):
     T.append(dict(id=id_, name=name, feature=feature, cat=cat, base=base, image_label=image_label, summary=summary, prompt=prompt,
-                  inputs=list(inputs), ref=ref, values=values or {}, note=note))
+                  inputs=list(inputs), ref=ref, values=values or {}, note=note, image2_label=image2_label, ref2=ref2, lora=lora, help=help_))
 
 
 # ---------------------------------------------------------------- ads & products (apps/edit pipeline, a product photo)
@@ -283,6 +307,160 @@ A("color-grade", "Color Grade", "Color Grading", "templates", "edit", "Your phot
                          ("Pastel", "soft pastel"), ("High-contrast B&W", "high-contrast black and white"), ("Golden hour", "golden hour glow")])],
   SCENE, {"look": "teal and orange blockbuster"}, "Only the colors change.")
 
+# ---------------------------------------------------------------- two reference images (edit2: person + garment, scene + person, photo + face)
+A("fashion-factory", "Fashion Factory", "Fashion Factory", "portraits", "edit2", "Your photo",
+  "A fashion catalog photo of you wearing a garment from a second photo.",
+  "A fashion catalog photo: the person from <ref_image_0> wearing the garment from <ref_image_1>, full-length, {scene}. Keep the face identical and the garment's "
+  "cut, color and pattern exactly as in its photo.",
+  [sel("scene", "Scene", [("Studio cyclorama", "in a white studio cyclorama"), ("City street, golden hour", "on a city street at golden hour"), ("Minimalist loft", "in a minimalist loft"),
+                          ("Runway", "walking a runway under spotlights")])],
+  WOMAN, {}, "She wears the yellow cardigan; catalog framing.", image2_label="Garment photo", ref2=GARMENT)
+A("try-on", "Virtual Try-On", "AI Stylist", "portraits", "edit2", "Your photo",
+  "Try a garment on your own photo: same pose, same background, new clothes.",
+  "The person from <ref_image_0> wearing the clothing item from <ref_image_1>, same pose, framing and background as <ref_image_0>, natural fit and folds. "
+  "Keep the face and everything else identical; keep the garment's color and pattern.",
+  [], MAN, {}, "Same photo of him, now in the cardigan.", image2_label="Garment photo", ref2=GARMENT)
+A("outfit-swap", "Outfit Swap", "Outfit Swap", "portraits", "edit2", "Your photo",
+  "Wear the whole outfit of the person in another photo.",
+  "The person from <ref_image_0> now dressed in the complete outfit worn by the person in <ref_image_1>, same pose, framing and background as <ref_image_0>. "
+  "Keep the face identical.",
+  [], PERSON, {}, "She wears his red jacket, jeans and sneakers.", image2_label="Photo of the outfit", ref2=CHARACTER)
+A("outfit-shot", "Outfit Shot", "Outfit Shot", "portraits", "edit2", "Model photo",
+  "A studio fashion shot of a garment on a model from your photo.",
+  "A studio fashion photo of the person from <ref_image_0> modeling the garment from <ref_image_1}, {pose}, clean studio backdrop, soft light. "
+  "Keep the face identical and the garment exactly as in its photo.".replace("<ref_image_1}", "<ref_image_1>"),
+  [sel("pose", "Pose", [("Standing", "standing straight, hands relaxed"), ("Walking", "mid-step, walking toward the camera"), ("On a stool", "sitting on a wooden stool")])],
+  WOMAN_B, {}, "Studio shot in the cardigan, same face.", image2_label="Garment photo", ref2=GARMENT)
+A("character-swap", "Character Swap", "Character Swap", "identity", "edit2", "Scene photo",
+  "Replaces the person in a scene with the person from a second photo.",
+  "The scene from <ref_image_0> with its main person replaced by the person from <ref_image_1>: same pose, framing, lighting and clothing as the scene; "
+  "the new person's face, hair and build.",
+  [], SCENE, {}, "The woman sits in the cafe in the man's place and pose.", image2_label="Photo of the new person", ref2=WOMAN)
+A("face-swap", "Face Swap", "Face Swap", "identity", "edit2", "Photo to edit",
+  "Puts the face from a second photo onto the first; for faces you own or have permission to use.",
+  "The photo from <ref_image_0> with the face replaced by the face of the person in <ref_image_1>, matching the original head angle, expression, lighting "
+  "and skin tone; everything else unchanged.",
+  [], PERSON, {}, "Her portrait with the other woman's face; lighting matched.", image2_label="Photo of the face", ref2=WOMAN_B,
+  help_="Only faces you own or have permission to use.")
+
+# ---------------------------------------------------------------- video templates (LTX-2.5 image-to-video, with sound)
+A("behind-the-scenes", "Behind the Scenes", "Behind the Scenes", "clips", "video", "Your photo",
+  "The camera pulls back from your photo to reveal the film set around it.",
+  "The camera pulls back from the photo to reveal a film set around it: crew members, a boom microphone, softbox lights and a clapperboard, people moving about; "
+  "the sound of a busy set, a director calling \"rolling\".",
+  [], PERSON, {"aspect": "16:9 (Widescreen)"}, "A set appears around her as the camera widens.")
+A("asmr-product", "ASMR Product", "ASMR Add-On", "ads", "video", "Product photo",
+  "Your product in an ASMR clip: tapping, scratching, no music.",
+  "An ASMR video: hands with manicured nails slowly tap and scratch the product, turning it under soft light, extreme close-up; crisp tapping and scratching "
+  "sounds, no music, no voice.",
+  [], PRODUCT, {"aspect": PORTRAIT}, "Hands tap the bottle; tapping sounds.")
+A("asmr-whisper", "ASMR Whisper", "ASMR Classic", "clips", "video", "Your photo",
+  "You whispering and tapping in a classic ASMR clip.",
+  "An ASMR video: the person whispers softly toward the camera and taps their fingers on the table, slow gentle movements, warm low light; soft whispering "
+  "and tapping sounds, no music.",
+  [], WOMAN, {"aspect": PORTRAIT}, "Whispering and tapping; calm.")
+A("asmr-host", "ASMR Host", "ASMR Host", "clips", "video", "Your photo",
+  "You hosting an ASMR studio with a big microphone and fairy lights.",
+  "The person sits in a cozy ASMR studio with a large microphone in front of them, fairy lights behind, and whispers into the mic while gently handling a soft "
+  "brush; close whispering sound.",
+  [], MAN, {"aspect": PORTRAIT}, "Studio, mic, whisper.")
+A("chameleon", "Chameleon", "Chameleon", "ads", "video", "Product photo",
+  "A chameleon climbs onto your product and takes its colors.",
+  "A chameleon crawls onto the product and slowly changes its skin to the exact colors and pattern of the product, blinking, macro lens; soft ambient "
+  "jungle sound.",
+  [], SNEAKER, {"aspect": "16:9 (Widescreen)"}, "The chameleon turns red and white like the sneaker.")
+A("magic-button", "Magic Button", "Magic button", "ads", "video", "Product photo",
+  "A glowing button turns the scene around your product magical.",
+  "A hand presses a big glowing button next to the product; the scene transforms into a magical world with floating sparks and soft light, the product "
+  "levitating and turning slowly; a magical chime.",
+  [], PRODUCT, {"aspect": PORTRAIT}, "Button, sparks, the bottle floats.")
+A("truck-ad", "Truck Ad", "Truck Ad", "ads", "video", "Product photo",
+  "Your product printed huge on the side of a passing delivery truck.",
+  "The camera pulls back from the product to reveal it printed huge on the side of a delivery truck driving along a city avenue, the truck passing by with "
+  "sunlight flashing on it; traffic sound.",
+  [], PRODUCT, {"aspect": "16:9 (Widescreen)"}, "The bottle on a truck's side, truck moving.")
+A("kick-ad", "Kick Ad", "Kick Ad", "ads", "video", "Product photo",
+  "Your product kicks the plain grey competition off screen.",
+  "The product stands in the center; plain grey unmarked boxes slide in from the sides and the product knocks them away with a swift cartoon kick, they tumble "
+  "off screen; comedic whoosh and thud sounds.",
+  [], PRODUCT, {"aspect": "16:9 (Widescreen)"}, "Grey boxes tumble; cartoon sounds. No real brands.")
+A("volcano-ad", "Volcano Ad", "Volcano Ad", "ads", "video", "Product photo",
+  "Your product in front of an erupting volcano.",
+  "The product stands on dark volcanic rock in front of an erupting volcano, lava fountains and glowing ash in the background, heat shimmer, slow camera "
+  "push-in; a deep rumbling sound.",
+  [], PRODUCT, {"aspect": "16:9 (Widescreen)"}, "Lava behind the bottle; rumble.")
+A("roller-coaster", "Roller Coaster", "Roller Coaster", "clips", "video", "Your photo",
+  "You on a roller coaster, camera mounted on the car.",
+  "The person rides a roller coaster: the camera is mounted on the car facing them, the track climbs then drops, hair whipping, hands up, laughing with joy; "
+  "clattering track and wind.",
+  [], WOMAN, {"aspect": PORTRAIT}, "Climb, drop, hair flying.")
+A("storm-creature", "Storm Creature", "Storm Creature", "clips", "video", "Your photo",
+  "A creature of clouds and lightning rises over your scene.",
+  "A towering creature made of storm clouds and lightning rises from the clouds over the landscape, lightning flashing inside its body, rain starting; "
+  "thunder and wind.",
+  [], STORM, {"aspect": "16:9 (Widescreen)"}, "A cloud giant with lightning inside.")
+A("cloud-surf", "Cloud Surf", "Cloud Surf", "clips", "video", "Your photo",
+  "You surfing across pink clouds at sunset.",
+  "The person surfs on a surfboard across fluffy pink clouds at sunset, carving through the cloud tops, spray of cloud mist, dynamic tracking shot; wind "
+  "and a cheerful whoosh.",
+  [], MAN, {"aspect": "16:9 (Widescreen)"}, "Surfboard on clouds; same face.")
+A("mukbang", "Mukbang", "Mukbang", "clips", "video", "Your photo",
+  "You at a table full of food, eating for the camera.",
+  "A mukbang video: the person sits at a table loaded with food in front of a microphone, picks up a piece and eats with relish, nodding at the camera; "
+  "crunching and chewing sounds, a short delighted hum.",
+  [], MAN, {"aspect": PORTRAIT}, "Food, mic, eating sounds.")
+A("melting-doodle", "Melting Doodle", "Melting Doodle", "clips", "video", "Your photo",
+  "Cartoon doodles appear over your photo and melt down the frame.",
+  "Colorful cartoon doodles appear drawn over the scene, then begin to melt and drip down the frame like wet paint, dripping and merging; a soft squelching "
+  "sound.",
+  [], STREET, {"aspect": PORTRAIT}, "Doodles drawn, then dripping.")
+A("rap-video", "Rap Video", "Rap God", "clips", "video", "Your photo",
+  "A rap music video of you: low angle, stage lights, smoke, a beat.",
+  "A rap music video: the person performs toward the camera with confident hand gestures, low-angle shot, flashing stage lights and smoke, quick push-ins; "
+  "a punchy hip-hop beat.",
+  [], MAN, {"aspect": PORTRAIT}, "Performance energy; a beat plays.")
+A("idol", "Idol", "Idol", "clips", "video", "Your photo",
+  "Your K-pop idol moment: spotlights, wind, confetti, a pose.",
+  "A pop idol stage moment: the person stands center stage under spotlights, hair blown by a fan, confetti falling, strikes a pose and smiles at the camera; "
+  "crowd cheering and a pop beat.",
+  [], WOMAN, {"aspect": PORTRAIT}, "Stage, confetti, pose.")
+
+# ---------------------------------------------------------------- camera LoRAs on Qwen-Image-Edit-2509 (the relight pipeline, other LoRA)
+MOVES = [("Move forward", "将镜头向前移动 Move the camera forward."), ("Move back", "将镜头向后移动 Move the camera backward."),
+         ("Move left", "将镜头向左移动 Move the camera left."), ("Move right", "将镜头向右移动 Move the camera right."),
+         ("Move up", "将镜头向上移动 Move the camera up."), ("Move down", "将镜头向下移动 Move the camera down."),
+         ("Rotate 45° left", "将镜头向左旋转45度 Rotate the camera 45 degrees to the left."), ("Rotate 45° right", "将镜头向右旋转45度 Rotate the camera 45 degrees to the right."),
+         ("Top-down view", "将镜头转为俯视 Turn the camera to a top-down view."), ("Low angle", "将镜头转为仰视 Turn the camera to a low-angle view looking up.")]
+A("angles", "Angles", "Angles 2.0", "camera", "qwen-edit", "Your photo",
+  "The same scene from another camera position: move, rotate, look down (Multiple Angles LoRA on Qwen-Image-Edit).",
+  "{move}",
+  [sel("move", "Camera move", MOVES, default=MOVES[6][1])],
+  SCENE, {}, "The cafe seen from 45° to the left; same people and table.", lora="angles")
+A("shots", "Shots", "Shots", "camera", "qwen-edit", "Your photo",
+  "Nine framings of one image: wide, close-up, top-down, low angle and rotations.",
+  "{shot}",
+  [sel("shot", "Shot", [("Wide-angle", "将镜头转为广角镜头 Turn the camera to a wide-angle lens."), ("Close-up", "将镜头转为特写镜头 Turn the camera to a close-up."),
+                         ("Extreme close-up", "将镜头转为极特写镜头 Turn the camera to an extreme close-up."), ("Top-down", "将镜头转为俯视 Turn the camera to a top-down view."),
+                         ("Low angle", "将镜头转为仰视 Turn the camera to a low-angle view looking up."), ("Rotate 45° left", "将镜头向左旋转45度 Rotate the camera 45 degrees to the left."),
+                         ("Rotate 45° right", "将镜头向右旋转45度 Rotate the camera 45 degrees to the right."), ("Rotate 90° left", "将镜头向左旋转90度 Rotate the camera 90 degrees to the left."),
+                         ("From behind", "将镜头转到人物背后 Move the camera behind the subject.")])],
+  LAKE, {}, "The lake scene as a wide-angle shot.", lora="angles")
+A("zooms", "Zooms", "Zooms", "camera", "qwen-edit", "Your photo",
+  "Zoom levels of one image, from a wide view to an extreme close-up.",
+  "{zoom}",
+  [sel("zoom", "Zoom", [("Much wider", "将镜头大幅向后移动并转为广角镜头 Move the camera far back and turn it to a wide-angle lens."), ("Wider", "将镜头向后移动 Move the camera backward."),
+                         ("Closer", "将镜头向前移动 Move the camera forward."), ("Close-up", "将镜头转为特写镜头 Turn the camera to a close-up."),
+                         ("Extreme close-up", "将镜头转为极特写镜头 Turn the camera to an extreme close-up.")], default="将镜头转为特写镜头 Turn the camera to a close-up.")],
+  STREET, {}, "A close-up of the woman in the raincoat.", lora="angles")
+A("whats-next", "What's Next", "What's Next?", "camera", "qwen-edit", "Your photo",
+  "The next shot of your scene: 8 cinematic continuations (next-scene LoRA on Qwen-Image-Edit).",
+  "Next Scene: {next}",
+  [sel("next", "Continuation", [("Pull back to reveal", "the camera pulls back to reveal the wider surroundings"), ("Push in to a close-up", "the camera pushes in to a close-up on the main subject"),
+                                 ("Pan right", "the camera pans right, revealing more of the scene"), ("Someone enters", "a new character walks into the frame from the left"),
+                                 ("Dusk falls", "time passes and the light turns to dusk, lights coming on"), ("Rain starts", "the weather turns and rain begins to fall"),
+                                 ("Tilt up to the sky", "the camera tilts up toward the sky"), ("Reverse angle", "the camera cuts to the reverse angle, looking back the other way")])],
+  ROAD, {}, "The next shot of the road: wider, more landscape.", lora="next-scene")
+
 
 def check() -> None:
     ids = [t["id"] for t in T]
@@ -301,13 +479,15 @@ def check() -> None:
         assert used <= have, (t["id"], used - have)
         assert have <= used, (t["id"], have - used)
         for i in t["inputs"]:
-            assert i["id"] not in ("image", "details", "steps", "seed", "width", "height"), (t["id"], i["id"])
+            assert i["id"] not in ("image", "image2", "details", "steps", "seed", "width", "height", "duration", "enhance", "aspect"), (t["id"], i["id"])
         if t["base"] == "z-image":
             assert t["ref"] is None and t["image_label"] is None
         else:
             assert t["ref"], t["id"]
-        for k in t["values"]:
-            assert k in have, (t["id"], k)
+        assert (t["base"] == "edit2") == bool(t["image2_label"] and t["ref2"]), t["id"]
+        assert (t["base"] == "qwen-edit") == (t["lora"] in QWEN_LORAS), t["id"]
+        for k in t["values"]:   # lab values name the template's own inputs or the settings kept from the base app
+            assert k in have or k in BASES[t["base"]]["keep"], (t["id"], k)
 
 
 def manifest(t: dict) -> dict:
@@ -317,28 +497,62 @@ def manifest(t: dict) -> dict:
     inputs = []
     if base["image"]:
         inputs.append({"id": "image", "type": "image", "label": t["image_label"], "required": True, "limits": {"max_mb": 20},
-                       "bind": [{"node": base["image"][0], "field": base["image"][1]}]})
+                       **({"help": t["help"]} if t["help"] else {}), "bind": [{"node": base["image"][0], "field": base["image"][1]}]})
+    if base.get("image2"):
+        inputs.append({"id": "image2", "type": "image", "label": t["image2_label"], "required": True, "limits": {"max_mb": 20},
+                       "bind": [{"node": base["image2"][0], "field": base["image2"][1]}]})
     inputs += t["inputs"]
     # the default "" matters: an optional input with no value is skipped everywhere, and the template with it
     inputs.append({"id": "details", "type": "textarea", "label": "Extra direction", "default": "", "help": "Added at the end of the app's prompt.",
                    "bind": [{"node": base["prompt"][0], "field": base["prompt"][1], "template": t["prompt"] + " {details}"}]})
     inputs += [keep[k] for k in base["keep"]]
     test = {"image": "test/portrait.png"} if base["image"] else {}
+    if base.get("image2"):
+        test["image2"] = "test/second.png"
+    if base["section"] == "video":
+        test["duration"] = 2
     test.update(t["values"])
+    models, credits = src["models"], list(src.get("credits", []))
+    notes = f"Template app written by tools/template_apps.py: the workflow is apps/{base['app']}'s (built by tools/build_apps.py)"
+    if t["base"] == "edit2":
+        notes += " plus a second LoadImage on ReferenceMultiLatent's images.image1"
+    if t["lora"]:
+        lora = QWEN_LORAS[t["lora"]]
+        models = [m for m in models if "Relight" not in m["file"]] + [{"repo": lora["repo"], "file": lora["file"], "dir": "loras", "gb": lora["gb"], "phase": "denoise", "license": lora["license"]}]
+        credits = [c for c in credits if "Relight" not in c]
+        credits.insert(1, lora["credit"])
+        notes += f" with {lora['file']} in place of the Relight LoRA and no Relight trigger"
+    notes += "; the prompt below is fixed and \"Extra direction\" is appended to it."
     return {
         "$schema": "../../schema/app.schema.json",
-        "id": t["id"], "name": t["name"], "section": "image",
+        "id": t["id"], "name": t["name"], "section": base["section"],
         "summary": t["summary"],
         "higgsfield_feature": t["feature"],
         "pack": base["pack"], "status": "ready", "workflow": "workflow.api.json",
-        "source": {**src.get("source", {}), "notes": f"Template app written by tools/template_apps.py: the workflow is apps/{base['app']}'s "
-                   f"(built by tools/build_apps.py) and the prompt below is fixed; \"Extra direction\" is appended to it."},
+        "source": {**src.get("source", {}), "notes": notes},
         "inputs": inputs,
         "outputs": [{**base["output"], "label": "Result"}],
-        "models": src["models"],
-        "credits": src.get("credits", []),
+        "models": models,
+        "credits": credits,
         "test": test,
     }
+
+
+def workflow(t: dict) -> dict:
+    """The base app's workflow, with the few edits a base needs."""
+    base = BASES[t["base"]]
+    api = json.loads((ROOT / "apps" / base["app"] / "workflow.api.json").read_text(encoding="utf-8"))
+    if t["base"] == "edit2":   # a second reference image into the same ReferenceMultiLatent
+        api["12"] = {"class_type": "LoadImage", "inputs": {"image": "second.png"}, "_meta": {"title": "Second reference"}}
+        api["17"]["inputs"]["images.image1"] = ["12", 0]
+    if t["lora"]:   # the relight pipeline with another LoRA; node 14 prepends the Relight trigger, so it is blanked
+        api["10:118"]["inputs"]["lora_name"] = QWEN_LORAS[t["lora"]]["file"]
+        api["14"]["inputs"]["string_a"] = ""
+    for n in api.values():
+        if n["class_type"] == "SaveImage" or n["class_type"] == "SaveVideo" or n["class_type"] == "CreateVideo":
+            if "filename_prefix" in n["inputs"]:
+                n["inputs"]["filename_prefix"] = f"freefield/{t['id']}"
+    return api
 
 
 def cases() -> list[str]:
@@ -348,7 +562,7 @@ def cases() -> list[str]:
         lines.append(f'    {{"id": "{rid}", "app": "z-image", "values": {j({"prompt": prompt, "width": w, "height": h})},\n     "note": {j(note)}}},')
     lines.append("")
     for t in T:
-        vals = ({"image": f"@case:{t['ref']}"} if t["ref"] else {}) | t["values"]
+        vals = ({"image": f"@case:{t['ref']}"} if t["ref"] else {}) | ({"image2": f"@case:{t['ref2']}"} if t["ref2"] else {}) | t["values"]
         note = j(f"{t['feature']}. {t['note']}")
         lines.append(f'    {{"id": "tpl-{t["id"]}", "showcase": true, "app": "{t["id"]}", "values": {j(vals)},\n'
                      f'     "note": {note}}},')
@@ -377,8 +591,9 @@ def write_cases() -> int:
 def readme() -> str:
     rows = ["| App | Rebuilds | Base | Inputs |", "|---|---|---|---|"]
     for t in T:
-        extra = ", ".join(i["label"].lower() for i in t["inputs"])
-        rows.append(f"| `{t['id']}` | {t['feature']} | `{BASES[t['base']]['app']}` | {t['image_label'].lower() + (', ' if extra else '') if t['image_label'] else ''}{extra} |")
+        ins = [x.lower() for x in (t["image_label"], t["image2_label"]) if x] + [i["label"].lower() for i in t["inputs"]]
+        base = BASES[t["base"]]["app"] + (f" + {QWEN_LORAS[t['lora']]['repo'].split('/')[1]}" if t["lora"] else "")
+        rows.append(f"| `{t['id']}` | {t['feature']} | `{base}` | {', '.join(ins)} |")
     return "\n".join(rows)
 
 
@@ -402,8 +617,7 @@ def main(argv=None) -> int:
         d = ROOT / "apps" / t["id"]
         d.mkdir(parents=True, exist_ok=True)
         (d / "app.json").write_text(json.dumps(manifest(t), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        wf = (ROOT / "apps" / BASES[t["base"]]["app"] / "workflow.api.json").read_text(encoding="utf-8")
-        (d / "workflow.api.json").write_text(wf, encoding="utf-8")
+        (d / "workflow.api.json").write_text(json.dumps(workflow(t), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"apps/: {len(T)} template apps written")
     print(f"lab/cases.json: {write_cases()} cases")
     return 0

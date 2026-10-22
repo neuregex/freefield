@@ -21,12 +21,14 @@ export async function loadCatalog() {
 /** Apps grouped like a store: a card can only sit in one row. */
 export const CATEGORIES = [
   { id: "create", apps: ["z-image", "cinema-studio", "styles", "video-t2v", "video", "music", "sfx"] },
-  { id: "identity", apps: ["character", "speak", "talking", "recast", "motion-transfer"] },
-  { id: "camera", apps: ["camera-moves", "camera-copy", "reshoot", "transitions"] },
+  { id: "identity", apps: ["character", "speak", "talking", "recast", "motion-transfer", "character-swap", "face-swap"] },
+  { id: "camera", apps: ["camera-moves", "camera-copy", "reshoot", "transitions", "angles", "shots", "zooms", "whats-next"] },
   { id: "style", apps: ["relight", "style-reference", "upscale", "upscale-video", "smooth", "remove-bg"] },
   { id: "vfx", apps: ["effects", "edit", "vfx-clean-plate", "vfx-day-to-night", "vfx-water"] },
-  { id: "ads", apps: ["product-shot", "poster", "packshot", "macro-scene", "macro-product", "giant-product", "billboard", "graffiti-ad", "fridge-ad", "ugc-shot"] },
-  { id: "portraits", apps: ["headshot", "commercial-faces", "style-snap", "skin-enhancer", "outfit-vending", "glitter-sticker"] },
+  { id: "ads", apps: ["product-shot", "poster", "packshot", "macro-scene", "macro-product", "giant-product", "billboard", "graffiti-ad", "fridge-ad", "ugc-shot",
+    "asmr-product", "chameleon", "magic-button", "truck-ad", "kick-ad", "volcano-ad"] },
+  { id: "portraits", apps: ["headshot", "commercial-faces", "style-snap", "skin-enhancer", "outfit-vending", "glitter-sticker", "fashion-factory", "try-on", "outfit-swap", "outfit-shot"] },
+  { id: "clips", apps: ["behind-the-scenes", "asmr-whisper", "asmr-host", "roller-coaster", "storm-creature", "cloud-surf", "mukbang", "melting-doodle", "rap-video", "idol"] },
   { id: "play", apps: ["game-styles", "plushie", "render-3d", "figure-3d", "pixel-game", "brick-toy", "sketch-to-real", "paint-app", "mural", "micro-beasts", "meme"] },
   { id: "templates", apps: ["j-magazine", "cafe-60s", "victory-card", "j-poster", "mascot", "burning-sunset", "comic-book", "giallo", "renaissance", "japanese-show", "breakdown", "edit-text", "image-effects", "color-grade"] },
 ];
@@ -39,6 +41,8 @@ export const VIDEO_TABS = [
   { id: "create", apps: ["video", "effects", "video-t2v", "speak", "talking", "transitions", "camera-moves"] },
   { id: "edit", apps: ["recast", "vfx-clean-plate", "vfx-day-to-night", "vfx-water", "upscale-video", "smooth", "reshoot"] },
   { id: "motion", apps: ["motion-transfer", "camera-copy"] },
+  { id: "templates", apps: ["behind-the-scenes", "asmr-product", "asmr-whisper", "asmr-host", "chameleon", "magic-button", "truck-ad", "kick-ad", "volcano-ad",
+    "roller-coaster", "storm-creature", "cloud-surf", "mukbang", "melting-doodle", "rap-video", "idol"] },
 ];
 export const videoTabOf = (id) => VIDEO_TABS.find((tab) => tab.apps.includes(id))?.id ?? null;
 

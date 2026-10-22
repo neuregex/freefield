@@ -1,9 +1,13 @@
 {
   "pack": "image-qwen-edit",
   "apps": [
-    "relight"
+    "angles",
+    "relight",
+    "shots",
+    "whats-next",
+    "zooms"
   ],
-  "download_gb": 31.15,
+  "download_gb": 31.69,
   "needs_hf_token": false,
   "custom_nodes": [],
   "models": [
@@ -16,7 +20,11 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
-        "relight"
+        "angles",
+        "relight",
+        "shots",
+        "whats-next",
+        "zooms"
       ]
     },
     {
@@ -28,7 +36,11 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
-        "relight"
+        "angles",
+        "relight",
+        "shots",
+        "whats-next",
+        "zooms"
       ]
     },
     {
@@ -44,6 +56,32 @@
       ]
     },
     {
+      "repo": "lovis93/next-scene-qwen-image-lora-2509",
+      "file": "next-scene_lora-v2-3000.safetensors",
+      "dir": "loras",
+      "gb": 0.3,
+      "name": "next-scene_lora-v2-3000.safetensors",
+      "gated": false,
+      "license": "MIT",
+      "used_by": [
+        "whats-next"
+      ]
+    },
+    {
+      "repo": "dx8152/Qwen-Edit-2509-Multiple-angles",
+      "file": "镜头转换.safetensors",
+      "dir": "loras",
+      "gb": 0.24,
+      "name": "镜头转换.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "angles",
+        "shots",
+        "zooms"
+      ]
+    },
+    {
       "repo": "Comfy-Org/Qwen-Image_ComfyUI",
       "file": "split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
       "dir": "text_encoders",
@@ -52,7 +90,11 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
-        "relight"
+        "angles",
+        "relight",
+        "shots",
+        "whats-next",
+        "zooms"
       ]
     },
     {
@@ -64,7 +106,11 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
-        "relight"
+        "angles",
+        "relight",
+        "shots",
+        "whats-next",
+        "zooms"
       ]
     }
   ]

@@ -32,11 +32,14 @@
       "burning-sunset",
       "cafe-60s",
       "character",
+      "character-swap",
       "color-grade",
       "comic-book",
       "commercial-faces",
       "edit",
       "edit-text",
+      "face-swap",
+      "fashion-factory",
       "figure-3d",
       "fridge-ad",
       "game-styles",
@@ -54,6 +57,8 @@
       "mascot",
       "micro-beasts",
       "mural",
+      "outfit-shot",
+      "outfit-swap",
       "outfit-vending",
       "packshot",
       "paint-app",
@@ -66,6 +71,7 @@
       "sketch-to-real",
       "skin-enhancer",
       "style-snap",
+      "try-on",
       "ugc-shot",
       "victory-card"
     ],
@@ -82,9 +88,13 @@
   },
   "image-qwen-edit": {
     "apps": [
-      "relight"
+      "angles",
+      "relight",
+      "shots",
+      "whats-next",
+      "zooms"
     ],
-    "download_gb": 31.15,
+    "download_gb": 31.69,
     "needs_hf_token": false
   },
   "upscale": {
@@ -106,15 +116,31 @@
   },
   "video-ltx25": {
     "apps": [
+      "asmr-host",
+      "asmr-product",
+      "asmr-whisper",
+      "behind-the-scenes",
       "camera-copy",
+      "chameleon",
+      "cloud-surf",
+      "idol",
+      "kick-ad",
+      "magic-button",
+      "melting-doodle",
+      "mukbang",
+      "rap-video",
+      "roller-coaster",
       "speak",
+      "storm-creature",
       "talking",
       "transitions",
+      "truck-ad",
       "vfx-clean-plate",
       "vfx-day-to-night",
       "vfx-water",
       "video",
-      "video-t2v"
+      "video-t2v",
+      "volcano-ad"
     ],
     "download_gb": 47.94,
     "needs_hf_token": true

@@ -253,6 +253,31 @@
       "measured_peak_gb": null
     },
     {
+      "id": "character-swap",
+      "name": "Character Swap",
+      "section": "image",
+      "pack": "image-flux3",
+      "status": "ready",
+      "whole_gb": 11.03,
+      "phases_gb": {
+        "encode": 4.86,
+        "denoise": 5.83,
+        "denoise2": 0.0,
+        "decode": 0.34,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 5.83,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "flux3-image-klein-int8-convrot.safetensors",
+        "gb": 5.83
+      },
+      "verdict_24gb": "fits whole",
+      "modal_gpu": "L4 / A10G (24 GB)",
+      "measured_peak_gb": null
+    },
+    {
       "id": "color-grade",
       "name": "Color Grade",
       "section": "image",
@@ -355,6 +380,56 @@
     {
       "id": "edit-text",
       "name": "Edit Text",
+      "section": "image",
+      "pack": "image-flux3",
+      "status": "ready",
+      "whole_gb": 11.03,
+      "phases_gb": {
+        "encode": 4.86,
+        "denoise": 5.83,
+        "denoise2": 0.0,
+        "decode": 0.34,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 5.83,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "flux3-image-klein-int8-convrot.safetensors",
+        "gb": 5.83
+      },
+      "verdict_24gb": "fits whole",
+      "modal_gpu": "L4 / A10G (24 GB)",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "face-swap",
+      "name": "Face Swap",
+      "section": "image",
+      "pack": "image-flux3",
+      "status": "ready",
+      "whole_gb": 11.03,
+      "phases_gb": {
+        "encode": 4.86,
+        "denoise": 5.83,
+        "denoise2": 0.0,
+        "decode": 0.34,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 5.83,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "flux3-image-klein-int8-convrot.safetensors",
+        "gb": 5.83
+      },
+      "verdict_24gb": "fits whole",
+      "modal_gpu": "L4 / A10G (24 GB)",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "fashion-factory",
+      "name": "Fashion Factory",
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
@@ -803,6 +878,56 @@
       "measured_peak_gb": null
     },
     {
+      "id": "outfit-shot",
+      "name": "Outfit Shot",
+      "section": "image",
+      "pack": "image-flux3",
+      "status": "ready",
+      "whole_gb": 11.03,
+      "phases_gb": {
+        "encode": 4.86,
+        "denoise": 5.83,
+        "denoise2": 0.0,
+        "decode": 0.34,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 5.83,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "flux3-image-klein-int8-convrot.safetensors",
+        "gb": 5.83
+      },
+      "verdict_24gb": "fits whole",
+      "modal_gpu": "L4 / A10G (24 GB)",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "outfit-swap",
+      "name": "Outfit Swap",
+      "section": "image",
+      "pack": "image-flux3",
+      "status": "ready",
+      "whole_gb": 11.03,
+      "phases_gb": {
+        "encode": 4.86,
+        "denoise": 5.83,
+        "denoise2": 0.0,
+        "decode": 0.34,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 5.83,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "flux3-image-klein-int8-convrot.safetensors",
+        "gb": 5.83
+      },
+      "verdict_24gb": "fits whole",
+      "modal_gpu": "L4 / A10G (24 GB)",
+      "measured_peak_gb": null
+    },
+    {
       "id": "outfit-vending",
       "name": "Outfit Vending",
       "section": "image",
@@ -1080,6 +1205,31 @@
     {
       "id": "style-snap",
       "name": "Style Snap",
+      "section": "image",
+      "pack": "image-flux3",
+      "status": "ready",
+      "whole_gb": 11.03,
+      "phases_gb": {
+        "encode": 4.86,
+        "denoise": 5.83,
+        "denoise2": 0.0,
+        "decode": 0.34,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 5.83,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "flux3-image-klein-int8-convrot.safetensors",
+        "gb": 5.83
+      },
+      "verdict_24gb": "fits whole",
+      "modal_gpu": "L4 / A10G (24 GB)",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "try-on",
+      "name": "Virtual Try-On",
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
@@ -1428,8 +1578,358 @@
       "measured_peak_gb": null
     },
     {
+      "id": "asmr-host",
+      "name": "ASMR Host",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "asmr-product",
+      "name": "ASMR Product",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "asmr-whisper",
+      "name": "ASMR Whisper",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "behind-the-scenes",
+      "name": "Behind the Scenes",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "chameleon",
+      "name": "Chameleon",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "cloud-surf",
+      "name": "Cloud Surf",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "idol",
+      "name": "Idol",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "kick-ad",
+      "name": "Kick Ad",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "magic-button",
+      "name": "Magic Button",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "melting-doodle",
+      "name": "Melting Doodle",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "mukbang",
+      "name": "Mukbang",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "rap-video",
+      "name": "Rap Video",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "roller-coaster",
+      "name": "Roller Coaster",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
       "id": "speak",
       "name": "Speak",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "storm-creature",
+      "name": "Storm Creature",
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
@@ -1469,6 +1969,31 @@
       "largest_phase": "denoise",
       "largest_phase_gb": 21.5,
       "optional_gb": 5.63,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "truck-ad",
+      "name": "Truck Ad",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
       "biggest_file": {
         "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
         "gb": 21.5
@@ -1528,6 +2053,56 @@
       "measured_peak_gb": null
     },
     {
+      "id": "volcano-ad",
+      "name": "Volcano Ad",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 39.7,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.5,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 1.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.5,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "angles",
+      "name": "Angles",
+      "section": "image",
+      "pack": "image-qwen-edit",
+      "status": "ready",
+      "whole_gb": 31.15,
+      "phases_gb": {
+        "encode": 9.38,
+        "denoise": 21.52,
+        "denoise2": 0.0,
+        "decode": 0.25,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.52,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "qwen_image_edit_2509_fp8_e4m3fn.safetensors",
+        "gb": 20.43
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
       "id": "relight",
       "name": "Relight",
       "section": "image",
@@ -1543,6 +2118,81 @@
       },
       "largest_phase": "denoise",
       "largest_phase_gb": 21.52,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "qwen_image_edit_2509_fp8_e4m3fn.safetensors",
+        "gb": 20.43
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "shots",
+      "name": "Shots",
+      "section": "image",
+      "pack": "image-qwen-edit",
+      "status": "ready",
+      "whole_gb": 31.15,
+      "phases_gb": {
+        "encode": 9.38,
+        "denoise": 21.52,
+        "denoise2": 0.0,
+        "decode": 0.25,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.52,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "qwen_image_edit_2509_fp8_e4m3fn.safetensors",
+        "gb": 20.43
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "zooms",
+      "name": "Zooms",
+      "section": "image",
+      "pack": "image-qwen-edit",
+      "status": "ready",
+      "whole_gb": 31.15,
+      "phases_gb": {
+        "encode": 9.38,
+        "denoise": 21.52,
+        "denoise2": 0.0,
+        "decode": 0.25,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.52,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "qwen_image_edit_2509_fp8_e4m3fn.safetensors",
+        "gb": 20.43
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "whats-next",
+      "name": "What's Next",
+      "section": "image",
+      "pack": "image-qwen-edit",
+      "status": "ready",
+      "whole_gb": 31.21,
+      "phases_gb": {
+        "encode": 9.38,
+        "denoise": 21.58,
+        "denoise2": 0.0,
+        "decode": 0.25,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.58,
       "optional_gb": 0,
       "biggest_file": {
         "name": "qwen_image_edit_2509_fp8_e4m3fn.safetensors",

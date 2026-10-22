@@ -1,0 +1,166 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "angles",
+  "name": "Angles",
+  "section": "image",
+  "summary": "The same scene from another camera position: move, rotate, look down (Multiple Angles LoRA on Qwen-Image-Edit).",
+  "higgsfield_feature": "Angles 2.0",
+  "pack": "image-qwen-edit",
+  "status": "ready",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_qwen_image_edit_2509_relight.json",
+    "comfyui": "0.42.0",
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/relight's (built by tools/build_apps.py) with 镜头转换.safetensors in place of the Relight LoRA and no Relight trigger; the prompt below is fixed and \"Extra direction\" is appended to it."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Your photo",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "11",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "move",
+      "type": "select",
+      "label": "Camera move",
+      "default": "将镜头向左旋转45度 Rotate the camera 45 degrees to the left.",
+      "options": [
+        {
+          "value": "将镜头向前移动 Move the camera forward.",
+          "label": "Move forward"
+        },
+        {
+          "value": "将镜头向后移动 Move the camera backward.",
+          "label": "Move back"
+        },
+        {
+          "value": "将镜头向左移动 Move the camera left.",
+          "label": "Move left"
+        },
+        {
+          "value": "将镜头向右移动 Move the camera right.",
+          "label": "Move right"
+        },
+        {
+          "value": "将镜头向上移动 Move the camera up.",
+          "label": "Move up"
+        },
+        {
+          "value": "将镜头向下移动 Move the camera down.",
+          "label": "Move down"
+        },
+        {
+          "value": "将镜头向左旋转45度 Rotate the camera 45 degrees to the left.",
+          "label": "Rotate 45° left"
+        },
+        {
+          "value": "将镜头向右旋转45度 Rotate the camera 45 degrees to the right.",
+          "label": "Rotate 45° right"
+        },
+        {
+          "value": "将镜头转为俯视 Turn the camera to a top-down view.",
+          "label": "Top-down view"
+        },
+        {
+          "value": "将镜头转为仰视 Turn the camera to a low-angle view looking up.",
+          "label": "Low angle"
+        }
+      ]
+    },
+    {
+      "id": "details",
+      "type": "textarea",
+      "label": "Extra direction",
+      "default": "",
+      "help": "Added at the end of the app's prompt.",
+      "bind": [
+        {
+          "node": "15",
+          "field": "value",
+          "template": "{move} {details}"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "10:3",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "12",
+      "type": "image",
+      "label": "Result"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/Qwen-Image-Edit_ComfyUI",
+      "file": "split_files/diffusion_models/qwen_image_edit_2509_fp8_e4m3fn.safetensors",
+      "dir": "diffusion_models",
+      "gb": 20.43,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Qwen-Image_ComfyUI",
+      "file": "split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "dir": "text_encoders",
+      "gb": 9.38,
+      "phase": "encode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Qwen-Image_ComfyUI",
+      "file": "split_files/vae/qwen_image_vae.safetensors",
+      "dir": "vae",
+      "gb": 0.25,
+      "phase": "decode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "lightx2v/Qwen-Image-Lightning",
+      "file": "Qwen-Image-Edit-2509/Qwen-Image-Edit-2509-Lightning-4steps-V1.0-bf16.safetensors",
+      "dir": "loras",
+      "gb": 0.85,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "dx8152/Qwen-Edit-2509-Multiple-angles",
+      "file": "镜头转换.safetensors",
+      "dir": "loras",
+      "gb": 0.24,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    }
+  ],
+  "credits": [
+    "Qwen-Image-Edit-2509 by Alibaba Qwen (Apache-2.0)",
+    "Multiple Angles LoRA by dx8152 (Apache-2.0)",
+    "Lightning LoRA by lightx2v",
+    "Workflow: ComfyUI official template"
+  ],
+  "test": {
+    "image": "test/portrait.png"
+  }
+}

@@ -17,9 +17,9 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 
 | | |
 |---|---|
-| Apps | 70 manifests, each with a workflow: 29 *ready* that ran on a GPU, 40 template apps (a fixed prompt over the `edit` or `z-image` pipeline, written by `tools/template_apps.py`; their lab run is pending) and 1 *draft* (`reshoot`: it runs, but parts of the new view come out unfilled) |
+| Apps | 96 manifests, each with a workflow: 29 *ready* that ran on a GPU, 66 template apps (a fixed prompt over the `edit`, `z-image`, `video` or `relight` pipeline, written by `tools/template_apps.py`; their lab runs are pending) and 1 *draft* (`reshoot`: it runs, but parts of the new view come out unfilled) |
 | Workflows | Built from official sources by `tools/build_apps.py` (the two smoke apps are hand-written) and accepted by ComfyUI's validator: ComfyUI `e3bee7f` (0.42.0), ComfyUI-LTXVideo `44c8a36`, ComfyUI-CrossViewWarp `fbb1e93` |
-| LoRA lab | 141 cases, one showcase per app plus one per effect (35); the prompt each one would queue (values, overrides and inserted LoRAs) passes the same validator |
+| LoRA lab | 168 cases, one showcase per app plus one per effect (35); the prompt each one would queue (values, overrides and inserted LoRAs) passes the same validator |
 | End to end | Web UI → server → gateway → comfy-api-proxy → ComfyUI tested with the model-free smoke apps; lab chaining tested the same way |
 | CI | `.github/workflows/validate.yml` runs all of the above on every push, including a CPU-only ComfyUI that checks every workflow and lab case (about 3 minutes) |
 | GPU runs | Showcase lab run on an L40S (`20261020-133620-l40s`): 35 of 36 cases, one example per app; `recast` failed there and passed in a re-run (`20261020-162214-l40s`). Effects on 4 H100s at once (`20261021-140940-h100`, `--shards 4`): 61 of 61 cases in about 31 minutes of GPU, 2 min 52 s per effect on average, peak 30.8 GB. Two more H100 rounds (`20261021-152107-h100`, `20261021-175735-h100`) re-ran the 5 that failed with new photos and tried 7 LoRAs by other authors: Painting, Pirate captain, Zen and Crash zoom out were taken out, Dolly zoom and Bullet time moved to ostris's and joyfox's LoRAs, and Money rain, Clones and Steam from nose and ears were added. A fourth round (`20261021-195731-h100`, 14 of 14 cases) ran the new ones as shipped; after it, Jungle, Samurai, Warrior, Jumpscare, Smoke outfit change and Gothic transformation were taken out to keep the app SFW. That leaves 35 effects, each with an example in the gallery. VRAM figures below are weight sizes; the lab's measured peaks show up in the web UI |
@@ -56,11 +56,14 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 
 ### Template apps
 
-Higgsfield's catalog is mostly fixed prompts over a few pipelines, and so is this: each of these apps is the `edit`
-pipeline (FLUX 3 Image Klein, one reference image) or Z-Image Turbo with its prompt baked in, selects that fill parts of
-it, and an "Extra direction" box appended to it. `tools/template_apps.py` holds the table and writes the 40 folders
-(manifest + a copy of the base workflow) and their lab cases; `--readme` prints this list and `--lab` the command that
-makes every example. Add a line to the table there, not a folder by hand.
+Higgsfield's catalog is mostly fixed prompts over a few pipelines, and so is this: each of these apps is one of
+Freefield's pipelines with its prompt baked in, selects that fill parts of it, and an "Extra direction" box appended
+to it. The bases: `edit` (FLUX 3 Image Klein, one reference image), `edit` with a second reference (a garment, another
+person, a face), `z-image` (text to image), `video` (LTX-2.5 image-to-video with its own audio) and `relight`'s
+Qwen-Image-Edit-2509 pipeline with another LoRA (dx8152's Multiple Angles for `angles`, `shots` and `zooms`; lovis93's
+next-scene v2 for `whats-next`). `tools/template_apps.py` holds the table and writes the 66 folders (manifest + the
+base workflow, with the few edits a base needs) and their lab cases; `--readme` prints this list and `--lab` the
+command that makes every example. Add a line to the table there, not a folder by hand.
 
 | App | Rebuilds | Base | Inputs |
 |---|---|---|---|
@@ -104,6 +107,32 @@ makes every example. Add a line to the table there, not a folder by hand.
 | `edit-text` | Edit Text | `edit` | image with text, text to replace, new text |
 | `image-effects` | Image Effects | `edit` | your photo, effect |
 | `color-grade` | Color Grading | `edit` | your photo, look |
+| `fashion-factory` | Fashion Factory | `edit` | your photo, garment photo, scene |
+| `try-on` | AI Stylist | `edit` | your photo, garment photo |
+| `outfit-swap` | Outfit Swap | `edit` | your photo, photo of the outfit |
+| `outfit-shot` | Outfit Shot | `edit` | model photo, garment photo, pose |
+| `character-swap` | Character Swap | `edit` | scene photo, photo of the new person |
+| `face-swap` | Face Swap | `edit` | photo to edit, photo of the face |
+| `behind-the-scenes` | Behind the Scenes | `video` | your photo |
+| `asmr-product` | ASMR Add-On | `video` | product photo |
+| `asmr-whisper` | ASMR Classic | `video` | your photo |
+| `asmr-host` | ASMR Host | `video` | your photo |
+| `chameleon` | Chameleon | `video` | product photo |
+| `magic-button` | Magic button | `video` | product photo |
+| `truck-ad` | Truck Ad | `video` | product photo |
+| `kick-ad` | Kick Ad | `video` | product photo |
+| `volcano-ad` | Volcano Ad | `video` | product photo |
+| `roller-coaster` | Roller Coaster | `video` | your photo |
+| `storm-creature` | Storm Creature | `video` | your photo |
+| `cloud-surf` | Cloud Surf | `video` | your photo |
+| `mukbang` | Mukbang | `video` | your photo |
+| `melting-doodle` | Melting Doodle | `video` | your photo |
+| `rap-video` | Rap God | `video` | your photo |
+| `idol` | Idol | `video` | your photo |
+| `angles` | Angles 2.0 | `relight + Qwen-Edit-2509-Multiple-angles` | your photo, camera move |
+| `shots` | Shots | `relight + Qwen-Edit-2509-Multiple-angles` | your photo, shot |
+| `zooms` | Zooms | `relight + Qwen-Edit-2509-Multiple-angles` | your photo, zoom |
+| `whats-next` | What's Next? | `relight + next-scene-qwen-image-lora-2509` | your photo, continuation |
 
 Full table: [`docs/vram-map.md`](docs/vram-map.md) (`python tools/catalog.py vram`). Between two apps with different
 base models the gateway calls ComfyUI's `POST /free`, so nothing from the previous app stays in VRAM.
