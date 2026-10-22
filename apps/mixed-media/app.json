@@ -393,7 +393,6 @@
       "dir": "loras",
       "gb": 0.65,
       "phase": "denoise",
-      "gated": true,
       "license": "LTX-2.x Community License"
     }
   ],

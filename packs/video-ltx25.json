@@ -180,7 +180,7 @@
       "dir": "loras",
       "gb": 0.65,
       "name": "ltx-2.3-22b-ic-lora-union-control-ref0.5.safetensors",
-      "gated": true,
+      "gated": false,
       "license": "LTX-2.x Community License",
       "used_by": [
         "mixed-media"

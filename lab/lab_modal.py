@@ -32,6 +32,7 @@ from pathlib import Path
 import modal
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent))   # lab/core.py, imported where it is used (the container has it elsewhere)
 from infra.common import build_image, ensure_models, hf_secret, lab_volume, models_volume, start_comfyui  # noqa: E402
 
 GPU = os.environ.get("FREEFIELD_GPU", "L40S")
@@ -79,7 +80,8 @@ def run(cases: list[dict], run_id: str, assets: dict[str, bytes]) -> list[dict]:
 
 
 def with_dependencies(spec: list[dict], keep: set[str]) -> list[dict]:
-    """The chosen cases plus every case they read an output from (transitively), in file order."""
+    """The chosen cases plus every case they read an output from (transitively), in run order."""
+    import core  # lab/core.py
     by_id = {c["id"]: c for c in spec}
     todo, seen = list(keep), set()
     while todo:
@@ -87,9 +89,8 @@ def with_dependencies(spec: list[dict], keep: set[str]) -> list[dict]:
         if cid in seen or cid not in by_id:
             continue
         seen.add(cid)
-        todo += [v[len("@case:"):] for v in by_id[cid].get("values", {}).values()
-                 if isinstance(v, str) and v.startswith("@case:")]
-    return [c for c in spec if c["id"] in seen]
+        todo += core.reads(by_id[cid])
+    return core.in_run_order([c for c in spec if c["id"] in seen])
 
 
 def split_cases(spec: list[dict], keep: set[str], n: int) -> list[list[dict]]:
@@ -223,6 +224,8 @@ def main(cases: str = "lab/cases.json", only: str = "", apps: str = "", showcase
             raise SystemExit("no case matches --only/--apps/--showcase")
     else:
         keep = {c["id"] for c in spec}
+    import core  # lab/core.py: case order, which models these cases load
+    spec = core.in_run_order(spec)
     assets = {}
     for c in spec:
         for v in c.get("values", {}).values():
@@ -230,8 +233,6 @@ def main(cases: str = "lab/cases.json", only: str = "", apps: str = "", showcase
                 name = v[len("asset:"):]
                 assets[name] = (Path("lab/assets") / name).read_bytes()
     run_id = run_id or time.strftime("%Y%m%d-%H%M%S") + f"-{GPU.lower()}"
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
-    import core  # lab/core.py: which models these cases load
     needed = core.models_for_cases(spec, Path(__file__).resolve().parent.parent / "apps")
     print(f"run {run_id}: {len(spec)} cases; making sure {len(needed)} model files are in the volume (CPU)")
     failed = fetch.remote(needed)

@@ -366,10 +366,10 @@
         "aspect": "16:9 (Widescreen)"
       },
       "seed": 42,
-      "seconds": 52.6,
-      "peak_vram_gb": 41.58,
-      "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261020-133620-l40s"
+      "seconds": 26.1,
+      "peak_vram_gb": 41.83,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261022-173700-h100"
     },
     "style-reference": {
       "case": "style-reference-lighthouse",
@@ -685,10 +685,10 @@
         "steps": 8
       },
       "seed": 42,
-      "seconds": 15.4,
-      "peak_vram_gb": 14.08,
+      "seconds": 19.1,
+      "peak_vram_gb": 12.59,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261022-173700-h100"
     },
     "recast": {
       "case": "recast-walk",
@@ -3203,5 +3203,5 @@
       "run": "20261022-035829-h100"
     }
   },
-  "updated_from": "20261022-035829-h100"
+  "updated_from": "20261022-173700-h100"
 }

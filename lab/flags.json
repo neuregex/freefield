@@ -1,0 +1,23 @@
+{
+  "about": "Lab examples marked mediocre in the web UI. Keys: <app> for the app's example, <app>/<input>/<option> for one option of a gallery select. lab/publish.py removes the mark of an example it replaces.",
+  "mediocre": {
+    "effects/effect/clones": {
+      "at": "2026-10-22T23:49:07.263Z"
+    },
+    "effects/effect/jaw-drop": {
+      "at": "2026-10-22T23:48:07.698Z"
+    },
+    "effects/effect/mona-lisa": {
+      "at": "2026-10-22T23:48:25.243Z"
+    },
+    "effects/effect/selfie-younger": {
+      "at": "2026-10-22T23:48:50.466Z"
+    },
+    "effects/effect/vip": {
+      "at": "2026-10-22T23:48:35.919Z"
+    },
+    "reshoot": {
+      "at": "2026-10-22T23:50:47.507Z"
+    }
+  }
+}

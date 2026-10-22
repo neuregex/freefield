@@ -176,6 +176,32 @@ def lora_models(loras: list[dict]) -> list[dict]:
     return [{"repo": l["repo"], "file": l["file"], "dir": "loras", "gb": l.get("gb", 0)} for l in loras]
 
 
+def reads(case: dict) -> list[str]:
+    """The ids of the cases this one takes a file from ("@case:<id>" values)."""
+    return [v[len("@case:"):] for v in case.get("values", {}).values() if isinstance(v, str) and v.startswith("@case:")]
+
+
+def in_run_order(spec: list[dict]) -> list[dict]:
+    """File order, except that a case always comes after the cases it reads: a reference written
+    further down the file (or added later) is still made first. Cycles and unknown ids are left as they are."""
+    by_id = {c["id"]: c for c in spec}
+    out, done, visiting = [], set(), set()
+
+    def visit(cid: str) -> None:
+        if cid in done or cid in visiting or cid not in by_id:
+            return
+        visiting.add(cid)
+        for src in reads(by_id[cid]):
+            visit(src)
+        visiting.discard(cid)
+        done.add(cid)
+        out.append(by_id[cid])
+
+    for c in spec:
+        visit(c["id"])
+    return out
+
+
 def models_for_cases(cases: list[dict], apps_dir: Path) -> list[dict]:
     seen, out = set(), []
     for c in cases:
@@ -389,6 +415,7 @@ def main(argv=None) -> int:
     if a.only:
         keep = set(a.only.split(","))
         cases = [c for c in cases if c["id"] in keep]
+    cases = in_run_order(cases)
     lab = Lab(a.url, a.comfy_dir / "input", a.comfy_dir / "output", a.out)
     results = lab.run_all(cases)
     return 0 if all(r["status"] == "ok" for r in results) else 1
