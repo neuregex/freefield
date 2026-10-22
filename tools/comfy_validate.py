@@ -170,9 +170,9 @@ def app_variants(app_dir: Path) -> list[tuple[str, dict]]:
             for opt in inp.get("options") or []:
                 if opt["value"] == v:
                     for s in opt.get("sets", []):
-                        api[s["node"]]["inputs"][s["field"]] = s["value"]
+                        api[s["node"]]["inputs"][s["field"]] = render(s["value"]) if isinstance(s["value"], str) else s["value"]
         for s in (preset or {}).get("sets", []):
-            api[s["node"]]["inputs"][s["field"]] = s["value"]
+            api[s["node"]]["inputs"][s["field"]] = render(s["value"]) if isinstance(s["value"], str) else s["value"]
         return api
 
     # no preset is a valid choice in the UI too, so check it alongside every preset

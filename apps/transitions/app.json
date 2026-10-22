@@ -4,7 +4,7 @@
   "name": "Transitions",
   "section": "video",
   "pack": "video-ltx25",
-  "status": "draft",
+  "status": "ready",
   "higgsfield_feature": "Effects / Transitions",
   "summary": "Morphs a first frame into a last frame with a transition LoRA on LTX-2.5.",
   "workflow": "workflow.api.json",

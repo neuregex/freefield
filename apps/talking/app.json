@@ -4,7 +4,7 @@
   "name": "Talking Avatar",
   "section": "video",
   "pack": "video-ltx25",
-  "status": "draft",
+  "status": "ready",
   "higgsfield_feature": "Lipsync / Speak",
   "summary": "A portrait speaks or sings along to your audio, with LTX-2.5 audio-to-video in two stages.",
   "workflow": "workflow.api.json",

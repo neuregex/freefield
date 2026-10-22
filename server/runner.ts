@@ -75,6 +75,11 @@ export function renderTemplate(template: string, values: Values): string {
     .replace(/,$/, "");
 }
 
+/** A value in an option's or preset's `sets`: a string with {placeholders} is filled like a bind template. */
+export function setValue(value: unknown, values: Values): unknown {
+  return typeof value === "string" && /\{[a-z][a-z0-9_]*\}/.test(value) ? renderTemplate(value, values) : value;
+}
+
 /**
  * Apply resolved values and an optional preset to a workflow.
  * `asset` turns a FileValue into whatever the workflow expects (an SDK asset handle).
@@ -93,14 +98,14 @@ export function applyInputs(
       if (b.template) wf.setInput(b.node, b.field, renderTemplate(b.template, values));
       else wf.setInput(b.node, b.field, isFileValue(v) ? asset(v) : v);
     }
-    // a select option can carry extra fields (the LoRA that goes with a style)
+    // a select option can carry extra fields (the LoRA that goes with a style, an effect's prompt)
     const chosen = input.type === "select" ? input.options?.find((o) => o.value === v) : undefined;
-    for (const s of chosen?.sets ?? []) wf.setInput(s.node, s.field, s.value);
+    for (const s of chosen?.sets ?? []) wf.setInput(s.node, s.field, setValue(s.value, values));
   }
   if (presetId) {
     const preset = (app.presets ?? []).find((p) => p.id === presetId);
     if (!preset) throw new InputError(`preset "${presetId}" does not exist in ${app.id}`);
-    for (const s of preset.sets) wf.setInput(s.node, s.field, s.value);
+    for (const s of preset.sets) wf.setInput(s.node, s.field, setValue(s.value, values));
   }
 }
 

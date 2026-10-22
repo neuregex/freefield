@@ -18,6 +18,7 @@
   "image": {
     "apps": [
       "cinema-studio",
+      "meme",
       "z-image"
     ],
     "download_gb": 12.17,
@@ -25,9 +26,48 @@
   },
   "image-flux3": {
     "apps": [
+      "billboard",
+      "breakdown",
+      "brick-toy",
+      "burning-sunset",
+      "cafe-60s",
       "character",
+      "color-grade",
+      "comic-book",
+      "commercial-faces",
       "edit",
-      "product-shot"
+      "edit-text",
+      "figure-3d",
+      "fridge-ad",
+      "game-styles",
+      "giallo",
+      "giant-product",
+      "glitter-sticker",
+      "graffiti-ad",
+      "headshot",
+      "image-effects",
+      "j-magazine",
+      "j-poster",
+      "japanese-show",
+      "macro-product",
+      "macro-scene",
+      "mascot",
+      "micro-beasts",
+      "mural",
+      "outfit-vending",
+      "packshot",
+      "paint-app",
+      "pixel-game",
+      "plushie",
+      "poster",
+      "product-shot",
+      "renaissance",
+      "render-3d",
+      "sketch-to-real",
+      "skin-enhancer",
+      "style-snap",
+      "ugc-shot",
+      "victory-card"
     ],
     "download_gb": 11.03,
     "needs_hf_token": true
@@ -98,6 +138,13 @@
       "camera-moves"
     ],
     "download_gb": 40.05,
+    "needs_hf_token": false
+  },
+  "video-wan-effects": {
+    "apps": [
+      "effects"
+    ],
+    "download_gb": 37.99,
     "needs_hf_token": false
   }
 }

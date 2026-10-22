@@ -93,11 +93,19 @@ def load_app(apps_dir: Path, app_id: str) -> tuple[dict, dict]:
     return manifest, api
 
 
+PLACEHOLDER = re.compile(r"\{([a-z][a-z0-9_]*)\}")
+
+
 def render(template: str, values: dict) -> str:
-    s = re.sub(r"\{([a-z][a-z0-9_]*)\}", lambda m: "" if values.get(m.group(1)) is None else str(values[m.group(1)]), template)
+    s = PLACEHOLDER.sub(lambda m: "" if values.get(m.group(1)) is None else str(values[m.group(1)]), template)
     s = re.sub(r"\s+,", ",", s)
     s = re.sub(r",\s*,+", ",", s)
     return re.sub(r"\s{2,}", " ", s).strip().rstrip(",")
+
+
+def set_value(value, values: dict):
+    """A value in an option's or preset's sets: a string with {placeholders} is filled like a bind template."""
+    return render(value, values) if isinstance(value, str) and PLACEHOLDER.search(value) else value
 
 
 def resolve_values(manifest: dict, given: dict) -> dict:
@@ -120,11 +128,11 @@ def apply(manifest: dict, api: dict, values: dict, preset: str | None = None) ->
         for opt in inp.get("options") or []:   # a select option can carry extra fields
             if opt["value"] == values[inp["id"]]:
                 for s in opt.get("sets", []):
-                    api[s["node"]]["inputs"][s["field"]] = s["value"]
+                    api[s["node"]]["inputs"][s["field"]] = set_value(s["value"], values)
     if preset:
         p = next(p for p in manifest.get("presets", []) if p["id"] == preset)
         for s in p["sets"]:
-            api[s["node"]]["inputs"][s["field"]] = s["value"]
+            api[s["node"]]["inputs"][s["field"]] = set_value(s["value"], values)
 
 
 def add_loras(api: dict, loras: list[dict]) -> None:

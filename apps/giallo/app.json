@@ -1,0 +1,116 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "giallo",
+  "name": "Giallo Horror",
+  "section": "image",
+  "summary": "A 1970s Italian giallo film still: red and blue gels, deep shadows, no blood.",
+  "higgsfield_feature": "Giallo Horror",
+  "pack": "image-flux3",
+  "status": "ready",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_flux3_klein_distilled_image_edit.json",
+    "comfyui": "0.42.0",
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py) and the prompt below is fixed; \"Extra direction\" is appended to it."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Your photo",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "11",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "details",
+      "type": "textarea",
+      "label": "Extra direction",
+      "help": "Added at the end of the app's prompt.",
+      "bind": [
+        {
+          "node": "4",
+          "field": "text",
+          "template": "The person from <ref_image_0> in a 1970s Italian giallo film still: saturated red and blue gel lighting, deep shadows, a gloved hand at the edge of the frame, film grain. No blood, no wounds. Keep the face, hairstyle and build identical. {details}"
+        }
+      ]
+    },
+    {
+      "id": "steps",
+      "type": "slider",
+      "label": "Steps",
+      "min": 8,
+      "max": 32,
+      "step": 1,
+      "default": 16,
+      "bind": [
+        {
+          "node": "7",
+          "field": "steps"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "7",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "9",
+      "type": "image",
+      "label": "Result"
+    }
+  ],
+  "models": [
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "phase": "denoise",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "phase": "encode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "decode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    }
+  ],
+  "credits": [
+    "FLUX 3 Image Klein by Black Forest Labs (FLUX Kommunity License)"
+  ],
+  "test": {
+    "image": "test/portrait.png"
+  }
+}

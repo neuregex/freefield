@@ -464,10 +464,7 @@
         "213:157",
         0
       ],
-      "batch_index": [
-        "213:184",
-        1
-      ],
+      "batch_index": 0,
       "length": 81
     },
     "_meta": {
@@ -513,28 +510,6 @@
         0
       ],
       "expression": "(a // 32) * 32"
-    },
-    "_meta": {
-      "title": "Math Expression"
-    }
-  },
-  "213:183": {
-    "class_type": "PrimitiveInt",
-    "inputs": {
-      "value": 1
-    },
-    "_meta": {
-      "title": "Int (segment index)"
-    }
-  },
-  "213:184": {
-    "class_type": "ComfyMathExpression",
-    "inputs": {
-      "values.a": [
-        "213:183",
-        0
-      ],
-      "expression": "(b - c) * (a - 1)"
     },
     "_meta": {
       "title": "Math Expression"

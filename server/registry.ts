@@ -19,6 +19,7 @@ export type Input = {
   max?: number;
   step?: number;
   options?: Option[];
+  gallery?: boolean;
   limits?: { max_mb?: number; seconds?: [number, number] };
   bind?: Bind[];
 };
@@ -96,21 +97,30 @@ function checkGraph(app: App, problems: Problem[], severity: Problem["severity"]
     if (!(field in n.inputs)) say(`${where}: node "${node}" (${n.class_type}) has no input "${field}"`);
   };
   const ids = new Set(app.inputs.map((i) => i.id));
+  const fileIds = new Set(app.inputs.filter(isFileInput).map((i) => i.id));
   const usedInTemplates = new Set<string>();
+  const checkTemplate = (template: string, where: string) => {
+    for (const v of templateVars(template)) {
+      if (!ids.has(v)) say(`${where}: template uses {${v}}, which is not an input`);
+      else if (fileIds.has(v)) say(`${where}: template uses {${v}}, a file input`);
+      usedInTemplates.add(v);
+    }
+  };
   for (const input of app.inputs) {
     for (const b of input.bind ?? []) {
       has(b.node, b.field, `input "${input.id}"`);
-      if (b.template) {
-        for (const v of templateVars(b.template)) {
-          if (!ids.has(v)) say(`input "${input.id}": template uses {${v}}, which is not an input`);
-          usedInTemplates.add(v);
-        }
-      }
+      if (b.template) checkTemplate(b.template, `input "${input.id}"`);
       if (isFileInput(input) && b.template) say(`input "${input.id}": file inputs cannot use templates`);
     }
+    // string values an option writes may be templates too (an effect's prompt written around {subject})
+    for (const o of input.options ?? []) {
+      for (const s of o.sets ?? []) if (typeof s.value === "string") checkTemplate(s.value, `input "${input.id}" option "${o.label}"`);
+    }
   }
+  for (const p of app.presets ?? []) for (const s of p.sets) if (typeof s.value === "string") checkTemplate(s.value, `preset "${p.id}"`);
   for (const input of app.inputs) {
-    if (!(input.bind?.length) && !usedInTemplates.has(input.id)) {
+    const writes = Boolean(input.bind?.length) || (input.options ?? []).some((o) => o.sets?.length);
+    if (!writes && !usedInTemplates.has(input.id)) {
       say(`input "${input.id}" is not bound to any node and no template uses it`);
     }
   }
@@ -119,6 +129,13 @@ function checkGraph(app: App, problems: Problem[], severity: Problem["severity"]
     for (const o of input.options ?? []) for (const s of o.sets ?? []) has(s.node, s.field, `input "${input.id}" option "${o.label}"`);
   }
   for (const o of app.outputs) if (!g[o.node]) say(`output node "${o.node}" is not in ${app.workflow}`);
+  // a math expression that names a variable with no input fails only when it runs, after validation passed
+  for (const [id, n] of Object.entries(g)) {
+    if (n.class_type !== "ComfyMathExpression" || typeof n.inputs.expression !== "string") continue;
+    const used = new Set(n.inputs.expression.match(/\b[a-z]\b/g) ?? []);
+    const missing = [...used].filter((v) => !(`values.${v}` in n.inputs));
+    if (missing.length) say(`node "${id}" (ComfyMathExpression): "${n.inputs.expression}" uses ${missing.join(", ")} but has no input for it`);
+  }
   // every model file the manifest declares should be referenced by some loader in the graph
   const referenced = new Set<string>();
   for (const n of Object.values(g)) for (const v of Object.values(n.inputs)) if (typeof v === "string") referenced.add(v);

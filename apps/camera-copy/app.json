@@ -4,7 +4,7 @@
   "name": "Camera Copy",
   "section": "video",
   "pack": "video-ltx25",
-  "status": "draft",
+  "status": "ready",
   "higgsfield_feature": "Camera Controls",
   "summary": "Copies the camera move of any reference clip onto your image: push-ins, pans, orbits, cranes.",
   "workflow": "workflow.api.json",

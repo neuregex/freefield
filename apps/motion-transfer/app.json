@@ -4,7 +4,7 @@
   "name": "Motion Transfer",
   "section": "video",
   "pack": "video-wan",
-  "status": "draft",
+  "status": "ready",
   "higgsfield_feature": "Character swap / Genjutsu-style motion",
   "summary": "Animates a character image with the motion of a driving clip, with Wan Animate 2.",
   "workflow": "workflow.api.json",

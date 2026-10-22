@@ -4,7 +4,7 @@
   "name": "Water Simulation",
   "section": "video",
   "pack": "video-ltx25",
-  "status": "draft",
+  "status": "ready",
   "higgsfield_feature": "VFX: water",
   "summary": "Adds simulated water to a shot, following the scene's geometry.",
   "workflow": "workflow.api.json",

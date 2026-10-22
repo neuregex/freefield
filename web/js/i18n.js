@@ -1,0 +1,187 @@
+// UI strings in English and Spanish. App names and summaries come from each app.json (English);
+// taglines for the bigger headings live in catalog.js. The language follows the browser until
+// the viewer picks one with the globe button.
+import { store } from "./util.js";
+
+const en = {
+  "nav.explore": "Explore", "nav.image": "Image", "nav.video": "Video", "nav.audio": "Audio", "nav.apps": "Apps", "nav.library": "Library",
+  "nav.vram": "VRAM map", "nav.create": "Create", "nav.lang": "Language",
+  "tag.featured": "Featured", "tag.new": "New", "tag.draft": "Draft", "tag.top": "Top",
+  "gpu.none": "No backend", "gpu.asleep": "GPU asleep", "gpu.waking": "Waking GPU · {s}s", "gpu.ready": "GPU ready", "gpu.failed": "Wake failed",
+  "gpu.pop.none": "Put the URL that `modal deploy infra/modal_app.py` printed in .env as COMFY_BASE_URL, then restart `npm run serve`.",
+  "gpu.pop.asleep": "The backend scales to zero when idle. Wake it now and it will be ready by the time you press Generate (a cold start takes a minute or two).",
+  "gpu.pop.wake": "Wake the GPU", "gpu.pop.waking": "Starting the container. Runs submitted now wait for it.",
+  "gpu.pop.ready": "Warm: runs start right away. It goes back to sleep 10 minutes after the last request.",
+  "gpu.pop.vram": "VRAM in use", "gpu.pop.loaded": "Loaded app", "gpu.pop.running": "{n} running", "gpu.pop.backend": "Backend",
+  "explore.lead.a": "An open studio for", "explore.lead.b": "images, video and sound",
+  "explore.lead.text": "Every app is a ComfyUI workflow with open weights, running on your own GPU. Nothing leaves your backend.",
+  "explore.start": "Start creating", "explore.browse": "Browse apps", "explore.apps": "{n} apps",
+  "tile.image.t": "Image studio", "tile.image.d": "Text to image, styles, references and edits.",
+  "tile.video.t": "Video studio", "tile.video.d": "Animate stills, recast actors, move the camera.",
+  "tile.audio.t": "Audio", "tile.audio.d": "Songs with lyrics and sound effects for any scene.",
+  "tile.apps.t": "Apps", "tile.apps.d": "Every workflow as a one-click app.",
+  "tile.library.t": "Library", "tile.library.d": "Your generations and the lab's examples, side by side.",
+  "tile.vram.t": "VRAM map", "tile.vram.d": "What fits on a 24 GB card, phase by phase.",
+  "explore.made": "Made with Freefield", "explore.made.sub": "One example per app, straight from the lab run.", "explore.seeall": "See all apps",
+  "explore.gallery.sub": "Pick one and try it with your own photo.",
+  "explore.how": "How it works",
+  "how.1.t": "A workflow is an app", "how.1.d": "Each folder in apps/ holds a ComfyUI API workflow and an app.json that turns its inputs into the form you fill in.",
+  "how.2.t": "Open weights only", "how.2.d": "Models download from Hugging Face into your own volume. Every app lists its models and their licenses.",
+  "how.3.t": "Your GPU, on demand", "how.3.d": "ComfyUI runs on Modal and scales to zero. Switching apps clears the VRAM, so nothing from the last app lingers.",
+  "explore.noex": "No examples yet. Run the lab once, then reload:",
+  "apps.title.a": "Welcome to", "apps.title.b": "Freefield apps",
+  "apps.sub": "One-click effects built from open ComfyUI workflows: recast a clip, relight a photo, make a portrait talk.",
+  "apps.search": "Search", "apps.all": "All", "apps.try": "Try it", "apps.seeall": "See all", "apps.none": "No app matches “{q}”.",
+  "cat.create.t": "Create", "cat.create.d": "From a prompt or a single image.",
+  "cat.style.t": "Enhance & style", "cat.style.d": "Light, resolution, motion and looks.",
+  "cat.identity.t": "Face & identity", "cat.identity.d": "Keep a character, swap one in, make it talk.",
+  "cat.camera.t": "Camera & motion", "cat.camera.d": "Direct a move, copy one, reshoot from a new angle.",
+  "cat.vfx.t": "VFX & editing", "cat.vfx.d": "Change what is in the shot.",
+  "cat.ads.t": "Ads & products", "cat.ads.d": "Product photography without a studio: packshots, posters, billboards.",
+  "cat.portraits.t": "Portraits & looks", "cat.portraits.d": "Headshots, campaigns and outfits from one selfie.",
+  "cat.play.t": "Toys & games", "cat.play.d": "Your photo as a plushie, a figure, pixel art, a meme.",
+  "cat.templates.t": "Templates", "cat.templates.d": "One-click looks: magazine covers, paintings, comics, color grades.",
+  "cat.more.t": "More", "cat.more.d": "",
+  "vtab.create": "Create video", "vtab.edit": "Edit video", "vtab.motion": "Motion control",
+  "ws.history": "History", "ws.library": "Library", "ws.how": "How it works",
+  "ws.create.title": "Start creating with", "ws.prompt.ph": "Describe the scene you imagine", "ws.prompt.opt": "{label} (optional): the app's prompt is already set", "ws.add": "Add {what}",
+  "ws.generate": "Generate", "ws.est": "GPU time of the lab example ({gpu})", "ws.count": "Generations",
+  "ws.seed": "Seed", "ws.seed.random": "Random", "ws.seed.reuse": "Use last", "ws.seed.help": "Same seed and same settings give the same result.",
+  "ws.preset": "Preset", "ws.preset.none": "None", "ws.advanced": "Advanced", "ws.change": "Change",
+  "ws.drop.image": "Add an image", "ws.drop.video": "Add a video", "ws.drop.audio": "Add audio",
+  "ws.drop.hint": "Click, drop or paste", "ws.drop.mb": "up to {mb} MB", "ws.drop.seconds": "{a}–{b} s",
+  "ws.replace": "Replace", "ws.remove": "Remove", "ws.need": "Add {label} first", "ws.needtext": "Write {label} first",
+  "ws.draft": "Draft: add FREEFIELD_DRAFTS=1 to .env and restart the server to run it.", "ws.noworkflow": "This app has no workflow yet.",
+  "ws.example": "Example from the lab", "ws.useex": "Load this example", "ws.related": "More like this",
+  "ws.empty.hist": "Nothing generated with this app yet.", "ws.dense": "Smaller tiles", "ws.optional": "optional", "ws.eg": "e.g. {x}",
+  "status.starting": "Waking the GPU…", "status.submitting": "Sending…", "status.queued": "In queue", "status.queued.n": "In queue · #{n}", "status.running": "Generating",
+  "status.step": "step {a}/{b}", "status.failed": "Failed", "status.canceled": "Canceled", "status.lost": "Lost", "status.expired": "Expired",
+  "status.elapsed": "{s} so far",
+  "act.open": "Open", "act.download": "Download", "act.compare": "Compare", "act.recreate": "Recreate", "act.delete": "Delete", "act.cancel": "Cancel",
+  "act.retry": "Try again", "act.copy": "Copy prompt", "act.reuse": "Reuse prompt", "act.sure": "Sure?", "act.close": "Close", "act.prev": "Previous", "act.next": "Next",
+  "toast.started": "{app} started", "toast.copied": "Copied", "toast.loaded": "Loaded into {app}", "toast.deleted": "Deleted",
+  "how.pipeline": "Pipeline", "how.pipeline.d": "apps/{id}/workflow.api.json runs on your ComfyUI backend; app.json maps each field of the form to a node input.",
+  "how.models": "Open-weight models", "how.total": "{gb} GB to download", "how.gated": "accept the license on Hugging Face", "how.optional": "optional",
+  "how.vram": "VRAM", "how.whole": "All models at once", "how.phase": "Largest phase", "how.measured": "Measured peak in the lab",
+  "fit.whole": "Fits 24 GB", "fit.phases": "Fits 24 GB by phases", "fit.tight": "Tight on 24 GB", "fit.big": "Needs 48 GB", "fit.none": "No models",
+  "how.cli": "From the terminal", "how.credits": "Credits", "how.notes": "Notes", "how.equiv": "Higgsfield counterpart", "how.pack": "Model pack",
+  "how.download": "Download it once:",
+  "lib.title": "Library", "lib.sub": "Everything generated here is saved in out/history/ on this computer.", "lib.mine": "My generations", "lib.lab": "Lab examples",
+  "lib.empty": "Nothing here yet. Pick an app and press Generate.", "lib.allapps": "All apps", "lib.allex": "All examples",
+  "lib.flagged": "Mediocre · {n}", "lib.noflag": "Nothing marked mediocre. The thumbs-down on an example marks it.",
+  "flag.mediocre": "Mediocre", "flag.marked": "Marked mediocre", "flag.mark": "Mark this example as mediocre: the lab will look for a better model, LoRA or prompt of the same kind",
+  "flag.unmark": "Marked mediocre. Click to undo", "flag.saved": "Saved in lab/flags.json", "flag.cleared": "Mark removed",
+  "vram.title": "VRAM map", "vram.sub": "How much GPU memory each app needs. Models load phase by phase (encode → denoise → decode), so the largest phase decides whether a 24 GB card is enough.",
+  "vram.whole": "all models", "vram.phase": "largest phase", "vram.measured": "measured peak (lab)", "vram.live": "Live: {name} · {used} of {total} GB in use",
+  "view.inputs": "Inputs", "view.settings": "Settings", "view.prompt": "Prompt", "view.gpu": "{s} on the GPU", "view.total": "{s} total", "view.example": "Lab example",
+  "view.seed": "Seed {n}", "view.peak": "peak {gb} GB",
+  "cmp.title": "Compare", "cmp.side": "Side by side", "cmp.wipe": "Wipe", "cmp.drop": "Drop the result to compare (from Higgsfield or anywhere else)",
+  "cmp.pick": "or pick one of your generations", "cmp.other": "Other", "cmp.local": "It stays on this computer; nothing is uploaded.", "cmp.both": "Play both",
+  "cmp.swap": "Swap sides", "cmp.clear": "Clear",
+  "ago.now": "just now", "ago.min": "{n} min ago", "ago.h": "{n} h ago",
+};
+
+const es = {
+  "nav.explore": "Explorar", "nav.image": "Imagen", "nav.video": "Video", "nav.audio": "Audio", "nav.apps": "Apps", "nav.library": "Biblioteca",
+  "nav.vram": "Mapa de VRAM", "nav.create": "Crear", "nav.lang": "Idioma",
+  "tag.featured": "Destacado", "tag.new": "Nuevo", "tag.draft": "Borrador", "tag.top": "Top",
+  "gpu.none": "Sin backend", "gpu.asleep": "GPU dormida", "gpu.waking": "Despertando GPU · {s}s", "gpu.ready": "GPU lista", "gpu.failed": "No despertó",
+  "gpu.pop.none": "Pon en .env, como COMFY_BASE_URL, la URL que imprimió `modal deploy infra/modal_app.py` y reinicia `npm run serve`.",
+  "gpu.pop.asleep": "El backend escala a cero cuando no se usa. Despiértalo ahora y estará listo cuando presiones Generar (un arranque en frío tarda uno o dos minutos).",
+  "gpu.pop.wake": "Despertar la GPU", "gpu.pop.waking": "Arrancando el contenedor. Lo que envíes ahora lo espera.",
+  "gpu.pop.ready": "Caliente: las corridas empiezan de inmediato. Vuelve a dormir 10 minutos después de la última petición.",
+  "gpu.pop.vram": "VRAM en uso", "gpu.pop.loaded": "App cargada", "gpu.pop.running": "{n} en curso", "gpu.pop.backend": "Backend",
+  "explore.lead.a": "Un estudio abierto para", "explore.lead.b": "imagen, video y sonido",
+  "explore.lead.text": "Cada app es un workflow de ComfyUI con pesos abiertos, en tu propia GPU. Nada sale de tu backend.",
+  "explore.start": "Empieza a crear", "explore.browse": "Ver las apps", "explore.apps": "{n} apps",
+  "tile.image.t": "Estudio de imagen", "tile.image.d": "Texto a imagen, estilos, referencias y ediciones.",
+  "tile.video.t": "Estudio de video", "tile.video.d": "Anima fotos, cambia actores, mueve la cámara.",
+  "tile.audio.t": "Audio", "tile.audio.d": "Canciones con letra y efectos de sonido para cualquier escena.",
+  "tile.apps.t": "Apps", "tile.apps.d": "Cada workflow como una app de un clic.",
+  "tile.library.t": "Biblioteca", "tile.library.d": "Tus generaciones y los ejemplos del lab, lado a lado.",
+  "tile.vram.t": "Mapa de VRAM", "tile.vram.d": "Qué cabe en una tarjeta de 24 GB, fase por fase.",
+  "explore.made": "Hecho con Freefield", "explore.made.sub": "Un ejemplo por app, directo de la corrida del lab.", "explore.seeall": "Ver todas las apps",
+  "explore.gallery.sub": "Elige uno y pruébalo con tu propia foto.",
+  "explore.how": "Cómo funciona",
+  "how.1.t": "Un workflow es una app", "how.1.d": "Cada carpeta en apps/ tiene un workflow de ComfyUI y un app.json que convierte sus entradas en el formulario que llenas.",
+  "how.2.t": "Solo pesos abiertos", "how.2.d": "Los modelos se descargan de Hugging Face a tu propio volumen. Cada app lista sus modelos y sus licencias.",
+  "how.3.t": "Tu GPU, bajo demanda", "how.3.d": "ComfyUI corre en Modal y escala a cero. Al cambiar de app se libera la VRAM, así no queda nada de la anterior.",
+  "explore.noex": "Aún no hay ejemplos. Corre el lab una vez y recarga:",
+  "apps.title.a": "Bienvenido a las", "apps.title.b": "apps de Freefield",
+  "apps.sub": "Efectos de un clic hechos con workflows abiertos de ComfyUI: cambia al actor de un clip, reilumina una foto, haz hablar un retrato.",
+  "apps.search": "Buscar", "apps.all": "Todas", "apps.try": "Pruébala", "apps.seeall": "Ver todo", "apps.none": "Ninguna app coincide con “{q}”.",
+  "cat.create.t": "Crear", "cat.create.d": "Desde un prompt o una sola imagen.",
+  "cat.style.t": "Mejora y estilo", "cat.style.d": "Luz, resolución, movimiento y estilo.",
+  "cat.identity.t": "Rostro e identidad", "cat.identity.d": "Mantén un personaje, pon otro en su lugar, hazlo hablar.",
+  "cat.camera.t": "Cámara y movimiento", "cat.camera.d": "Dirige un movimiento, cópialo, vuelve a filmar desde otro ángulo.",
+  "cat.vfx.t": "VFX y edición", "cat.vfx.d": "Cambia lo que hay en la toma.",
+  "cat.ads.t": "Anuncios y productos", "cat.ads.d": "Fotografía de producto sin estudio: packshots, pósters, espectaculares.",
+  "cat.portraits.t": "Retratos y looks", "cat.portraits.d": "Headshots, campañas y outfits desde una selfie.",
+  "cat.play.t": "Juguetes y juegos", "cat.play.d": "Tu foto como peluche, figura, pixel art o meme.",
+  "cat.templates.t": "Plantillas", "cat.templates.d": "Looks de un clic: portadas, pinturas, cómics, color grading.",
+  "cat.more.t": "Más", "cat.more.d": "",
+  "vtab.create": "Crear video", "vtab.edit": "Editar video", "vtab.motion": "Control de movimiento",
+  "ws.history": "Historial", "ws.library": "Biblioteca", "ws.how": "Cómo funciona",
+  "ws.create.title": "Empieza a crear con", "ws.prompt.ph": "Describe la escena que imaginas", "ws.prompt.opt": "{label} (opcional): el prompt de la app ya está puesto", "ws.add": "Agregar {what}",
+  "ws.generate": "Generar", "ws.est": "Tiempo de GPU del ejemplo del lab ({gpu})", "ws.count": "Generaciones",
+  "ws.seed": "Semilla", "ws.seed.random": "Aleatoria", "ws.seed.reuse": "Usar la última", "ws.seed.help": "Misma semilla y mismos ajustes dan el mismo resultado.",
+  "ws.preset": "Preset", "ws.preset.none": "Ninguno", "ws.advanced": "Avanzado", "ws.change": "Cambiar",
+  "ws.drop.image": "Agrega una imagen", "ws.drop.video": "Agrega un video", "ws.drop.audio": "Agrega un audio",
+  "ws.drop.hint": "Haz clic, suelta o pega", "ws.drop.mb": "hasta {mb} MB", "ws.drop.seconds": "{a}–{b} s",
+  "ws.replace": "Reemplazar", "ws.remove": "Quitar", "ws.need": "Primero agrega {label}", "ws.needtext": "Primero escribe {label}",
+  "ws.draft": "Borrador: agrega FREEFIELD_DRAFTS=1 a .env y reinicia el servidor para correrla.", "ws.noworkflow": "Esta app aún no tiene workflow.",
+  "ws.example": "Ejemplo del lab", "ws.useex": "Cargar este ejemplo", "ws.related": "Más como esta",
+  "ws.empty.hist": "Aún no has generado nada con esta app.", "ws.dense": "Mosaicos chicos", "ws.optional": "opcional", "ws.eg": "p. ej. {x}",
+  "status.starting": "Despertando la GPU…", "status.submitting": "Enviando…", "status.queued": "En cola", "status.queued.n": "En cola · #{n}", "status.running": "Generando",
+  "status.step": "paso {a}/{b}", "status.failed": "Falló", "status.canceled": "Cancelado", "status.lost": "Perdido", "status.expired": "Expirado",
+  "status.elapsed": "{s} hasta ahora",
+  "act.open": "Abrir", "act.download": "Descargar", "act.compare": "Comparar", "act.recreate": "Recrear", "act.delete": "Borrar", "act.cancel": "Cancelar",
+  "act.retry": "Reintentar", "act.copy": "Copiar prompt", "act.reuse": "Reusar prompt", "act.sure": "¿Seguro?", "act.close": "Cerrar", "act.prev": "Anterior", "act.next": "Siguiente",
+  "toast.started": "{app} en marcha", "toast.copied": "Copiado", "toast.loaded": "Cargado en {app}", "toast.deleted": "Borrado",
+  "how.pipeline": "Pipeline", "how.pipeline.d": "apps/{id}/workflow.api.json corre en tu backend de ComfyUI; app.json conecta cada campo del formulario con la entrada de un nodo.",
+  "how.models": "Modelos de pesos abiertos", "how.total": "{gb} GB por descargar", "how.gated": "acepta la licencia en Hugging Face", "how.optional": "opcional",
+  "how.vram": "VRAM", "how.whole": "Todos los modelos juntos", "how.phase": "Fase más grande", "how.measured": "Pico medido en el lab",
+  "fit.whole": "Cabe en 24 GB", "fit.phases": "Cabe en 24 GB por fases", "fit.tight": "Justo en 24 GB", "fit.big": "Necesita 48 GB", "fit.none": "Sin modelos",
+  "how.cli": "Desde la terminal", "how.credits": "Créditos", "how.notes": "Notas", "how.equiv": "Equivalente en Higgsfield", "how.pack": "Paquete de modelos",
+  "how.download": "Descárgalo una vez:",
+  "lib.title": "Biblioteca", "lib.sub": "Todo lo que generas aquí se guarda en out/history/ en esta computadora.", "lib.mine": "Mis generaciones", "lib.lab": "Ejemplos del lab",
+  "lib.empty": "Aún no hay nada. Elige una app y presiona Generar.", "lib.allapps": "Todas las apps", "lib.allex": "Todos los ejemplos",
+  "lib.flagged": "Mediocres · {n}", "lib.noflag": "Nada marcado como mediocre. El pulgar abajo en un ejemplo lo marca.",
+  "flag.mediocre": "Mediocre", "flag.marked": "Marcado mediocre", "flag.mark": "Marcar este ejemplo como mediocre: el lab buscará un modelo, LoRA o prompt mejor del mismo tipo",
+  "flag.unmark": "Marcado como mediocre. Clic para quitar la marca", "flag.saved": "Guardado en lab/flags.json", "flag.cleared": "Marca quitada",
+  "vram.title": "Mapa de VRAM", "vram.sub": "Cuánta memoria de GPU necesita cada app. Los modelos se cargan por fases (codificar → difundir → decodificar), así que la fase más grande decide si basta una tarjeta de 24 GB.",
+  "vram.whole": "todos los modelos", "vram.phase": "fase más grande", "vram.measured": "pico medido (lab)", "vram.live": "En vivo: {name} · {used} de {total} GB en uso",
+  "view.inputs": "Entradas", "view.settings": "Ajustes", "view.prompt": "Prompt", "view.gpu": "{s} en la GPU", "view.total": "{s} en total", "view.example": "Ejemplo del lab",
+  "view.seed": "Semilla {n}", "view.peak": "pico {gb} GB",
+  "cmp.title": "Comparar", "cmp.side": "Lado a lado", "cmp.wipe": "Cortina", "cmp.drop": "Suelta el resultado a comparar (de Higgsfield o de donde sea)",
+  "cmp.pick": "o elige una de tus generaciones", "cmp.other": "Otro", "cmp.local": "Se queda en esta computadora; no se sube nada.", "cmp.both": "Reproducir ambos",
+  "cmp.swap": "Intercambiar lados", "cmp.clear": "Quitar",
+  "ago.now": "justo ahora", "ago.min": "hace {n} min", "ago.h": "hace {n} h",
+};
+
+const DICT = { en, es };
+export const LANGS = [["en", "English"], ["es", "Español"]];
+export let lang = store.get("lang") || ((navigator.language || "en").toLowerCase().startsWith("es") ? "es" : "en");
+document.documentElement.lang = lang;
+
+/** t("ws.need", { label: "Image" }) */
+export function t(key, vars) {
+  const s = DICT[lang]?.[key] ?? en[key] ?? key;
+  return vars ? s.replace(/\{(\w+)\}/g, (_, k) => (vars[k] ?? "")) : s;
+}
+
+export function setLang(next) {
+  if (!DICT[next] || next === lang) return;
+  lang = next;
+  store.set("lang", next);
+  document.documentElement.lang = next;
+}
+
+export function ago(iso) {
+  if (!iso) return "";
+  const s = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (s < 60) return t("ago.now");
+  if (s < 3600) return t("ago.min", { n: Math.floor(s / 60) });
+  if (s < 86400) return t("ago.h", { n: Math.floor(s / 3600) });
+  return new Date(iso).toLocaleDateString(lang, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+}

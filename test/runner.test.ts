@@ -66,6 +66,42 @@ test("a select option writes its extra fields (style → LoRA file)", () => {
   assert.throws(() => resolveValues(app, { prompt: "a fox", style: "not a style" }), InputError);
 });
 
+test("an option's string values are templates: the effect's prompt is written around the subject", () => {
+  const app = byId("effects");
+  const file = { bytes: new Uint8Array([1]), name: "teddy.png" };
+  const values = resolveValues(app, { image: file, effect: "squish", subject: "a plush teddy bear", aspect: "square", seed: 1 });
+  const wf = recorder();
+  applyInputs(app, values, wf, () => null);
+  assert.equal(wf.sets["ff_effect.lora_name"], "squish_18.safetensors");
+  const text = wf.sets["6.text"] as string;
+  assert.match(text, /^In the video, a plush teddy bear is presented/);
+  assert.match(text, /further showing the sq41sh squish effect\.$/, "an empty {details} leaves nothing behind");
+  assert.ok(!text.includes("{"), "no placeholder left behind");
+  assert.equal(wf.sets["50.width"], 624);
+  assert.equal(wf.sets["50.height"], 624);
+  assert.equal(wf.sets["ff_lora_fast.strength_model"], undefined, "the fast LoRA stays off without the preset");
+
+  const extra = recorder();
+  applyInputs(app, resolveValues(app, { image: file, effect: "squish", subject: "a teddy", details: "on a pink rug", seed: 1 }), extra, () => null, "fast");
+  assert.match(extra.sets["6.text"] as string, /squish effect\. on a pink rug$/);
+  assert.equal(extra.sets["ff_lora_fast.strength_model"], 1.0);
+  assert.equal(extra.sets["3.steps"], 6);
+});
+
+test("every effect writes its own LoRA and a prompt with its trigger words", () => {
+  const app = byId("effects");
+  const effect = app.inputs.find((i) => i.id === "effect")!;
+  const files = new Set<unknown>();
+  for (const o of effect.options!) {
+    const lora = o.sets!.find((s) => s.field === "lora_name")!.value;
+    const prompt = o.sets!.find((s) => s.node === "6")!.value as string;
+    files.add(lora);
+    assert.ok(app.models.some((m) => m.file.endsWith(String(lora))), `${o.value}: ${String(lora)} is not in models`);
+    assert.match(prompt, /\{subject\}/, `${o.value} uses the subject`);
+  }
+  assert.equal(files.size, effect.options!.length, "one LoRA per effect");
+});
+
 test("validation errors name the node and, for a missing model file, the pack to download", () => {
   const app = byId("edit");
   // the shape ComfyUI returns (captured from a real /prompt rejection), relayed by comfy-api-proxy

@@ -1,0 +1,1130 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "effects",
+  "name": "Effects",
+  "section": "video",
+  "pack": "video-wan-effects",
+  "status": "ready",
+  "higgsfield_feature": "Effects",
+  "summary": "Turns a photo into a 5-second effect clip: 35 open effect LoRAs, from Cakeify and a robot face reveal to money rain and a 360° orbit (Wan 2.1 image-to-video).",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_to_video_wan.json",
+    "comfyui": "0.42.0",
+    "notes": "fp8 weights instead of fp16. Each effect option swaps the effect LoRA that sits after the model loader (Remade-AI's for 30 effects; joyfox's, ostris's and lvfengchun's for the other 5) and writes a prompt modeled on the example in that LoRA's model card (trigger words included), with your subject in it. lightx2v's step-distill LoRA is added at strength 0 (a no-op) for the fast preset. Flow shift 5, as Remade-AI's cards recommend."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Your photo",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "52",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "effect",
+      "type": "select",
+      "label": "Effect",
+      "default": "robot-face",
+      "options": [
+        {
+          "value": "assassin",
+          "label": "Assassin",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "assassin_45_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video starts with a portrait of {subject}. Then the 3p1c epic transformation starts: they are now dressed as a stealthy assassin in a dark hooded outfit with a long coat and black gloves, standing in a moody city alley at night. The 3p1c epic transformation is complete. {details}"
+            }
+          ]
+        },
+        {
+          "value": "baby",
+          "label": "Baby",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "baby_50_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video starts with a studio portrait of {subject}. Then the image shifts to the 848y baby effect, and they are now a baby in front of a crib, surrounded by toys. Finally, the 848y baby effect is shown again in a different location: the baby version is in the crib and seems excited and amused. {details}"
+            }
+          ]
+        },
+        {
+          "value": "bride",
+          "label": "Bride",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "bride_50_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video starts with a close-up of {subject} smiling, then the 8r1d3 bride effect happens. They are now in a white lace wedding dress with a veil, smiling, holding a bouquet of white flowers in front of a softly blurred background. {details}"
+            }
+          ]
+        },
+        {
+          "value": "classy",
+          "label": "Classy",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "classy_45_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video starts with {subject}. The c1455y classy transformation occurs and they are now wearing an elegant light blue dress, holding a small white envelope and a flower, smiling and looking at the camera, seated at a wooden table against a gold and brown background. {details}"
+            }
+          ]
+        },
+        {
+          "value": "mona-lisa",
+          "label": "Mona Lisa",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "mona_lisa_45_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video starts with an image of {subject}. The m0n4 Mona Lisa transformation begins as a dark sheet seems to wrap around them, and when the image resolves, they are depicted as a Mona Lisa version of themselves, seated in a chair with a landscape painting backdrop. {details}"
+            }
+          ]
+        },
+        {
+          "value": "princess",
+          "label": "Princess",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "princess_45_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video begins with an image of {subject}. A pr1nc355 princess transformation then happens as white sparkling light appears around them. They are now wearing a tiara, a long silver beaded gown and long silver gloves, seated in front of a table with gifts and candles in a room with white curtains. {details}"
+            }
+          ]
+        },
+        {
+          "value": "robot-face",
+          "label": "Robot face reveal",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "robot_face_reveal_35_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video shows the face of {subject}, with the r8b8t1c robotic face reveal starting with subtle movements, then lines appear on the face, the expression staying the same as the robot face is revealed. {details}"
+            }
+          ]
+        },
+        {
+          "value": "vip",
+          "label": "VIP red carpet",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "vip_50_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video begins with an image of {subject}. Then the v1p red carpet transformation appears: they are shown wearing an elegant black dress with gold jewelry. The v1p red carpet transformation continues, and they are now on the red carpet, with photographers taking pictures behind a barricade. {details}"
+            }
+          ]
+        },
+        {
+          "value": "angry",
+          "label": "Angry face",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "angry_face_5_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video shows {subject} with a neutral expression. The expression changes to 4ngr23 angry face, and they start yelling, then throw their arms up while making the 4ngr23 angry face. {details}"
+            }
+          ]
+        },
+        {
+          "value": "crying",
+          "label": "Crying",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "crying_20_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video starts with {subject}, appearing with a sad expression. Then a tear rolls down their cheek, as they are cr471ng crying. {details}"
+            }
+          ]
+        },
+        {
+          "value": "laughing",
+          "label": "Laughing",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "laughing_15_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video shows {subject}, who starts by looking into the camera and smiling, and then starts l4a6ing laughing, still l4a6ing laughing at the end. {details}"
+            }
+          ]
+        },
+        {
+          "value": "jaw-drop",
+          "label": "Cartoon jaw drop",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "cartoon_jaw_drop_50_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video shows {subject}, who is smiling wide, then their mouth transforms into a dr0p_j88 comical jaw drop, extending down in a long, rectangular shape, and revealing the tongue and teeth. {details}"
+            }
+          ]
+        },
+        {
+          "value": "puppies",
+          "label": "Surrounded by puppies",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "puppy_50_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video begins with a close-up portrait of {subject}. The background changes and then the pu11y puppy effect begins. They are now surrounded by many puppies and pet the puppies. {details}"
+            }
+          ]
+        },
+        {
+          "value": "selfie-younger",
+          "label": "Selfie with younger self",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "selfie_younger_self_15_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video starts with {subject} smiling at the camera, then s31lf13 taking a selfie with their younger self, and the younger self appears next to them with similar facial features and eye color. The younger self is smiling slightly. {details}"
+            }
+          ]
+        },
+        {
+          "value": "steam",
+          "label": "Steam from nose and ears",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "wan21_penqi_000003500.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "p3n91，鼻孔和耳朵冒出白烟。The video shows {subject}, who gets angry as white steam shoots out of their nostrils and ears. {details}"
+            }
+          ]
+        },
+        {
+          "value": "money-rain",
+          "label": "Money rain",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "money_000003000.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "飘落的美钞。The video shows {subject}, smiling as US dollar bills fall from above all around them. {details}"
+            }
+          ]
+        },
+        {
+          "value": "clones",
+          "label": "Clones",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "fensheng_000003500.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "镜头快速拉远，人物快速分裂出三个做着相同战斗姿势的影分身，站成一排，全身一直散发着浓烈的金色能量，分身保持人物一致性，令人惊叹的视觉效果。The video shows {subject}. {details}"
+            }
+          ]
+        },
+        {
+          "value": "cakeify",
+          "label": "Cakeify",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "cakeify_16_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video opens on {subject}. A knife, held by a hand, is coming into frame and hovering over it. The knife then begins cutting into it to c4k3 cakeify it. As the knife slices it open, the inside is revealed to be cake with chocolate layers. The knife cuts through and the contents are revealed. {details}"
+            }
+          ]
+        },
+        {
+          "value": "crush",
+          "label": "Hydraulic press",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "crush_20_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video begins with {subject}. A hydraulic press positioned above slowly descends towards it. Upon contact, the hydraulic press c5us4 crushes it, deforming and flattening it, causing it to collapse inward until it is no longer recognizable. {details}"
+            }
+          ]
+        },
+        {
+          "value": "deflate",
+          "label": "Deflate",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "deflate_20_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video opens with {subject}. As the video progresses, it begins to d3d1at3 deflate it, gradually shrinking and losing shape, eventually flattening completely into a lifeless, deflated mass on the ground. {details}"
+            }
+          ]
+        },
+        {
+          "value": "electrify",
+          "label": "Electrify",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "electrify_50_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video shows {subject}. The e13c7r1c electricity effect streaks through the scene: bright electric arcs crackle around it, each strike lighting it up for a brief moment. {details}"
+            }
+          ]
+        },
+        {
+          "value": "explode",
+          "label": "Explode",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "explode_30_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video opens with {subject}. Then it 3xp105ion huge explosion that engulfs the entire screen with a bright light. The light is so bright that it obscures everything around. {details}"
+            }
+          ]
+        },
+        {
+          "value": "inflate",
+          "label": "Inflate",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "inflate_20_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video shows {subject}, then infl4t3 inflates it, expanding into a giant, round, inflated figure. {details}"
+            }
+          ]
+        },
+        {
+          "value": "rotate",
+          "label": "Rotate 360°",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "rotate_20_epochs.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video shows {subject}. It performs a r0t4tion 360 degrees rotation. {details}"
+            }
+          ]
+        },
+        {
+          "value": "squish",
+          "label": "Squish",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "squish_18.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "In the video, {subject} is presented, held in a person's hands. The person then presses on it, causing a sq41sh squish effect. The person keeps pressing down on it, further showing the sq41sh squish effect. {details}"
+            }
+          ]
+        },
+        {
+          "value": "orbit-360",
+          "label": "360° orbit",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "360_Orbit.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video shows {subject}. The camera performs an 0rb4it 360 degree orbit, circling around and showing the surroundings, before returning to the front view. Throughout the 0rb4it 360 degree orbit, the main subject stays in place. {details}"
+            }
+          ]
+        },
+        {
+          "value": "arc-shot",
+          "label": "Arc shot",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "Arc_shot.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video shows {subject}. The 34Ar2c arc the camera moves in a smooth curve around the main subject, shifting the perspective around it. {details}"
+            }
+          ]
+        },
+        {
+          "value": "bullet-time",
+          "label": "Bullet time",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "Wan21_I2V_rotation_000003750.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "rw360xz，人物定在空中，相机视角围绕人物向一个方向旋转。The video shows {subject}, frozen in mid-air while the camera circles around them in one direction. {details}"
+            }
+          ]
+        },
+        {
+          "value": "car-chase",
+          "label": "Car chase",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "car_chase.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video depicts a dramatic c4r ch4s3 car chase. {subject} speeds along the road, followed closely by a pursuing car, while a helicopter shines a spotlight from above. The camera tracks the pursuit, panning as the car drifts into a turn, emphasizing the ongoing c4r ch4s3 car chase. {details}"
+            }
+          ]
+        },
+        {
+          "value": "crane-down",
+          "label": "Crane down",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "crane_down.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video shows {subject}. The cr4n3 crane down camera motion begins high above the scene, slowly lowering the view. The camera continues to move downwards, getting closer. {details}"
+            }
+          ]
+        },
+        {
+          "value": "crane-over-head",
+          "label": "Crane over the head",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "crane_overhead.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video shows {subject}. The camera begins a cr4n3 crane over the head movement, rising smoothly upwards. As the cr4n3 crane over the head movement progresses, the camera passes overhead. The cr4n3 crane over the head movement concludes with a high-angle shot looking down. {details}"
+            }
+          ]
+        },
+        {
+          "value": "crane-up",
+          "label": "Crane up",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "crane_up.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video shows {subject}. The cr4n3 crane up effect is applied, smoothly lifting the camera's viewpoint higher, revealing more of the surrounding landscape. {details}"
+            }
+          ]
+        },
+        {
+          "value": "crash-zoom-in",
+          "label": "Crash zoom in",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "crash_zoom_in.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video shows {subject}. The camera performs a cr34sh crash zoom in effect, rapidly zooming closer to the face. {details}"
+            }
+          ]
+        },
+        {
+          "value": "dolly-zoom",
+          "label": "Dolly zoom",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "wan_21_i2v_dolly_zoom.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "dolly zoom. The video shows {subject}. The camera moves toward them while zooming out: they stay the same size and the background behind them stretches away. {details}"
+            }
+          ]
+        },
+        {
+          "value": "hero-run",
+          "label": "Hero run",
+          "sets": [
+            {
+              "node": "ff_effect",
+              "field": "lora_name",
+              "value": "Hero_run.safetensors"
+            },
+            {
+              "node": "6",
+              "field": "text",
+              "value": "The video shows {subject}, poised in a starting position and facing the camera. Then they explode from the starting position, beginning the 4ct3ion Action Run directly towards the camera, pumping their arms. {details}"
+            }
+          ]
+        }
+      ],
+      "gallery": true
+    },
+    {
+      "id": "subject",
+      "type": "textarea",
+      "label": "Who or what is in the photo",
+      "required": true,
+      "default": "a person",
+      "help": "A few words; the effect's prompt is written around them, e.g. \"a man in a grey t-shirt\", \"an orange cat\", \"a white sneaker\"."
+    },
+    {
+      "id": "details",
+      "type": "textarea",
+      "label": "Extra direction",
+      "help": "Added at the end of the effect's prompt."
+    },
+    {
+      "id": "strength",
+      "type": "slider",
+      "label": "Effect strength",
+      "min": 0.5,
+      "max": 1.4,
+      "step": 0.05,
+      "default": 1.0,
+      "bind": [
+        {
+          "node": "ff_effect",
+          "field": "strength_model"
+        }
+      ]
+    },
+    {
+      "id": "aspect",
+      "type": "select",
+      "label": "Format",
+      "default": "portrait",
+      "options": [
+        {
+          "value": "portrait",
+          "label": "9:16",
+          "sets": [
+            {
+              "node": "50",
+              "field": "width",
+              "value": 480
+            },
+            {
+              "node": "50",
+              "field": "height",
+              "value": 832
+            }
+          ]
+        },
+        {
+          "value": "landscape",
+          "label": "16:9",
+          "sets": [
+            {
+              "node": "50",
+              "field": "width",
+              "value": 832
+            },
+            {
+              "node": "50",
+              "field": "height",
+              "value": 480
+            }
+          ]
+        },
+        {
+          "value": "square",
+          "label": "1:1",
+          "sets": [
+            {
+              "node": "50",
+              "field": "width",
+              "value": 624
+            },
+            {
+              "node": "50",
+              "field": "height",
+              "value": 624
+            }
+          ]
+        }
+      ],
+      "help": "Your photo is center-cropped to this shape."
+    },
+    {
+      "id": "frames",
+      "type": "select",
+      "label": "Length",
+      "default": 81,
+      "options": [
+        {
+          "value": 49,
+          "label": "3 s"
+        },
+        {
+          "value": 81,
+          "label": "5 s"
+        }
+      ],
+      "bind": [
+        {
+          "node": "50",
+          "field": "length"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "3",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "id": "fast",
+      "label": "Fast: 6 steps with the lightx2v LoRA (about 6x quicker; the effect can come out weaker)",
+      "sets": [
+        {
+          "node": "ff_lora_fast",
+          "field": "strength_model",
+          "value": 1.0
+        },
+        {
+          "node": "3",
+          "field": "steps",
+          "value": 6
+        },
+        {
+          "node": "3",
+          "field": "cfg",
+          "value": 1.0
+        },
+        {
+          "node": "3",
+          "field": "sampler_name",
+          "value": "euler"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "56",
+      "type": "video",
+      "label": "Video"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
+      "file": "split_files/diffusion_models/wan2.1_i2v_480p_14B_fp8_scaled.safetensors",
+      "dir": "diffusion_models",
+      "gb": 16.4,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
+      "file": "split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "dir": "text_encoders",
+      "gb": 6.74,
+      "phase": "encode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
+      "file": "split_files/clip_vision/clip_vision_h.safetensors",
+      "dir": "clip_vision",
+      "gb": 1.26,
+      "phase": "encode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
+      "file": "split_files/vae/wan_2.1_vae.safetensors",
+      "dir": "vae",
+      "gb": 0.25,
+      "phase": "decode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Kijai/WanVideo_comfy",
+      "file": "Lightx2v/lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors",
+      "dir": "loras",
+      "gb": 0.74,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Robot-Face-Reveal",
+      "file": "robot_face_reveal_35_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Remade-AI/Assassin",
+      "file": "assassin_45_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Baby",
+      "file": "baby_50_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Bride",
+      "file": "bride_50_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Classy",
+      "file": "classy_45_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Mona-Lisa",
+      "file": "mona_lisa_45_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Princess",
+      "file": "princess_45_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/VIP",
+      "file": "vip_50_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/angry-face",
+      "file": "angry_face_5_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/crying",
+      "file": "crying_20_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Laughing",
+      "file": "laughing_15_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Cartoon_Jaw_Drop",
+      "file": "cartoon_jaw_drop_50_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Puppy",
+      "file": "puppy_50_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Selfie-With-Younger-Self",
+      "file": "selfie_younger_self_15_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "lvfengchun/wan21_i2v_boiling_point",
+      "file": "wan21_penqi_000003500.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "joyfox/WAN2.1-I2V-480P-Falling_US_dollars",
+      "file": "money_000003000.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "joyfox/wan2.1_I2V480P_fenshengshu_lora",
+      "file": "fensheng_000003500.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Cakeify",
+      "file": "cakeify_16_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Crush",
+      "file": "crush_20_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Deflate",
+      "file": "deflate_20_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Electrify",
+      "file": "electrify_50_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Explode",
+      "file": "explode_30_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Inflate",
+      "file": "inflate_20_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Rotate",
+      "file": "rotate_20_epochs.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Squish",
+      "file": "squish_18.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/360-Orbit",
+      "file": "360_Orbit.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Arc_shot",
+      "file": "Arc_shot.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "joyfox/Wan2.1-BulletTime-LoRA",
+      "file": "Wan21_I2V_rotation_000003750.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Car-chase",
+      "file": "car_chase.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Crane-down",
+      "file": "crane_down.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Crane_over_the_head",
+      "file": "crane_overhead.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Crane_up",
+      "file": "crane_up.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Crash-zoom-in",
+      "file": "crash_zoom_in.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "ostris/wan21_i2v_dolly_zoom_lora",
+      "file": "wan_21_i2v_dolly_zoom.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "Remade-AI/Hero-run",
+      "file": "Hero_run.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    }
+  ],
+  "credits": [
+    "Effect LoRAs by Remade-AI (Apache-2.0)",
+    "Bullet time, Money rain and Clones LoRAs by joyfox (Apache-2.0; the repos moved there from valiantcat and laozou)",
+    "Dolly zoom LoRA by ostris (Apache-2.0)",
+    "Steam LoRA by lvfengchun (Apache-2.0)",
+    "Wan 2.1 image-to-video 14B by Wan-AI, Alibaba (Apache-2.0)",
+    "Step-distill LoRA by lightx2v, packaged for ComfyUI by Kijai",
+    "Workflow: ComfyUI official template"
+  ],
+  "test": {
+    "image": "test/portrait.png",
+    "effect": "squish",
+    "aspect": "square",
+    "frames": 49
+  }
+}

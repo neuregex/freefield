@@ -17,12 +17,12 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 
 | | |
 |---|---|
-| Apps | 29 manifests, each with a workflow: 21 *ready* (an official template with only the edits listed in its recipe) and 8 *drafts* (models or LoRAs combined in ways a GPU run still has to confirm) |
+| Apps | 70 manifests, each with a workflow: 29 *ready* that ran on a GPU, 40 template apps (a fixed prompt over the `edit` or `z-image` pipeline, written by `tools/template_apps.py`; their lab run is pending) and 1 *draft* (`reshoot`: it runs, but parts of the new view come out unfilled) |
 | Workflows | Built from official sources by `tools/build_apps.py` (the two smoke apps are hand-written) and accepted by ComfyUI's validator: ComfyUI `e3bee7f` (0.42.0), ComfyUI-LTXVideo `44c8a36`, ComfyUI-CrossViewWarp `fbb1e93` |
-| LoRA lab | 47 cases, one showcase per app; the prompt each one would queue (values, overrides and inserted LoRAs) passes the same validator |
+| LoRA lab | 141 cases, one showcase per app plus one per effect (35); the prompt each one would queue (values, overrides and inserted LoRAs) passes the same validator |
 | End to end | Web UI → server → gateway → comfy-api-proxy → ComfyUI tested with the model-free smoke apps; lab chaining tested the same way |
 | CI | `.github/workflows/validate.yml` runs all of the above on every push, including a CPU-only ComfyUI that checks every workflow and lab case (about 3 minutes) |
-| GPU runs | Not yet. VRAM figures below are weight sizes, not measurements |
+| GPU runs | Showcase lab run on an L40S (`20261020-133620-l40s`): 35 of 36 cases, one example per app; `recast` failed there and passed in a re-run (`20261020-162214-l40s`). Effects on 4 H100s at once (`20261021-140940-h100`, `--shards 4`): 61 of 61 cases in about 31 minutes of GPU, 2 min 52 s per effect on average, peak 30.8 GB. Two more H100 rounds (`20261021-152107-h100`, `20261021-175735-h100`) re-ran the 5 that failed with new photos and tried 7 LoRAs by other authors: Painting, Pirate captain, Zen and Crash zoom out were taken out, Dolly zoom and Bullet time moved to ostris's and joyfox's LoRAs, and Money rain, Clones and Steam from nose and ears were added. A fourth round (`20261021-195731-h100`, 14 of 14 cases) ran the new ones as shipped; after it, Jungle, Samurai, Warrior, Jumpscare, Smoke outfit change and Gothic transformation were taken out to keep the app SFW. That leaves 35 effects, each with an example in the gallery. VRAM figures below are weight sizes; the lab's measured peaks show up in the web UI |
 
 ## Apps
 
@@ -38,20 +38,72 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 | `remove-bg` | Background removal | BiRefNet | fits whole, 0.4 GB | ready |
 | `smooth` | Slow motion / smoothing | FILM frame interpolation | fits whole, 0.1 GB | ready |
 | `video`, `video-t2v` | Create Video (with audio) | LTX-2.5 22B distilled (int8) | tight: 21.5 GB largest phase | ready |
-| `vfx-clean-plate`, `vfx-day-to-night`, `vfx-water` | VFX | LTX-2.5 + official IC-LoRAs | tight: 21.8–22.4 GB | draft |
-| `transitions` | Effects / Transitions | LTX-2.5 + transition LoRA (2.3) | tight: 21.9 GB | draft |
+| `vfx-clean-plate`, `vfx-day-to-night`, `vfx-water` | VFX | LTX-2.5 + official IC-LoRAs | tight: 21.8–22.4 GB | ready |
+| `transitions` | Effects / Transitions | LTX-2.5 + transition LoRA (2.3) | tight: 21.9 GB | ready |
 | `camera-moves` | Camera Controls | Wan 2.2 Fun Camera (fp8): pans, zooms and rolls on an image, with a 4-step fast preset | fits by phases, 15.3 GB | ready |
-| `camera-copy` | Camera Controls | LTX-2.5 + Cameraman v2 IC-LoRA (2.3): copies the camera move of a reference clip | tight: 22.1 GB | draft |
+| `camera-copy` | Camera Controls | LTX-2.5 + Cameraman v2 IC-LoRA (2.3): copies the camera move of a reference clip | tight: 22.1 GB | ready |
+| `effects` | Effects | Wan 2.1 image-to-video 14B (fp8) + 35 effect LoRAs, 30 of them by Remade-AI (Cakeify, Robot face reveal, Money rain, 360° orbit…), picked from a gallery, with a 6-step fast preset | fits by phases, 16.8 GB | ready |
 | `music` | Audio | MiniMax Music 3 | fits whole, 14.3 GB | ready |
 | `sfx` | Audio | Stable Audio 3 medium | fits whole, 10.4 GB | ready |
 | `recast` | Character swap | SCAIL-2 (int8) + SAM 3.1 tracking: replace a person in a video, or animate a character | fits by phases, 18.6 GB | ready |
-| `motion-transfer` | Character / motion swap | Wan Animate 2 (int8) | fits by phases, 16.6 GB | draft |
+| `motion-transfer` | Character / motion swap | Wan Animate 2 (int8) | fits by phases, 16.6 GB | ready |
 | `reshoot` | Camera angles | MiniMax H3 + MoGe + CrossView | needs Modal: 27.1 GB text encoder | draft |
 | `product-shot` | Product placement | FLUX 3 Image Klein (int8) with product-photography scenes | fits whole, 11.0 GB | ready |
 | `speak` | Speak | LTX-2.5 image-to-video voicing a quoted line (voice, lip sync and motion in one pass, no TTS) | tight: 21.5 GB largest phase | ready |
 | `character` | Soul ID | FLUX 3 Image Klein, reference image (int8) | fits whole, 11.0 GB | ready |
-| `talking` | Lipsync / Speak | LTX-2.5 audio-to-video (int8) | tight: 21.5 GB largest phase | draft |
+| `talking` | Lipsync / Speak | LTX-2.5 audio-to-video (int8) | tight: 21.5 GB largest phase | ready |
 | `smoke`, `smoke-invert` | — | none | — | ready |
+
+### Template apps
+
+Higgsfield's catalog is mostly fixed prompts over a few pipelines, and so is this: each of these apps is the `edit`
+pipeline (FLUX 3 Image Klein, one reference image) or Z-Image Turbo with its prompt baked in, selects that fill parts of
+it, and an "Extra direction" box appended to it. `tools/template_apps.py` holds the table and writes the 40 folders
+(manifest + a copy of the base workflow) and their lab cases; `--readme` prints this list and `--lab` the command that
+makes every example. Add a line to the table there, not a folder by hand.
+
+| App | Rebuilds | Base | Inputs |
+|---|---|---|---|
+| `poster` | Poster | `edit` | product photo, headline |
+| `packshot` | Packshot | `edit` | product photo, backdrop |
+| `macro-scene` | Macroshot Scene | `edit` | product photo, setting |
+| `macro-product` | Macroshot Product | `edit` | product photo |
+| `giant-product` | Giant Product | `edit` | product photo, time of day |
+| `billboard` | Billboard Ad | `edit` | your photo, where |
+| `graffiti-ad` | Graffiti Ad | `edit` | product photo |
+| `fridge-ad` | Fridge Ad | `edit` | product photo |
+| `ugc-shot` | Marketing (UGC) | `edit` | product photo, where |
+| `headshot` | AI Headshot Generator | `edit` | your selfie, backdrop, outfit |
+| `commercial-faces` | Commercial Faces | `edit` | your photo, campaign |
+| `style-snap` | Style Snap | `edit` | your photo, style |
+| `skin-enhancer` | Skin Enhancer | `edit` | your photo |
+| `outfit-vending` | Outfit Vending Machine | `edit` | your photo |
+| `glitter-sticker` | Glitter Sticker | `edit` | your photo |
+| `game-styles` | Game Dump | `edit` | your photo, game style |
+| `plushie` | Plushies | `edit` | your photo |
+| `render-3d` | 3D Render | `edit` | your photo |
+| `figure-3d` | 3D Figure | `edit` | your photo |
+| `pixel-game` | Pixel Game | `edit` | your photo |
+| `brick-toy` | Brick Cube | `edit` | your photo |
+| `sketch-to-real` | Sketch-to-Real | `edit` | your sketch |
+| `paint-app` | Paint App | `edit` | your photo |
+| `mural` | Signboard | `edit` | your photo |
+| `micro-beasts` | Surrounded by Animals | `edit` | your photo, animals |
+| `meme` | Meme Generator | `z-image` | scene, top text, bottom text |
+| `j-magazine` | J-Magazine | `edit` | your photo |
+| `cafe-60s` | 60s Cafe | `edit` | your photo |
+| `victory-card` | Victory Card | `edit` | your photo |
+| `j-poster` | J-Poster | `edit` | your photo |
+| `mascot` | Mascot | `edit` | your photo, mascot |
+| `burning-sunset` | Burning Sunset | `edit` | your photo |
+| `comic-book` | Comic Book | `edit` | your photo |
+| `giallo` | Giallo Horror | `edit` | your photo |
+| `renaissance` | Renaissance | `edit` | your photo |
+| `japanese-show` | Japanese Show | `edit` | your photo |
+| `breakdown` | Breakdown | `edit` | your photo |
+| `edit-text` | Edit Text | `edit` | image with text, text to replace, new text |
+| `image-effects` | Image Effects | `edit` | your photo, effect |
+| `color-grade` | Color Grading | `edit` | your photo, look |
 
 Full table: [`docs/vram-map.md`](docs/vram-map.md) (`python tools/catalog.py vram`). Between two apps with different
 base models the gateway calls ComfyUI's `POST /free`, so nothing from the previous app stays in VRAM.
@@ -84,6 +136,35 @@ npm run app -- z-image --set prompt="a red bicycle against a white wall"   # or 
 
 On Windows PowerShell, environment variables go before the command as `$env:FREEFIELD_GPU = "A10G"; modal deploy ...`.
 
+### The web app
+
+`npm run serve` opens a studio laid out like the one it rebuilds:
+
+- **Explore**: featured apps as video cards, the studios, and one lab example per app.
+- **Image** and **Audio**: prompt-first apps. Results fill the page and a floating bar holds the prompt, reference
+  images (click **+**, drop or paste them), one chip per setting, the number of generations and **Generate**, which shows
+  how long the lab example took on the GPU.
+- **Video** (and the upload-first tools): controls in a left column (*Create video*, *Edit video*, *Motion control*),
+  results on the right.
+- Every app has **History** (what you generated with it), **Library** (the lab example, *Load this example*) and
+  **How it works** (models and licenses, VRAM by phase, the download and terminal commands).
+- A thumbs-down on any lab example (Explore, Library, the viewer, the effects picker) marks it *mediocre*. The marks
+  live in `lab/flags.json` (key `<app>` or `<app>/<input>/<option>`), **Library → Lab examples → Mediocre** lists them,
+  and `lab/publish.py` clears a mark when a new run replaces that example. It is how a reviewer tells the lab which
+  results need a better model, LoRA or prompt.
+- **Apps** lists every app by category; **Library** shows everything you generated; **VRAM map** draws each app's
+  weights, largest phase and measured peak against 24 and 48 GB.
+- **Compare** (on any result) puts it next to another file side by side, or as a wipe for two images; videos play in
+  sync. Drop the result of the same prompt from Higgsfield, or anything else; dropped files never leave the browser.
+- The **GPU** pill says whether the backend is warm (asking never wakes it) and wakes it on request, so a cold start
+  happens while you prepare the inputs. When warm it shows the VRAM in use and which app is loaded.
+- English or Spanish (the globe button); it follows the browser until you pick one.
+
+Runs are recorded before they are submitted and kept in `out/history/<id>/` (inputs, outputs and a `meta.json` with
+the values, the seed that was used, and timings), so they survive a closed tab, the backend's retention and a server
+restart; runs still going when the server stops are picked up again. *Recreate* puts any result's inputs and settings
+back in the form.
+
 Any ComfyUI works as the backend: run `comfy-api-proxy` next to it and `python infra/gateway.py` in front, and point
 `COMFY_BASE_URL` at the gateway. Pointing it straight at a `comfy-api-proxy` (or another Comfy API v2 endpoint) works
 too; only the unload-between-apps step is skipped. Draft apps stay locked in the UI and the CLI until you set
@@ -99,14 +180,31 @@ modal run --detach lab/lab_modal.py --showcase    # one example per app + the re
 modal run lab/lab_modal.py --pull <run_id>        # only if the terminal closed before the end: copy back and publish
 ```
 
+The effects app has one case per effect (`fx-*`, 35 of them, on synthetic people, objects and scenes made
+by `z-image` in the same run). Its effect picker is a *gallery* input, so `lab/publish.py` also keeps one example per
+effect (`web/examples/effects/options/`): the picker shows them as cards and *Explore* gets a wall of effects. A run
+of a few effects adds to that gallery without replacing the rest.
+
+```sh
+modal run --detach lab/lab_modal.py --apps effects --shards 4   # 35 effects + their 19 reference stills, on 4 GPUs at once
+modal run lab/lab_modal.py --only fx-cakeify,fx-squish          # re-run a few after changing their prompt
+```
+
+`--shards N` works with any selection: it splits the cases over N GPU containers that run at the same time, keeping
+the cases that read the same reference together so each reference is made once (the 35 effects become 4 groups of
+8 or 9). The GPU time stays about the same, plus loading the models once per container; the wait drops to about 1/N.
+The groups write to `<run_id>-s1`, `-s2`… on the volume and come back merged into one `lab/results/<run_id>`, with one
+`review.html`; `--pull <run_id>` merges them the same way.
+
 `--detach` keeps the GPU job running if the terminal closes; the run id is printed at the start. Missing models are
 downloaded first on a CPU container, so no GPU is billed while they arrive (the whole catalog is
 close to 300 GB). Then one GPU container runs the cases, recording time and peak VRAM, and keeps going when one fails;
 a case whose model could not be downloaded (say, a license not yet accepted) is skipped with the reason. Every output
 also gets small web versions (a card, a poster for videos, a web-sized copy). At the end the run is copied to
 `lab/results/<run_id>`, `review.html` is built there for rating, and `lab/publish.py` copies one example per app into
-`web/examples/`: the web UI shows it as the app's thumbnail, as an *Example* block (inputs → output, with the settings
-and a *Use these settings* button) and in the **gallery** tab.
+`web/examples/` (its output plus the reference files it was given): the web UI uses it as the app's card and video
+loop, in *Explore*, in each app's *Library* tab, and for *Load this example*, which puts the same inputs and settings in
+the form so you can run it again and compare.
 
 ```sh
 modal run lab/lab_modal.py                        # every case (LoRA comparisons included) on an L40S
@@ -120,11 +218,14 @@ python tools/comfy_validate.py --comfy-dir /path/to/ComfyUI --placeholders --lab
 ## Add an app
 
 1. Get the workflow in API format: add a recipe to `tools/build_apps.py` (official template + explicit edits), or
-   export it from ComfyUI with *Export (API)*.
+   export it from ComfyUI with *Export (API)*. A fixed prompt over a pipeline that already runs is one line in
+   `tools/template_apps.py` instead (see *Template apps* above).
 2. Write `apps/<id>/app.json`: inputs and where each one binds (`node` + `field`), outputs, and every model with its
    Hugging Face repo, size and phase. The schema is `schema/app.schema.json`. A `select` option can carry `sets`
-   (extra node fields written when it is chosen, like the LoRA file that goes with a style), and `presets` change
-   several fields at once (the 4-step mode of `camera-moves`).
+   (extra node fields written when it is chosen, like the LoRA file that goes with a style); a string in `sets` may
+   use `{input_id}` placeholders like a bind template (each effect writes its LoRA's prompt, with its trigger words, around
+   your `{subject}`). `presets` change several fields at once (the 4-step mode of `camera-moves`), and a select marked
+   `"gallery": true` is shown as cards with one lab example per option.
 3. Check it:
    ```sh
    npm run validate                                # schema, bindings, declared models vs. loaders
@@ -146,5 +247,15 @@ Audio Community License, MiniMax H3 Community License). Some community LoRAs are
 `app.json` says so and the web UI shows it next to the model. Workflows are adapted from ComfyUI's official templates and Lightricks' ComfyUI-LTXVideo examples;
 the cloud text-encoder branch in Lightricks' examples is removed so every app runs on open weights only. Camera and
 lens vocabulary in `cinema-studio` comes from [open-higgsfield-ai](https://github.com/sunnychase/open-higgsfield-ai) (MIT).
+30 of the 35 effect LoRAs in `effects` are [Remade-AI](https://huggingface.co/Remade-AI)'s; the other 5 are by
+[joyfox](https://huggingface.co/joyfox) (Bullet time, Money rain, Clones; its repos moved there from valiantcat and laozou),
+[ostris](https://huggingface.co/ostris) (Dolly zoom) and
+[lvfengchun](https://huggingface.co/lvfengchun) (Steam from nose and ears), all Apache-2.0. Each effect's prompt follows the
+example on its model card and keeps its trigger words. Nine of Remade-AI's image-to-video LoRAs are left out: the ones that undress someone, fire a gun, make two
+people kiss, or put a franchise character or a religious figure on screen. Four more came out wrong in three lab rounds (Painting,
+Pirate captain, Zen, Crash zoom out) and four were taken out to keep the app SFW (Jungle, Samurai, Warrior, Jumpscare); Remade-AI's
+Dolly effect and Bullet time were replaced. joyfox's smoke outfit change and gothic transformation LoRAs worked in the lab but were
+left out for the same reason: the first dresses people in the outfits of its examples (a bunny suit with a corset, a tight dress,
+a school uniform), the second puts gloved hands from someone unseen on the person's shoulders.
 
 Use footage and characters you own or have permission for; the apps are meant for SFW work.

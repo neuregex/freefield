@@ -1,0 +1,173 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "game-styles",
+  "name": "Game Styles",
+  "section": "image",
+  "summary": "You as a character in 12 kinds of video game, from 16-bit pixel art to voxel worlds.",
+  "higgsfield_feature": "Game Dump",
+  "pack": "image-flux3",
+  "status": "ready",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_flux3_klein_distilled_image_edit.json",
+    "comfyui": "0.42.0",
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py) and the prompt below is fixed; \"Extra direction\" is appended to it."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Your photo",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "11",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "style",
+      "type": "select",
+      "label": "Game style",
+      "default": "a 16-bit pixel art platformer",
+      "options": [
+        {
+          "value": "a 16-bit pixel art platformer",
+          "label": "16-bit platformer"
+        },
+        {
+          "value": "a low-poly 1990s console game",
+          "label": "Low-poly 90s console"
+        },
+        {
+          "value": "a cel-shaded action game",
+          "label": "Cel-shaded action"
+        },
+        {
+          "value": "an isometric role-playing game",
+          "label": "Isometric RPG"
+        },
+        {
+          "value": "a voxel block-building game",
+          "label": "Voxel builder"
+        },
+        {
+          "value": "a claymation adventure game",
+          "label": "Claymation adventure"
+        },
+        {
+          "value": "a 2D fighting game character select screen",
+          "label": "Fighting game select screen"
+        },
+        {
+          "value": "a visual novel portrait",
+          "label": "Visual novel"
+        },
+        {
+          "value": "a neon cyberpunk shooter",
+          "label": "Neon cyberpunk shooter"
+        },
+        {
+          "value": "a cozy farming simulator",
+          "label": "Cozy farming sim"
+        },
+        {
+          "value": "a kart racing game",
+          "label": "Kart racer"
+        },
+        {
+          "value": "a survival horror game, no gore",
+          "label": "Survival horror"
+        }
+      ]
+    },
+    {
+      "id": "details",
+      "type": "textarea",
+      "label": "Extra direction",
+      "help": "Added at the end of the app's prompt.",
+      "bind": [
+        {
+          "node": "4",
+          "field": "text",
+          "template": "The same person as in <ref_image_0> as a character in {style}, keep the face recognizable. {details}"
+        }
+      ]
+    },
+    {
+      "id": "steps",
+      "type": "slider",
+      "label": "Steps",
+      "min": 8,
+      "max": 32,
+      "step": 1,
+      "default": 16,
+      "bind": [
+        {
+          "node": "7",
+          "field": "steps"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "7",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "9",
+      "type": "image",
+      "label": "Result"
+    }
+  ],
+  "models": [
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "phase": "denoise",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "phase": "encode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "decode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    }
+  ],
+  "credits": [
+    "FLUX 3 Image Klein by Black Forest Labs (FLUX Kommunity License)"
+  ],
+  "test": {
+    "image": "test/portrait.png",
+    "style": "a cel-shaded action game"
+  }
+}

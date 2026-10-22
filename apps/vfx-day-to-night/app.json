@@ -4,7 +4,7 @@
   "name": "Day to Night",
   "section": "video",
   "pack": "video-ltx25",
-  "status": "draft",
+  "status": "ready",
   "higgsfield_feature": "VFX: relight",
   "summary": "Turns a daytime shot into a believable night version of the same shot.",
   "workflow": "workflow.api.json",

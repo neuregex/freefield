@@ -4,7 +4,7 @@
   "name": "Clean Plate",
   "section": "video",
   "pack": "video-ltx25",
-  "status": "draft",
+  "status": "ready",
   "higgsfield_feature": "VFX: remove people",
   "summary": "Removes people and moving subjects from a shot and rebuilds the background.",
   "workflow": "workflow.api.json",

@@ -88,7 +88,7 @@
         "sets": {
           "type": "array",
           "items": { "$ref": "#/$defs/set" },
-          "description": "Extra node fields written when this option is chosen, e.g. the LoRA file that goes with a style."
+          "description": "Extra node fields written when this option is chosen, e.g. the LoRA file that goes with a style, or the prompt that goes with an effect LoRA."
         }
       }
     },
@@ -99,7 +99,7 @@
       "properties": {
         "node": { "type": "string" },
         "field": { "type": "string" },
-        "value": {}
+        "value": { "description": "Written as is; a string with {input_id} placeholders is filled like a bind template." }
       }
     },
     "input": {
@@ -117,6 +117,10 @@
         "max": { "type": "number" },
         "step": { "type": "number" },
         "options": { "type": "array", "items": { "$ref": "#/$defs/option" } },
+        "gallery": {
+          "type": "boolean",
+          "description": "Select only. lab/publish.py keeps one example per option and the UI shows the options as cards with those examples (the effects picker)."
+        },
         "limits": {
           "type": "object",
           "additionalProperties": false,
@@ -128,7 +132,7 @@
         "bind": {
           "type": "array",
           "items": { "$ref": "#/$defs/bind" },
-          "description": "Where the value goes. May be empty when the input is only used inside another bind's template."
+          "description": "Where the value goes. May be empty when the input is only used inside a template, or when its options write the fields (sets)."
         }
       }
     },

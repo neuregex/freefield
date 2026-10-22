@@ -150,6 +150,7 @@ def ltx_v2v_local(api: Api, lora_file: str) -> None:
 
 
 CAMERAMAN = "LTX2.3-22B_IC-LoRA-Cameraman_v2_14000.safetensors"
+EFFECT_LORA = "robot_face_reveal_35_epochs.safetensors"   # Remade-AI's Robot Face Reveal: the effects app's default option
 
 
 def ltx_cameraman(api: Api) -> None:
@@ -275,6 +276,20 @@ def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None)
                    "wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors", 0.0, nid="ff_lora_low")
     out["camera-moves"] = cm
 
+    ef = tpl("image_to_video_wan.json")
+    # Wan 2.1 I2V 14B 480p, the model Remade-AI trained its effect LoRAs on, in fp8 so the 14B
+    # model fits a 24 GB card by phases. The effect LoRA goes right after the loader (each effect
+    # option in app.json swaps the file and writes its prompt); lightx2v's step-distill LoRA follows
+    # at strength 0 (a no-op) for the "fast" preset. Flow shift 5, as the effect LoRA cards say.
+    swap_files(ef, {"wan2.1_i2v_480p_14B_fp16.safetensors": "wan2.1_i2v_480p_14B_fp8_scaled.safetensors"})
+    add_lora_after(ef, find(ef, "UNETLoader"), EFFECT_LORA, 1.0, nid="ff_effect")
+    add_lora_after(ef, "ff_effect", "lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors", 0.0, nid="ff_lora_fast")
+    put(ef, find(ef, "ModelSamplingSD3"), "shift", 5.0)
+    i2v = find(ef, "WanImageToVideo")
+    for field, value in (("width", 480), ("height", 832), ("length", 81)):   # the app's defaults: 9:16, 5 s at 16 fps
+        put(ef, i2v, field, value)
+    out["effects"] = ef
+
     out["style-reference"] = tpl("image_krea2_turbo_int8_image_style_reference.json")   # Krea 2 Turbo + ostris' style LoRA, as shipped
     st = tpl("image_krea2_turbo_t2i_int8.json")
     # the template's own "use LoRA" switch (it also appends the trigger to the prompt) goes on;
@@ -287,6 +302,10 @@ def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None)
     # keep the first segment (81 frames); the template's "extend" subgraph needs a clip of 157+ frames
     # and fails on shorter ones, so it goes, with the nodes that only joined the two segments
     drop(rc, *[i for i in rc if i.startswith("262:")], "263", "264", "265", "269", "270", "271")
+    # the pose offset (b - c) * (a - 1) reads b and c from subgraph inputs the conversion cannot see;
+    # for the first segment it is 0, so the frame range starts at 0 and the expression goes
+    put(rc, "213:177", "batch_index", 0)
+    drop(rc, "213:184", "213:183")
     out["recast"] = rc
     out["relight"] = tpl("image_qwen_image_edit_2509_relight.json")   # Qwen Image Edit 2509 + Relight + Lightning LoRAs, as shipped
 
