@@ -79,7 +79,7 @@
         0
       ],
       "lora_name": "ltx-2.3-22b-ic-lora-union-control-ref0.5.safetensors",
-      "strength_model": 1
+      "strength_model": 0.7
     },
     "_meta": {
       "title": "🅛🅣🅧 IC-LoRA Loader Model Only"

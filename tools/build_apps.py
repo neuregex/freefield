@@ -301,7 +301,13 @@ def ltx_union_control(api: Api, edit: Api) -> None:
     rewire(api, [guide_out, 0], ["ff_canny", 0])
     drop(api, guide_out, find(api, "VideoDepthAnythingProcess"), find(api, "LoadVideoDepthAnythingModel"),
          find(api, "CannyEdgePreprocessor"), find(api, "DWPreprocessor"))
-    put(api, find(api, "LTXICLoRALoaderModelOnly"), "lora_name", UNION_CONTROL)
+    lora = find(api, "LTXICLoRALoaderModelOnly")
+    put(api, lora, "lora_name", UNION_CONTROL)
+    # at 1.0 the control LoRA pulls the clip back to photoreal footage after the first second (it learnt
+    # "edges → real video"); at 0.7 the look of the first frame holds to the last frame and the structure
+    # still follows the edges (run 20261023-124332-h100: anime and brick toy held, the second-stage sigma
+    # change and a "keep the look" prompt did nothing)
+    put(api, lora, "strength_model", 0.7)
     # first frame → FLUX 3 Klein edit in the chosen look → the video's first frame
     merge(api, edit, "edit")
     drop(api, "edit:9")   # its SaveImage: the still is an intermediate, not an output
