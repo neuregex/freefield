@@ -1543,7 +1543,7 @@
       },
       "largest_phase": "denoise",
       "largest_phase_gb": 16.76,
-      "optional_gb": 11.18,
+      "optional_gb": 9.02,
       "biggest_file": {
         "name": "wan2.1_i2v_480p_14B_fp8_scaled.safetensors",
         "gb": 16.4

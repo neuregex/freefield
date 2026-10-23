@@ -103,7 +103,7 @@ const TAGLINES = {
   video: ["Bring a still to life", "Dale vida a una foto"],
   "video-t2v": ["Type a shot, get a clip", "Escribe una toma, obtén un clip"],
   "camera-moves": ["Direct the camera", "Dirige la cámara"],
-  effects: ["30 effects from one photo", "30 efectos desde una foto"],
+  effects: ["24 effects from one photo", "24 efectos desde una foto"],
   "camera-copy": ["Copy any camera move", "Copia cualquier movimiento de cámara"],
   recast: ["Recast anyone in your clip", "Cambia al protagonista de tu clip"],
   "motion-transfer": ["Borrow the moves", "Toma prestado el movimiento"],
@@ -121,7 +121,7 @@ const TAGLINES = {
   "sdr-hdr": ["HDR range for an SDR clip", "Rango HDR para un clip SDR"],
   "mixed-media": ["Same clip, 16 looks", "El mismo clip, 16 estilos"],
   dub: ["New words, same face", "Palabras nuevas, la misma cara"],
-  morph: ["Nine transformations, your face", "Nueve transformaciones, tu cara"],
+  morph: ["Fifteen transformations, your face", "Quince transformaciones, tu cara"],
   music: ["Write a song", "Compón una canción"],
   sfx: ["Sound for every scene", "Sonido para cada escena"],
 };

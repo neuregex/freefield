@@ -6,12 +6,12 @@
   "pack": "video-ltx25",
   "status": "ready",
   "higgsfield_feature": "Effects (transformations)",
-  "summary": "Nine transformations that keep the face: FLUX 3 Klein redraws the photo (statue, red carpet, cartoon, clones…) and LTX-2.5 morphs from the photo to it.",
+  "summary": "Fifteen transformations that keep the face: FLUX 3 Klein redraws the photo (statue, bride, cartoon, clones…) and LTX-2.5 morphs the photo into it.",
   "workflow": "workflow.api.json",
   "source": {
     "template": "comfyui_workflow_templates video_ltx2_5_flf2v.json (0.1.115) + image_flux3_klein_distilled_image_edit.json",
     "comfyui": "0.42.0",
-    "notes": "The `transitions` workflow (first/last frame + joyfox's transition LoRA) with the last frame made in the graph by the `edit` pipeline (nodes edit:*); the prompt enhancer is off so the motion prompt is used as written. Replaces five Remade-AI effect LoRAs (Mona Lisa, VIP, younger self, clones, cartoon jaw drop) that lost the person's identity at 480p. Ran on an H100 on 23 Oct (20261023-143551-h100): 8 of 9 kept the face; the statue and the aged portrait got their instructions tightened."
+    "notes": "The `transitions` workflow (first/last frame + joyfox's transition LoRA) with the last frame made in the graph by the `edit` pipeline (nodes edit:*); the prompt enhancer is off so the motion prompt is used as written. Replaces eleven effect LoRAs (Mona Lisa, VIP, younger self, clones, cartoon jaw drop, assassin, baby, bride, classy, princess, robot face reveal) that lost the person's identity or looked flat at 480p. Ran on an H100 on 23 Oct (20261023-143551-h100): 8 of 9 kept the face; the statue and the aged portrait got their instructions tightened."
   },
   "outputs": [
     {
@@ -168,6 +168,102 @@
               "node": "251:252",
               "field": "value",
               "value": "The room dissolves into a space station; they float gently in a spacesuit while Earth turns outside the window. {details}"
+            }
+          ]
+        },
+        {
+          "value": "assassin",
+          "label": "Assassin",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "Dress this exact person as a stealthy assassin in a dark hooded outfit with leather straps, standing in a misty alley at night, keeping their own face."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "A dark hood and leather gear materialise on them as the room fades into a misty night alley; they look up at the camera. {details}"
+            }
+          ]
+        },
+        {
+          "value": "baby",
+          "label": "Baby",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "Show this exact person as a one-year-old baby version of themselves with the same facial features and hair colour, sitting in front of a crib surrounded by soft toys."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "They shrink and soften into a baby version of themselves in front of a crib, soft toys all around, and giggle. {details}"
+            }
+          ]
+        },
+        {
+          "value": "bride",
+          "label": "Bride",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "Dress this exact person in a white lace wedding dress with a veil, holding a bouquet of white flowers, in a flower-filled garden, keeping their own face."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "White petals swirl around them as a lace wedding dress and veil appear and a bouquet settles in their hands. {details}"
+            }
+          ]
+        },
+        {
+          "value": "classy",
+          "label": "Classy",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "Dress this exact person in elegant light-blue formal wear, holding a small white envelope and a single flower, against a warm gold-brown studio backdrop, keeping their own face."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "Warm studio light rises as elegant light-blue formal wear appears on them; they hold up a small envelope and a flower. {details}"
+            }
+          ]
+        },
+        {
+          "value": "princess",
+          "label": "Princess",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "Dress this exact person as a fairytale princess with a tiara, a long silver beaded gown and long silver gloves, seated at a table with gifts and candles in a room with white curtains, keeping their own face."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "White sparkling light swirls around them; a tiara and a silver gown appear and they sit at a candle-lit table with gifts. {details}"
+            }
+          ]
+        },
+        {
+          "value": "robot-face",
+          "label": "Robot face reveal",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "This exact person with the left half of their face opened like a panel to reveal a chrome robot face underneath with a glowing blue eye; the right half is still their own face."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "Their face splits down the middle and the left half slides open to reveal a chrome robot face with a glowing blue eye. {details}"
             }
           ]
         },

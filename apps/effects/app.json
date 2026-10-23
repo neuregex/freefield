@@ -6,7 +6,7 @@
   "pack": "video-wan-effects",
   "status": "ready",
   "higgsfield_feature": "Effects",
-  "summary": "Turns a photo into a 5-second effect clip: 30 open effect LoRAs, from Cakeify and a robot face reveal to money rain and a 360° orbit (Wan 2.1 image-to-video).",
+  "summary": "Turns a photo into a 5-second effect clip: 24 open effect LoRAs, from Cakeify and a hydraulic press to money rain and a 360° orbit (Wan 2.1 image-to-video).",
   "workflow": "workflow.api.json",
   "source": {
     "template": "image_to_video_wan.json",
@@ -33,104 +33,8 @@
       "id": "effect",
       "type": "select",
       "label": "Effect",
-      "default": "robot-face",
+      "default": "cakeify",
       "options": [
-        {
-          "value": "assassin",
-          "label": "Assassin",
-          "sets": [
-            {
-              "node": "ff_effect",
-              "field": "lora_name",
-              "value": "assassin_45_epochs.safetensors"
-            },
-            {
-              "node": "6",
-              "field": "text",
-              "value": "The video starts with a portrait of {subject}. Then the 3p1c epic transformation starts: they are now dressed as a stealthy assassin in a dark hooded outfit with a long coat and black gloves, standing in a moody city alley at night. The 3p1c epic transformation is complete. {details}"
-            }
-          ]
-        },
-        {
-          "value": "baby",
-          "label": "Baby",
-          "sets": [
-            {
-              "node": "ff_effect",
-              "field": "lora_name",
-              "value": "baby_50_epochs.safetensors"
-            },
-            {
-              "node": "6",
-              "field": "text",
-              "value": "The video starts with a studio portrait of {subject}. Then the image shifts to the 848y baby effect, and they are now a baby in front of a crib, surrounded by toys. Finally, the 848y baby effect is shown again in a different location: the baby version is in the crib and seems excited and amused. {details}"
-            }
-          ]
-        },
-        {
-          "value": "bride",
-          "label": "Bride",
-          "sets": [
-            {
-              "node": "ff_effect",
-              "field": "lora_name",
-              "value": "bride_50_epochs.safetensors"
-            },
-            {
-              "node": "6",
-              "field": "text",
-              "value": "The video starts with a close-up of {subject} smiling, then the 8r1d3 bride effect happens. They are now in a white lace wedding dress with a veil, smiling, holding a bouquet of white flowers in front of a softly blurred background. {details}"
-            }
-          ]
-        },
-        {
-          "value": "classy",
-          "label": "Classy",
-          "sets": [
-            {
-              "node": "ff_effect",
-              "field": "lora_name",
-              "value": "classy_45_epochs.safetensors"
-            },
-            {
-              "node": "6",
-              "field": "text",
-              "value": "The video starts with {subject}. The c1455y classy transformation occurs and they are now wearing an elegant light blue dress, holding a small white envelope and a flower, smiling and looking at the camera, seated at a wooden table against a gold and brown background. {details}"
-            }
-          ]
-        },
-        {
-          "value": "princess",
-          "label": "Princess",
-          "sets": [
-            {
-              "node": "ff_effect",
-              "field": "lora_name",
-              "value": "princess_45_epochs.safetensors"
-            },
-            {
-              "node": "6",
-              "field": "text",
-              "value": "The video begins with an image of {subject}. A pr1nc355 princess transformation then happens as white sparkling light appears around them. They are now wearing a tiara, a long silver beaded gown and long silver gloves, seated in front of a table with gifts and candles in a room with white curtains. {details}"
-            }
-          ]
-        },
-        {
-          "value": "robot-face",
-          "label": "Robot face reveal",
-          "sets": [
-            {
-              "node": "ff_effect",
-              "field": "lora_name",
-              "value": "robot_face_reveal_35_epochs.safetensors"
-            },
-            {
-              "node": "6",
-              "field": "text",
-              "value": "The video shows the face of {subject}, with the r8b8t1c robotic face reveal starting with subtle movements, then lines appear on the face, the expression staying the same as the robot face is revealed. {details}"
-            }
-          ]
-        },
         {
           "value": "angry",
           "label": "Angry face",
@@ -718,57 +622,12 @@
       "optional": true
     },
     {
-      "repo": "Remade-AI/Robot-Face-Reveal",
-      "file": "robot_face_reveal_35_epochs.safetensors",
+      "repo": "Remade-AI/Cakeify",
+      "file": "cakeify_16_epochs.safetensors",
       "dir": "loras",
       "gb": 0.36,
       "phase": "denoise",
       "license": "Apache-2.0"
-    },
-    {
-      "repo": "Remade-AI/Assassin",
-      "file": "assassin_45_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "phase": "denoise",
-      "license": "Apache-2.0",
-      "optional": true
-    },
-    {
-      "repo": "Remade-AI/Baby",
-      "file": "baby_50_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "phase": "denoise",
-      "license": "Apache-2.0",
-      "optional": true
-    },
-    {
-      "repo": "Remade-AI/Bride",
-      "file": "bride_50_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "phase": "denoise",
-      "license": "Apache-2.0",
-      "optional": true
-    },
-    {
-      "repo": "Remade-AI/Classy",
-      "file": "classy_45_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "phase": "denoise",
-      "license": "Apache-2.0",
-      "optional": true
-    },
-    {
-      "repo": "Remade-AI/Princess",
-      "file": "princess_45_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "phase": "denoise",
-      "license": "Apache-2.0",
-      "optional": true
     },
     {
       "repo": "Remade-AI/angry-face",
@@ -818,15 +677,6 @@
     {
       "repo": "joyfox/WAN2.1-I2V-480P-Falling_US_dollars",
       "file": "money_000003000.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "phase": "denoise",
-      "license": "Apache-2.0",
-      "optional": true
-    },
-    {
-      "repo": "Remade-AI/Cakeify",
-      "file": "cakeify_16_epochs.safetensors",
       "dir": "loras",
       "gb": 0.36,
       "phase": "denoise",

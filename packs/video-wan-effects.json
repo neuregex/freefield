@@ -3,7 +3,7 @@
   "apps": [
     "effects"
   ],
-  "download_gb": 36.19,
+  "download_gb": 34.03,
   "needs_hf_token": false,
   "custom_nodes": [],
   "models": [
@@ -92,42 +92,6 @@
       ]
     },
     {
-      "repo": "Remade-AI/Assassin",
-      "file": "assassin_45_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "name": "assassin_45_epochs.safetensors",
-      "gated": false,
-      "license": "Apache-2.0",
-      "used_by": [
-        "effects"
-      ]
-    },
-    {
-      "repo": "Remade-AI/Baby",
-      "file": "baby_50_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "name": "baby_50_epochs.safetensors",
-      "gated": false,
-      "license": "Apache-2.0",
-      "used_by": [
-        "effects"
-      ]
-    },
-    {
-      "repo": "Remade-AI/Bride",
-      "file": "bride_50_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "name": "bride_50_epochs.safetensors",
-      "gated": false,
-      "license": "Apache-2.0",
-      "used_by": [
-        "effects"
-      ]
-    },
-    {
       "repo": "Remade-AI/Cakeify",
       "file": "cakeify_16_epochs.safetensors",
       "dir": "loras",
@@ -145,18 +109,6 @@
       "dir": "loras",
       "gb": 0.36,
       "name": "car_chase.safetensors",
-      "gated": false,
-      "license": "Apache-2.0",
-      "used_by": [
-        "effects"
-      ]
-    },
-    {
-      "repo": "Remade-AI/Classy",
-      "file": "classy_45_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "name": "classy_45_epochs.safetensors",
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
@@ -320,35 +272,11 @@
       ]
     },
     {
-      "repo": "Remade-AI/Princess",
-      "file": "princess_45_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "name": "princess_45_epochs.safetensors",
-      "gated": false,
-      "license": "Apache-2.0",
-      "used_by": [
-        "effects"
-      ]
-    },
-    {
       "repo": "Remade-AI/Puppy",
       "file": "puppy_50_epochs.safetensors",
       "dir": "loras",
       "gb": 0.36,
       "name": "puppy_50_epochs.safetensors",
-      "gated": false,
-      "license": "Apache-2.0",
-      "used_by": [
-        "effects"
-      ]
-    },
-    {
-      "repo": "Remade-AI/Robot-Face-Reveal",
-      "file": "robot_face_reveal_35_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "name": "robot_face_reveal_35_epochs.safetensors",
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [

@@ -24,8 +24,8 @@ function exampleTile(a, list) {
 
 // ------------------------------------------------------------------ Explore
 export function exploreView() {
-  const withEx = apps.filter((a) => a.example);
-  const hero = HERO.map((id) => byId.get(id)).filter((a) => a?.example);
+  const withEx = apps.filter((a) => a.example?.full);
+  const hero = HERO.map((id) => byId.get(id)).filter((a) => a?.example?.full);
   for (const a of withEx) if (hero.length < 6 && !hero.includes(a) && a.example.type === "video") hero.push(a);
 
   const row = el("div", { class: "hero-row" }, ...hero.map((a) => {
@@ -178,7 +178,7 @@ export function libraryView() {
       const n = flags.count();
       filter.replaceChildren(...(n || libFlagged ? [[false, t("lib.allex")], [true, t("lib.flagged", { n })]].map(([on, label]) =>
         el("button", { type: "button", "aria-pressed": String(libFlagged === on), onclick: () => { libFlagged = on; draw(); } }, label)) : []));
-      const withEx = apps.filter((a) => a.example && (!libFlagged || flags.is(flags.key(a.id))));
+      const withEx = apps.filter((a) => a.example?.full && (!libFlagged || flags.is(flags.key(a.id))));
       const grid = el("div");
       masonry(grid, withEx.map((a) => exampleTile(a, withEx)), { min: 250 });
       const walls = libFlagged ? flaggedOptions() : [];

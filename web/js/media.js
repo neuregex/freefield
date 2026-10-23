@@ -7,7 +7,7 @@ import { flagButton } from "./flags.js";
 /** A lab example (web/examples/index.json via /api/apps) as a result item. */
 export function exampleItem(app) {
   const ex = app?.example;
-  if (!ex) return null;
+  if (!ex?.full) return null;   // an entry with only per-option examples (the app's own case never ran) is not a tile
   const labels = Object.fromEntries(app.inputs.map((i) => [i.id, i]));
   return {
     kind: "example", key: `ex:${app.id}`, app: app.id, type: ex.type, card: ex.card || ex.full, poster: ex.poster, full: ex.full,

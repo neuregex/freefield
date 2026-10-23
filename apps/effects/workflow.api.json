@@ -216,7 +216,7 @@
         "37",
         0
       ],
-      "lora_name": "robot_face_reveal_35_epochs.safetensors",
+      "lora_name": "cakeify_16_epochs.safetensors",
       "strength_model": 1.0
     },
     "_meta": {

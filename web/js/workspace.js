@@ -174,7 +174,7 @@ export async function recreate(item, { run = false } = {}) {
 
 // ------------------------------------------------------------------ small parts
 function appThumb(a) {
-  const ex = a.example;
+  const ex = a.example?.full ? a.example : null;
   if (!ex) return el("span", { style: { display: "grid", placeItems: "center", width: "100%", height: "100%", color: "#55555c" } }, icon(iconOf(a)));
   const src = ex.type === "video" ? ex.poster : ex.card || ex.full;
   return el("img", { src, alt: "", loading: "lazy", class: ex.type === "audio" ? "contain" : null, style: ex.type === "audio" ? { objectFit: "contain" } : null });
@@ -556,7 +556,7 @@ let dense = store.get("dense", false);
 function relatedExamples(app) {
   const cat = categoryOf(app.id);
   const same = (CATEGORIES.find((c) => c.id === cat)?.apps || []).filter((id) => id !== app.id).map((id) => byId.get(id)).filter((a) => a?.example);
-  const rest = apps.filter((a) => a.example && a.id !== app.id && !same.includes(a) && a.section === app.section);
+  const rest = apps.filter((a) => a.example?.full && a.id !== app.id && !same.includes(a) && a.section === app.section);
   return [...same, ...rest].slice(0, 12);
 }
 

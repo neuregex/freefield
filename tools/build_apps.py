@@ -150,7 +150,7 @@ def ltx_v2v_local(api: Api, lora_file: str) -> None:
 
 
 CAMERAMAN = "LTX2.3-22B_IC-LoRA-Cameraman_v2_14000.safetensors"
-EFFECT_LORA = "robot_face_reveal_35_epochs.safetensors"   # Remade-AI's Robot Face Reveal: the effects app's default option
+EFFECT_LORA = "cakeify_16_epochs.safetensors"   # Remade-AI's Cakeify: the effects app's default option (Robot face reveal moved to morph)
 
 
 def ltx_cameraman(api: Api) -> None:
