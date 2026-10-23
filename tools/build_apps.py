@@ -237,14 +237,54 @@ UNION_STANDINS = {
 }
 
 
-def ltx_union_control(api: Api) -> None:
-    """Lightricks' Union Control IC-LoRA example (two stages): local text, no enhancer, edges from the core Canny node.
+def ltx_dub(api: Api) -> None:
+    """DubIt on LTX-2.5: the V2V IC-LoRA example with the DubIt LoRA and a fresh audio latent.
+
+    Lightricks' DubIt workflow is 2.3-only (dev checkpoint + distilled LoRA), but its shape is the
+    V2V one: the clip is the guide, its own audio the speaker reference (ref tokens), the new words
+    come in the prompt. Two differences from the V2V example, which only *keeps* the clip's audio: it
+    starts the sampler from that audio with noise_mask 0 ("frozen_audio"), so the first run
+    (20261022-181155-h100) came back with the old words, and it never attaches the reference tokens
+    (the node's conditioning outputs hang loose). DubIt's 2.3 example starts from an empty audio latent
+    and feeds the guider the conditioning with the reference tokens, taken after the IC guide.
+    """
+    ltx_v2v_local(api, DUBIT)
+    concat, ref, guide, guider = (find(api, t) for t in ("LTXVConcatAVLatent", "LTXVSetAudioRefTokens", "LTXAddVideoICLoRAGuide", "CFGGuider"))
+    assert api[concat]["inputs"]["audio_latent"] == [ref, 2], api[concat]["inputs"]
+    assert api[guider]["inputs"]["positive"] == [guide, 0], api[guider]["inputs"]
+    size, source = find(api, "GetImageSize"), find(api, "GetVideoComponents")
+    api["ff_audio_empty"] = {"class_type": "LTXVEmptyLatentAudio",
+                             "inputs": {"audio_vae": [find(api, "VAELoader", vae_name="ltx-2.5-audio-vae-bf16.safetensors"), 0],
+                                        "frames_number": [size, 2], "frame_rate": [source, 2], "batch_size": 1},
+                             "_meta": {"title": "New audio (not the clip's)"}}
+    put(api, concat, "audio_latent", ["ff_audio_empty", 0])
+    put(api, ref, "positive", [guide, 0])
+    put(api, ref, "negative", [guide, 1])
+    put(api, guider, "positive", [ref, 0])
+    put(api, guider, "negative", [ref, 1])
+    api[ref]["_meta"] = {"title": "Speaker reference (the clip's own voice)"}
+
+
+def merge(api: Api, other: Api, prefix: str) -> None:
+    """Add every node of `other` to `api` under "<prefix>:<id>", links rewritten."""
+    for i, n in other.items():
+        node = json.loads(json.dumps(n))
+        for k, v in node["inputs"].items():
+            if is_link(v):
+                node["inputs"][k] = [f"{prefix}:{v[0]}", v[1]]
+        api[f"{prefix}:{i}"] = node
+
+
+def ltx_union_control(api: Api, edit: Api) -> None:
+    """Lightricks' Union Control IC-LoRA example (two stages) as a one-click restyle: the clip's first frame
+    is redrawn in the chosen look by FLUX 3 Klein (the `edit` pipeline, merged in under "edit:"), that still
+    opens the video ("use image input" on), and the clip's edges from the core Canny node keep the structure.
 
     The example turns the reference clip into a control signal with an annotator: Video Depth Anything by
-    default, Canny or DWPose as alternatives, all three custom nodes. Core ComfyUI has Canny, so the edge
-    branch is the one wired in; it keeps the clip's structure and leaves the look to the prompt, which is what
-    a restyle needs. The optional first frame stays as in the example ("use image input" off: LoadImage keeps
-    ComfyUI's bundled example.png, which is never read while the switch is off).
+    default, Canny or DWPose as alternatives, all three custom nodes; Canny exists in core, so that branch is
+    wired in. The first run (20261022-181155-h100) with edges and the look only in the prompt gave the same
+    photoreal footage in 14 of 16 looks: the control LoRA reproduces what it is guided with, and the look has
+    to come in through the first frame, as the example's image input is meant to be used.
     """
     ltx_local_text(api)
     # the prompt is "<look>. <what is in the shot>": the look picker writes ff_style, the text box writes 5508
@@ -262,6 +302,25 @@ def ltx_union_control(api: Api) -> None:
     drop(api, guide_out, find(api, "VideoDepthAnythingProcess"), find(api, "LoadVideoDepthAnythingModel"),
          find(api, "CannyEdgePreprocessor"), find(api, "DWPreprocessor"))
     put(api, find(api, "LTXICLoRALoaderModelOnly"), "lora_name", UNION_CONTROL)
+    # first frame → FLUX 3 Klein edit in the chosen look → the video's first frame
+    merge(api, edit, "edit")
+    drop(api, "edit:9")   # its SaveImage: the still is an intermediate, not an output
+    source = find(api, "GetVideoComponents")
+    api["ff_first_frame"] = {"class_type": "ImageFromBatch", "inputs": {"image": [source, 0], "batch_index": 0, "length": 1},
+                             "_meta": {"title": "First frame of the clip"}}
+    rewire(api, ["edit:11", 0], ["ff_first_frame", 0])
+    drop(api, "edit:11")
+    api["ff_edit_prompt"] = {"class_type": "StringConcatenate",
+                             "inputs": {"string_a": "Redraw this exact photo in this look, keeping the composition, the people and the place:",
+                                        "string_b": ["ff_style", 0], "delimiter": " "},
+                             "_meta": {"title": "Edit instruction"}}
+    put(api, "edit:4", "text", ["ff_edit_prompt", 0])
+    styled = find(api, "VAEDecode", vae=["edit:3", 0])
+    load_image = find(api, "LoadImage")
+    rewire(api, [load_image, 0], [styled, 0])
+    drop(api, load_image)
+    use_image = find(api, "PrimitiveBoolean", value=False)
+    put(api, use_image, "value", True)
 
 
 def ltx_ingredients(api: Api) -> None:
@@ -325,8 +384,15 @@ def ltx_outpaint(api: Api) -> None:
                      "inputs": {"image": ["ff_fit", 0], "left": ["ff_left", 1], "top": ["ff_top", 1], "right": ["ff_right", 1],
                                 "bottom": ["ff_bottom", 1], "feathering": api[pad]["inputs"].get("feathering", 0)},
                      "_meta": {"title": "Pad to the target"}}
+    # the core pad returns one mask, the KJ node one per frame; the example's Laplacian blends trim every
+    # input to the shortest, so a one-frame mask leaves a one-frame video (run 20261022-181155-h100)
+    api["ff_mask_img"] = {"class_type": "MaskToImage", "inputs": {"mask": ["ff_pad", 1]}, "_meta": {"title": "Mask as image"}}
+    api["ff_mask_rep"] = {"class_type": "RepeatImageBatch", "inputs": {"image": ["ff_mask_img", 0], "amount": ["ff_size", 2]},
+                          "_meta": {"title": "One mask per frame"}}
+    api["ff_mask"] = {"class_type": "ImageToMask", "inputs": {"image": ["ff_mask_rep", 0], "channel": "red"},
+                      "_meta": {"title": "Padding mask"}}
     rewire(api, [pad, 0], ["ff_pad", 0])
-    rewire(api, [pad, 1], ["ff_pad", 1])
+    rewire(api, [pad, 1], ["ff_mask", 0])
     drop(api, pad)
     put(api, find(api, "LTXICLoRALoaderModelOnly"), "lora_name", IN_OUTPAINTING)
 
@@ -432,13 +498,13 @@ def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None)
     ltx_outpaint(op)
     out["reframe"] = op
     uc = ltxwf("LTX-2.5_ICLoRA_Union_Control_Distilled.json", UNION_STANDINS)
-    ltx_union_control(uc)
+    ltx_union_control(uc, e)
     out["mixed-media"] = uc
     # DubIt on 2.5: Lightricks only published a 2.3 workflow (dev checkpoint + distilled LoRA), but its shape is
     # the V2V IC-LoRA one: the clip is the guide, its audio the speaker reference, the new words come in the
     # prompt. The 2.5 V2V example already freezes the clip's audio as reference tokens, so only the LoRA differs.
     dub = ltxwf("LTX-2.5_V2V_ICLoRA_Single_Stage_Distilled.json")
-    ltx_v2v_local(dub, DUBIT)
+    ltx_dub(dub)
     out["dub"] = dub
 
     cm = tpl("video_wan2_2_14B_fun_camera.json")

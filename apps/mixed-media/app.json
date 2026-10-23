@@ -6,12 +6,12 @@
   "pack": "video-ltx25",
   "status": "ready",
   "higgsfield_feature": "Mixed Media",
-  "summary": "Restyles a clip in one of 16 looks: the clip's edges keep its structure (Union Control IC-LoRA) and the prompt sets the look.",
+  "summary": "Restyles a clip in one of 16 looks: FLUX 3 Klein redraws the first frame in the look, and the clip's edges keep its structure (Union Control IC-LoRA).",
   "workflow": "workflow.api.json",
   "source": {
-    "template": "ComfyUI-LTXVideo example_workflows/2.5/LTX-2.5_ICLoRA_Union_Control_Distilled.json (44c8a36)",
+    "template": "ComfyUI-LTXVideo example_workflows/2.5/LTX-2.5_ICLoRA_Union_Control_Distilled.json (44c8a36) + comfyui_workflow_templates image_flux3_klein_distilled_image_edit.json (0.1.115)",
     "comfyui": "0.42.0",
-    "notes": "Gemma API text encoder removed (local encoding only), int8 weights, prompt enhancer removed. The example's annotators (Video Depth Anything, DWPose, Canny: all custom nodes) are replaced by the core Canny node on the edge branch. The optional first frame works as in the example: 'use image input' off unless you turn it on. The LoRA was trained on LTX-2.3; Lightricks' own 2.5 example uses it. Not run yet."
+    "notes": "Gemma API text encoder removed (local encoding only), int8 weights, prompt enhancer removed. The example's annotators (Video Depth Anything, DWPose, Canny: all custom nodes) are replaced by the core Canny node on the edge branch. The example's optional first frame is always on and comes from the `edit` pipeline merged into the graph (nodes edit:*): the clip's first frame redrawn in the look. The first lab run with the look only in the prompt gave photoreal footage back in 14 of 16 looks. The LoRA was trained on LTX-2.3; Lightricks' own 2.5 example uses it."
   },
   "outputs": [
     {
@@ -251,33 +251,6 @@
       ]
     },
     {
-      "id": "image",
-      "type": "image",
-      "label": "Styled first frame",
-      "limits": {
-        "max_mb": 20
-      },
-      "help": "Optional: a still already in the look (from Image styles, say). Turn on the switch below to use it",
-      "bind": [
-        {
-          "node": "2004",
-          "field": "image"
-        }
-      ]
-    },
-    {
-      "id": "use_image",
-      "type": "toggle",
-      "label": "Use the styled first frame",
-      "default": false,
-      "bind": [
-        {
-          "node": "5014:5506",
-          "field": "value"
-        }
-      ]
-    },
-    {
       "id": "size",
       "type": "select",
       "label": "Resolution (short side)",
@@ -337,6 +310,10 @@
         {
           "node": "5517:4967",
           "field": "noise_seed"
+        },
+        {
+          "node": "edit:7",
+          "field": "seed"
         }
       ]
     }
@@ -394,6 +371,33 @@
       "gb": 0.65,
       "phase": "denoise",
       "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "phase": "aux",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "phase": "aux",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "aux",
+      "gated": true,
+      "license": "FLUX Kommunity License"
     }
   ],
   "custom_nodes": [
@@ -404,7 +408,8 @@
   ],
   "credits": [
     "LTX-2.5 and the Union Control IC-LoRA by Lightricks",
-    "Workflow adapted from Lightricks' ComfyUI-LTXVideo examples"
+    "FLUX 3 Image Klein by Black Forest Labs",
+    "Workflow adapted from Lightricks' ComfyUI-LTXVideo examples and ComfyUI's FLUX 3 Klein edit template"
   ],
   "test": {
     "clip": "test/clip.mp4",

@@ -42,7 +42,7 @@
       "type": "textarea",
       "label": "Describe the scene",
       "required": true,
-      "default": "The man on the left rides the red bicycle in the middle along the beach boardwalk on the right, golden hour, handheld camera following him",
+      "default": "The man on the left, wearing his red jacket, rides the red bicycle from the middle along the beach boardwalk on the right, golden hour, handheld camera following him",
       "help": "Say which element is which: the woman on the left, the jacket in the middle, the place on the right",
       "bind": [
         {
@@ -182,8 +182,8 @@
       "dir": "loras",
       "gb": 1.31,
       "phase": "denoise",
-      "gated": true,
-      "license": "LTX-2.x Community License"
+      "license": "LTX-2.x Community License",
+      "gated": true
     }
   ],
   "custom_nodes": [

@@ -45,7 +45,7 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 | `genjutsu` | Genjutsu | LTX-2.5 + Ingredients IC-LoRA: one reference sheet (people, props, a place side by side) composed into a clip | tight: 22.8 GB largest phase | ready |
 | `reframe` | Reframe | LTX-2.5 + In-Outpainting IC-LoRA (2.3), two stages: a new aspect ratio with the missing parts painted in | tight: 22.8 GB largest phase | ready |
 | `sdr-hdr` | SDR to HDR | LTX-2.5 + SDR-to-HDR IC-LoRA and its scene embeddings (no text encoder): a 10-bit HLG master plus a tone-mapped preview | tight: 22.8 GB largest phase | ready |
-| `mixed-media` | Mixed Media | LTX-2.5 + Union Control IC-LoRA (2.3), two stages: the clip's edges (core Canny) keep its structure, a picker of 16 looks sets the prompt | tight: 22.1 GB largest phase | ready |
+| `mixed-media` | Mixed Media | FLUX 3 Klein redraws the clip's first frame in one of 16 looks, then LTX-2.5 + Union Control IC-LoRA (2.3), two stages, follows it with the clip's edges (core Canny) as structure | tight: 22.1 GB largest phase | ready |
 | `dub` | Lipsync Studio (dub) | LTX-2.5 + DubIt IC-LoRA (2.3): new words in the prompt, the clip as guide and its audio as the speaker reference; Lightricks' DubIt workflow exists only for 2.3, this is a port | needs Modal: 24.0 GB denoise phase (the LoRA is 2.5 GB) | ready |
 | `effects` | Effects | Wan 2.1 image-to-video 14B (fp8) + 35 effect LoRAs, 30 of them by Remade-AI (Cakeify, Robot face reveal, Money rain, 360° orbit…), picked from a gallery, with a 6-step fast preset | fits by phases, 16.8 GB | ready |
 | `music` | Audio | MiniMax Music 3 | fits whole, 14.3 GB | ready |

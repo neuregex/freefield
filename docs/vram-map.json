@@ -2308,13 +2308,13 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
-      "whole_gb": 40.35,
+      "whole_gb": 51.38,
       "phases_gb": {
         "encode": 15.37,
         "denoise": 22.15,
         "denoise2": 0.0,
         "decode": 1.83,
-        "aux": 1.0
+        "aux": 5.83
       },
       "largest_phase": "denoise",
       "largest_phase_gb": 22.15,

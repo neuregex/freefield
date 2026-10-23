@@ -124,7 +124,7 @@
      "values": {"prompt": "A reference sheet on a plain white background: three photos side by side separated by thin grey lines. Left: full body photo of a young man in a red jacket, jeans and white sneakers. Middle: a vintage red bicycle with a wicker basket, side view. Right: a sunny beach boardwalk with palm trees and the sea behind. Clean studio lighting, photorealistic, no text", "width": 1536, "height": 768},
      "note": "Ingredients sheet for Genjutsu: a person, a prop and a place, named by position in the prompt."},
     {"id": "genjutsu-bike", "showcase": true, "app": "genjutsu",
-     "values": {"sheet": "@case:ref-sheet", "prompt": "The man on the left rides the red bicycle from the middle along the beach boardwalk on the right, golden hour, the camera tracks alongside him, palm trees passing by", "negative": "", "duration": 5, "size": 544},
+     "values": {"sheet": "@case:ref-sheet", "prompt": "The man on the left, wearing his red jacket, rides the red bicycle from the middle along the beach boardwalk on the right, golden hour, the camera tracks alongside him, palm trees passing by", "negative": "", "duration": 5, "size": 544},
      "note": "The man, the bicycle and the boardwalk should all come from the sheet; the sheet itself must not appear as a frame."},
     {"id": "reframe-vertical", "showcase": true, "app": "reframe", "values": {"clip": "@case:ref-street", "aspect": "9:16", "prompt": "", "negative": ""},
      "note": "16:9 street → 9:16: the original stays sharp in the middle band; the painted top and bottom (sky, pavement, building fronts) must continue it without a visible seam or green edge."},

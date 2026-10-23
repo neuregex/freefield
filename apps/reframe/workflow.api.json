@@ -203,8 +203,8 @@
     "class_type": "ResizeImageMaskNode",
     "inputs": {
       "input": [
-        "ff_pad",
-        1
+        "ff_mask",
+        0
       ],
       "resize_type.match": [
         "5408:5360",
@@ -1068,6 +1068,47 @@
     },
     "_meta": {
       "title": "Pad to the target"
+    }
+  },
+  "ff_mask_img": {
+    "class_type": "MaskToImage",
+    "inputs": {
+      "mask": [
+        "ff_pad",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "Mask as image"
+    }
+  },
+  "ff_mask_rep": {
+    "class_type": "RepeatImageBatch",
+    "inputs": {
+      "image": [
+        "ff_mask_img",
+        0
+      ],
+      "amount": [
+        "ff_size",
+        2
+      ]
+    },
+    "_meta": {
+      "title": "One mask per frame"
+    }
+  },
+  "ff_mask": {
+    "class_type": "ImageToMask",
+    "inputs": {
+      "image": [
+        "ff_mask_rep",
+        0
+      ],
+      "channel": "red"
+    },
+    "_meta": {
+      "title": "Padding mask"
     }
   }
 }

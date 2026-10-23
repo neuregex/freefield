@@ -32,7 +32,7 @@
     "video-t2v",
     "volcano-ad"
   ],
-  "download_gb": 55.0,
+  "download_gb": 66.03,
   "needs_hf_token": true,
   "custom_nodes": [
     {
@@ -41,6 +41,18 @@
     }
   ],
   "models": [
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "name": "flux3-image-klein-int8-convrot.safetensors",
+      "gated": true,
+      "license": "FLUX Kommunity License",
+      "used_by": [
+        "mixed-media"
+      ]
+    },
     {
       "repo": "Lightricks/LTX-2.5",
       "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
@@ -333,6 +345,30 @@
         "video",
         "video-t2v",
         "volcano-ad"
+      ]
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "name": "qwen3vl_4b_int8_convrot.safetensors",
+      "gated": true,
+      "license": "FLUX Kommunity License",
+      "used_by": [
+        "mixed-media"
+      ]
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "name": "flux2-vae.safetensors",
+      "gated": true,
+      "license": "FLUX Kommunity License",
+      "used_by": [
+        "mixed-media"
       ]
     },
     {

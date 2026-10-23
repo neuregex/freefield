@@ -1,13 +1,4 @@
 {
-  "2004": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "example.png"
-    },
-    "_meta": {
-      "title": "Load Image"
-    }
-  },
   "4852": {
     "class_type": "SaveVideo",
     "inputs": {
@@ -150,7 +141,7 @@
     "class_type": "ResizeImageMaskNode",
     "inputs": {
       "input": [
-        "2004",
+        "edit:8",
         0
       ],
       "resize_type": "scale longer dimension",
@@ -176,7 +167,7 @@
   "5014:5506": {
     "class_type": "PrimitiveBoolean",
     "inputs": {
-      "value": false
+      "value": true
     },
     "_meta": {
       "title": "Boolean"
@@ -775,6 +766,164 @@
     },
     "_meta": {
       "title": "Edges of the reference clip"
+    }
+  },
+  "edit:1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "flux3-image-klein-int8-convrot.safetensors",
+      "weight_dtype": "default"
+    },
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "edit:2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_4b_int8_convrot.safetensors",
+      "type": "flux3",
+      "device": "default"
+    },
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "edit:3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "flux2-vae.safetensors"
+    },
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "edit:4": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "edit:2",
+        0
+      ],
+      "text": [
+        "ff_edit_prompt",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Positive Prompt"
+    }
+  },
+  "edit:7": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": [
+        "edit:1",
+        0
+      ],
+      "positive": [
+        "edit:17",
+        0
+      ],
+      "negative": [
+        "edit:17",
+        1
+      ],
+      "latent_image": [
+        "edit:17",
+        2
+      ],
+      "seed": 563228241303057,
+      "steps": 16,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1
+    },
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "edit:8": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "edit:7",
+        0
+      ],
+      "vae": [
+        "edit:3",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "edit:17": {
+    "class_type": "ReferenceMultiLatent",
+    "inputs": {
+      "positive": [
+        "edit:4",
+        0
+      ],
+      "negative": [
+        "edit:32",
+        0
+      ],
+      "vae": [
+        "edit:3",
+        0
+      ],
+      "images.image0": [
+        "ff_first_frame",
+        0
+      ],
+      "resolution": "resize",
+      "resolution.megapixels": 1
+    },
+    "_meta": {
+      "title": "Set Reference Multi Latent"
+    }
+  },
+  "edit:32": {
+    "class_type": "ConditioningZeroOut",
+    "inputs": {
+      "conditioning": [
+        "edit:4",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Conditioning Zero Out"
+    }
+  },
+  "ff_first_frame": {
+    "class_type": "ImageFromBatch",
+    "inputs": {
+      "image": [
+        "5548:5000",
+        0
+      ],
+      "batch_index": 0,
+      "length": 1
+    },
+    "_meta": {
+      "title": "First frame of the clip"
+    }
+  },
+  "ff_edit_prompt": {
+    "class_type": "StringConcatenate",
+    "inputs": {
+      "string_a": "Redraw this exact photo in this look, keeping the composition, the people and the place:",
+      "string_b": [
+        "ff_style",
+        0
+      ],
+      "delimiter": " "
+    },
+    "_meta": {
+      "title": "Edit instruction"
     }
   }
 }
