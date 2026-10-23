@@ -17,12 +17,12 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 
 | | |
 |---|---|
-| Apps | 102 manifests, each with a workflow: 29 *ready* that ran on a GPU, 5 IC-LoRA apps with their own workflows (`genjutsu`, `reframe`, `sdr-hdr`, `mixed-media`, `dub`) that ran on an H100 on 22–23 Oct, `morph` (lab run pending), 66 template apps (a fixed prompt over the `edit`, `z-image`, `video` or `relight` pipeline, written by `tools/template_apps.py`; their lab runs are pending) and 1 *draft* (`reshoot`: it runs, but parts of the new view come out unfilled) |
+| Apps | 102 manifests, each with a workflow: 29 *ready* that ran on a GPU, 5 IC-LoRA apps with their own workflows (`genjutsu`, `reframe`, `sdr-hdr`, `mixed-media`, `dub`) that ran on an H100 on 22–23 Oct, `morph` (ran on an H100, 23 Oct), 66 template apps (a fixed prompt over the `edit`, `z-image`, `video` or `relight` pipeline, written by `tools/template_apps.py`; their lab runs are pending) and 1 *draft* (`reshoot`: it runs, but parts of the new view come out unfilled) |
 | Workflows | Built from official sources by `tools/build_apps.py` (the two smoke apps are hand-written) and accepted by ComfyUI's validator: ComfyUI `e3bee7f` (0.42.0), ComfyUI-LTXVideo `44c8a36`, ComfyUI-CrossViewWarp `fbb1e93` |
-| LoRA lab | 213 cases, one showcase per app plus one per effect (35), one per look of `mixed-media` (16) and one per transformation of `morph` (9), plus 12 style-drift experiments; the prompt each one would queue (values, overrides and inserted LoRAs) passes the same validator |
+| LoRA lab | 213 cases, one showcase per app plus one per effect (30), one per look of `mixed-media` (16) and one per transformation of `morph` (9), plus 12 style-drift experiments; the prompt each one would queue (values, overrides and inserted LoRAs) passes the same validator |
 | End to end | Web UI → server → gateway → comfy-api-proxy → ComfyUI tested with the model-free smoke apps; lab chaining tested the same way |
 | CI | `.github/workflows/validate.yml` runs all of the above on every push, including a CPU-only ComfyUI that checks every workflow and lab case (about 3 minutes) |
-| GPU runs | Showcase lab run on an L40S (`20261020-133620-l40s`): 35 of 36 cases, one example per app; `recast` failed there and passed in a re-run (`20261020-162214-l40s`). Effects on 4 H100s at once (`20261021-140940-h100`, `--shards 4`): 61 of 61 cases in about 31 minutes of GPU, 2 min 52 s per effect on average, peak 30.8 GB. Two more H100 rounds (`20261021-152107-h100`, `20261021-175735-h100`) re-ran the 5 that failed with new photos and tried 7 LoRAs by other authors: Painting, Pirate captain, Zen and Crash zoom out were taken out, Dolly zoom and Bullet time moved to ostris's and joyfox's LoRAs, and Money rain, Clones and Steam from nose and ears were added. A fourth round (`20261021-195731-h100`, 14 of 14 cases) ran the new ones as shipped; after it, Jungle, Samurai, Warrior, Jumpscare, Smoke outfit change and Gothic transformation were taken out to keep the app SFW. That leaves 35 effects, each with an example in the gallery. VRAM figures below are weight sizes; the lab's measured peaks show up in the web UI |
+| GPU runs | Showcase lab run on an L40S (`20261020-133620-l40s`): 35 of 36 cases, one example per app; `recast` failed there and passed in a re-run (`20261020-162214-l40s`). Effects on 4 H100s at once (`20261021-140940-h100`, `--shards 4`): 61 of 61 cases in about 31 minutes of GPU, 2 min 52 s per effect on average, peak 30.8 GB. Two more H100 rounds (`20261021-152107-h100`, `20261021-175735-h100`) re-ran the 5 that failed with new photos and tried 7 LoRAs by other authors: Painting, Pirate captain, Zen and Crash zoom out were taken out, Dolly zoom and Bullet time moved to ostris's and joyfox's LoRAs, and Money rain, Clones and Steam from nose and ears were added. A fourth round (`20261021-195731-h100`, 14 of 14 cases) ran the new ones as shipped; after it, Jungle, Samurai, Warrior, Jumpscare, Smoke outfit change and Gothic transformation were taken out to keep the app SFW. That left 35 effects; on 23 Oct five more (Mona Lisa, VIP, Cartoon jaw drop, Selfie with younger self, Clones) were marked mediocre in the web UI (they lose the face or look flat at 480p) and moved to the `morph` app, which keeps the face: 30 effects, each with an example in the gallery. VRAM figures below are weight sizes; the lab's measured peaks show up in the web UI |
 
 ## Apps
 
@@ -46,9 +46,9 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 | `reframe` | Reframe | LTX-2.5 + In-Outpainting IC-LoRA (2.3), two stages: a new aspect ratio with the missing parts painted in | tight: 22.8 GB largest phase | ready |
 | `sdr-hdr` | SDR to HDR | LTX-2.5 + SDR-to-HDR IC-LoRA and its scene embeddings (no text encoder): a 10-bit HLG master plus a tone-mapped preview | tight: 22.8 GB largest phase | ready |
 | `mixed-media` | Mixed Media | FLUX 3 Klein redraws the clip's first frame in one of 16 looks, then LTX-2.5 + Union Control IC-LoRA (2.3), two stages, follows it with the clip's edges (core Canny) as structure | tight: 22.1 GB largest phase | ready |
-| `morph` | Effects (transformations) | FLUX 3 Klein redraws the photo as the transformation (Renaissance portrait, red carpet, younger self, clones, cartoon, statue, old age, astronaut, knight) and LTX-2.5 + the transition LoRA morphs the photo into it: the face stays | tight: 21.9 GB largest phase | ready |
+| `morph` | Effects (transformations) | FLUX 3 Klein redraws the photo as the transformation (Renaissance portrait, red carpet, younger self, clones, cartoon, statue, old age, astronaut, knight) and LTX-2.5 + the transition LoRA morphs the photo into it: the face stays (ran on an H100, 23 Oct) | tight: 21.9 GB largest phase | ready |
 | `dub` | Lipsync Studio (dub) | LTX-2.5 + DubIt IC-LoRA (2.3): new words in the prompt, the clip as guide and its audio as the speaker reference; Lightricks' DubIt workflow exists only for 2.3, this is a port | needs Modal: 24.0 GB denoise phase (the LoRA is 2.5 GB) | ready |
-| `effects` | Effects | Wan 2.1 image-to-video 14B (fp8) + 35 effect LoRAs, 30 of them by Remade-AI (Cakeify, Robot face reveal, Money rain, 360° orbit…), picked from a gallery, with a 6-step fast preset | fits by phases, 16.8 GB | ready |
+| `effects` | Effects | Wan 2.1 image-to-video 14B (fp8) + 30 effect LoRAs, 26 of them by Remade-AI (Cakeify, Robot face reveal, Money rain, 360° orbit…), picked from a gallery, with a 6-step fast preset | fits by phases, 16.8 GB | ready |
 | `music` | Audio | MiniMax Music 3 | fits whole, 14.3 GB | ready |
 | `sfx` | Audio | Stable Audio 3 medium | fits whole, 10.4 GB | ready |
 | `recast` | Character swap | SCAIL-2 (int8) + SAM 3.1 tracking: replace a person in a video, or animate a character | fits by phases, 18.6 GB | ready |
@@ -215,19 +215,19 @@ modal run --detach lab/lab_modal.py --showcase    # one example per app + the re
 modal run lab/lab_modal.py --pull <run_id>        # only if the terminal closed before the end: copy back and publish
 ```
 
-The effects app has one case per effect (`fx-*`, 35 of them, on synthetic people, objects and scenes made
+The effects app has one case per effect (`fx-*`, 30 of them, on synthetic people, objects and scenes made
 by `z-image` in the same run). Its effect picker is a *gallery* input, so `lab/publish.py` also keeps one example per
 effect (`web/examples/effects/options/`): the picker shows them as cards and *Explore* gets a wall of effects. A run
 of a few effects adds to that gallery without replacing the rest.
 
 ```sh
-modal run --detach lab/lab_modal.py --apps effects --shards 4   # 35 effects + their 19 reference stills, on 4 GPUs at once
+modal run --detach lab/lab_modal.py --apps effects --shards 4   # 30 effects + their 19 reference stills, on 4 GPUs at once
 modal run lab/lab_modal.py --only fx-cakeify,fx-squish          # re-run a few after changing their prompt
 ```
 
 `--shards N` works with any selection: it splits the cases over N GPU containers that run at the same time, keeping
-the cases that read the same reference together so each reference is made once (the 35 effects become 4 groups of
-8 or 9). The GPU time stays about the same, plus loading the models once per container; the wait drops to about 1/N.
+the cases that read the same reference together so each reference is made once (the 30 effects become 4 groups of
+7 or 8). The GPU time stays about the same, plus loading the models once per container; the wait drops to about 1/N.
 The groups write to `<run_id>-s1`, `-s2`… on the volume and come back merged into one `lab/results/<run_id>`, with one
 `review.html`; `--pull <run_id>` merges them the same way.
 
@@ -282,8 +282,8 @@ Audio Community License, MiniMax H3 Community License). Some community LoRAs are
 `app.json` says so and the web UI shows it next to the model. Workflows are adapted from ComfyUI's official templates and Lightricks' ComfyUI-LTXVideo examples;
 the cloud text-encoder branch in Lightricks' examples is removed so every app runs on open weights only. Camera and
 lens vocabulary in `cinema-studio` comes from [open-higgsfield-ai](https://github.com/sunnychase/open-higgsfield-ai) (MIT).
-30 of the 35 effect LoRAs in `effects` are [Remade-AI](https://huggingface.co/Remade-AI)'s; the other 5 are by
-[joyfox](https://huggingface.co/joyfox) (Bullet time, Money rain, Clones; its repos moved there from valiantcat and laozou),
+26 of the 30 effect LoRAs in `effects` are [Remade-AI](https://huggingface.co/Remade-AI)'s; the other 4 are by
+[joyfox](https://huggingface.co/joyfox) (Bullet time, Money rain; its repos moved there from valiantcat and laozou),
 [ostris](https://huggingface.co/ostris) (Dolly zoom) and
 [lvfengchun](https://huggingface.co/lvfengchun) (Steam from nose and ears), all Apache-2.0. Each effect's prompt follows the
 example on its model card and keeps its trigger words. Nine of Remade-AI's image-to-video LoRAs are left out: the ones that undress someone, fire a gun, make two

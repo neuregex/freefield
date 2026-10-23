@@ -6,7 +6,7 @@
   "pack": "video-wan-effects",
   "status": "ready",
   "higgsfield_feature": "Effects",
-  "summary": "Turns a photo into a 5-second effect clip: 35 open effect LoRAs, from Cakeify and a robot face reveal to money rain and a 360° orbit (Wan 2.1 image-to-video).",
+  "summary": "Turns a photo into a 5-second effect clip: 30 open effect LoRAs, from Cakeify and a robot face reveal to money rain and a 360° orbit (Wan 2.1 image-to-video).",
   "workflow": "workflow.api.json",
   "source": {
     "template": "image_to_video_wan.json",
@@ -100,22 +100,6 @@
           ]
         },
         {
-          "value": "mona-lisa",
-          "label": "Mona Lisa",
-          "sets": [
-            {
-              "node": "ff_effect",
-              "field": "lora_name",
-              "value": "mona_lisa_45_epochs.safetensors"
-            },
-            {
-              "node": "6",
-              "field": "text",
-              "value": "The video starts with an image of {subject}. The m0n4 Mona Lisa transformation begins as a dark sheet seems to wrap around them, and when the image resolves, they are depicted as a Mona Lisa version of themselves, seated in a chair with a landscape painting backdrop. {details}"
-            }
-          ]
-        },
-        {
           "value": "princess",
           "label": "Princess",
           "sets": [
@@ -144,22 +128,6 @@
               "node": "6",
               "field": "text",
               "value": "The video shows the face of {subject}, with the r8b8t1c robotic face reveal starting with subtle movements, then lines appear on the face, the expression staying the same as the robot face is revealed. {details}"
-            }
-          ]
-        },
-        {
-          "value": "vip",
-          "label": "VIP red carpet",
-          "sets": [
-            {
-              "node": "ff_effect",
-              "field": "lora_name",
-              "value": "vip_50_epochs.safetensors"
-            },
-            {
-              "node": "6",
-              "field": "text",
-              "value": "The video begins with an image of {subject}. Then the v1p red carpet transformation appears: they are shown wearing an elegant black dress with gold jewelry. The v1p red carpet transformation continues, and they are now on the red carpet, with photographers taking pictures behind a barricade. {details}"
             }
           ]
         },
@@ -212,22 +180,6 @@
           ]
         },
         {
-          "value": "jaw-drop",
-          "label": "Cartoon jaw drop",
-          "sets": [
-            {
-              "node": "ff_effect",
-              "field": "lora_name",
-              "value": "cartoon_jaw_drop_50_epochs.safetensors"
-            },
-            {
-              "node": "6",
-              "field": "text",
-              "value": "The video shows {subject}, who is smiling wide, then their mouth transforms into a dr0p_j88 comical jaw drop, extending down in a long, rectangular shape, and revealing the tongue and teeth. {details}"
-            }
-          ]
-        },
-        {
           "value": "puppies",
           "label": "Surrounded by puppies",
           "sets": [
@@ -240,22 +192,6 @@
               "node": "6",
               "field": "text",
               "value": "The video begins with a close-up portrait of {subject}. The background changes and then the pu11y puppy effect begins. They are now surrounded by many puppies and pet the puppies. {details}"
-            }
-          ]
-        },
-        {
-          "value": "selfie-younger",
-          "label": "Selfie with younger self",
-          "sets": [
-            {
-              "node": "ff_effect",
-              "field": "lora_name",
-              "value": "selfie_younger_self_15_epochs.safetensors"
-            },
-            {
-              "node": "6",
-              "field": "text",
-              "value": "The video starts with {subject} smiling at the camera, then s31lf13 taking a selfie with their younger self, and the younger self appears next to them with similar facial features and eye color. The younger self is smiling slightly. {details}"
             }
           ]
         },
@@ -288,22 +224,6 @@
               "node": "6",
               "field": "text",
               "value": "飘落的美钞。The video shows {subject}, smiling as US dollar bills fall from above all around them. {details}"
-            }
-          ]
-        },
-        {
-          "value": "clones",
-          "label": "Clones",
-          "sets": [
-            {
-              "node": "ff_effect",
-              "field": "lora_name",
-              "value": "fensheng_000003500.safetensors"
-            },
-            {
-              "node": "6",
-              "field": "text",
-              "value": "镜头快速拉远，人物快速分裂出三个做着相同战斗姿势的影分身，站成一排，全身一直散发着浓烈的金色能量，分身保持人物一致性，令人惊叹的视觉效果。The video shows {subject}. {details}"
             }
           ]
         },
@@ -842,26 +762,8 @@
       "optional": true
     },
     {
-      "repo": "Remade-AI/Mona-Lisa",
-      "file": "mona_lisa_45_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "phase": "denoise",
-      "license": "Apache-2.0",
-      "optional": true
-    },
-    {
       "repo": "Remade-AI/Princess",
       "file": "princess_45_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "phase": "denoise",
-      "license": "Apache-2.0",
-      "optional": true
-    },
-    {
-      "repo": "Remade-AI/VIP",
-      "file": "vip_50_epochs.safetensors",
       "dir": "loras",
       "gb": 0.36,
       "phase": "denoise",
@@ -896,26 +798,8 @@
       "optional": true
     },
     {
-      "repo": "Remade-AI/Cartoon_Jaw_Drop",
-      "file": "cartoon_jaw_drop_50_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "phase": "denoise",
-      "license": "Apache-2.0",
-      "optional": true
-    },
-    {
       "repo": "Remade-AI/Puppy",
       "file": "puppy_50_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "phase": "denoise",
-      "license": "Apache-2.0",
-      "optional": true
-    },
-    {
-      "repo": "Remade-AI/Selfie-With-Younger-Self",
-      "file": "selfie_younger_self_15_epochs.safetensors",
       "dir": "loras",
       "gb": 0.36,
       "phase": "denoise",
@@ -934,15 +818,6 @@
     {
       "repo": "joyfox/WAN2.1-I2V-480P-Falling_US_dollars",
       "file": "money_000003000.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "phase": "denoise",
-      "license": "Apache-2.0",
-      "optional": true
-    },
-    {
-      "repo": "joyfox/wan2.1_I2V480P_fenshengshu_lora",
-      "file": "fensheng_000003500.safetensors",
       "dir": "loras",
       "gb": 0.36,
       "phase": "denoise",

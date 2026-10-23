@@ -3,7 +3,7 @@
   "apps": [
     "effects"
   ],
-  "download_gb": 37.99,
+  "download_gb": 36.19,
   "needs_hf_token": false,
   "custom_nodes": [],
   "models": [
@@ -152,18 +152,6 @@
       ]
     },
     {
-      "repo": "Remade-AI/Cartoon_Jaw_Drop",
-      "file": "cartoon_jaw_drop_50_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "name": "cartoon_jaw_drop_50_epochs.safetensors",
-      "gated": false,
-      "license": "Apache-2.0",
-      "used_by": [
-        "effects"
-      ]
-    },
-    {
       "repo": "Remade-AI/Classy",
       "file": "classy_45_epochs.safetensors",
       "dir": "loras",
@@ -284,18 +272,6 @@
       ]
     },
     {
-      "repo": "joyfox/wan2.1_I2V480P_fenshengshu_lora",
-      "file": "fensheng_000003500.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "name": "fensheng_000003500.safetensors",
-      "gated": false,
-      "license": "Apache-2.0",
-      "used_by": [
-        "effects"
-      ]
-    },
-    {
       "repo": "Remade-AI/Inflate",
       "file": "inflate_20_epochs.safetensors",
       "dir": "loras",
@@ -325,18 +301,6 @@
       "dir": "loras",
       "gb": 0.74,
       "name": "lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors",
-      "gated": false,
-      "license": "Apache-2.0",
-      "used_by": [
-        "effects"
-      ]
-    },
-    {
-      "repo": "Remade-AI/Mona-Lisa",
-      "file": "mona_lisa_45_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "name": "mona_lisa_45_epochs.safetensors",
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
@@ -404,35 +368,11 @@
       ]
     },
     {
-      "repo": "Remade-AI/Selfie-With-Younger-Self",
-      "file": "selfie_younger_self_15_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "name": "selfie_younger_self_15_epochs.safetensors",
-      "gated": false,
-      "license": "Apache-2.0",
-      "used_by": [
-        "effects"
-      ]
-    },
-    {
       "repo": "Remade-AI/Squish",
       "file": "squish_18.safetensors",
       "dir": "loras",
       "gb": 0.36,
       "name": "squish_18.safetensors",
-      "gated": false,
-      "license": "Apache-2.0",
-      "used_by": [
-        "effects"
-      ]
-    },
-    {
-      "repo": "Remade-AI/VIP",
-      "file": "vip_50_epochs.safetensors",
-      "dir": "loras",
-      "gb": 0.36,
-      "name": "vip_50_epochs.safetensors",
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [

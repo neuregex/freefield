@@ -69,7 +69,7 @@ When two apps run back to back with different models, the gateway asks ComfyUI t
 | `styles` | ready | 19.4 GB (+3.8 optional) | denoise 14.0 GB | krea2_turbo_int8_convrot.safetensors (13.5) | fits whole | L4 / A10G (24 GB) | not measured |
 | `camera-moves` | ready | 37.6 GB (+2.5 optional) | denoise 15.3 GB | wan2.2_fun_camera_high_noise_14B_fp8_scaled.safetensors (15.3) | fits by phases | L4 / A10G (24 GB) | not measured |
 | `motion-transfer` | ready | 24.9 GB | denoise 16.6 GB | wan_animate_2_distill_int8_convrot.safetensors (16.6) | fits by phases | L4 / A10G (24 GB) | not measured |
-| `effects` | ready | 25.0 GB (+13.0 optional) | denoise 16.8 GB | wan2.1_i2v_480p_14B_fp8_scaled.safetensors (16.4) | fits by phases | L4 / A10G (24 GB) | not measured |
+| `effects` | ready | 25.0 GB (+11.2 optional) | denoise 16.8 GB | wan2.1_i2v_480p_14B_fp8_scaled.safetensors (16.4) | fits by phases | L4 / A10G (24 GB) | not measured |
 | `recast` | ready | 28.6 GB | denoise 18.6 GB | wan2.1_14B_SCAIL_2_int8_convrot.safetensors (16.6) | fits by phases | L4 / A10G (24 GB) | not measured |
 | `asmr-host` | ready | 39.7 GB (+5.2 optional) | denoise 21.5 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | tight (by phases) | test on L4 / A10G; L40S (48 GB) is comfortable | not measured |
 | `asmr-product` | ready | 39.7 GB (+5.2 optional) | denoise 21.5 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | tight (by phases) | test on L4 / A10G; L40S (48 GB) is comfortable | not measured |

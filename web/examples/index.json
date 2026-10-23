@@ -830,24 +830,6 @@
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
             "run": "20261021-140940-h100"
           },
-          "mona-lisa": {
-            "case": "fx-mona-lisa",
-            "type": "video",
-            "card": "examples/effects/options/effect/mona-lisa/card.mp4",
-            "poster": "examples/effects/options/effect/mona-lisa/poster.jpg",
-            "values": {
-              "effect": "mona-lisa",
-              "subject": "a young woman with long wavy brown hair in a cream sweater",
-              "strength": 1.0,
-              "aspect": "portrait",
-              "frames": 81
-            },
-            "seed": 42,
-            "seconds": 169.2,
-            "peak_vram_gb": 30.64,
-            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261021-140940-h100"
-          },
           "princess": {
             "case": "fx-princess",
             "type": "video",
@@ -881,24 +863,6 @@
             "seed": 42,
             "seconds": 190.3,
             "peak_vram_gb": 30.77,
-            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261021-140940-h100"
-          },
-          "vip": {
-            "case": "fx-vip",
-            "type": "video",
-            "card": "examples/effects/options/effect/vip/card.mp4",
-            "poster": "examples/effects/options/effect/vip/poster.jpg",
-            "values": {
-              "effect": "vip",
-              "subject": "a woman with a short black bob in a navy blazer",
-              "strength": 1.0,
-              "aspect": "portrait",
-              "frames": 81
-            },
-            "seed": 42,
-            "seconds": 167.6,
-            "peak_vram_gb": 30.58,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
             "run": "20261021-140940-h100"
           },
@@ -956,24 +920,6 @@
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
             "run": "20261021-140940-h100"
           },
-          "jaw-drop": {
-            "case": "fx-jaw-drop",
-            "type": "video",
-            "card": "examples/effects/options/effect/jaw-drop/card.mp4",
-            "poster": "examples/effects/options/effect/jaw-drop/poster.jpg",
-            "values": {
-              "effect": "jaw-drop",
-              "subject": "a young man with short curly hair in a mustard yellow hoodie",
-              "strength": 1.0,
-              "aspect": "portrait",
-              "frames": 81
-            },
-            "seed": 42,
-            "seconds": 167.4,
-            "peak_vram_gb": 30.58,
-            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261021-140940-h100"
-          },
           "puppies": {
             "case": "fx-puppies",
             "type": "video",
@@ -989,24 +935,6 @@
             "seed": 42,
             "seconds": 173.2,
             "peak_vram_gb": 30.58,
-            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261021-140940-h100"
-          },
-          "selfie-younger": {
-            "case": "fx-selfie-younger",
-            "type": "video",
-            "card": "examples/effects/options/effect/selfie-younger/card.mp4",
-            "poster": "examples/effects/options/effect/selfie-younger/poster.jpg",
-            "values": {
-              "effect": "selfie-younger",
-              "subject": "a woman with a short black bob in a navy blazer",
-              "strength": 1.0,
-              "aspect": "portrait",
-              "frames": 81
-            },
-            "seed": 42,
-            "seconds": 166.5,
-            "peak_vram_gb": 30.67,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
             "run": "20261021-140940-h100"
           },
@@ -1367,24 +1295,6 @@
             "seed": 42,
             "seconds": 238.0,
             "peak_vram_gb": 30.77,
-            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261021-195731-h100"
-          },
-          "clones": {
-            "case": "fx-clones",
-            "type": "video",
-            "card": "examples/effects/options/effect/clones/card.mp4",
-            "poster": "examples/effects/options/effect/clones/poster.jpg",
-            "values": {
-              "effect": "clones",
-              "subject": "a man in a red jacket, jeans and white sneakers",
-              "strength": 1.0,
-              "aspect": "portrait",
-              "frames": 81
-            },
-            "seed": 42,
-            "seconds": 167.6,
-            "peak_vram_gb": 30.67,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
             "run": "20261021-195731-h100"
           }
@@ -3272,21 +3182,21 @@
           "type": "video",
           "src": "examples/mixed-media/input-clip.jpg",
           "full": "examples/mixed-media/input-clip-full.mp4",
-          "from_case": "ref-walk"
+          "from_case": "ref-stroll"
         }
       ],
       "values": {
         "style": "anime",
-        "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+        "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
         "negative": "photorealistic, photo, blurry, distorted",
         "size": 544,
         "strength": 0.7
       },
       "seed": 42,
-      "seconds": 98.2,
+      "seconds": 109.4,
       "peak_vram_gb": 51.25,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261023-131909-h100",
+      "run": "20261023-143551-h100",
       "options": {
         "style": {
           "anime": {
@@ -3296,16 +3206,16 @@
             "poster": "examples/mixed-media/options/style/anime/poster.jpg",
             "values": {
               "style": "anime",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 98.2,
+            "seconds": 109.4,
             "peak_vram_gb": 51.25,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-143551-h100"
           },
           "claymation": {
             "case": "mm-claymation",
@@ -3314,16 +3224,16 @@
             "poster": "examples/mixed-media/options/style/claymation/poster.jpg",
             "values": {
               "style": "claymation",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 52.2,
+            "seconds": 55.2,
             "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-143551-h100"
           },
           "watercolor": {
             "case": "mm-watercolor",
@@ -3332,16 +3242,16 @@
             "poster": "examples/mixed-media/options/style/watercolor/poster.jpg",
             "values": {
               "style": "watercolor",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 101.7,
-            "peak_vram_gb": 51.25,
+            "seconds": 54.3,
+            "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-140409-h100"
+            "run": "20261023-143551-h100"
           },
           "comic-book": {
             "case": "mm-comic-book",
@@ -3350,34 +3260,16 @@
             "poster": "examples/mixed-media/options/style/comic-book/poster.jpg",
             "values": {
               "style": "comic-book",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 52.9,
-            "peak_vram_gb": 55.63,
+            "seconds": 54.9,
+            "peak_vram_gb": 55.6,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
-          },
-          "pixel-art": {
-            "case": "mm-pixel-art",
-            "type": "video",
-            "card": "examples/mixed-media/options/style/pixel-art/card.mp4",
-            "poster": "examples/mixed-media/options/style/pixel-art/poster.jpg",
-            "values": {
-              "style": "pixel-art",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
-              "negative": "photorealistic, photo, blurry, distorted",
-              "size": 544,
-              "strength": 0.7
-            },
-            "seed": 42,
-            "seconds": 53.6,
-            "peak_vram_gb": 55.63,
-            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-140409-h100"
+            "run": "20261023-143551-h100"
           },
           "oil-painting": {
             "case": "mm-oil-painting",
@@ -3386,16 +3278,16 @@
             "poster": "examples/mixed-media/options/style/oil-painting/poster.jpg",
             "values": {
               "style": "oil-painting",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 52.2,
-            "peak_vram_gb": 55.66,
+            "seconds": 54.3,
+            "peak_vram_gb": 55.6,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-143551-h100"
           },
           "brick-toy": {
             "case": "mm-brick-toy",
@@ -3404,16 +3296,16 @@
             "poster": "examples/mixed-media/options/style/brick-toy/poster.jpg",
             "values": {
               "style": "brick-toy",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 52.1,
-            "peak_vram_gb": 55.63,
+            "seconds": 53.7,
+            "peak_vram_gb": 55.66,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-143551-h100"
           },
           "cyberpunk": {
             "case": "mm-cyberpunk",
@@ -3422,16 +3314,16 @@
             "poster": "examples/mixed-media/options/style/cyberpunk/poster.jpg",
             "values": {
               "style": "cyberpunk",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 52.4,
-            "peak_vram_gb": 55.6,
+            "seconds": 54.6,
+            "peak_vram_gb": 55.66,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-143551-h100"
           },
           "paper-cutout": {
             "case": "mm-paper-cutout",
@@ -3440,16 +3332,16 @@
             "poster": "examples/mixed-media/options/style/paper-cutout/poster.jpg",
             "values": {
               "style": "paper-cutout",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 52.2,
-            "peak_vram_gb": 55.66,
+            "seconds": 53.5,
+            "peak_vram_gb": 55.6,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-143551-h100"
           },
           "pencil-sketch": {
             "case": "mm-pencil-sketch",
@@ -3458,16 +3350,16 @@
             "poster": "examples/mixed-media/options/style/pencil-sketch/poster.jpg",
             "values": {
               "style": "pencil-sketch",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 53.2,
-            "peak_vram_gb": 55.66,
+            "seconds": 54.4,
+            "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-143551-h100"
           },
           "film-noir": {
             "case": "mm-film-noir",
@@ -3476,16 +3368,16 @@
             "poster": "examples/mixed-media/options/style/film-noir/poster.jpg",
             "values": {
               "style": "film-noir",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 52.4,
-            "peak_vram_gb": 55.63,
+            "seconds": 56.2,
+            "peak_vram_gb": 55.6,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-143551-h100"
           },
           "ukiyo-e": {
             "case": "mm-ukiyo-e",
@@ -3494,16 +3386,16 @@
             "poster": "examples/mixed-media/options/style/ukiyo-e/poster.jpg",
             "values": {
               "style": "ukiyo-e",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 53.2,
+            "seconds": 54.6,
             "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-143551-h100"
           },
           "stained-glass": {
             "case": "mm-stained-glass",
@@ -3512,16 +3404,16 @@
             "poster": "examples/mixed-media/options/style/stained-glass/poster.jpg",
             "values": {
               "style": "stained-glass",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 53.6,
-            "peak_vram_gb": 55.66,
+            "seconds": 54.8,
+            "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-140409-h100"
+            "run": "20261023-143551-h100"
           },
           "low-poly-3d": {
             "case": "mm-low-poly-3d",
@@ -3530,16 +3422,16 @@
             "poster": "examples/mixed-media/options/style/low-poly-3d/poster.jpg",
             "values": {
               "style": "low-poly-3d",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 52.2,
-            "peak_vram_gb": 55.69,
+            "seconds": 54.3,
+            "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-143551-h100"
           },
           "charcoal": {
             "case": "mm-charcoal",
@@ -3548,16 +3440,16 @@
             "poster": "examples/mixed-media/options/style/charcoal/poster.jpg",
             "values": {
               "style": "charcoal",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 53.2,
-            "peak_vram_gb": 55.66,
+            "seconds": 54.8,
+            "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-143551-h100"
           },
           "pop-art": {
             "case": "mm-pop-art",
@@ -3566,7 +3458,25 @@
             "poster": "examples/mixed-media/options/style/pop-art/poster.jpg",
             "values": {
               "style": "pop-art",
-              "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
+              "negative": "photorealistic, photo, blurry, distorted",
+              "size": 544,
+              "strength": 0.7
+            },
+            "seed": 42,
+            "seconds": 55.2,
+            "peak_vram_gb": 55.6,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-143551-h100"
+          },
+          "felt-toy": {
+            "case": "mm-felt-toy",
+            "type": "video",
+            "card": "examples/mixed-media/options/style/felt-toy/card.mp4",
+            "poster": "examples/mixed-media/options/style/felt-toy/poster.jpg",
+            "values": {
+              "style": "felt-toy",
+              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
@@ -3575,7 +3485,7 @@
             "seconds": 54.2,
             "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-143551-h100"
           }
         }
       }
@@ -3634,7 +3544,202 @@
       "peak_vram_gb": 37.27,
       "gpu": "NVIDIA H100 NVL, 95830 MiB",
       "run": "20261022-181155-h100"
+    },
+    "morph": {
+      "case": "morph-renaissance",
+      "type": "video",
+      "card": "examples/morph/card.mp4",
+      "poster": "examples/morph/poster.jpg",
+      "full": "examples/morph/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/morph/input-image.jpg",
+          "full": "examples/morph/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "effect": "renaissance",
+        "details": "",
+        "aspect": "portrait",
+        "duration": 4,
+        "strength": 1.0
+      },
+      "seed": 42,
+      "seconds": 79.4,
+      "peak_vram_gb": 49.91,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261023-143551-h100",
+      "options": {
+        "effect": {
+          "renaissance": {
+            "case": "morph-renaissance",
+            "type": "video",
+            "card": "examples/morph/options/effect/renaissance/card.mp4",
+            "poster": "examples/morph/options/effect/renaissance/poster.jpg",
+            "values": {
+              "effect": "renaissance",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 79.4,
+            "peak_vram_gb": 49.91,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-143551-h100"
+          },
+          "red-carpet": {
+            "case": "morph-red-carpet",
+            "type": "video",
+            "card": "examples/morph/options/effect/red-carpet/card.mp4",
+            "poster": "examples/morph/options/effect/red-carpet/poster.jpg",
+            "values": {
+              "effect": "red-carpet",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 28.1,
+            "peak_vram_gb": 49.91,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-143551-h100"
+          },
+          "younger-self": {
+            "case": "morph-younger-self",
+            "type": "video",
+            "card": "examples/morph/options/effect/younger-self/card.mp4",
+            "poster": "examples/morph/options/effect/younger-self/poster.jpg",
+            "values": {
+              "effect": "younger-self",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 28.5,
+            "peak_vram_gb": 50.07,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-143551-h100"
+          },
+          "clones": {
+            "case": "morph-clones",
+            "type": "video",
+            "card": "examples/morph/options/effect/clones/card.mp4",
+            "poster": "examples/morph/options/effect/clones/poster.jpg",
+            "values": {
+              "effect": "clones",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 27.2,
+            "peak_vram_gb": 50.1,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-143551-h100"
+          },
+          "cartoon": {
+            "case": "morph-cartoon",
+            "type": "video",
+            "card": "examples/morph/options/effect/cartoon/card.mp4",
+            "poster": "examples/morph/options/effect/cartoon/poster.jpg",
+            "values": {
+              "effect": "cartoon",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 27.1,
+            "peak_vram_gb": 49.91,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-143551-h100"
+          },
+          "statue": {
+            "case": "morph-statue",
+            "type": "video",
+            "card": "examples/morph/options/effect/statue/card.mp4",
+            "poster": "examples/morph/options/effect/statue/poster.jpg",
+            "values": {
+              "effect": "statue",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 27.1,
+            "peak_vram_gb": 49.91,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-143551-h100"
+          },
+          "old-age": {
+            "case": "morph-old-age",
+            "type": "video",
+            "card": "examples/morph/options/effect/old-age/card.mp4",
+            "poster": "examples/morph/options/effect/old-age/poster.jpg",
+            "values": {
+              "effect": "old-age",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 27.1,
+            "peak_vram_gb": 50.1,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-143551-h100"
+          },
+          "astronaut": {
+            "case": "morph-astronaut",
+            "type": "video",
+            "card": "examples/morph/options/effect/astronaut/card.mp4",
+            "poster": "examples/morph/options/effect/astronaut/poster.jpg",
+            "values": {
+              "effect": "astronaut",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 27.2,
+            "peak_vram_gb": 50.1,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-143551-h100"
+          },
+          "knight": {
+            "case": "morph-knight",
+            "type": "video",
+            "card": "examples/morph/options/effect/knight/card.mp4",
+            "poster": "examples/morph/options/effect/knight/poster.jpg",
+            "values": {
+              "effect": "knight",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 27.3,
+            "peak_vram_gb": 50.1,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-143551-h100"
+          }
+        }
+      }
     }
   },
-  "updated_from": "20261023-140409-h100"
+  "updated_from": "20261023-143551-h100"
 }

@@ -11,7 +11,7 @@
   "source": {
     "template": "comfyui_workflow_templates video_ltx2_5_flf2v.json (0.1.115) + image_flux3_klein_distilled_image_edit.json",
     "comfyui": "0.42.0",
-    "notes": "The `transitions` workflow (first/last frame + joyfox's transition LoRA) with the last frame made in the graph by the `edit` pipeline (nodes edit:*); the prompt enhancer is off so the motion prompt is used as written. Replaces five Remade-AI effect LoRAs (Mona Lisa, VIP, younger self, clones, cartoon jaw drop) that lost the person's identity at 480p. Not run yet."
+    "notes": "The `transitions` workflow (first/last frame + joyfox's transition LoRA) with the last frame made in the graph by the `edit` pipeline (nodes edit:*); the prompt enhancer is off so the motion prompt is used as written. Replaces five Remade-AI effect LoRAs (Mona Lisa, VIP, younger self, clones, cartoon jaw drop) that lost the person's identity at 480p. Ran on an H100 on 23 Oct (20261023-143551-h100): 8 of 9 kept the face; the statue and the aged portrait got their instructions tightened."
   },
   "outputs": [
     {
@@ -130,7 +130,7 @@
             {
               "node": "edit:4",
               "field": "text",
-              "value": "Turn this exact person into a white marble statue on a stone pedestal in a museum hall, keeping their pose and features."
+              "value": "Turn this exact person into a white marble statue on a stone pedestal in a museum hall: the statue has their exact face, hairstyle, beard if any, pose and clothes, all carved in white marble."
             },
             {
               "node": "251:252",
@@ -146,7 +146,7 @@
             {
               "node": "edit:4",
               "field": "text",
-              "value": "Show this exact person at eighty years old: grey hair, deep wrinkles, the same features, expression and clothes."
+              "value": "Show this exact person at eighty years old: the same face, gender, hairstyle, expression and clothes, now with grey hair and deep wrinkles."
             },
             {
               "node": "251:252",

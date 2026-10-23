@@ -103,7 +103,7 @@ const TAGLINES = {
   video: ["Bring a still to life", "Dale vida a una foto"],
   "video-t2v": ["Type a shot, get a clip", "Escribe una toma, obtén un clip"],
   "camera-moves": ["Direct the camera", "Dirige la cámara"],
-  effects: ["35 effects from one photo", "35 efectos desde una foto"],
+  effects: ["30 effects from one photo", "30 efectos desde una foto"],
   "camera-copy": ["Copy any camera move", "Copia cualquier movimiento de cámara"],
   recast: ["Recast anyone in your clip", "Cambia al protagonista de tu clip"],
   "motion-transfer": ["Borrow the moves", "Toma prestado el movimiento"],
