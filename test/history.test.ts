@@ -147,3 +147,22 @@ test("file names are checked before touching the disk", () => {
     assert.equal(history.remove("../x"), false);
   } finally { done(); }
 });
+
+test("a poll that cannot reach the backend is retried; a backend answer that the job is gone is not", async () => {
+  const { waitPatiently, isTransient } = await import("../server/history.ts");
+  let calls = 0;
+  const flaky = { async wait() { calls++; if (calls < 3) throw Object.assign(new TypeError("fetch failed"), { cause: { code: "ECONNRESET" } }); } };
+  const log: string[] = [];
+  const t0 = Date.now();
+  await waitPatiently(flaky, 60_000, 60_000, (m) => log.push(m));
+  assert.equal(calls, 3);
+  assert.equal(log.length, 2);
+  assert.ok(Date.now() - t0 >= 2000, "backs off between attempts");
+
+  const gone = { async wait() { throw Object.assign(new Error("job not found"), { httpStatus: 404 }); } };
+  await assert.rejects(() => waitPatiently(gone, 60_000, 60_000), /job not found/);
+  const proxy = Object.assign(new Error("Bad Gateway"), { httpStatus: 502 });
+  assert.equal(isTransient(proxy), true);
+  assert.equal(isTransient(new Error("job x not terminal after 10ms (status=running)")), false);
+  assert.equal(isTransient(Object.assign(new Error("bad request"), { httpStatus: 400 })), false);
+});

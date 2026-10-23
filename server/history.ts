@@ -84,6 +84,42 @@ function normStatus(s: string): Status {
   return (["queued", "running", "succeeded", "failed", "canceled", "expired"] as string[]).includes(s) ? (s as Status) : "running";
 }
 
+/** A poll that failed to reach the backend, as opposed to the backend answering that the job is gone or the request is
+ * wrong: node's fetch says "fetch failed" (connection reset, DNS, TLS), a proxy answers 502/503/504 while the GPU
+ * container starts, or nothing answers in time. */
+export function isTransient(e: unknown): boolean {
+  const err = e as { message?: string; httpStatus?: number; name?: string; cause?: { code?: string } };
+  if (typeof err?.httpStatus === "number") return err.httpStatus >= 500 || err.httpStatus === 429;
+  if (/not terminal after/.test(err?.message ?? "")) return false;   // the SDK's own wait timeout
+  return /fetch failed|ECONN|ETIMEDOUT|EAI_AGAIN|socket hang up|network|timed? ?out|aborted/i.test(`${err?.message ?? ""} ${err?.cause?.code ?? ""}`);
+}
+
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+/** job.wait() stops at the first poll that fails to reach the backend; a backend waking up (the Modal container's cold
+ * start) drops one or two, so the wait is picked up again, for up to `patience` of continuous failures, before the
+ * run is called lost. */
+export async function waitPatiently(job: { wait(timeoutMs?: number): Promise<unknown> }, timeoutMs: number, patience = 10 * 60 * 1000,
+  log: (msg: string) => void = () => {}): Promise<void> {
+  const deadline = Date.now() + timeoutMs;
+  let firstFailure: number | null = null;
+  let failures = 0;
+  for (;;) {
+    try {
+      await job.wait(Math.max(1000, deadline - Date.now()));
+      return;
+    } catch (e) {
+      if (!isTransient(e) || Date.now() >= deadline) throw e;
+      firstFailure ??= Date.now();
+      if (Date.now() - firstFailure > patience) throw e;
+      failures++;
+      const pause = Math.min(15_000, 2_000 * failures);
+      log(`poll failed (${(e as Error).message}); trying again in ${pause / 1000}s`);
+      await sleep(pause);
+    }
+  }
+}
+
 const secondsBetween = (a: string | Date | null | undefined, b: string | Date | null | undefined) =>
   a && b ? Math.max(0, Math.round((new Date(b).getTime() - new Date(a).getTime()) / 100) / 10) : null;
 
@@ -190,7 +226,7 @@ export class History {
 
     let waitError: unknown = null;
     try {
-      await job.wait(6 * 3600 * 1000);
+      await waitPatiently(job, 6 * 3600 * 1000, 10 * 60 * 1000, (msg) => console.warn(`[history] ${entry.id}: ${msg}`));
       this.onContact();
     } catch (e) {
       waitError = e;
