@@ -92,13 +92,13 @@
           ]
         },
         {
-          "value": "pixel-art",
-          "label": "Pixel art",
+          "value": "felt-toy",
+          "label": "Felt toy",
           "sets": [
             {
               "node": "ff_style",
               "field": "value",
-              "value": "Pixel art: the whole picture made of large visible square pixels like a 16-bit video game sprite, limited color palette, no smooth gradients"
+              "value": "Everything made of soft felt and wool fabric like a handmade plush-toy diorama, visible stitched seams, the people included"
             }
           ]
         },

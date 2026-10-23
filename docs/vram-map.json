@@ -2253,6 +2253,31 @@
       "measured_peak_gb": null
     },
     {
+      "id": "morph",
+      "name": "Transformations",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 50.12,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.89,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 5.83
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.89,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
       "id": "transitions",
       "name": "Transitions",
       "section": "video",

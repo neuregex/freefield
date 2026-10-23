@@ -275,6 +275,23 @@ def merge(api: Api, other: Api, prefix: str) -> None:
         api[f"{prefix}:{i}"] = node
 
 
+def morph(api: Api, edit: Api) -> None:
+    """The `transitions` workflow (LTX-2.5 first/last frame + transition LoRA) with the last frame made in the
+    graph: FLUX 3 Klein (the `edit` pipeline, merged in as edit:*) redraws the photo as the chosen transformation,
+    and the video morphs from the photo to that still. The identity stays because Klein keeps the face; the
+    five Remade-AI LoRAs this replaces (Mona Lisa, VIP, younger self, clones, jaw drop) lost it at 480p."""
+    merge(api, edit, "edit")
+    drop(api, "edit:9")
+    first, last = "31", "39"
+    assert api[first]["class_type"] == "LoadImage" and api[last]["class_type"] == "LoadImage"
+    rewire(api, ["edit:11", 0], [first, 0])
+    drop(api, "edit:11")
+    styled = find(api, "VAEDecode", vae=["edit:3", 0])
+    rewire(api, [last, 0], [styled, 0])
+    drop(api, last)
+    put(api, "251:250", "value", False)   # the motion prompt is written per transformation: no enhancer rewrite
+
+
 def ltx_union_control(api: Api, edit: Api) -> None:
     """Lightricks' Union Control IC-LoRA example (two stages) as a one-click restyle: the clip's first frame
     is redrawn in the chosen look by FLUX 3 Klein (the `edit` pipeline, merged in under "edit:"), that still
@@ -478,6 +495,9 @@ def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None)
     t = tpl("video_ltx2_5_flf2v.json")
     add_lora_after(t, find(t, "UNETLoader"), "ltx2.3-transition.safetensors", 1.0)
     out["transitions"] = t
+    mp = json.loads(json.dumps(t))
+    morph(mp, e)
+    out["morph"] = mp
 
     for app_id, lora in [("vfx-clean-plate", "ltx-2.5-22b-ic-lora-clean-plate-1.0.safetensors"),
                          ("vfx-day-to-night", "ltx-2.5-22b-ic-lora-day-to-night-0.9.safetensors"),

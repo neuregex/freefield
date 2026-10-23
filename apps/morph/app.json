@@ -1,0 +1,396 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "morph",
+  "name": "Transformations",
+  "section": "video",
+  "pack": "video-ltx25",
+  "status": "ready",
+  "higgsfield_feature": "Effects (transformations)",
+  "summary": "Nine transformations that keep the face: FLUX 3 Klein redraws the photo (statue, red carpet, cartoon, clones…) and LTX-2.5 morphs from the photo to it.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "comfyui_workflow_templates video_ltx2_5_flf2v.json (0.1.115) + image_flux3_klein_distilled_image_edit.json",
+    "comfyui": "0.42.0",
+    "notes": "The `transitions` workflow (first/last frame + joyfox's transition LoRA) with the last frame made in the graph by the `edit` pipeline (nodes edit:*); the prompt enhancer is off so the motion prompt is used as written. Replaces five Remade-AI effect LoRAs (Mona Lisa, VIP, younger self, clones, cartoon jaw drop) that lost the person's identity at 480p. Not run yet."
+  },
+  "outputs": [
+    {
+      "node": "68",
+      "type": "video",
+      "label": "Video"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Your photo",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "31",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "effect",
+      "type": "select",
+      "label": "Transformation",
+      "default": "renaissance",
+      "gallery": true,
+      "options": [
+        {
+          "value": "renaissance",
+          "label": "Renaissance portrait",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "Repaint this exact person as a Renaissance oil portrait in the pose and setting of the Mona Lisa: seated, hands folded, a misty landscape behind, dark period dress, keeping their own face and features."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "The photo slowly turns into an old oil painting: brushstrokes spread across the frame, the background becomes a misty landscape and they settle into a seated pose with hands folded, smiling faintly. {details}"
+            }
+          ]
+        },
+        {
+          "value": "red-carpet",
+          "label": "Red carpet",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "Dress this exact person in elegant black evening wear with gold jewellery, standing on a red carpet at a gala with photographers behind a barricade, keeping their own face."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "Camera flashes go off as the scene becomes a red carpet gala; they stand tall and pose for the photographers. {details}"
+            }
+          ]
+        },
+        {
+          "value": "younger-self",
+          "label": "Selfie with younger self",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "This exact person holding up a phone to take a selfie next to a ten-year-old child version of themselves with the same facial features and hair, both smiling, keeping their own face."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "They raise a phone to take a selfie and a child version of themselves appears beside them; both smile at the phone. {details}"
+            }
+          ]
+        },
+        {
+          "value": "clones",
+          "label": "Clones",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "Three identical copies of this exact person standing side by side in a row in martial-arts fighting poses, same clothes, same face."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "The camera pulls back as they split into three identical copies standing in a row, striking fighting poses. {details}"
+            }
+          ]
+        },
+        {
+          "value": "cartoon",
+          "label": "Cartoon self",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "Redraw this exact person as a classic 2D animated cartoon character with bold outlines and big expressive eyes, keeping their recognisable features and clothes."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "The photo turns into a cartoon drawing: outlines appear first, flat colours fill in, then the cartoon blinks and grins. {details}"
+            }
+          ]
+        },
+        {
+          "value": "statue",
+          "label": "Marble statue",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "Turn this exact person into a white marble statue on a stone pedestal in a museum hall, keeping their pose and features."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "Their skin and clothes slowly turn to white marble from the feet up until they stand still as a statue in a museum hall. {details}"
+            }
+          ]
+        },
+        {
+          "value": "old-age",
+          "label": "Eighty years old",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "Show this exact person at eighty years old: grey hair, deep wrinkles, the same features, expression and clothes."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "Time passes: their hair greys and lines deepen as they age gracefully, still smiling at the camera. {details}"
+            }
+          ]
+        },
+        {
+          "value": "astronaut",
+          "label": "Astronaut",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "Put this exact person in a white spacesuit with the helmet visor open, floating inside a space station with Earth visible through a window, keeping their face."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "The room dissolves into a space station; they float gently in a spacesuit while Earth turns outside the window. {details}"
+            }
+          ]
+        },
+        {
+          "value": "knight",
+          "label": "Knight in armour",
+          "sets": [
+            {
+              "node": "edit:4",
+              "field": "text",
+              "value": "Dress this exact person in shining medieval plate armour with the helmet under one arm, standing in a castle courtyard, keeping their face."
+            },
+            {
+              "node": "251:252",
+              "field": "value",
+              "value": "Armour assembles around them piece by piece until they stand as a knight in a castle courtyard. {details}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "details",
+      "type": "textarea",
+      "label": "Extra direction",
+      "default": "",
+      "help": "Added at the end of the transformation's motion prompt",
+      "bind": []
+    },
+    {
+      "id": "aspect",
+      "type": "select",
+      "label": "Format",
+      "default": "portrait",
+      "options": [
+        {
+          "value": "portrait",
+          "label": "9:16",
+          "sets": [
+            {
+              "node": "251:215",
+              "field": "value",
+              "value": 720
+            },
+            {
+              "node": "251:216",
+              "field": "value",
+              "value": 1280
+            }
+          ]
+        },
+        {
+          "value": "landscape",
+          "label": "16:9",
+          "sets": [
+            {
+              "node": "251:215",
+              "field": "value",
+              "value": 1280
+            },
+            {
+              "node": "251:216",
+              "field": "value",
+              "value": 720
+            }
+          ]
+        },
+        {
+          "value": "square",
+          "label": "1:1",
+          "sets": [
+            {
+              "node": "251:215",
+              "field": "value",
+              "value": 960
+            },
+            {
+              "node": "251:216",
+              "field": "value",
+              "value": 960
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "duration",
+      "type": "slider",
+      "label": "Seconds",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4,
+      "bind": [
+        {
+          "node": "251:198",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "strength",
+      "type": "slider",
+      "label": "Transition strength",
+      "min": 0,
+      "max": 1.5,
+      "step": 0.05,
+      "default": 1.0,
+      "bind": [
+        {
+          "node": "ff_lora",
+          "field": "strength_model"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "251:196",
+          "field": "noise_seed"
+        },
+        {
+          "node": "edit:7",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "models": [
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 21.5,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 15.37,
+      "phase": "encode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-video-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 1.47,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-audio-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.36,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Comfy-Org/gemma-4",
+      "file": "text_encoders/gemma4_e2b_it_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.2,
+      "phase": "encode",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "joyfox/LTX-2.3-Transition-LORA",
+      "file": "ltx2.3-transition.safetensors",
+      "dir": "loras",
+      "gb": 0.39,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "phase": "aux",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "phase": "aux",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "aux",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    }
+  ],
+  "credits": [
+    "LTX-2.5 by Lightricks",
+    "FLUX 3 Image Klein by Black Forest Labs",
+    "Transition LoRA by joyfox (Apache-2.0)",
+    "Workflow adapted from ComfyUI's official LTX-2.5 and FLUX 3 Klein templates"
+  ],
+  "test": {
+    "image": "test/portrait.png",
+    "duration": 2
+  }
+}

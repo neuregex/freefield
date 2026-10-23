@@ -3338,10 +3338,10 @@
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 52.9,
-            "peak_vram_gb": 55.63,
+            "seconds": 101.7,
+            "peak_vram_gb": 51.25,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-140409-h100"
           },
           "comic-book": {
             "case": "mm-comic-book",
@@ -3374,10 +3374,10 @@
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 51.6,
+            "seconds": 53.6,
             "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-140409-h100"
           },
           "oil-painting": {
             "case": "mm-oil-painting",
@@ -3518,10 +3518,10 @@
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 52.6,
-            "peak_vram_gb": 55.69,
+            "seconds": 53.6,
+            "peak_vram_gb": 55.66,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-131909-h100"
+            "run": "20261023-140409-h100"
           },
           "low-poly-3d": {
             "case": "mm-low-poly-3d",
@@ -3636,5 +3636,5 @@
       "run": "20261022-181155-h100"
     }
   },
-  "updated_from": "20261023-131909-h100"
+  "updated_from": "20261023-140409-h100"
 }

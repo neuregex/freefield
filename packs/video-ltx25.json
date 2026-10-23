@@ -15,6 +15,7 @@
     "magic-button",
     "melting-doodle",
     "mixed-media",
+    "morph",
     "mukbang",
     "rap-video",
     "reframe",
@@ -50,7 +51,8 @@
       "gated": true,
       "license": "FLUX Kommunity License",
       "used_by": [
-        "mixed-media"
+        "mixed-media",
+        "morph"
       ]
     },
     {
@@ -76,6 +78,7 @@
         "magic-button",
         "melting-doodle",
         "mixed-media",
+        "morph",
         "mukbang",
         "rap-video",
         "reframe",
@@ -267,6 +270,7 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
+        "morph",
         "transitions"
       ]
     },
@@ -293,6 +297,7 @@
         "magic-button",
         "melting-doodle",
         "mixed-media",
+        "morph",
         "mukbang",
         "rap-video",
         "reframe",
@@ -331,6 +336,7 @@
         "kick-ad",
         "magic-button",
         "melting-doodle",
+        "morph",
         "mukbang",
         "rap-video",
         "roller-coaster",
@@ -356,7 +362,8 @@
       "gated": true,
       "license": "FLUX Kommunity License",
       "used_by": [
-        "mixed-media"
+        "mixed-media",
+        "morph"
       ]
     },
     {
@@ -368,7 +375,8 @@
       "gated": true,
       "license": "FLUX Kommunity License",
       "used_by": [
-        "mixed-media"
+        "mixed-media",
+        "morph"
       ]
     },
     {
@@ -394,6 +402,7 @@
         "magic-button",
         "melting-doodle",
         "mixed-media",
+        "morph",
         "mukbang",
         "rap-video",
         "reframe",
@@ -435,6 +444,7 @@
         "magic-button",
         "melting-doodle",
         "mixed-media",
+        "morph",
         "mukbang",
         "rap-video",
         "reframe",
