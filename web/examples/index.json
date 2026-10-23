@@ -729,6 +729,33 @@
       "run": "20261020-162214-l40s"
     },
     "effects": {
+      "case": "fx-cakeify",
+      "type": "video",
+      "card": "examples/effects/card.mp4",
+      "poster": "examples/effects/poster.jpg",
+      "full": "examples/effects/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/effects/input-image.jpg",
+          "full": "examples/effects/input-image-full.jpg",
+          "from_case": "ref-fx-sneaker"
+        }
+      ],
+      "values": {
+        "effect": "cakeify",
+        "subject": "a white sneaker with red details",
+        "strength": 1.0,
+        "aspect": "landscape",
+        "frames": 81
+      },
+      "seed": 42,
+      "seconds": 195.7,
+      "peak_vram_gb": 41.94,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261023-162024-h100",
       "options": {
         "effect": {
           "angry": {
@@ -816,10 +843,10 @@
               "frames": 81
             },
             "seed": 42,
-            "seconds": 167.0,
-            "peak_vram_gb": 30.67,
+            "seconds": 195.7,
+            "peak_vram_gb": 41.94,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261021-140940-h100"
+            "run": "20261023-162024-h100"
           },
           "crush": {
             "case": "fx-crush",
@@ -3543,10 +3570,10 @@
               "strength": 1.0
             },
             "seed": 42,
-            "seconds": 27.1,
-            "peak_vram_gb": 49.91,
+            "seconds": 89.1,
+            "peak_vram_gb": 50.0,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-143551-h100"
+            "run": "20261023-162024-h100"
           },
           "old-age": {
             "case": "morph-old-age",
@@ -3561,10 +3588,10 @@
               "strength": 1.0
             },
             "seed": 42,
-            "seconds": 27.1,
-            "peak_vram_gb": 50.1,
+            "seconds": 27.4,
+            "peak_vram_gb": 50.0,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-143551-h100"
+            "run": "20261023-162024-h100"
           },
           "astronaut": {
             "case": "morph-astronaut",
@@ -3601,10 +3628,118 @@
             "peak_vram_gb": 50.1,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
             "run": "20261023-143551-h100"
+          },
+          "assassin": {
+            "case": "morph-assassin",
+            "type": "video",
+            "card": "examples/morph/options/effect/assassin/card.mp4",
+            "poster": "examples/morph/options/effect/assassin/poster.jpg",
+            "values": {
+              "effect": "assassin",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 28.1,
+            "peak_vram_gb": 50.0,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-162024-h100"
+          },
+          "baby": {
+            "case": "morph-baby",
+            "type": "video",
+            "card": "examples/morph/options/effect/baby/card.mp4",
+            "poster": "examples/morph/options/effect/baby/poster.jpg",
+            "values": {
+              "effect": "baby",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 29.1,
+            "peak_vram_gb": 50.16,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-162024-h100"
+          },
+          "bride": {
+            "case": "morph-bride",
+            "type": "video",
+            "card": "examples/morph/options/effect/bride/card.mp4",
+            "poster": "examples/morph/options/effect/bride/poster.jpg",
+            "values": {
+              "effect": "bride",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 27.1,
+            "peak_vram_gb": 50.0,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-162024-h100"
+          },
+          "classy": {
+            "case": "morph-classy",
+            "type": "video",
+            "card": "examples/morph/options/effect/classy/card.mp4",
+            "poster": "examples/morph/options/effect/classy/poster.jpg",
+            "values": {
+              "effect": "classy",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 28.1,
+            "peak_vram_gb": 50.19,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-162024-h100"
+          },
+          "princess": {
+            "case": "morph-princess",
+            "type": "video",
+            "card": "examples/morph/options/effect/princess/card.mp4",
+            "poster": "examples/morph/options/effect/princess/poster.jpg",
+            "values": {
+              "effect": "princess",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 28.1,
+            "peak_vram_gb": 50.0,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-162024-h100"
+          },
+          "robot-face": {
+            "case": "morph-robot-face",
+            "type": "video",
+            "card": "examples/morph/options/effect/robot-face/card.mp4",
+            "poster": "examples/morph/options/effect/robot-face/poster.jpg",
+            "values": {
+              "effect": "robot-face",
+              "details": "",
+              "aspect": "portrait",
+              "duration": 4,
+              "strength": 1.0
+            },
+            "seed": 42,
+            "seconds": 28.2,
+            "peak_vram_gb": 50.0,
+            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+            "run": "20261023-162024-h100"
           }
         }
       }
     }
   },
-  "updated_from": "20261023-143551-h100"
+  "updated_from": "20261023-162024-h100"
 }
