@@ -3280,13 +3280,13 @@
         "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
         "negative": "photorealistic, photo, blurry, distorted",
         "size": 544,
-        "strength": 1.0
+        "strength": 0.7
       },
       "seed": 42,
-      "seconds": 97.3,
-      "peak_vram_gb": 51.26,
+      "seconds": 98.2,
+      "peak_vram_gb": 51.25,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261023-044125-h100",
+      "run": "20261023-131909-h100",
       "options": {
         "style": {
           "anime": {
@@ -3299,13 +3299,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 97.3,
-            "peak_vram_gb": 51.26,
+            "seconds": 98.2,
+            "peak_vram_gb": 51.25,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "claymation": {
             "case": "mm-claymation",
@@ -3317,13 +3317,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 51.4,
-            "peak_vram_gb": 55.64,
+            "seconds": 52.2,
+            "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "watercolor": {
             "case": "mm-watercolor",
@@ -3335,13 +3335,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 54.2,
-            "peak_vram_gb": 55.64,
+            "seconds": 52.9,
+            "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "comic-book": {
             "case": "mm-comic-book",
@@ -3353,13 +3353,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 53.4,
-            "peak_vram_gb": 55.64,
+            "seconds": 52.9,
+            "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "pixel-art": {
             "case": "mm-pixel-art",
@@ -3371,13 +3371,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 52.2,
-            "peak_vram_gb": 55.64,
+            "seconds": 51.6,
+            "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "oil-painting": {
             "case": "mm-oil-painting",
@@ -3389,13 +3389,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 53.2,
-            "peak_vram_gb": 55.61,
+            "seconds": 52.2,
+            "peak_vram_gb": 55.66,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "brick-toy": {
             "case": "mm-brick-toy",
@@ -3407,13 +3407,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 53.2,
-            "peak_vram_gb": 55.61,
+            "seconds": 52.1,
+            "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "cyberpunk": {
             "case": "mm-cyberpunk",
@@ -3425,13 +3425,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 53.2,
-            "peak_vram_gb": 55.67,
+            "seconds": 52.4,
+            "peak_vram_gb": 55.6,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "paper-cutout": {
             "case": "mm-paper-cutout",
@@ -3443,13 +3443,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 54.2,
-            "peak_vram_gb": 55.64,
+            "seconds": 52.2,
+            "peak_vram_gb": 55.66,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "pencil-sketch": {
             "case": "mm-pencil-sketch",
@@ -3461,13 +3461,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 53.3,
-            "peak_vram_gb": 55.64,
+            "seconds": 53.2,
+            "peak_vram_gb": 55.66,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "film-noir": {
             "case": "mm-film-noir",
@@ -3479,13 +3479,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 52.2,
-            "peak_vram_gb": 55.67,
+            "seconds": 52.4,
+            "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "ukiyo-e": {
             "case": "mm-ukiyo-e",
@@ -3497,13 +3497,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 52.6,
-            "peak_vram_gb": 55.67,
+            "seconds": 53.2,
+            "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "stained-glass": {
             "case": "mm-stained-glass",
@@ -3515,13 +3515,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 52.4,
-            "peak_vram_gb": 55.64,
+            "seconds": 52.6,
+            "peak_vram_gb": 55.69,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "low-poly-3d": {
             "case": "mm-low-poly-3d",
@@ -3533,13 +3533,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 53.2,
-            "peak_vram_gb": 55.64,
+            "seconds": 52.2,
+            "peak_vram_gb": 55.69,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "charcoal": {
             "case": "mm-charcoal",
@@ -3551,13 +3551,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
-            "seconds": 53.3,
-            "peak_vram_gb": 55.64,
+            "seconds": 53.2,
+            "peak_vram_gb": 55.66,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           },
           "pop-art": {
             "case": "mm-pop-art",
@@ -3569,13 +3569,13 @@
               "details": "A woman in a white shirt walking toward the camera on a city sidewalk",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
-              "strength": 1.0
+              "strength": 0.7
             },
             "seed": 42,
             "seconds": 54.2,
-            "peak_vram_gb": 55.67,
+            "peak_vram_gb": 55.63,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-044125-h100"
+            "run": "20261023-131909-h100"
           }
         }
       }
@@ -3636,5 +3636,5 @@
       "run": "20261022-181155-h100"
     }
   },
-  "updated_from": "20261023-124332-h100"
+  "updated_from": "20261023-131909-h100"
 }

@@ -76,7 +76,7 @@
             {
               "node": "ff_style",
               "field": "value",
-              "value": "Loose watercolor painting, soft bleeding washes, visible paper texture"
+              "value": "A loose watercolor painting on textured paper, the whole scene and the people painted in soft bleeding washes with wet edges, no photographic detail anywhere"
             }
           ]
         },
@@ -98,7 +98,7 @@
             {
               "node": "ff_style",
               "field": "value",
-              "value": "Retro pixel art, 16-bit video game look, limited color palette"
+              "value": "Pixel art: the whole picture made of large visible square pixels like a 16-bit video game sprite, limited color palette, no smooth gradients"
             }
           ]
         },
@@ -186,7 +186,7 @@
             {
               "node": "ff_style",
               "field": "value",
-              "value": "Stained glass window, black lead lines, glowing colored glass"
+              "value": "The whole scene rendered as a stained glass window, the people included: every shape a piece of glowing colored glass separated by thick black lead lines"
             }
           ]
         },
