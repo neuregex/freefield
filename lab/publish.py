@@ -205,6 +205,9 @@ def main(argv: list[str] | None = None) -> int:
     index["updated_from"] = run_dir.name
     index_path.write_text(json.dumps(index, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"published {len(published)} app example(s) to {EXAMPLES.relative_to(ROOT)}")
+    sys.path.insert(0, str(ROOT / "tools"))
+    import catalog  # tools/catalog.py: docs/vram-map.* show each example's measured peak, so they follow the index
+    catalog.write_vram(catalog.load_apps(), quiet=True)
     dropped = unmark(replaced)
     if dropped:
         print(f"{dropped} \"mediocre\" mark(s) removed from lab/flags.json: those examples were replaced")

@@ -25,7 +25,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 27.71,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "remove-bg",
@@ -50,7 +51,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 4.96,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "upscale",
@@ -75,7 +77,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 5.64,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "upscale-video",
@@ -100,7 +103,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 26.11,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "billboard",
@@ -125,7 +129,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.9,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "breakdown",
@@ -150,7 +155,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "brick-toy",
@@ -175,7 +181,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "burning-sunset",
@@ -200,7 +207,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "cafe-60s",
@@ -225,7 +233,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.14,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "character",
@@ -250,7 +259,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.28,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "character-swap",
@@ -275,7 +285,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.79,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "color-grade",
@@ -300,7 +311,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.18,
+      "measured_on": "H100 · 20261023-225832-h100"
     },
     {
       "id": "comic-book",
@@ -325,7 +337,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "commercial-faces",
@@ -350,7 +363,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.18,
+      "measured_on": "H100 · 20261023-225832-h100"
     },
     {
       "id": "edit",
@@ -375,7 +389,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 30.89,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "edit-text",
@@ -400,7 +415,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "face-swap",
@@ -425,7 +441,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 12.33,
+      "measured_on": "L40S · 20261024-034326-l40s"
     },
     {
       "id": "fashion-factory",
@@ -450,7 +467,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.9,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "figure-3d",
@@ -475,7 +493,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "fridge-ad",
@@ -500,7 +519,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.23,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "game-styles",
@@ -525,7 +545,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "giallo",
@@ -550,7 +571,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "giant-product",
@@ -575,7 +597,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.23,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "glitter-sticker",
@@ -600,7 +623,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "graffiti-ad",
@@ -625,7 +649,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 12.86,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "headshot",
@@ -650,7 +675,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "image-effects",
@@ -675,7 +701,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.5,
+      "measured_on": "H100 · 20261023-225832-h100"
     },
     {
       "id": "j-magazine",
@@ -700,7 +727,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "j-poster",
@@ -725,7 +753,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.49,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "japanese-show",
@@ -750,7 +779,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "macro-product",
@@ -775,7 +805,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.52,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "macro-scene",
@@ -800,7 +831,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.23,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "mascot",
@@ -825,7 +857,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "micro-beasts",
@@ -850,7 +883,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "mural",
@@ -875,7 +909,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.21,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "outfit-shot",
@@ -900,7 +935,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 12.39,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "outfit-swap",
@@ -925,7 +961,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.79,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "outfit-vending",
@@ -950,7 +987,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 12.86,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "packshot",
@@ -975,7 +1013,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.23,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "paint-app",
@@ -1000,7 +1039,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "pixel-game",
@@ -1025,7 +1065,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "plushie",
@@ -1050,7 +1091,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.23,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "poster",
@@ -1075,7 +1117,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 12.02,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "product-shot",
@@ -1100,7 +1143,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 10.99,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "renaissance",
@@ -1125,7 +1169,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "render-3d",
@@ -1150,7 +1195,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.18,
+      "measured_on": "H100 · 20261023-225832-h100"
     },
     {
       "id": "sketch-to-real",
@@ -1175,7 +1221,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.23,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "skin-enhancer",
@@ -1200,7 +1247,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.17,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "style-snap",
@@ -1225,7 +1273,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 12.86,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "try-on",
@@ -1250,7 +1299,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.82,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "ugc-shot",
@@ -1275,7 +1325,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 27.93,
+      "measured_on": "H100 · 20261023-225832-h100"
     },
     {
       "id": "victory-card",
@@ -1300,7 +1351,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 11.18,
+      "measured_on": "H100 · 20261023-225832-h100"
     },
     {
       "id": "cinema-studio",
@@ -1325,7 +1377,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 12.36,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "meme",
@@ -1350,7 +1403,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 12.66,
+      "measured_on": "H100 · 20261022-035128-h100"
     },
     {
       "id": "z-image",
@@ -1375,7 +1429,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 12.22,
+      "measured_on": "L40S · 20261024-034326-l40s"
     },
     {
       "id": "music",
@@ -1400,7 +1455,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 37.06,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "sfx",
@@ -1425,7 +1481,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 9.25,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "style-reference",
@@ -1450,7 +1507,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 19.8,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "styles",
@@ -1475,7 +1533,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 19.51,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "camera-moves",
@@ -1500,7 +1559,8 @@
       },
       "verdict_24gb": "fits by phases",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 41.26,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "motion-transfer",
@@ -1525,7 +1585,8 @@
       },
       "verdict_24gb": "fits by phases",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 37.34,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "effects",
@@ -1550,7 +1611,8 @@
       },
       "verdict_24gb": "fits by phases",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 41.94,
+      "measured_on": "H100 · 20261023-162024-h100"
     },
     {
       "id": "recast",
@@ -1575,7 +1637,8 @@
       },
       "verdict_24gb": "fits by phases",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null
+      "measured_peak_gb": 30.57,
+      "measured_on": "L40S · 20261020-162214-l40s"
     },
     {
       "id": "asmr-host",
@@ -1600,7 +1663,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 46.28,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "asmr-product",
@@ -1625,7 +1689,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 46.59,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "asmr-whisper",
@@ -1650,7 +1715,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 46.09,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "behind-the-scenes",
@@ -1675,7 +1741,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 46.5,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "idol",
@@ -1700,7 +1767,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 46.28,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "kick-ad",
@@ -1725,7 +1793,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 46.69,
+      "measured_on": "H100 · 20261024-000821-h100"
     },
     {
       "id": "magic-button",
@@ -1750,7 +1819,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 46.28,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "melting-doodle",
@@ -1775,7 +1845,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 46.09,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "mukbang",
@@ -1800,7 +1871,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 46.09,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "rap-video",
@@ -1825,7 +1897,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 46.28,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "speak",
@@ -1850,7 +1923,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 41.79,
+      "measured_on": "H100 · 20261023-044125-h100"
     },
     {
       "id": "storm-creature",
@@ -1875,7 +1949,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 42.78,
+      "measured_on": "H100 · 20261023-225832-h100"
     },
     {
       "id": "talking",
@@ -1900,7 +1975,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 42.85,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "truck-ad",
@@ -1925,7 +2001,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 41.8,
+      "measured_on": "H100 · 20261023-225832-h100"
     },
     {
       "id": "video",
@@ -1950,7 +2027,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 41.55,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "video-t2v",
@@ -1975,7 +2053,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 41.55,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "angles",
@@ -2000,7 +2079,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 38.24,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "relight",
@@ -2025,7 +2105,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 28.66,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "shots",
@@ -2050,7 +2131,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 38.2,
+      "measured_on": "H100 · 20261024-000821-h100"
     },
     {
       "id": "zooms",
@@ -2075,7 +2157,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 29.29,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "whats-next",
@@ -2100,7 +2183,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 42.87,
+      "measured_on": "H100 · 20261022-035829-h100"
     },
     {
       "id": "vfx-clean-plate",
@@ -2125,7 +2209,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 40.61,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "vfx-day-to-night",
@@ -2150,7 +2235,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 44.05,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "chameleon",
@@ -2175,7 +2261,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 44.14,
+      "measured_on": "L40S · 20261024-032920-l40s"
     },
     {
       "id": "cloud-surf",
@@ -2200,7 +2287,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 49.91,
+      "measured_on": "H100 · 20261023-225832-h100"
     },
     {
       "id": "morph",
@@ -2225,7 +2313,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 49.91,
+      "measured_on": "H100 · 20261023-143551-h100"
     },
     {
       "id": "roller-coaster",
@@ -2250,7 +2339,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 49.91,
+      "measured_on": "H100 · 20261023-225832-h100"
     },
     {
       "id": "transitions",
@@ -2275,7 +2365,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 44.29,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "volcano-ad",
@@ -2300,7 +2391,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 50.28,
+      "measured_on": "H100 · 20261023-225832-h100"
     },
     {
       "id": "camera-copy",
@@ -2325,7 +2417,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 40.64,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "mixed-media",
@@ -2350,7 +2443,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 51.25,
+      "measured_on": "H100 · 20261023-143551-h100"
     },
     {
       "id": "vfx-water",
@@ -2375,7 +2469,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 44.4,
+      "measured_on": "L40S · 20261020-133620-l40s"
     },
     {
       "id": "genjutsu",
@@ -2400,7 +2495,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 40.86,
+      "measured_on": "H100 NVL · 20261022-181155-h100"
     },
     {
       "id": "reframe",
@@ -2425,7 +2521,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 44.15,
+      "measured_on": "H100 · 20261023-044125-h100"
     },
     {
       "id": "sdr-hdr",
@@ -2450,7 +2547,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
+      "measured_peak_gb": 37.27,
+      "measured_on": "H100 NVL · 20261022-181155-h100"
     },
     {
       "id": "dub",
@@ -2475,7 +2573,8 @@
       },
       "verdict_24gb": "needs Modal",
       "modal_gpu": "L40S (48 GB), whole",
-      "measured_peak_gb": null
+      "measured_peak_gb": 43.67,
+      "measured_on": "H100 · 20261023-044125-h100"
     },
     {
       "id": "reshoot",
@@ -2500,7 +2599,8 @@
       },
       "verdict_24gb": "needs Modal",
       "modal_gpu": "L40S (48 GB), by phases",
-      "measured_peak_gb": null
+      "measured_peak_gb": 44.15,
+      "measured_on": "L40S · 20261024-035222-l40s"
     },
     {
       "id": "smoke",
@@ -2522,7 +2622,8 @@
       "biggest_file": null,
       "verdict_24gb": "no models",
       "modal_gpu": "any",
-      "measured_peak_gb": null
+      "measured_peak_gb": null,
+      "measured_on": null
     },
     {
       "id": "smoke-invert",
@@ -2544,7 +2645,8 @@
       "biggest_file": null,
       "verdict_24gb": "no models",
       "modal_gpu": "any",
-      "measured_peak_gb": null
+      "measured_peak_gb": null,
+      "measured_on": null
     }
   ]
 }

@@ -43,7 +43,7 @@
       "gb": 0.6,
       "name": "MiniMax-H3_Ref2VA-LoRA-CrossView-Warp_v1_3500.safetensors",
       "gated": false,
-      "license": null,
+      "license": "MiniMax H3 Community License",
       "used_by": [
         "reshoot"
       ]
@@ -55,7 +55,7 @@
       "gb": 1.96,
       "name": "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
       "gated": false,
-      "license": null,
+      "license": "Not stated on the model card (its code, ModelTC/Minimax-H3-Turbo, is Apache-2.0)",
       "used_by": [
         "reshoot"
       ]

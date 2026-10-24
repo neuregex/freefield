@@ -8,8 +8,9 @@
 VRAM numbers here are weight sizes from the Hub, not measurements. "Whole" assumes every
 model sits on the GPU at once; "largest phase" assumes ComfyUI keeps only the models of
 the current step (text encoding, denoising, decoding) and offloads the rest, which is
-what it does when VRAM is short. Activations come on top and are not estimated: the
-smoke tests and the lab write measured peaks into each app.json (vram.peak_gb).
+what it does when VRAM is short. Activations come on top and are not estimated. The
+"Measured" column is the peak VRAM of the app's published lab example (web/examples/index.json),
+or vram.peak_gb in its app.json when `lab/review.py --apply-peaks` wrote one.
 """
 from __future__ import annotations
 
@@ -21,6 +22,21 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 LOCAL_GB = 24.0          # the RTX 3090 Ti this project targets locally
 HEADROOM_GB = 4.0        # CUDA context + activations margin used for the "fits" call
+EXAMPLES = ROOT / "web" / "examples" / "index.json"
+
+
+def example_peaks() -> dict[str, dict]:
+    """Peak VRAM, GPU and run of each app's published lab example."""
+    try:
+        apps = json.loads(EXAMPLES.read_text(encoding="utf-8"))["apps"]
+    except (OSError, ValueError, KeyError):
+        return {}
+    out = {}
+    for app_id, e in apps.items():
+        if e.get("peak_vram_gb"):
+            gpu = (e.get("gpu") or "GPU").split(",")[0].replace("NVIDIA ", "").replace(" 80GB HBM3", "")
+            out[app_id] = {"peak_gb": e["peak_vram_gb"], "measured_on": f"{gpu} · {e.get('run', '')}"}
+    return out
 
 
 def load_apps() -> list[dict]:
@@ -76,7 +92,7 @@ def write_packs(apps: list[dict]) -> None:
 
 
 # ---------------------------------------------------------------- VRAM
-def vram_row(a: dict) -> dict:
+def vram_row(a: dict, measured: dict | None = None) -> dict:
     req = [m for m in a.get("models", []) if not m.get("optional")]
     opt = [m for m in a.get("models", []) if m.get("optional")]
     by = defaultdict(float)
@@ -115,12 +131,14 @@ def vram_row(a: dict) -> dict:
         "optional_gb": round(sum(m["gb"] for m in opt), 2),
         "biggest_file": {"name": basename(biggest["file"]), "gb": biggest["gb"]} if biggest else None,
         "verdict_24gb": verdict, "modal_gpu": gpu,
-        "measured_peak_gb": (a.get("vram") or {}).get("peak_gb"),
+        "measured_peak_gb": (a.get("vram") or measured or {}).get("peak_gb"),
+        "measured_on": (a.get("vram") or measured or {}).get("measured_on"),
     }
 
 
-def write_vram(apps: list[dict]) -> None:
-    rows = [vram_row(a) for a in apps]
+def write_vram(apps: list[dict], quiet: bool = False) -> None:
+    peaks = example_peaks()
+    rows = [vram_row(a, peaks.get(a["id"])) for a in apps]
     order = {"fits whole": 0, "fits by phases": 1, "tight (by phases)": 2, "needs Modal": 3, "no models": 4}
     rows.sort(key=lambda r: (order[r["verdict_24gb"]], r["largest_phase_gb"], r["id"]))
     docs = ROOT / "docs"
@@ -136,16 +154,23 @@ def write_vram(apps: list[dict]) -> None:
         "When two apps run back to back with different models, the gateway asks ComfyUI to unload everything first",
         "(`POST /free`), so the previous app never stays in VRAM.",
         "",
+        "*Measured* is the peak VRAM of the app's lab example as published in the web UI, and the GPU it ran on. On an",
+        "80 GB H100 ComfyUI can keep models of earlier steps loaded instead of offloading them, so a peak measured there",
+        "is not the least the app needs.",
+        "",
         "| App | Status | Whole | Largest phase | Biggest file | Verdict on 24 GB | Modal GPU | Measured |",
         "|---|---|---:|---|---|---|---|---:|",
     ]
     for r in rows:
         bf = f"{r['biggest_file']['name']} ({r['biggest_file']['gb']:.1f})" if r["biggest_file"] else "—"
-        peak = f"{r['measured_peak_gb']:.1f}" if r["measured_peak_gb"] else "not measured"
+        on = (r["measured_on"] or "").split(" · ")[0]
+        peak = f"{r['measured_peak_gb']:.1f} GB ({on})" if r["measured_peak_gb"] else "not measured"
         opt = f" (+{r['optional_gb']:.1f} optional)" if r["optional_gb"] else ""
         lines.append(f"| `{r['id']}` | {r['status']} | {r['whole_gb']:.1f} GB{opt} | {r['largest_phase']} {r['largest_phase_gb']:.1f} GB "
                      f"| {bf} | {r['verdict_24gb']} | {r['modal_gpu']} | {peak} |")
     (docs / "vram-map.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    if quiet:
+        return
     for r in rows:
         print(f"{r['verdict_24gb']:<18} whole {r['whole_gb']:5.1f}  {r['largest_phase']:<7} {r['largest_phase_gb']:5.1f}  {r['id']}")
 

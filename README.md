@@ -17,12 +17,13 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 
 | | |
 |---|---|
-| Apps | 102 manifests, each with a workflow: 29 *ready* that ran on a GPU, 5 IC-LoRA apps with their own workflows (`genjutsu`, `reframe`, `sdr-hdr`, `mixed-media`, `dub`) that ran on an H100 on 22–23 Oct, `morph` (ran on an H100, 23 Oct), 66 template apps (a fixed prompt over the `edit`, `z-image`, `video` or `relight` pipeline, written by `tools/template_apps.py`; all 66 ran on H100s on 22 Oct, see GPU runs; the 15 that came out weak were redone on 23–24 Oct through the `tplx-*` experiments, four of them on a `morph` base: Klein draws the last frame and LTX-2.5 moves the photo into it); `reshoot` was a draft until 24 Oct: its web example showed the warp guide instead of the result (the lab now keeps an app's outputs in their declared order) |
-| Workflows | Built from official sources by `tools/build_apps.py` (the two smoke apps are hand-written) and accepted by ComfyUI's validator: ComfyUI `e3bee7f` (0.42.0), ComfyUI-LTXVideo `44c8a36`, ComfyUI-CrossViewWarp `fbb1e93` |
-| LoRA lab | 244 cases: one showcase per app (100), one per effect (24), one per look of `mixed-media` (16) and one per transformation of `morph` (15), 33 references the others start from, 12 style-drift experiments (`mmx-*`) and 36 template experiments (`tplx-*`, each with its verdict in the note); the prompt each one would queue (values, overrides and inserted LoRAs) passes the same validator |
-| End to end | Web UI → server → gateway on Modal → comfy-api-proxy → ComfyUI on an H100, run from the browser on 23 Oct: `morph` (Astronaut, 160.8 s from the button to the video, 128.7 s of it on the GPU), `mixed-media` (Anime, 149 s / 129.4 s) and `dub` (a Spanish line, 72 s / 67 s; the transcript matches the prompt). Four fixes came out of it, each with a test: links the gateway rewrites are https on a public host (Modal sends no `X-Forwarded-Proto`), an mp4 is a video even when ComfyUI lists it under `images`, the app's declared output nodes come first (core `LoadVideo` reports the clip it was given), and the progress bar is computed by the server from the raw event stream (the proxy's first frames say 1.0 and the SDK drops everything after). The model-free smoke apps cover the same path in CI |
-| CI | `.github/workflows/validate.yml` runs all of the above on every push, including a CPU-only ComfyUI that checks every workflow and lab case (about 3 minutes) |
-| GPU runs | Showcase lab run on an L40S (`20261020-133620-l40s`): 35 of 36 cases, one example per app; `recast` failed there and passed in a re-run (`20261020-162214-l40s`). Effects on 4 H100s at once (`20261021-140940-h100`, `--shards 4`): 61 of 61 cases in about 31 minutes of GPU, 2 min 52 s per effect on average, peak 30.8 GB. Two more H100 rounds (`20261021-152107-h100`, `20261021-175735-h100`) re-ran the 5 that failed with new photos and tried 7 LoRAs by other authors: Painting, Pirate captain, Zen and Crash zoom out were taken out, Dolly zoom and Bullet time moved to ostris's and joyfox's LoRAs, and Money rain, Clones and Steam from nose and ears were added. A fourth round (`20261021-195731-h100`, 14 of 14 cases) ran the new ones as shipped; after it, Jungle, Samurai, Warrior, Jumpscare, Smoke outfit change and Gothic transformation were taken out to keep the app SFW. That left 35 effects; on 23 Oct five more (Mona Lisa, VIP, Cartoon jaw drop, Selfie with younger self, Clones) were marked mediocre in the web UI (they lose the face or look flat at 480p) and moved to the `morph` app, which keeps the face; the other costume and identity transformations (Assassin, Baby, Bride, Classy, Princess, Robot face reveal) followed the same day for the same reason: 24 effects, each with an example in the gallery. The 66 template apps ran on 22 Oct: the 40 image templates on 2 H100s (`20261022-035128-h100`, 52 of 52 cases, 17 s at most, peak 14.7 GB) and the 26 video and two-reference ones on 3 (`20261022-035829-h100`, 39 of 39, 98 s at most, peak 46.6 GB). The IC-LoRA apps: `20261022-173700-h100` reached 6 of 28 (the gated Lightricks repos needed their licenses accepted first), `20261022-181155-h100` 28 of 28 on an H100 NVL, `20261023-044125-h100` 24 of 24 after the fixes to `reframe` (a per-frame mask) and `dub` (an empty audio latent plus the speaker reference wired into the guider); `mixed-media` took three more rounds (`20261023-124332-h100`, `-131909`, `-140409`) to settle the Klein first frame, the LoRA strength 0.7 and the 16 looks, and `20261023-143551-h100` (30 of 30) ran the looks on the final clip with the first 9 transformations of `morph`; `20261023-162024-h100` (14 of 14, peak 50.2 GB) ran the other 6 and the Cakeify showcase. The weak templates took three H100 rounds of `tplx-*` experiments (`20261023-222828-h100`, `20261023-225832-h100`, `20261024-000821-h100`) and three jobs of the lab queue on an L40S (`20261024-032920-l40s`, `-033622-l40s`, `-034326-l40s`): face swap works since the last two, with MediaPipe's face oval as the mask and the other photo as Klein's only reference. VRAM figures below are weight sizes; the lab's measured peaks show up in the web UI |
+| Apps | 102, all *ready*: 28 apps with a workflow of their own, the 5 IC-LoRA apps (`genjutsu`, `reframe`, `sdr-hdr`, `mixed-media`, `dub`), `morph`, 66 template apps (a fixed prompt over one of those pipelines, written by `tools/template_apps.py`) and 2 model-free smoke apps. The 100 that use models each have a lab example made on a GPU |
+| Open weights | No API or partner nodes. Every model is a file you download, listed in its app's `app.json` with its Hugging Face repo, size and license; the cloud text-encoder branch of Lightricks' examples is removed |
+| Workflows | Built from official sources by `tools/build_apps.py` (ComfyUI's templates, Lightricks' ComfyUI-LTXVideo examples, Comfy's `comfy-reshoot`); the template apps reuse those bases and the two smoke apps are hand-written. All accepted by ComfyUI's validator: ComfyUI `e3bee7f` (0.42.0), ComfyUI-LTXVideo `44c8a36`, ComfyUI-CrossViewWarp `fbb1e93` |
+| GPU runs | 24 lab runs on Modal from 20 to 24 Oct (L40S and H100), 504 of 527 cases ok. Every example in the web UI comes from one of them, with its time and peak VRAM. Run by run, and what each one changed: [`docs/lab-runs.md`](docs/lab-runs.md) |
+| End to end | Run from the browser on 23 Oct, web UI → server → gateway on Modal → ComfyUI on an H100: `morph` 160.8 s from the button to the video (128.7 s of it on the GPU), `mixed-media` 149 s, `dub` 72 s. The model-free smoke apps cover the same path in CI |
+| LoRA lab | 244 cases: one showcase per app (100), one per effect (24), one per look of `mixed-media` (16) and one per transformation of `morph` (15), 33 references the others start from, 12 style-drift experiments (`mmx-*`) and 36 template experiments (`tplx-*`, each with its verdict in the note) |
+| CI | `.github/workflows/validate.yml` on every push: the manifest validator, the tests, the type check, the generated packs and VRAM map, and a CPU-only ComfyUI that accepts every workflow and the prompt of every lab case (about 3 minutes) |
 
 ## Apps
 
@@ -65,7 +66,9 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 Higgsfield's catalog is mostly fixed prompts over a few pipelines, and so is this: each of these apps is one of
 Freefield's pipelines with its prompt baked in, selects that fill parts of it, and an "Extra direction" box appended
 to it. The bases: `edit` (FLUX 3 Image Klein, one reference image), `edit` with a second reference (a garment, another
-person, a face), `z-image` (text to image), `video` (LTX-2.5 image-to-video with its own audio) and `relight`'s
+person; for `face-swap`, MediaPipe's face oval from core ComfyUI nodes masks the edit and the face photo is Klein's only
+reference), `z-image` (text to image), `video` (LTX-2.5 image-to-video with its own audio), `morph` (Klein draws the
+last frame from a fixed instruction, LTX-2.5 and the transition LoRA move the photo into it) and `relight`'s
 Qwen-Image-Edit-2509 pipeline with another LoRA (dx8152's Multiple Angles for `angles`, `shots` and `zooms`; lovis93's
 next-scene v2 for `whats-next`). `tools/template_apps.py` holds the table and writes the 66 folders (manifest + the
 base workflow, with the few edits a base needs) and their lab cases; `--readme` prints this list and `--lab` the
@@ -140,8 +143,9 @@ command that makes every example. Add a line to the table there, not a folder by
 | `zooms` | Zooms | `relight + Qwen-Edit-2509-Multiple-angles` | your photo, zoom |
 | `whats-next` | What's Next? | `relight + next-scene-qwen-image-lora-2509` | your photo, continuation |
 
-Full table: [`docs/vram-map.md`](docs/vram-map.md) (`python tools/catalog.py vram`). Between two apps with different
-base models the gateway calls ComfyUI's `POST /free`, so nothing from the previous app stays in VRAM.
+The sizes above are weights only. Full table, with the peak VRAM measured on each app's lab example and the GPU it ran
+on: [`docs/vram-map.md`](docs/vram-map.md) (`python tools/catalog.py vram`). Between two apps with different base
+models the gateway calls ComfyUI's `POST /free`, so nothing from the previous app stays in VRAM.
 
 ## Run it
 
@@ -153,7 +157,7 @@ python tools/doctor.py
 
 # 1. secrets (once). Pick the Modal workspace first: in .env, FREEFIELD_MODAL_PROFILE=<profile from `modal profile list`>
 python tools/setup_token.py                       # gateway token: Modal secret "freefield" and .env get the same value
-modal secret create huggingface HF_TOKEN=hf_...   # accept the LTX-2.5 and FLUX 3 Klein licenses on the Hub first
+modal secret create huggingface HF_TOKEN=hf_...   # accept the gated licenses on the Hub first (doctor.py checks them)
 
 # 2. models into the "freefield-models" volume, per pack (see packs/index.json)
 python tools/catalog.py packs
@@ -202,8 +206,8 @@ back in the form.
 
 Any ComfyUI works as the backend: run `comfy-api-proxy` next to it and `python infra/gateway.py` in front, and point
 `COMFY_BASE_URL` at the gateway. Pointing it straight at a `comfy-api-proxy` (or another Comfy API v2 endpoint) works
-too; only the unload-between-apps step is skipped. Draft apps stay locked in the UI and the CLI until you set
-`FREEFIELD_DRAFTS=1` (or pass `--draft` to `npm run app`).
+too; only the unload-between-apps step is skipped. An app marked `draft` (none is, today) stays locked in the UI and
+the CLI until you set `FREEFIELD_DRAFTS=1` (or pass `--draft` to `npm run app`).
 
 ## The LoRA lab and the gallery
 
@@ -211,7 +215,7 @@ too; only the unload-between-apps step is skipped. Draft apps stay locked in the
 runs on them with a fixed seed. Each app has a *showcase* case, so one command makes an example of every app:
 
 ```sh
-modal run --detach lab/lab_modal.py --showcase    # one example per app + the references they need (36 cases)
+modal run --detach lab/lab_modal.py --showcase    # one example per app + the references they need (125 cases)
 modal run lab/lab_modal.py --pull <run_id>        # only if the terminal closed before the end: copy back and publish
 ```
 
@@ -248,7 +252,7 @@ at a time, saves the output to `<name>.log` and writes `<name>.done.json` with t
 
 `--detach` keeps the GPU job running if the terminal closes; the run id is printed at the start. Missing models are
 downloaded first on a CPU container, so no GPU is billed while they arrive (the whole catalog is
-close to 300 GB). Then one GPU container runs the cases, recording time and peak VRAM, and keeps going when one fails;
+103 files, about 334 GB). Then one GPU container runs the cases, recording time and peak VRAM, and keeps going when one fails;
 a case whose model could not be downloaded (say, a license not yet accepted) is skipped with the reason. Every output
 also gets small web versions (a card, a poster for videos, a web-sized copy). At the end the run is copied to
 `lab/results/<run_id>`, `review.html` is built there for rating, and `lab/publish.py` copies one example per app into
@@ -292,11 +296,16 @@ using the node definitions in `tools/object_info.json`.
 ## Credits and licenses
 
 Code: MIT. Model weights are not in this repository and keep their own licenses, listed in each `app.json`
-(Apache-2.0, MIT, LTX-2.x Community License, FLUX Kommunity License, Krea 2 Community License, SAM License, Stable
-Audio Community License, MiniMax H3 Community License). Some community LoRAs are research-only or non-commercial (Cameraman v2 in `camera-copy`); their
-`app.json` says so and the web UI shows it next to the model. Workflows are adapted from ComfyUI's official templates and Lightricks' ComfyUI-LTXVideo examples;
+(Apache-2.0, MIT, OpenRAIL, LTX-2.x Community License, FLUX Kommunity License, Krea 2 Community License, SAM License,
+Stable Audio Community License, MiniMax H3 Community License). Some community LoRAs are research-only or non-commercial
+(Cameraman v2 in `camera-copy`), and one states no license on its model card (lightx2v's MiniMax-H3 Turbo in `reshoot`;
+its code repository is Apache-2.0); their `app.json` says so and the web UI shows it next to the model. Workflows are adapted from ComfyUI's official templates and Lightricks' ComfyUI-LTXVideo examples;
 the cloud text-encoder branch in Lightricks' examples is removed so every app runs on open weights only. Camera and
 lens vocabulary in `cinema-studio` comes from [open-higgsfield-ai](https://github.com/sunnychase/open-higgsfield-ai) (MIT).
+LoRAs outside `effects`: Lightricks' IC-LoRAs (LTX-2.x Community License); joyfox's LTX-2.3 transition LoRA (`transitions`,
+`morph` and the four templates on it), dx8152's Multiple Angles and lightx2v's Qwen-Image Lightning (Apache-2.0); lovis93's
+next-scene v2 (MIT); elix3r's talking-head LoRA in `talking` (OpenRAIL); Cseti's CrossView Warp in `reshoot` (MiniMax H3
+Community License). `face-swap` masks the face with Comfy-Org's MediaPipe face landmarker (Apache-2.0).
 20 of the 24 effect LoRAs in `effects` are [Remade-AI](https://huggingface.co/Remade-AI)'s; the other 4 are by
 [joyfox](https://huggingface.co/joyfox) (Bullet time, Money rain; its repos moved there from valiantcat and laozou),
 [ostris](https://huggingface.co/ostris) (Dolly zoom) and

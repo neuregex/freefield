@@ -178,14 +178,16 @@
       "file": "MiniMax-H3_Ref2VA-LoRA-CrossView-Warp_v1_3500.safetensors",
       "dir": "loras",
       "gb": 0.6,
-      "phase": "denoise"
+      "phase": "denoise",
+      "license": "MiniMax H3 Community License"
     },
     {
       "repo": "lightx2v/Minimax-h3-Turbo",
       "file": "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
       "dir": "loras",
       "gb": 1.96,
-      "phase": "denoise"
+      "phase": "denoise",
+      "license": "Not stated on the model card (its code, ModelTC/Minimax-H3-Turbo, is Apache-2.0)"
     }
   ],
   "custom_nodes": [
