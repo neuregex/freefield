@@ -23,6 +23,8 @@ function fakeJob(end: "succeeded" | "failed", events: ComfyEvent[] = []): JobLik
     get outputs() {
       return status === "succeeded"
         ? [{ name: "ComfyUI_00001_.png", type: "image", nodeId: "9", contentType: "image/png", toBytes: async () => PNG },
+           // core SaveVideo reports its mp4 under `images`, so the SDK says "image"
+           { name: "video_00001_.mp4", type: "image", nodeId: "68", contentType: "video/mp4", toBytes: async () => PNG },
            { name: "latent.bin", type: "latent", nodeId: "3", contentType: "application/octet-stream", toBytes: async () => new Uint8Array() }]
         : [];
     },
@@ -66,7 +68,8 @@ test("following a job stores its media outputs and timings", async () => {
     const done1 = await history.follow(entry, fakeJob("succeeded", [progress]));
     assert.equal(done1.status, "succeeded");
     assert.equal(done1.job, "job-1");
-    assert.deepEqual(done1.outputs.map((o) => [o.file, o.type]), [["out-01.png", "image"]], "latents are skipped");
+    assert.deepEqual(done1.outputs.map((o) => [o.file, o.type]), [["out-01.png", "image"], ["out-02.mp4", "video"]],
+      "latents are skipped; an mp4 is a video whatever the SDK called it");
     assert.ok(existsSync(join(dir, entry.id, "out-01.png")));
     assert.equal(done1.seconds, 2.5);
     assert.equal(history.get(entry.id)!.progress, null, "live progress is dropped once the run ends");

@@ -79,6 +79,18 @@ function safeExt(name: string | undefined, type: string | undefined): string {
   return EXT[(type ?? "").split(";")[0].trim()] ?? ".bin";
 }
 
+const VIDEO_EXT = new Set([".mp4", ".webm", ".mov", ".mkv", ".gif"]);
+const AUDIO_EXT = new Set([".mp3", ".wav", ".flac", ".ogg", ".m4a", ".opus"]);
+
+/** What the file is, by its extension first: core SaveVideo and CreateVideo report their mp4 under
+ * `images` (with `animated: true`), so the SDK calls it an image and the web would draw it in an <img>.
+ * (First web run of morph, 23 oct: a blank card for a good video.) */
+function mediaKind(ext: string, sdkType: string): "image" | "video" | "audio" {
+  if (VIDEO_EXT.has(ext)) return "video";
+  if (AUDIO_EXT.has(ext)) return "audio";
+  return sdkType === "video" || sdkType === "audio" ? sdkType : "image";
+}
+
 function normStatus(s: string): Status {
   if (s === "canceling") return "running";
   return (["queued", "running", "succeeded", "failed", "canceled", "expired"] as string[]).includes(s) ? (s as Status) : "running";
@@ -257,9 +269,10 @@ export class History {
           if (!MEDIA.has(out.type)) continue;
           try {
             const bytes = await out.toBytes();
-            const file = `out-${String(++n).padStart(2, "0")}${safeExt(out.name, out.contentType)}`;
+            const ext = safeExt(out.name, out.contentType);
+            const file = `out-${String(++n).padStart(2, "0")}${ext}`;
             writeFileSync(join(folder, file), bytes);
-            entry.outputs.push({ file, type: out.type, name: out.name, node: out.nodeId });
+            entry.outputs.push({ file, type: mediaKind(ext, out.type), name: out.name, node: out.nodeId });
           } catch (e) {
             entry.error = { message: `could not download ${out.name}: ${(e as Error).message}` };
           }
@@ -367,7 +380,10 @@ export class History {
   private read(id: string): Entry | null {
     if (!ID.test(id)) return null;
     try {
-      return JSON.parse(readFileSync(join(this.dir, id, "meta.json"), "utf-8")) as Entry;
+      const entry = JSON.parse(readFileSync(join(this.dir, id, "meta.json"), "utf-8")) as Entry;
+      // entries saved before mediaKind() carry the SDK's type: fix them as they are read
+      for (const o of entry.outputs ?? []) o.type = mediaKind(extname(o.file).toLowerCase(), o.type);
+      return entry;
     } catch {
       return null;
     }
