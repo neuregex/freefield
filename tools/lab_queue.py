@@ -9,7 +9,10 @@ Whoever wants a run (you, or an assistant working in this folder) writes lab/que
 
     {"only": "tpl-face-swap,tplx-face-swap-*", "shards": 1, "note": "why this run"}
 
-The watcher runs exactly `modal run lab/lab_modal.py --only <only> [--shards N]` from the repo root, prints
+"publish": false adds --no-publish: the run is copied to lab/results/ for review but web/examples/ stays as it is
+(publish what passed later with `python lab/publish.py lab/results/<run_id> --skip <case ids>`).
+
+The watcher runs exactly `modal run lab/lab_modal.py --only <only> [--shards N] [--no-publish]` from the repo root, prints
 the output and saves it to lab/queue/<name>.log, then writes lab/queue/<name>.done.json (exit code, run id,
 "N/M ok", times) and renames the job to <name>.job.done.json. Nothing else can be asked for: no deploy, no other
 script, no extra arguments. "only" may hold case ids and fnmatch patterns from lab/cases.json and nothing else.
@@ -50,14 +53,16 @@ def check_job(name: str, job: dict, max_cases: int) -> tuple[list[str] | None, s
     """The case ids a job selects, or None and the reason it is refused."""
     if not NAME.match(name):
         return None, "job name must be letters, digits, - and _"
-    if set(job) - {"only", "shards", "note"}:
-        return None, f"unknown keys: {sorted(set(job) - {'only', 'shards', 'note'})}"
+    if set(job) - {"only", "shards", "note", "publish"}:
+        return None, f"unknown keys: {sorted(set(job) - {'only', 'shards', 'note', 'publish'})}"
     only = job.get("only")
     if not isinstance(only, str) or not ONLY.match(only):
         return None, "only must be case ids or patterns: a-z 0-9 - * ? and commas"
     shards = job.get("shards", 1)
     if not isinstance(shards, int) or not 1 <= shards <= 4:
         return None, "shards must be 1 to 4"
+    if not isinstance(job.get("publish", True), bool):
+        return None, "publish must be true or false"
     ids = case_ids()
     wanted = [w for w in only.split(",") if w]
     unknown = [w for w in wanted if not any(fnmatch(i, w) for i in ids)]
@@ -90,6 +95,8 @@ def run_job(name: str, job: dict, picked: list[str]) -> dict:
     args = modal_cmd() + ["run", "lab/lab_modal.py", "--only", job["only"]]
     if job.get("shards", 1) > 1:
         args += ["--shards", str(job["shards"])]
+    if job.get("publish", True) is False:
+        args += ["--no-publish"]
     log_path = QUEUE / f"{name}.log"
     started, t0 = now(), time.time()
     print(f"\n[{started}] {name}: {len(picked)} cases · {' '.join(args[1:])}", flush=True)

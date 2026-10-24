@@ -2,6 +2,7 @@
 """Publish one example per app from a lab run into the web UI.
 
     python lab/publish.py lab/results/<run_id>
+    python lab/publish.py lab/results/<run_id> --skip fx-crying,tpl-idol   # all but these cases
 
 For every app it picks a case that succeeded (the one marked "showcase" in lab/cases.json if
 it ran, otherwise the first one in file order) and copies that case's web versions into
@@ -130,9 +131,17 @@ def publish_options(run_dir: Path, ok: list[dict], dest: Path, manifest: dict, o
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("run_dir", type=Path)
+    ap.add_argument("--skip", default="", help="case ids not to publish (comma-separated): their apps keep what they had")
     a = ap.parse_args(argv)
     run_dir = a.run_dir.resolve()
     results = read_results(run_dir)
+    skip = {s for s in a.skip.split(",") if s}
+    if skip:
+        unknown = skip - set(results)
+        if unknown:
+            print(f"--skip: not in this run: {', '.join(sorted(unknown))}", file=sys.stderr)
+            return 2
+        results = {k: v for k, v in results.items() if k not in skip}
     cases = json.loads((ROOT / "lab" / "cases.json").read_text(encoding="utf-8"))["cases"]
     rank = {c["id"]: i for i, c in enumerate(cases)}
     showcase = {c["id"] for c in cases if c.get("showcase")}
