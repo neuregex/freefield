@@ -653,23 +653,23 @@
       "run": "20261024-164909-h100"
     },
     "video-t2v": {
-      "case": "baseline-t2v",
+      "case": "t2v-trumpet",
       "type": "video",
       "card": "examples/video-t2v/card.mp4",
       "poster": "examples/video-t2v/poster.jpg",
       "full": "examples/video-t2v/full.mp4",
       "inputs": [],
       "values": {
-        "prompt": "A glass of water tips over on a wooden table and water splashes, macro shot",
+        "prompt": "A street musician plays a trumpet on a rainy night street in New Orleans, neon signs reflected in the wet pavement, the camera slowly pushes in toward him, warm jazz trumpet and soft rain",
         "duration": 4,
         "enhance": false,
         "aspect": "16:9 (Widescreen)"
       },
       "seed": 42,
-      "seconds": 47.6,
-      "peak_vram_gb": 41.55,
-      "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261020-133620-l40s"
+      "seconds": 53.7,
+      "peak_vram_gb": 48.41,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-172353-h100"
     },
     "z-image": {
       "case": "ref-face-a",
@@ -3740,7 +3740,240 @@
           }
         }
       }
+    },
+    "ai-influencer": {
+      "case": "tpl-ai-influencer",
+      "type": "image",
+      "card": "examples/ai-influencer/card.jpg",
+      "poster": null,
+      "full": "examples/ai-influencer/full.jpg",
+      "inputs": [],
+      "values": {
+        "who": "a woman in her late twenties from Mexico City with curly dark hair",
+        "niche": "fitness influencer stretching on a rooftop at sunrise in workout clothes",
+        "details": "",
+        "width": 768,
+        "height": 1280,
+        "steps": 8
+      },
+      "seed": 42,
+      "seconds": 12.0,
+      "peak_vram_gb": 35.67,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-172353-h100"
+    },
+    "bullet-time-scene": {
+      "case": "tpl-bullet-time-scene",
+      "type": "video",
+      "card": "examples/bullet-time-scene/card.mp4",
+      "poster": "examples/bullet-time-scene/poster.jpg",
+      "full": "examples/bullet-time-scene/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/bullet-time-scene/input-image.jpg",
+          "full": "examples/bullet-time-scene/input-image-full.jpg",
+          "from_case": "ref-fx-jump"
+        }
+      ],
+      "values": {
+        "subject": "a parkour athlete in a black t-shirt leaping between two rooftops",
+        "details": "",
+        "strength": 1.0,
+        "aspect": "portrait",
+        "frames": 81
+      },
+      "seed": 42,
+      "seconds": 190.2,
+      "peak_vram_gb": 30.78,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-172353-h100"
+    },
+    "bullet-time-splash": {
+      "case": "tpl-bullet-time-splash",
+      "type": "video",
+      "card": "examples/bullet-time-splash/card.mp4",
+      "poster": "examples/bullet-time-splash/poster.jpg",
+      "full": "examples/bullet-time-splash/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/bullet-time-splash/input-image.jpg",
+          "full": "examples/bullet-time-splash/input-image-full.jpg",
+          "from_case": "ref-fx-runner"
+        }
+      ],
+      "values": {
+        "subject": "a sprinter in a red and white running outfit",
+        "details": "",
+        "strength": 1.0,
+        "aspect": "portrait",
+        "frames": 81
+      },
+      "seed": 42,
+      "seconds": 190.0,
+      "peak_vram_gb": 39.95,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-172353-h100"
+    },
+    "bullet-time-white": {
+      "case": "tpl-bullet-time-white",
+      "type": "video",
+      "card": "examples/bullet-time-white/card.mp4",
+      "poster": "examples/bullet-time-white/poster.jpg",
+      "full": "examples/bullet-time-white/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/bullet-time-white/input-image.jpg",
+          "full": "examples/bullet-time-white/input-image-full.jpg",
+          "from_case": "ref-character"
+        }
+      ],
+      "values": {
+        "subject": "a man in a red jacket, jeans and white sneakers",
+        "details": "",
+        "strength": 1.0,
+        "aspect": "portrait",
+        "frames": 81
+      },
+      "seed": 42,
+      "seconds": 203.8,
+      "peak_vram_gb": 40.2,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-172353-h100"
+    },
+    "depth-map": {
+      "case": "depth-room",
+      "type": "image",
+      "card": "examples/depth-map/card.jpg",
+      "poster": null,
+      "full": "examples/depth-map/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Photo",
+          "type": "image",
+          "src": "examples/depth-map/input-image.jpg",
+          "full": "examples/depth-map/input-image-full.jpg",
+          "from_case": "ref-room"
+        }
+      ],
+      "values": {
+        "map": "depth_colored",
+        "detail": 6
+      },
+      "seed": null,
+      "seconds": 3.2,
+      "peak_vram_gb": 6.64,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-172353-h100"
+    },
+    "extend-video": {
+      "case": "extend-stroll",
+      "type": "video",
+      "card": "examples/extend-video/card.mp4",
+      "poster": "examples/extend-video/poster.jpg",
+      "full": "examples/extend-video/full.mp4",
+      "inputs": [
+        {
+          "id": "clip",
+          "label": "Your clip",
+          "type": "video",
+          "src": "examples/extend-video/input-clip.jpg",
+          "full": "examples/extend-video/input-clip-full.mp4",
+          "from_case": "ref-stroll"
+        }
+      ],
+      "values": {
+        "prompt": "She keeps walking along the path, slows down and looks up at the trees; birds sing and leaves rustle.",
+        "duration": 3,
+        "steps": 20
+      },
+      "seed": 42,
+      "seconds": 48.1,
+      "peak_vram_gb": 50.54,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-172353-h100"
+    },
+    "h3-photo": {
+      "case": "h3-photo-man",
+      "type": "video",
+      "card": "examples/h3-photo/card.mp4",
+      "poster": "examples/h3-photo/poster.jpg",
+      "full": "examples/h3-photo/full.mp4",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Photo",
+          "type": "image",
+          "src": "examples/h3-photo/input-image.jpg",
+          "full": "examples/h3-photo/input-image-full.jpg",
+          "from_case": "ref-fx-man-b"
+        }
+      ],
+      "values": {
+        "prompt": "The man laughs, looks at the camera and says: \"Hey, good to see you.\"",
+        "duration": 4,
+        "steps": 20
+      },
+      "seed": 42,
+      "seconds": 109.8,
+      "peak_vram_gb": 49.46,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-172353-h100"
+    },
+    "h3-video": {
+      "case": "h3-video-tacos",
+      "type": "video",
+      "card": "examples/h3-video/card.mp4",
+      "poster": "examples/h3-video/poster.jpg",
+      "full": "examples/h3-video/full.mp4",
+      "inputs": [],
+      "values": {
+        "prompt": "A street cook in Mexico City flips tacos on a hot griddle, steam and sizzling sound, he looks up and says: \"Two more coming right up!\"",
+        "aspect": "16:9 (Widescreen)",
+        "duration": 4,
+        "steps": 20
+      },
+      "seed": 42,
+      "seconds": 108.6,
+      "peak_vram_gb": 48.33,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-172353-h100"
+    },
+    "video-remove-bg": {
+      "case": "vbg-walk",
+      "type": "video",
+      "card": "examples/video-remove-bg/card.mp4",
+      "poster": "examples/video-remove-bg/poster.jpg",
+      "full": "examples/video-remove-bg/full.mp4",
+      "inputs": [
+        {
+          "id": "clip",
+          "label": "Your clip",
+          "type": "video",
+          "src": "examples/video-remove-bg/input-clip.jpg",
+          "full": "examples/video-remove-bg/input-clip-full.mp4",
+          "from_case": "ref-walk"
+        }
+      ],
+      "values": {
+        "background": "green",
+        "seconds": 5
+      },
+      "seed": null,
+      "seconds": 21.2,
+      "peak_vram_gb": 6.73,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-172353-h100"
     }
   },
-  "updated_from": "20261024-164909-h100"
+  "updated_from": "20261024-172353-h100"
 }
