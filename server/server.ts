@@ -44,7 +44,7 @@ const WARM_MS = 9 * 60 * 1000;
 let lastContact = 0;
 let waking: { since: number; error?: string } | null = null;
 const contact = () => { lastContact = Date.now(); };
-const history = new History(join(root, "out", "history"), contact);
+const history = new History(join(root, "out", "history"), contact, (id) => (apps.find((a) => a.id === id)?.outputs ?? []).map((o) => o.node));
 const flags = new Flags(join(root, "lab", "flags.json"), apps);
 
 const MIME: Record<string, string> = {

@@ -132,6 +132,16 @@ export async function waitPatiently(job: { wait(timeoutMs?: number): Promise<unk
   }
 }
 
+/** The media outputs worth keeping: those of the app's declared output nodes, in the declared order (the first one
+ * is the card's thumbnail), and only when none of them produced anything, every media output of the job. The
+ * backend lists more than the results: core LoadVideo reports the clip it was given (mixed-media's first web run,
+ * 23 oct: the card showed the input clip, the result was out-02). */
+export function pickOutputs<T extends { type: string; nodeId: string }>(outputs: readonly T[], wanted: readonly string[]): T[] {
+  const media = outputs.filter((o) => MEDIA.has(o.type));
+  const declared = wanted.flatMap((node) => media.filter((o) => o.nodeId === node));
+  return declared.length ? declared : media;
+}
+
 const secondsBetween = (a: string | Date | null | undefined, b: string | Date | null | undefined) =>
   a && b ? Math.max(0, Math.round((new Date(b).getTime() - new Date(a).getTime()) / 100) / 10) : null;
 
@@ -141,10 +151,13 @@ export class History {
 
   readonly dir: string;
   private onContact: () => void;
+  private outputNodes: (appId: string) => string[];
 
-  constructor(dir: string, onContact: () => void = () => {}) {
+  /** outputNodes(app): the nodes app.json declares as outputs, in order; [] means "keep every media output". */
+  constructor(dir: string, onContact: () => void = () => {}, outputNodes: (appId: string) => string[] = () => []) {
     this.dir = dir;
     this.onContact = onContact;
+    this.outputNodes = outputNodes;
     mkdirSync(dir, { recursive: true });
   }
 
@@ -265,8 +278,7 @@ export class History {
       if (entry.status === "succeeded") {
         const folder = join(this.dir, entry.id);
         let n = 0;
-        for (const out of job.outputs) {
-          if (!MEDIA.has(out.type)) continue;
+        for (const out of pickOutputs(job.outputs, this.outputNodes(entry.app))) {
           try {
             const bytes = await out.toBytes();
             const ext = safeExt(out.name, out.contentType);

@@ -6,7 +6,7 @@ import { join } from "node:path";
 import type { ComfyEvent } from "@comfyorg/sdk";
 import { loadRegistry } from "../server/registry.ts";
 import { resolveValues } from "../server/runner.ts";
-import { History, type JobLike } from "../server/history.ts";
+import { History, pickOutputs, type JobLike } from "../server/history.ts";
 
 const { apps } = loadRegistry();
 const byId = (id: string) => apps.find((a) => a.id === id)!;
@@ -75,6 +75,16 @@ test("following a job stores its media outputs and timings", async () => {
     assert.equal(history.get(entry.id)!.progress, null, "live progress is dropped once the run ends");
     assert.equal(JSON.parse(readFileSync(join(dir, entry.id, "meta.json"), "utf-8")).status, "succeeded");
   } finally { done(); }
+});
+
+test("the app's declared output nodes come first; the backend also lists what LoadVideo was given", () => {
+  const given = { name: "clip.mp4", type: "video", nodeId: "5001" };
+  const made = { name: "mixed-media_00001_.mp4", type: "video", nodeId: "4852" };
+  const latent = { name: "x.latent", type: "latent", nodeId: "3" };
+  assert.deepEqual(pickOutputs([given, made, latent], ["4852"]), [made]);
+  assert.deepEqual(pickOutputs([given, made], ["ff_hdr_save", "4852"]), [made], "declared nodes that made nothing are skipped");
+  assert.deepEqual(pickOutputs([given, made, latent], []), [given, made], "no declaration: every media output");
+  assert.deepEqual(pickOutputs([given, made], ["999"]), [given, made], "a wrong declaration still shows the results");
 });
 
 test("a failed job keeps the node and the message", async () => {
