@@ -88,10 +88,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 6.0,
-      "peak_vram_gb": 11.28,
-      "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261020-133620-l40s"
+      "seconds": 4.0,
+      "peak_vram_gb": 12.92,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-164909-h100"
     },
     "cinema-studio": {
       "case": "cinema-studio-detective",
@@ -134,10 +134,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 13.2,
-      "peak_vram_gb": 30.89,
-      "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261020-133620-l40s"
+      "seconds": 27.0,
+      "peak_vram_gb": 38.22,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-164909-h100"
     },
     "motion-transfer": {
       "case": "motion-transfer-walk",
@@ -239,10 +239,10 @@
         "details": ""
       },
       "seed": 42,
-      "seconds": 39.9,
-      "peak_vram_gb": 28.66,
-      "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261020-133620-l40s"
+      "seconds": 66.7,
+      "peak_vram_gb": 32.99,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-164909-h100"
     },
     "remove-bg": {
       "case": "remove-bg-product",
@@ -366,10 +366,10 @@
         "aspect": "16:9 (Widescreen)"
       },
       "seed": 42,
-      "seconds": 25.1,
-      "peak_vram_gb": 41.79,
+      "seconds": 65.4,
+      "peak_vram_gb": 41.84,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261023-044125-h100"
+      "run": "20261024-164909-h100"
     },
     "style-reference": {
       "case": "style-reference-lighthouse",
@@ -439,9 +439,9 @@
           "id": "audio",
           "label": "Voice or song",
           "type": "audio",
-          "src": "examples/talking/input-audio.png",
-          "full": "examples/talking/input-audio-full.mp3",
-          "from_case": "ref-song"
+          "src": null,
+          "full": null,
+          "from": "@case:ref-song"
         }
       ],
       "values": {
@@ -452,10 +452,10 @@
         "enhance": false
       },
       "seed": 42,
-      "seconds": 90.4,
-      "peak_vram_gb": 42.85,
-      "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261020-133620-l40s"
+      "seconds": 89.6,
+      "peak_vram_gb": 43.24,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-164909-h100"
     },
     "transitions": {
       "case": "transition-statue",
@@ -487,10 +487,10 @@
         "duration": 4
       },
       "seed": 42,
-      "seconds": 66.8,
-      "peak_vram_gb": 44.29,
-      "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261020-133620-l40s"
+      "seconds": 74.4,
+      "peak_vram_gb": 45.53,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-164909-h100"
     },
     "upscale": {
       "case": "upscale-face",
@@ -512,10 +512,10 @@
         "scale": 2
       },
       "seed": 42,
-      "seconds": 8.0,
-      "peak_vram_gb": 5.64,
-      "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261020-133620-l40s"
+      "seconds": 14.8,
+      "peak_vram_gb": 6.51,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-164909-h100"
     },
     "upscale-video": {
       "case": "upscale-video-street",
@@ -647,10 +647,10 @@
         "aspect": "16:9 (Widescreen)"
       },
       "seed": 42,
-      "seconds": 23.1,
-      "peak_vram_gb": 41.55,
-      "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261020-133620-l40s"
+      "seconds": 87.0,
+      "peak_vram_gb": 41.79,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-164909-h100"
     },
     "video-t2v": {
       "case": "baseline-t2v",
@@ -679,16 +679,16 @@
       "full": "examples/z-image/full.jpg",
       "inputs": [],
       "values": {
-        "prompt": "Portrait of a woman with short black hair and a denim jacket, soft studio light, neutral grey background, photorealistic",
+        "prompt": "Portrait photo of a Mexican woman in her late twenties with short dark wavy hair and a denim jacket, warm brown skin, light freckles, natural skin texture with visible pores, no retouching, soft window light from the side, neutral grey background, shot on an 85mm lens",
         "width": 1280,
         "height": 768,
         "steps": 8
       },
       "seed": 42,
-      "seconds": 18.1,
-      "peak_vram_gb": 12.22,
-      "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261024-034326-l40s"
+      "seconds": 17.3,
+      "peak_vram_gb": 12.56,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-164909-h100"
     },
     "recast": {
       "case": "recast-walk",
@@ -789,10 +789,10 @@
               "frames": 81
             },
             "seed": 42,
-            "seconds": 170.5,
-            "peak_vram_gb": 30.67,
+            "seconds": 214.8,
+            "peak_vram_gb": 30.54,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261021-140940-h100"
+            "run": "20261024-164909-h100"
           },
           "laughing": {
             "case": "fx-laughing",
@@ -807,10 +807,10 @@
               "frames": 81
             },
             "seed": 42,
-            "seconds": 169.3,
-            "peak_vram_gb": 30.67,
+            "seconds": 169.0,
+            "peak_vram_gb": 30.7,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261021-140940-h100"
+            "run": "20261024-164909-h100"
           },
           "puppies": {
             "case": "fx-puppies",
@@ -1185,10 +1185,10 @@
               "frames": 81
             },
             "seed": 42,
-            "seconds": 238.0,
-            "peak_vram_gb": 30.77,
+            "seconds": 170.7,
+            "peak_vram_gb": 30.7,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261021-195731-h100"
+            "run": "20261024-164909-h100"
           }
         }
       }
@@ -1215,10 +1215,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 16.3,
-      "peak_vram_gb": 11.9,
+      "seconds": 16.1,
+      "peak_vram_gb": 11.27,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261024-164909-h100"
     },
     "breakdown": {
       "case": "tpl-breakdown",
@@ -1532,10 +1532,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 4.3,
-      "peak_vram_gb": 11.17,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.3,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261024-164909-h100"
     },
     "giant-product": {
       "case": "tpl-giant-product",
@@ -1585,10 +1585,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 4.2,
-      "peak_vram_gb": 11.17,
+      "seconds": 4.0,
+      "peak_vram_gb": 13.02,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261024-164909-h100"
     },
     "graffiti-ad": {
       "case": "tpl-graffiti-ad",
@@ -1640,9 +1640,9 @@
       },
       "seed": 42,
       "seconds": 4.0,
-      "peak_vram_gb": 11.17,
+      "peak_vram_gb": 13.02,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261024-164909-h100"
     },
     "image-effects": {
       "case": "tpl-image-effects",
@@ -1692,10 +1692,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 4.2,
-      "peak_vram_gb": 11.17,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.3,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261024-164909-h100"
     },
     "j-poster": {
       "case": "tpl-j-poster",
@@ -1744,10 +1744,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 4.0,
-      "peak_vram_gb": 11.17,
+      "seconds": 4.1,
+      "peak_vram_gb": 13.02,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261024-164909-h100"
     },
     "macro-product": {
       "case": "tpl-macro-product",
@@ -1873,10 +1873,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 4.0,
-      "peak_vram_gb": 11.17,
+      "seconds": 4.2,
+      "peak_vram_gb": 11.3,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261024-164909-h100"
     },
     "mural": {
       "case": "tpl-mural",
@@ -1978,10 +1978,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 4.2,
-      "peak_vram_gb": 11.17,
+      "seconds": 4.0,
+      "peak_vram_gb": 13.02,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261024-164909-h100"
     },
     "pixel-game": {
       "case": "tpl-pixel-game",
@@ -2110,9 +2110,9 @@
       },
       "seed": 42,
       "seconds": 4.2,
-      "peak_vram_gb": 11.18,
+      "peak_vram_gb": 11.3,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261023-225832-h100"
+      "run": "20261024-164909-h100"
     },
     "sketch-to-real": {
       "case": "tpl-sketch-to-real",
@@ -2189,9 +2189,9 @@
       },
       "seed": 42,
       "seconds": 4.2,
-      "peak_vram_gb": 12.86,
+      "peak_vram_gb": 11.3,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261024-164909-h100"
     },
     "ugc-shot": {
       "case": "tpl-ugc-shot",
@@ -2241,10 +2241,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 4.0,
-      "peak_vram_gb": 11.18,
+      "seconds": 4.2,
+      "peak_vram_gb": 11.3,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261023-225832-h100"
+      "run": "20261024-164909-h100"
     },
     "angles": {
       "case": "tpl-angles",
@@ -2351,10 +2351,10 @@
         "aspect": "9:16 (Portrait Widescreen)"
       },
       "seed": 42,
-      "seconds": 28.1,
-      "peak_vram_gb": 46.09,
+      "seconds": 28.4,
+      "peak_vram_gb": 46.2,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261024-164909-h100"
     },
     "behind-the-scenes": {
       "case": "tpl-behind-the-scenes",
@@ -2379,10 +2379,10 @@
         "aspect": "16:9 (Widescreen)"
       },
       "seed": 42,
-      "seconds": 89.2,
-      "peak_vram_gb": 46.5,
+      "seconds": 67.2,
+      "peak_vram_gb": 46.61,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261024-164909-h100"
     },
     "chameleon": {
       "case": "tpl-chameleon",
@@ -2443,9 +2443,9 @@
       },
       "seed": 42,
       "seconds": 7.0,
-      "peak_vram_gb": 11.79,
+      "peak_vram_gb": 11.92,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261024-164909-h100"
     },
     "cloud-surf": {
       "case": "tpl-cloud-surf",
@@ -2504,10 +2504,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 26.3,
-      "peak_vram_gb": 12.33,
-      "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261024-034326-l40s"
+      "seconds": 12.0,
+      "peak_vram_gb": 11.32,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-164909-h100"
     },
     "fashion-factory": {
       "case": "tpl-fashion-factory",
@@ -2539,10 +2539,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 18.2,
-      "peak_vram_gb": 11.9,
+      "seconds": 7.0,
+      "peak_vram_gb": 11.95,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261024-164909-h100"
     },
     "idol": {
       "case": "tpl-idol",
@@ -2567,10 +2567,10 @@
         "aspect": "9:16 (Portrait Widescreen)"
       },
       "seed": 42,
-      "seconds": 27.1,
-      "peak_vram_gb": 46.28,
+      "seconds": 64.9,
+      "peak_vram_gb": 46.81,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261024-164909-h100"
     },
     "kick-ad": {
       "case": "tpl-kick-ad",
@@ -2715,9 +2715,9 @@
       },
       "seed": 42,
       "seconds": 7.0,
-      "peak_vram_gb": 12.39,
+      "peak_vram_gb": 13.02,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261024-164909-h100"
     },
     "outfit-swap": {
       "case": "tpl-outfit-swap",
@@ -2749,9 +2749,9 @@
       },
       "seed": 42,
       "seconds": 7.0,
-      "peak_vram_gb": 11.79,
+      "peak_vram_gb": 11.92,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261024-164909-h100"
     },
     "rap-video": {
       "case": "tpl-rap-video",
@@ -2804,10 +2804,10 @@
         "strength": 1.0
       },
       "seed": 42,
-      "seconds": 26.1,
-      "peak_vram_gb": 49.91,
+      "seconds": 65.0,
+      "peak_vram_gb": 50.02,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261023-225832-h100"
+      "run": "20261024-164909-h100"
     },
     "shots": {
       "case": "tpl-shots",
@@ -3028,10 +3028,10 @@
         "strength": 1.0
       },
       "seed": 42,
-      "seconds": 67.1,
-      "peak_vram_gb": 43.67,
+      "seconds": 67.5,
+      "peak_vram_gb": 40.88,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261023-044125-h100"
+      "run": "20261024-164909-h100"
     },
     "genjutsu": {
       "case": "genjutsu-bike",
@@ -3462,10 +3462,10 @@
         "strength": 1.0
       },
       "seed": 42,
-      "seconds": 79.4,
-      "peak_vram_gb": 49.91,
+      "seconds": 64.0,
+      "peak_vram_gb": 50.02,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261023-143551-h100",
+      "run": "20261024-164909-h100",
       "options": {
         "effect": {
           "renaissance": {
@@ -3481,10 +3481,10 @@
               "strength": 1.0
             },
             "seed": 42,
-            "seconds": 79.4,
-            "peak_vram_gb": 49.91,
+            "seconds": 64.0,
+            "peak_vram_gb": 50.02,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-143551-h100"
+            "run": "20261024-164909-h100"
           },
           "red-carpet": {
             "case": "morph-red-carpet",
@@ -3499,10 +3499,10 @@
               "strength": 1.0
             },
             "seed": 42,
-            "seconds": 28.1,
-            "peak_vram_gb": 49.91,
+            "seconds": 26.3,
+            "peak_vram_gb": 50.02,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-143551-h100"
+            "run": "20261024-164909-h100"
           },
           "younger-self": {
             "case": "morph-younger-self",
@@ -3553,10 +3553,10 @@
               "strength": 1.0
             },
             "seed": 42,
-            "seconds": 27.1,
-            "peak_vram_gb": 49.91,
+            "seconds": 26.2,
+            "peak_vram_gb": 50.02,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-143551-h100"
+            "run": "20261024-164909-h100"
           },
           "statue": {
             "case": "morph-statue",
@@ -3589,10 +3589,10 @@
               "strength": 1.0
             },
             "seed": 42,
-            "seconds": 27.4,
-            "peak_vram_gb": 50.0,
+            "seconds": 26.1,
+            "peak_vram_gb": 50.02,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-162024-h100"
+            "run": "20261024-164909-h100"
           },
           "astronaut": {
             "case": "morph-astronaut",
@@ -3643,10 +3643,10 @@
               "strength": 1.0
             },
             "seed": 42,
-            "seconds": 28.1,
-            "peak_vram_gb": 50.0,
+            "seconds": 26.1,
+            "peak_vram_gb": 50.02,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-162024-h100"
+            "run": "20261024-164909-h100"
           },
           "baby": {
             "case": "morph-baby",
@@ -3679,10 +3679,10 @@
               "strength": 1.0
             },
             "seed": 42,
-            "seconds": 27.1,
-            "peak_vram_gb": 50.0,
+            "seconds": 26.3,
+            "peak_vram_gb": 50.02,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-162024-h100"
+            "run": "20261024-164909-h100"
           },
           "classy": {
             "case": "morph-classy",
@@ -3697,10 +3697,10 @@
               "strength": 1.0
             },
             "seed": 42,
-            "seconds": 28.1,
-            "peak_vram_gb": 50.19,
+            "seconds": 26.1,
+            "peak_vram_gb": 50.02,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-162024-h100"
+            "run": "20261024-164909-h100"
           },
           "princess": {
             "case": "morph-princess",
@@ -3715,10 +3715,10 @@
               "strength": 1.0
             },
             "seed": 42,
-            "seconds": 28.1,
-            "peak_vram_gb": 50.0,
+            "seconds": 26.5,
+            "peak_vram_gb": 50.02,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-162024-h100"
+            "run": "20261024-164909-h100"
           },
           "robot-face": {
             "case": "morph-robot-face",
@@ -3742,5 +3742,5 @@
       }
     }
   },
-  "updated_from": "20261024-035222-l40s"
+  "updated_from": "20261024-164909-h100"
 }
