@@ -9,6 +9,10 @@
   unload everything (POST /free) so nothing from the previous app stays in VRAM.
 - GET /freefield/status shows the current app and ComfyUI's device stats.
 - GET /health is open, for Modal's startup probe.
+- The proxy writes absolute links (a job's `urls.self`, `.events`, `.cancel`, an output's
+  `url`) from the host *it* sees, http://127.0.0.1:8189; the SDK follows those links
+  verbatim, so from outside they went nowhere ("fetch failed", 23 oct). JSON answers are
+  rewritten to the address the client reached the gateway on.
 
 Run: python gateway.py  (env: FREEFIELD_TOKEN, COMFYUI_URL, PROXY_URL, GATEWAY_PORT)
 """
@@ -92,6 +96,17 @@ async def status(request: web.Request) -> web.Response:
     return web.json_response({"app": pantry.app, "models": pantry.models, "frees": pantry.frees, "comfyui": stats})
 
 
+def external_base(request: web.Request) -> str:
+    """Where the client reached us: Modal terminates TLS and says so in X-Forwarded-Proto."""
+    scheme = request.headers.get("X-Forwarded-Proto", request.scheme).split(",")[0].strip()
+    return f"{scheme}://{request.host}"
+
+
+def relink(body: bytes, request: web.Request) -> bytes:
+    """The proxy's own address in a JSON answer becomes the gateway's external one."""
+    return body.replace(PROXY_URL.encode(), external_base(request).encode())
+
+
 async def forward(request: web.Request) -> web.StreamResponse:
     session: ClientSession = request.app["session"]
     headers = {k: v for k, v in request.headers.items() if k.lower() not in HOP_HEADERS}
@@ -103,10 +118,14 @@ async def forward(request: web.Request) -> web.StreamResponse:
     data = body() if request.can_read_body else None
     async with session.request(request.method, f"{PROXY_URL}{request.rel_url}", headers=headers, data=data,
                                allow_redirects=False) as upstream:
+        passthrough = {k: v for k, v in upstream.headers.items() if k.lower() not in HOP_HEADERS | {"content-encoding"}}
+        if upstream.content_type == "application/json":   # job and asset answers carry links: fix them up whole
+            raw = relink(await upstream.read(), request)
+            passthrough.pop("Content-Length", None)
+            return web.Response(status=upstream.status, body=raw, headers=passthrough)
         resp = web.StreamResponse(status=upstream.status)
-        for k, v in upstream.headers.items():
-            if k.lower() not in HOP_HEADERS | {"content-encoding"}:
-                resp.headers[k] = v
+        for k, v in passthrough.items():
+            resp.headers[k] = v
         await resp.prepare(request)
         async for chunk in upstream.content.iter_any():   # streams SSE events and big files as they come
             await resp.write(chunk)
