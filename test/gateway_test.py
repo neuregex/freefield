@@ -36,6 +36,13 @@ async def main():
         async with s.get("http://127.0.0.1:18000/api/v2/jobs/j1", headers={**h, "X-Forwarded-Proto": "https", "Host": "gw.example.test"}) as r:
             body = await r.json()
         assert body["urls"]["self"] == "https://gw.example.test/api/v2/jobs/j1", body["urls"]
+        # a public host with no forwarded header (Modal) is https; a local one keeps http
+        async with s.get("http://127.0.0.1:18000/api/v2/jobs/j1", headers={**h, "Host": "x--serve.us-east.modal.run"}) as r:
+            body = await r.json()
+        assert body["urls"]["self"] == "https://x--serve.us-east.modal.run/api/v2/jobs/j1", body["urls"]
+        async with s.get("http://127.0.0.1:18000/api/v2/jobs/j1", headers={**h, "Host": "192.168.1.20:8000"}) as r:
+            body = await r.json()
+        assert body["urls"]["self"] == "http://192.168.1.20:8000/api/v2/jobs/j1", body["urls"]
         async with s.get("http://127.0.0.1:18000/api/v2/jobs/j1/events", headers=h) as r:
             text = await r.text(); assert r.headers["Content-Type"].startswith("text/event-stream")
         assert "http://127.0.0.1:18189/x" in text, "streams are passed through untouched"

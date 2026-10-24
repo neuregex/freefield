@@ -96,10 +96,20 @@ async def status(request: web.Request) -> web.Response:
     return web.json_response({"app": pantry.app, "models": pantry.models, "frees": pantry.frees, "comfyui": stats})
 
 
+LOCAL_HOSTS = ("127.0.0.1", "localhost", "0.0.0.0", "[::1]")
+
+
 def external_base(request: web.Request) -> str:
-    """Where the client reached us: Modal terminates TLS and says so in X-Forwarded-Proto."""
-    scheme = request.headers.get("X-Forwarded-Proto", request.scheme).split(",")[0].strip()
-    return f"{scheme}://{request.host}"
+    """Where the client reached us. Modal terminates TLS and talks plain http to the container
+    without an X-Forwarded-Proto header (first deploy, 23 oct: links came out as http://…modal.run,
+    the SDK saw another origin and sent no token, 401), so a public host is https unless a proxy
+    says otherwise; only a local or private address keeps the scheme it was reached on."""
+    forwarded = request.headers.get("X-Forwarded-Proto", "").split(",")[0].strip()
+    host = request.host
+    name = host.rsplit(":", 1)[0] if not host.startswith("[") else host.split("]")[0] + "]"
+    private = name in LOCAL_HOSTS or name.startswith(("10.", "192.168.", "172.16.", "172.17.", "172.18.", "172.19.", "172.2", "172.30.", "172.31."))
+    scheme = forwarded or (request.scheme if private else "https")
+    return f"{scheme}://{host}"
 
 
 def relink(body: bytes, request: web.Request) -> bytes:
