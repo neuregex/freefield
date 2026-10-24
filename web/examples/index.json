@@ -685,10 +685,10 @@
         "steps": 8
       },
       "seed": 42,
-      "seconds": 18.3,
-      "peak_vram_gb": 12.23,
+      "seconds": 18.1,
+      "peak_vram_gb": 12.22,
       "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261024-032920-l40s"
+      "run": "20261024-034326-l40s"
     },
     "recast": {
       "case": "recast-walk",
@@ -2504,10 +2504,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 6.0,
-      "peak_vram_gb": 11.18,
+      "seconds": 26.3,
+      "peak_vram_gb": 12.33,
       "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261024-032920-l40s"
+      "run": "20261024-034326-l40s"
     },
     "fashion-factory": {
       "case": "tpl-fashion-factory",
@@ -3742,5 +3742,5 @@
       }
     }
   },
-  "updated_from": "20261024-032920-l40s"
+  "updated_from": "20261024-034326-l40s"
 }
