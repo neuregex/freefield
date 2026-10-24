@@ -291,10 +291,10 @@
         "prompt": ""
       },
       "seed": 42,
-      "seconds": 196.2,
-      "peak_vram_gb": 44.17,
+      "seconds": 222.9,
+      "peak_vram_gb": 44.15,
       "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261020-133620-l40s"
+      "run": "20261024-035222-l40s"
     },
     "sfx": {
       "case": "sfx-rain",
@@ -3742,5 +3742,5 @@
       }
     }
   },
-  "updated_from": "20261024-034326-l40s"
+  "updated_from": "20261024-035222-l40s"
 }

@@ -1,8 +1,4 @@
 {
   "about": "Lab examples marked mediocre in the web UI. Keys: <app> for the app's example, <app>/<input>/<option> for one option of a gallery select. lab/publish.py removes the mark of an example it replaces.",
-  "mediocre": {
-    "reshoot": {
-      "at": "2026-10-22T23:50:47.507Z"
-    }
-  }
+  "mediocre": {}
 }

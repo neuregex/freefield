@@ -153,7 +153,8 @@ test("prepare: a backend without the gateway (404) is skipped, auth errors are n
 });
 
 test("drafts run only when allowed", async () => {
-  const draft = apps.find((a) => a.status === "draft" && a.workflowPath)!;
+  // every app is ready now, so the test marks a copy of one as a draft
+  const draft = { ...byId("reshoot"), status: "draft" as const };
   const values = Object.fromEntries(draft.inputs.filter((i) => ["image", "video", "audio"].includes(i.type))
     .map((i) => [i.id, { bytes: new Uint8Array([1]), name: "x.bin" }]));
   const closed = new Runner({ baseUrl: "http://backend.test", fetch: fakeFetch(() => 500), allowDrafts: false });

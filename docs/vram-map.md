@@ -107,6 +107,6 @@ When two apps run back to back with different models, the gateway asks ComfyUI t
 | `reframe` | ready | 40.0 GB | denoise 22.8 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | tight (by phases) | test on L4 / A10G; L40S (48 GB) is comfortable | not measured |
 | `sdr-hdr` | ready | 24.6 GB | denoise 22.8 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | tight (by phases) | test on L4 / A10G; L40S (48 GB) is comfortable | not measured |
 | `dub` | ready | 41.2 GB (+5.2 optional) | denoise 24.0 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | needs Modal | L40S (48 GB), whole | not measured |
-| `reshoot` | draft | 54.8 GB | encode 27.1 GB | qwen3vl_32b_minimax_h3_int8_convrot.safetensors (27.1) | needs Modal | L40S (48 GB), by phases | not measured |
+| `reshoot` | ready | 54.8 GB | encode 27.1 GB | qwen3vl_32b_minimax_h3_int8_convrot.safetensors (27.1) | needs Modal | L40S (48 GB), by phases | not measured |
 | `smoke` | ready | 0.0 GB | encode 0.0 GB | — | no models | any | not measured |
 | `smoke-invert` | ready | 0.0 GB | encode 0.0 GB | — | no models | any | not measured |

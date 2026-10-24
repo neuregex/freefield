@@ -2482,7 +2482,7 @@
       "name": "Re-shoot",
       "section": "video",
       "pack": "video-h3",
-      "status": "draft",
+      "status": "ready",
       "whole_gb": 54.75,
       "phases_gb": {
         "encode": 27.14,

@@ -4,14 +4,14 @@
   "name": "Re-shoot",
   "section": "video",
   "pack": "video-h3",
-  "status": "draft",
+  "status": "ready",
   "higgsfield_feature": "Camera angles",
   "summary": "Moves the camera to a new angle on an existing clip (MiniMax H3 + MoGe + CrossView).",
   "workflow": "workflow.api.json",
   "source": {
     "template": "Comfy-Org/comfy-reshoot workflows/generate.api.json (dc53fc7)",
     "comfyui": "0.42.0",
-    "notes": "Comfy's own reference app, shown on a 96 GB GPU. Needs an 80 GB Modal GPU; draft until it runs there."
+    "notes": "Comfy's own reference app, shown on a 96 GB GPU. Runs on a 48 GB L40S in Modal: 196.2 s (20261020-133620-l40s) and 222.9 s (20261024-035222-l40s) for a 4 s clip, peak 44.2 GB (the text encoder alone is 27.1 GB). The second output, \"Warp guide\", is the clip reprojected to the new angle with its holes in magenta: what MiniMax H3 fills in."
   },
   "inputs": [
     {
