@@ -685,10 +685,10 @@
         "steps": 8
       },
       "seed": 42,
-      "seconds": 31.4,
-      "peak_vram_gb": 14.08,
-      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261024-000821-h100"
+      "seconds": 18.3,
+      "peak_vram_gb": 12.23,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261024-032920-l40s"
     },
     "recast": {
       "case": "recast-walk",
@@ -2401,16 +2401,17 @@
         }
       ],
       "values": {
+        "colors": "bright white with bold red patches",
         "details": "",
         "aspect": "landscape",
         "duration": 4,
         "strength": 1.0
       },
       "seed": 42,
-      "seconds": 64.8,
-      "peak_vram_gb": 50.28,
-      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261024-000821-h100"
+      "seconds": 100.9,
+      "peak_vram_gb": 44.14,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261024-032920-l40s"
     },
     "character-swap": {
       "case": "tpl-character-swap",
@@ -2495,7 +2496,7 @@
           "type": "image",
           "src": "examples/face-swap/input-image2.jpg",
           "full": "examples/face-swap/input-image2-full.jpg",
-          "from_case": "ref-fx-woman-b"
+          "from_case": "ref-fx-woman-a"
         }
       ],
       "values": {
@@ -2503,10 +2504,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 7.0,
-      "peak_vram_gb": 11.79,
-      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "seconds": 6.0,
+      "peak_vram_gb": 11.18,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261024-032920-l40s"
     },
     "fashion-factory": {
       "case": "tpl-fashion-factory",
@@ -3741,5 +3742,5 @@
       }
     }
   },
-  "updated_from": "20261024-000821-h100"
+  "updated_from": "20261024-032920-l40s"
 }
