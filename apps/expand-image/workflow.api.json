@@ -126,7 +126,7 @@
         0
       ],
       "images.image0": [
-        "11",
+        "op_fill",
         0
       ],
       "resolution": "resize",
@@ -177,14 +177,81 @@
       "feathering": 24
     },
     "_meta": {
-      "title": "Border to draw"
+      "title": "Border to draw (its mask)"
+    }
+  },
+  "op_size": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "op_pad",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Canvas size"
+    }
+  },
+  "op_stretch": {
+    "class_type": "ImageScale",
+    "inputs": {
+      "image": [
+        "op_scale",
+        0
+      ],
+      "upscale_method": "bilinear",
+      "width": [
+        "op_size",
+        0
+      ],
+      "height": [
+        "op_size",
+        1
+      ],
+      "crop": "disabled"
+    },
+    "_meta": {
+      "title": "Photo stretched to the canvas"
+    }
+  },
+  "op_blur": {
+    "class_type": "ImageBlur",
+    "inputs": {
+      "image": [
+        "op_stretch",
+        0
+      ],
+      "blur_radius": 31,
+      "sigma": 10.0
+    },
+    "_meta": {
+      "title": "Blurred"
+    }
+  },
+  "op_fill": {
+    "class_type": "ImageCompositeMasked",
+    "inputs": {
+      "destination": [
+        "op_blur",
+        0
+      ],
+      "source": [
+        "op_scale",
+        0
+      ],
+      "x": 192,
+      "y": 192,
+      "resize_source": false
+    },
+    "_meta": {
+      "title": "Photo on its blurred canvas"
     }
   },
   "op_encode": {
     "class_type": "VAEEncode",
     "inputs": {
       "pixels": [
-        "op_pad",
+        "op_fill",
         0
       ],
       "vae": [
@@ -193,7 +260,7 @@
       ]
     },
     "_meta": {
-      "title": "Encode the padded photo"
+      "title": "Encode the canvas"
     }
   },
   "op_latent": {

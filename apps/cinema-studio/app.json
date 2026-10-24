@@ -11,7 +11,7 @@
   "source": {
     "template": "image_z_image_turbo_int8.json",
     "comfyui": "0.42.0",
-    "notes": "Camera and lens vocabulary from open-higgsfield-ai (MIT), src/lib/promptUtils.js."
+    "notes": "Camera and lens vocabulary from open-higgsfield-ai (MIT), src/lib/promptUtils.js. Camera, lens and focal options write the look they give, not the gear: with \"shot on a <camera>\" Z-Image drew the camera into the picture (run 20261020-133620-l40s), and \"no camera in the frame\" did not stop it (run 20261024-172353-h100)."
   },
   "inputs": [
     {
@@ -19,12 +19,12 @@
       "type": "textarea",
       "label": "Scene",
       "required": true,
-      "default": "A detective lighting a cigarette under a streetlamp",
+      "default": "A detective in a trench coat lights a cigarette under a streetlamp on a rainy night",
       "bind": [
         {
           "node": "57:27",
           "field": "text",
-          "template": "A cinematic film still: {prompt}. The picture looks as if it was shot on a {camera} with a {lens} at {focal}, {aperture}; no camera, lens or film gear appears in the frame. Cinematic lighting, natural color science, high dynamic range, ultra-detailed"
+          "template": "A cinematic film still: {prompt}. The look: {camera}; {lens}; {focal}; {aperture}. Cinematic lighting, natural color science, high dynamic range, ultra-detailed"
         }
       ]
     },
@@ -32,30 +32,30 @@
       "id": "camera",
       "type": "select",
       "label": "Camera",
-      "default": "full-frame digital cinema camera",
+      "default": "the full-frame digital cinema look, natural and smooth",
       "options": [
         {
-          "value": "modular 8K digital cinema camera",
+          "value": "the crisp, clean detail of 8K digital cinema",
           "label": "Modular 8K Digital"
         },
         {
-          "value": "full-frame digital cinema camera",
+          "value": "the full-frame digital cinema look, natural and smooth",
           "label": "Full-Frame Cine Digital"
         },
         {
-          "value": "grand format 70mm film camera",
+          "value": "the rich detail and fine grain of large-format 70mm film",
           "label": "Grand Format 70mm Film"
         },
         {
-          "value": "Super 35 studio digital camera",
+          "value": "the polished Super 35 digital studio look",
           "label": "Studio Digital S35"
         },
         {
-          "value": "classic 16mm film camera",
+          "value": "the soft, grainy texture of 16mm film",
           "label": "Classic 16mm Film"
         },
         {
-          "value": "premium large-format digital cinema camera",
+          "value": "the smooth, wide-latitude large-format digital look",
           "label": "Premium Large Format Digital"
         }
       ]
@@ -64,50 +64,50 @@
       "id": "lens",
       "type": "select",
       "label": "Lens",
-      "default": "classic anamorphic lens",
+      "default": "a classic anamorphic widescreen look with oval bokeh and blue streak flares",
       "options": [
         {
-          "value": "creative tilt lens effect",
+          "value": "tilt-shift selective focus",
           "label": "Creative Tilt Lens"
         },
         {
-          "value": "compact anamorphic lens",
+          "value": "subtle anamorphic oval bokeh and horizontal flares",
           "label": "Compact Anamorphic"
         },
         {
-          "value": "extreme macro lens",
+          "value": "extreme macro detail",
           "label": "Extreme Macro"
         },
         {
-          "value": "1970s cinema prime lens",
+          "value": "the warm, slightly soft rendering of 1970s cinema glass",
           "label": "70s Cinema Prime"
         },
         {
-          "value": "classic anamorphic lens",
+          "value": "a classic anamorphic widescreen look with oval bokeh and blue streak flares",
           "label": "Classic Anamorphic"
         },
         {
-          "value": "premium modern prime lens",
+          "value": "clean, sharp modern rendering",
           "label": "Premium Modern Prime"
         },
         {
-          "value": "warm-toned cinema prime lens",
+          "value": "warm-toned cinematic rendering",
           "label": "Warm Cinema Prime"
         },
         {
-          "value": "swirl bokeh portrait lens",
+          "value": "swirling vintage bokeh",
           "label": "Swirl Bokeh Portrait"
         },
         {
-          "value": "vintage prime lens",
+          "value": "soft vintage rendering with gentle flare",
           "label": "Vintage Prime"
         },
         {
-          "value": "halation diffusion filter",
+          "value": "a halation glow around the highlights",
           "label": "Halation Diffusion"
         },
         {
-          "value": "ultra-sharp clinical prime lens",
+          "value": "ultra-sharp clinical detail",
           "label": "Clinical Sharp Prime"
         }
       ]
@@ -116,30 +116,30 @@
       "id": "focal",
       "type": "select",
       "label": "Focal length",
-      "default": "35mm (natural cinematic perspective)",
+      "default": "a natural 35mm perspective",
       "options": [
         {
-          "value": "8mm (ultra-wide perspective)",
+          "value": "an ultra-wide 8mm perspective",
           "label": "8 mm"
         },
         {
-          "value": "14mm (wide-angle perspective)",
+          "value": "a wide-angle 14mm perspective",
           "label": "14 mm"
         },
         {
-          "value": "24mm (wide-angle dynamic perspective)",
+          "value": "a dynamic wide 24mm perspective",
           "label": "24 mm"
         },
         {
-          "value": "35mm (natural cinematic perspective)",
+          "value": "a natural 35mm perspective",
           "label": "35 mm"
         },
         {
-          "value": "50mm (standard portrait perspective)",
+          "value": "a standard 50mm perspective",
           "label": "50 mm"
         },
         {
-          "value": "85mm (classic portrait perspective)",
+          "value": "a classic 85mm portrait perspective",
           "label": "85 mm"
         }
       ]

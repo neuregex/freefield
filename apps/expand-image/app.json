@@ -11,7 +11,7 @@
   "source": {
     "template": "image_flux3_klein_distilled_image_edit.json",
     "comfyui": "0.42.0",
-    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py); the sampler starts from the photo scaled to 1 MP and padded by ImagePadForOutpaint (the select sets the padding), with a noise mask on the border only, and the unpadded photo stays Klein's reference; the prompt below is fixed and \"Extra direction\" is appended to it."
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py); the photo, scaled to 1 MP, sits on a stretched and blurred copy of itself as big as ImagePadForOutpaint's canvas (the select sets the padding); the sampler starts from that canvas with a noise mask on the border only, and the canvas is Klein's reference; the prompt below is fixed and \"Extra direction\" is appended to it."
   },
   "inputs": [
     {
@@ -58,6 +58,16 @@
               "node": "op_pad",
               "field": "bottom",
               "value": 192
+            },
+            {
+              "node": "op_fill",
+              "field": "x",
+              "value": 192
+            },
+            {
+              "node": "op_fill",
+              "field": "y",
+              "value": 192
             }
           ]
         },
@@ -83,6 +93,16 @@
             {
               "node": "op_pad",
               "field": "bottom",
+              "value": 0
+            },
+            {
+              "node": "op_fill",
+              "field": "x",
+              "value": 320
+            },
+            {
+              "node": "op_fill",
+              "field": "y",
               "value": 0
             }
           ]
@@ -110,6 +130,16 @@
               "node": "op_pad",
               "field": "bottom",
               "value": 320
+            },
+            {
+              "node": "op_fill",
+              "field": "x",
+              "value": 0
+            },
+            {
+              "node": "op_fill",
+              "field": "y",
+              "value": 320
             }
           ]
         }
@@ -125,7 +155,7 @@
         {
           "node": "4",
           "field": "text",
-          "template": "Extend this photo outward into the gray border around it: continue the scene, its objects, light and perspective naturally past the original edges, as if the camera had pulled back. The original part of the photo stays exactly the same; no frame, no border, no text. {details}"
+          "template": "The outer part of this photo is blurred: redraw it sharp, continuing the scene, its objects, light and perspective naturally out to all four edges, as if the camera had pulled back. The sharp center stays exactly the same; one continuous photo, no frame, no border, no text. {details}"
         }
       ]
     },

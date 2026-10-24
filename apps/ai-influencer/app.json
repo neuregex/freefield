@@ -4,7 +4,7 @@
   "name": "AI Influencer",
   "section": "image",
   "summary": "Makes a feed-ready photo of a made-up influencer in their niche, with natural skin (Z-Image Turbo).",
-  "higgsfield_feature": "Influencer IA",
+  "higgsfield_feature": "AI Influencer",
   "pack": "image",
   "status": "ready",
   "workflow": "workflow.api.json",

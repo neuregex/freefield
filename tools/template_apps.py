@@ -21,8 +21,8 @@ these bases, all workflows built by tools/build_apps.py:
   effect     Wan 2.1 image-to-video with one effect LoRA fixed (apps/effects); "effect_lora" names it
   effect-klein  the same, after FLUX 3 Klein redraws the photo with the fixed "klein" instruction
              (merged in as edit:*): for effects that need another background or something added first
-  edit + outpaint  the edit pipeline on a padded canvas: the sampler starts from the photo with gray borders
-             and a noise mask on them, so only the new border is drawn; a select sets the padding
+  edit + outpaint  the edit pipeline on a bigger canvas: the photo sits on a stretched, blurred copy of itself,
+             with a noise mask on the border, so only the border is drawn; a select sets the padding
 The app folder gets the base workflow (copied, or with the few edits noted in BASES) and a manifest
 whose "details" input carries the prompt as a bind template; selects feed {placeholders} in that
 prompt. The base app's models and credits are copied as they are (qwen-edit swaps the LoRA).
@@ -126,8 +126,10 @@ def A(id_, name, feature, cat, base, image_label, summary, prompt, inputs=(), re
 
 
 def pad(left, top, right, bottom):
-    """The sets of an outpaint select option: pixels added on each side of the photo (scaled to 1 MP first)."""
-    return [{"node": "op_pad", "field": f, "value": v} for f, v in (("left", left), ("top", top), ("right", right), ("bottom", bottom))]
+    """The sets of an outpaint select option: pixels added on each side of the photo (scaled to 1 MP first), and
+    where the photo sits on the filled canvas."""
+    return ([{"node": "op_pad", "field": f, "value": v} for f, v in (("left", left), ("top", top), ("right", right), ("bottom", bottom))]
+            + [{"node": "op_fill", "field": "x", "value": left}, {"node": "op_fill", "field": "y", "value": top}])
 
 
 # ---------------------------------------------------------------- ads & products (apps/edit pipeline, a product photo)
@@ -504,14 +506,14 @@ A("idol", "Idol", "Idol", "clips", "video", "Your photo",
 # ---------------------------------------------------------------- the canvas, a new person, one effect LoRA
 A("expand-image", "Expand Image", "Expand Image", "style", "edit", "Your photo",
   "Grows a photo past its edges: FLUX 3 Image Klein draws only the new border, so the original stays as it was.",
-  "Extend this photo outward into the gray border around it: continue the scene, its objects, light and perspective naturally past the "
-  "original edges, as if the camera had pulled back. The original part of the photo stays exactly the same; no frame, no border, no text.",
+  "The outer part of this photo is blurred: redraw it sharp, continuing the scene, its objects, light and perspective naturally out to all "
+  "four edges, as if the camera had pulled back. The sharp center stays exactly the same; one continuous photo, no frame, no border, no text.",
   [{"id": "direction", "type": "select", "label": "Expand", "default": "out", "options": [
       {"value": "out", "label": "Zoom out", "sets": pad(192, 192, 192, 192)},
       {"value": "wide", "label": "Wider", "sets": pad(320, 0, 320, 0)},
       {"value": "tall", "label": "Taller", "sets": pad(0, 320, 0, 320)}]}],
   LAKE, {"direction": "out"}, "Does the border continue the lake, rock and sky, with no seam or gray left?", outpaint=True)
-A("ai-influencer", "AI Influencer", "Influencer IA", "portraits", "z-image", None,
+A("ai-influencer", "AI Influencer", "AI Influencer", "portraits", "z-image", None,
   "Makes a feed-ready photo of a made-up influencer in their niche, with natural skin (Z-Image Turbo).",
   "A vertical phone photo for a social media feed of {who}, a {niche}. Natural skin texture with visible pores, candid moment, "
   "realistic photo, no text, no logos.",
@@ -667,8 +669,8 @@ def manifest(t: dict) -> dict:
         notes += (f", after FLUX 3 Klein (apps/edit, merged in as edit:*) redraws the photo with a fixed instruction (node edit:4: \"{t['klein']}\"); "
                   "Wan starts from Klein's image")
     if t["outpaint"]:
-        notes += ("; the sampler starts from the photo scaled to 1 MP and padded by ImagePadForOutpaint (the select sets the padding), with a noise "
-                  "mask on the border only, and the unpadded photo stays Klein's reference")
+        notes += ("; the photo, scaled to 1 MP, sits on a stretched and blurred copy of itself as big as ImagePadForOutpaint's canvas (the select "
+                  "sets the padding); the sampler starts from that canvas with a noise mask on the border only, and the canvas is Klein's reference")
     if t["lora"]:
         lora = QWEN_LORAS[t["lora"]]
         models = [m for m in models if "Relight" not in m["file"]] + [{"repo": lora["repo"], "file": lora["file"], "dir": "loras", "gb": lora["gb"], "phase": "denoise", "license": lora["license"]}]
@@ -737,15 +739,23 @@ def workflow(t: dict) -> dict:
                     n["inputs"][k] = ["52", 0]
                 elif is_link(v) and v[0] == "52" and not i.startswith("edit:"):
                     n["inputs"][k] = ["edit:8", 0]
-    if t["outpaint"]:   # draw only the border: start from the padded photo, noise mask on the padding, the photo as reference
+    if t["outpaint"]:   # draw only the border. The canvas around the photo is the photo itself, stretched and blurred: on a flat
+                        # gray border (ImagePadForOutpaint's own fill) Klein drew a gray frame around the photo (run 20261024-172353-h100)
         api["op_scale"] = {"class_type": "ImageScaleToTotalPixels", "inputs": {"image": ["11", 0], "upscale_method": "lanczos", "megapixels": 1.0,
                                                                                 "resolution_steps": 16}, "_meta": {"title": "Photo at 1 MP"}}
         api["op_pad"] = {"class_type": "ImagePadForOutpaint", "inputs": {"image": ["op_scale", 0], "left": 192, "top": 192, "right": 192, "bottom": 192,
-                                                                          "feathering": 24}, "_meta": {"title": "Border to draw"}}
-        api["op_encode"] = {"class_type": "VAEEncode", "inputs": {"pixels": ["op_pad", 0], "vae": ["3", 0]}, "_meta": {"title": "Encode the padded photo"}}
+                                                                          "feathering": 24}, "_meta": {"title": "Border to draw (its mask)"}}
+        api["op_size"] = {"class_type": "GetImageSize", "inputs": {"image": ["op_pad", 0]}, "_meta": {"title": "Canvas size"}}
+        api["op_stretch"] = {"class_type": "ImageScale", "inputs": {"image": ["op_scale", 0], "upscale_method": "bilinear", "width": ["op_size", 0],
+                                                                     "height": ["op_size", 1], "crop": "disabled"}, "_meta": {"title": "Photo stretched to the canvas"}}
+        api["op_blur"] = {"class_type": "ImageBlur", "inputs": {"image": ["op_stretch", 0], "blur_radius": 31, "sigma": 10.0}, "_meta": {"title": "Blurred"}}
+        api["op_fill"] = {"class_type": "ImageCompositeMasked", "inputs": {"destination": ["op_blur", 0], "source": ["op_scale", 0], "x": 192, "y": 192,
+                                                                           "resize_source": False}, "_meta": {"title": "Photo on its blurred canvas"}}
+        api["op_encode"] = {"class_type": "VAEEncode", "inputs": {"pixels": ["op_fill", 0], "vae": ["3", 0]}, "_meta": {"title": "Encode the canvas"}}
         api["op_latent"] = {"class_type": "SetLatentNoiseMask", "inputs": {"samples": ["op_encode", 0], "mask": ["op_pad", 1]},
                             "_meta": {"title": "Only the border is drawn"}}
         api["7"]["inputs"]["latent_image"] = ["op_latent", 0]
+        api["17"]["inputs"]["images.image0"] = ["op_fill", 0]   # the reference has the canvas's shape, so Klein fills it edge to edge
     if t["base"] in ("morph", "effect-klein"):   # the image Klein draws is fixed per template (placeholders filled with the defaults)
         defaults = {i["id"]: i.get("default", "") for i in t["inputs"]}
         api[base["klein"][0]]["inputs"][base["klein"][1]] = re.sub(r"\{([a-z][a-z0-9_]*)\}", lambda m: str(defaults.get(m.group(1), "")), t["klein"])
@@ -797,6 +807,7 @@ def readme() -> str:
     for t in T:
         ins = [x.lower() for x in (t["image_label"], t["image2_label"]) if x] + [i["label"].lower() for i in t["inputs"]]
         base = BASES[t["base"]]["app"] + (f" + {QWEN_LORAS[t['lora']]['repo'].split('/')[1]}" if t["lora"] else "")
+        base = "edit + effects" if t["base"] == "effect-klein" else base
         rows.append(f"| `{t['id']}` | {t['feature']} | `{base}` | {', '.join(ins)} |")
     return "\n".join(rows)
 
