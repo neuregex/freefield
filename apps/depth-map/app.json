@@ -1,0 +1,102 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "depth-map",
+  "name": "Depth Map",
+  "section": "image",
+  "summary": "A depth map (or a normal map) of any photo, from MoGe-2's geometry estimate.",
+  "higgsfield_feature": "Depth Map",
+  "pack": "upscale",
+  "status": "ready",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "utility_moge_depth_estimation.json",
+    "comfyui": "0.42.0",
+    "notes": "Comfy's MoGe depth template: the colored depth render is saved, the grayscale and mask previews go; the map select picks MoGeRender's output."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Photo",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "9",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "map",
+      "type": "select",
+      "label": "Map",
+      "default": "depth_colored",
+      "options": [
+        {
+          "value": "depth_colored",
+          "label": "Depth, colored"
+        },
+        {
+          "value": "depth",
+          "label": "Depth, grayscale"
+        },
+        {
+          "value": "normal_opengl",
+          "label": "Normal map (OpenGL)"
+        },
+        {
+          "value": "normal_directx",
+          "label": "Normal map (DirectX)"
+        }
+      ],
+      "bind": [
+        {
+          "node": "49:23",
+          "field": "output"
+        }
+      ]
+    },
+    {
+      "id": "detail",
+      "type": "slider",
+      "label": "Detail",
+      "min": 0,
+      "max": 9,
+      "step": 1,
+      "default": 6,
+      "help": "Higher is sharper and slower.",
+      "bind": [
+        {
+          "node": "49:13",
+          "field": "resolution_level"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "17",
+      "type": "image",
+      "label": "Map"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/MoGe",
+      "file": "geometry_estimation/moge_2_vitl_normal_fp16.safetensors",
+      "dir": "geometry_estimation",
+      "gb": 0.66,
+      "phase": "all",
+      "license": "MIT"
+    }
+  ],
+  "credits": [
+    "MoGe-2 (Microsoft, MIT), ComfyUI port: Comfy-Org/MoGe"
+  ],
+  "test": {
+    "image": "test/portrait.png"
+  }
+}

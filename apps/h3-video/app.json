@@ -1,0 +1,154 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "h3-video",
+  "name": "H3 Video",
+  "section": "video",
+  "summary": "A clip with its own sound from a prompt, on MiniMax H3: speech in quotes, sound effects and music come out of the same model.",
+  "higgsfield_feature": "Create Video",
+  "pack": "video-h3",
+  "status": "ready",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "video_minimax_h3_t2v.json",
+    "comfyui": "0.42.0",
+    "notes": "Comfy's video_minimax_h3_t2v template with the int8 text encoder in place of the NVFP4 one (it needs a Blackwell GPU) and the plain 20-step branch of its turbo switch wired in: lightx2v's turbo LoRA is left out, its model card states no license (tools/build_apps.py)."
+  },
+  "inputs": [
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "Prompt",
+      "required": true,
+      "default": "A street cook in Mexico City flips tacos on a hot griddle, steam and sizzling sound, he looks up and says: \"Two more coming right up!\"",
+      "help": "Put spoken words in quotes; describe sounds and music too.",
+      "bind": [
+        {
+          "node": "140:131",
+          "field": "prompt"
+        }
+      ]
+    },
+    {
+      "id": "aspect",
+      "type": "select",
+      "label": "Format",
+      "default": "16:9 (Widescreen)",
+      "options": [
+        {
+          "value": "16:9 (Widescreen)",
+          "label": "16:9"
+        },
+        {
+          "value": "9:16 (Portrait Widescreen)",
+          "label": "9:16"
+        },
+        {
+          "value": "1:1 (Square)",
+          "label": "1:1"
+        },
+        {
+          "value": "4:3 (Standard)",
+          "label": "4:3"
+        }
+      ],
+      "bind": [
+        {
+          "node": "115",
+          "field": "aspect_ratio"
+        }
+      ]
+    },
+    {
+      "id": "duration",
+      "type": "slider",
+      "label": "Duration (s)",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "bind": [
+        {
+          "node": "140:133",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "steps",
+      "type": "slider",
+      "label": "Steps",
+      "min": 8,
+      "max": 30,
+      "step": 1,
+      "default": 20,
+      "help": "Fewer steps run faster and look rougher.",
+      "bind": [
+        {
+          "node": "140:137",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "140:129",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "92",
+      "type": "video",
+      "label": "Video"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 20.97,
+      "phase": "denoise",
+      "license": "MiniMax H3 Community License"
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 27.14,
+      "phase": "encode",
+      "license": "MiniMax H3 Community License"
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "vae/minimax_h3_video_vae_int8_convrot.safetensors",
+      "dir": "vae",
+      "gb": 2.81,
+      "phase": "decode",
+      "license": "MiniMax H3 Community License"
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "vae/minimax_h3_audio_vae_fp32.safetensors",
+      "dir": "vae",
+      "gb": 0.61,
+      "phase": "decode",
+      "license": "MiniMax H3 Community License"
+    }
+  ],
+  "credits": [
+    "MiniMax H3 (MiniMax H3 Community License)"
+  ],
+  "test": {
+    "prompt": "a cat yawns on a sunny windowsill",
+    "duration": 2
+  }
+}

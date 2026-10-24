@@ -14,6 +14,8 @@ is not the least the app needs.
 |---|---|---:|---|---|---|---|---:|
 | `smooth` | ready | 0.1 GB | encode 0.1 GB | film_net_fp16.safetensors (0.1) | fits whole | L4 / A10G (24 GB) | 27.7 GB (L40S) |
 | `remove-bg` | ready | 0.4 GB | encode 0.4 GB | birefnet.safetensors (0.4) | fits whole | L4 / A10G (24 GB) | 5.0 GB (L40S) |
+| `video-remove-bg` | ready | 0.4 GB | encode 0.4 GB | birefnet.safetensors (0.4) | fits whole | L4 / A10G (24 GB) | not measured |
+| `depth-map` | ready | 0.7 GB | encode 0.7 GB | moge_2_vitl_normal_fp16.safetensors (0.7) | fits whole | L4 / A10G (24 GB) | not measured |
 | `upscale` | ready | 4.0 GB | denoise 3.5 GB | seedvr2_3b_int8_convrot.safetensors (3.5) | fits whole | L4 / A10G (24 GB) | 5.6 GB (L40S) |
 | `upscale-video` | ready | 4.0 GB | denoise 3.5 GB | seedvr2_3b_int8_convrot.safetensors (3.5) | fits whole | L4 / A10G (24 GB) | 26.1 GB (L40S) |
 | `billboard` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.9 GB (H100) |
@@ -28,6 +30,7 @@ is not the least the app needs.
 | `commercial-faces` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.2 GB (H100) |
 | `edit` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 30.9 GB (L40S) |
 | `edit-text` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.2 GB (H100) |
+| `expand-image` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | not measured |
 | `face-swap` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 12.3 GB (L40S) |
 | `fashion-factory` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.9 GB (H100) |
 | `figure-3d` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.2 GB (H100) |
@@ -64,6 +67,7 @@ is not the least the app needs.
 | `try-on` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.8 GB (H100) |
 | `ugc-shot` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 27.9 GB (H100) |
 | `victory-card` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.2 GB (H100) |
+| `ai-influencer` | ready | 12.2 GB | denoise 6.2 GB | z_image_turbo_int8_convrot.safetensors (6.2) | fits whole | L4 / A10G (24 GB) | not measured |
 | `cinema-studio` | ready | 12.2 GB | denoise 6.2 GB | z_image_turbo_int8_convrot.safetensors (6.2) | fits whole | L4 / A10G (24 GB) | 12.4 GB (L40S) |
 | `meme` | ready | 12.2 GB | denoise 6.2 GB | z_image_turbo_int8_convrot.safetensors (6.2) | fits whole | L4 / A10G (24 GB) | 12.7 GB (H100) |
 | `z-image` | ready | 12.2 GB | denoise 6.2 GB | z_image_turbo_int8_convrot.safetensors (6.2) | fits whole | L4 / A10G (24 GB) | 12.2 GB (L40S) |
@@ -72,6 +76,7 @@ is not the least the app needs.
 | `style-reference` | ready | 19.4 GB | denoise 13.9 GB | krea2_turbo_int8_convrot.safetensors (13.5) | fits whole | L4 / A10G (24 GB) | 19.8 GB (L40S) |
 | `styles` | ready | 19.4 GB (+3.8 optional) | denoise 14.0 GB | krea2_turbo_int8_convrot.safetensors (13.5) | fits whole | L4 / A10G (24 GB) | 19.5 GB (L40S) |
 | `camera-moves` | ready | 37.6 GB (+2.5 optional) | denoise 15.3 GB | wan2.2_fun_camera_high_noise_14B_fp8_scaled.safetensors (15.3) | fits by phases | L4 / A10G (24 GB) | 41.3 GB (L40S) |
+| `bullet-time-scene` | ready | 24.6 GB (+1.1 optional) | denoise 16.4 GB | wan2.1_i2v_480p_14B_fp8_scaled.safetensors (16.4) | fits by phases | L4 / A10G (24 GB) | not measured |
 | `motion-transfer` | ready | 24.9 GB | denoise 16.6 GB | wan_animate_2_distill_int8_convrot.safetensors (16.6) | fits by phases | L4 / A10G (24 GB) | 37.3 GB (L40S) |
 | `effects` | ready | 25.0 GB (+9.0 optional) | denoise 16.8 GB | wan2.1_i2v_480p_14B_fp8_scaled.safetensors (16.4) | fits by phases | L4 / A10G (24 GB) | 41.9 GB (H100) |
 | `recast` | ready | 28.6 GB | denoise 18.6 GB | wan2.1_14B_SCAIL_2_int8_convrot.safetensors (16.6) | fits by phases | L4 / A10G (24 GB) | 30.6 GB (L40S) |
@@ -106,11 +111,16 @@ is not the least the app needs.
 | `volcano-ad` | ready | 50.1 GB (+5.2 optional) | denoise 21.9 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | tight (by phases) | test on L4 / A10G; L40S (48 GB) is comfortable | 50.3 GB (H100) |
 | `camera-copy` | ready | 39.4 GB (+5.2 optional) | denoise 22.1 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | tight (by phases) | test on L4 / A10G; L40S (48 GB) is comfortable | 40.6 GB (L40S) |
 | `mixed-media` | ready | 51.4 GB | denoise 22.1 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | tight (by phases) | test on L4 / A10G; L40S (48 GB) is comfortable | 51.2 GB (H100) |
+| `bullet-time-splash` | ready | 35.7 GB (+1.1 optional) | denoise 22.2 GB | wan2.1_i2v_480p_14B_fp8_scaled.safetensors (16.4) | tight (by phases) | test on L4 / A10G; L40S (48 GB) is comfortable | not measured |
+| `bullet-time-white` | ready | 35.7 GB (+1.1 optional) | denoise 22.2 GB | wan2.1_i2v_480p_14B_fp8_scaled.safetensors (16.4) | tight (by phases) | test on L4 / A10G; L40S (48 GB) is comfortable | not measured |
 | `vfx-water` | ready | 39.6 GB (+5.2 optional) | denoise 22.4 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | tight (by phases) | test on L4 / A10G; L40S (48 GB) is comfortable | 44.4 GB (L40S) |
 | `genjutsu` | ready | 40.0 GB | denoise 22.8 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | tight (by phases) | test on L4 / A10G; L40S (48 GB) is comfortable | 40.9 GB (H100 NVL) |
 | `reframe` | ready | 40.0 GB | denoise 22.8 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | tight (by phases) | test on L4 / A10G; L40S (48 GB) is comfortable | 44.1 GB (H100) |
 | `sdr-hdr` | ready | 24.6 GB | denoise 22.8 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | tight (by phases) | test on L4 / A10G; L40S (48 GB) is comfortable | 37.3 GB (H100 NVL) |
 | `dub` | ready | 41.2 GB (+5.2 optional) | denoise 24.0 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | needs Modal | L40S (48 GB), whole | 43.7 GB (H100) |
+| `extend-video` | ready | 51.5 GB | encode 27.1 GB | qwen3vl_32b_minimax_h3_int8_convrot.safetensors (27.1) | needs Modal | L40S (48 GB), by phases | not measured |
+| `h3-photo` | ready | 51.5 GB | encode 27.1 GB | qwen3vl_32b_minimax_h3_int8_convrot.safetensors (27.1) | needs Modal | L40S (48 GB), by phases | not measured |
+| `h3-video` | ready | 51.5 GB | encode 27.1 GB | qwen3vl_32b_minimax_h3_int8_convrot.safetensors (27.1) | needs Modal | L40S (48 GB), by phases | not measured |
 | `reshoot` | ready | 54.8 GB | encode 27.1 GB | qwen3vl_32b_minimax_h3_int8_convrot.safetensors (27.1) | needs Modal | L40S (48 GB), by phases | 44.1 GB (L40S) |
 | `smoke` | ready | 0.0 GB | encode 0.0 GB | — | no models | any | not measured |
 | `smoke-invert` | ready | 0.0 GB | encode 0.0 GB | — | no models | any | not measured |

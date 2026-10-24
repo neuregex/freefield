@@ -1,0 +1,139 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "extend-video",
+  "name": "Extend Video",
+  "section": "video",
+  "summary": "Continues a clip from its last frame with MiniMax H3, sound included, and joins the new part after it.",
+  "higgsfield_feature": "Extend Video",
+  "pack": "video-h3",
+  "status": "ready",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "video_minimax_h3_i2v.json",
+    "comfyui": "0.42.0",
+    "notes": "Comfy's video_minimax_h3_i2v template with the int8 text encoder in place of the NVFP4 one (it needs a Blackwell GPU) and the plain 20-step branch of its turbo switch wired in: lightx2v's turbo LoRA is left out, its model card states no license (tools/build_apps.py). The clip's last frame (ImageFromBatch -1) starts the new part; ImageBatch joins the frames (the new ones scaled to the clip's size), AudioConcat the sound, CreateVideo writes them at the clip's frame rate."
+  },
+  "inputs": [
+    {
+      "id": "clip",
+      "type": "video",
+      "label": "Your clip",
+      "required": true,
+      "limits": {
+        "max_mb": 60
+      },
+      "help": "Up to about 15 s; 24 or 25 fps clips join best.",
+      "bind": [
+        {
+          "node": "ff_clip",
+          "field": "file"
+        }
+      ]
+    },
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "What happens next",
+      "required": true,
+      "default": "The scene continues naturally: same people, place, light and camera style.",
+      "bind": [
+        {
+          "node": "105:104",
+          "field": "prompt"
+        }
+      ]
+    },
+    {
+      "id": "duration",
+      "type": "slider",
+      "label": "Seconds to add",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 3,
+      "bind": [
+        {
+          "node": "105:111",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "steps",
+      "type": "slider",
+      "label": "Steps",
+      "min": 8,
+      "max": 30,
+      "step": 1,
+      "default": 20,
+      "help": "Fewer steps run faster and look rougher.",
+      "bind": [
+        {
+          "node": "105:124",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "105:15",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "92",
+      "type": "video",
+      "label": "Extended clip"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 20.97,
+      "phase": "denoise",
+      "license": "MiniMax H3 Community License"
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 27.14,
+      "phase": "encode",
+      "license": "MiniMax H3 Community License"
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "vae/minimax_h3_video_vae_int8_convrot.safetensors",
+      "dir": "vae",
+      "gb": 2.81,
+      "phase": "decode",
+      "license": "MiniMax H3 Community License"
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "vae/minimax_h3_audio_vae_fp32.safetensors",
+      "dir": "vae",
+      "gb": 0.61,
+      "phase": "decode",
+      "license": "MiniMax H3 Community License"
+    }
+  ],
+  "credits": [
+    "MiniMax H3 (MiniMax H3 Community License)"
+  ],
+  "test": {
+    "clip": "test/clip.mp4",
+    "duration": 2
+  }
+}

@@ -1,6 +1,7 @@
 {
   "pack": "image",
   "apps": [
+    "ai-influencer",
     "cinema-studio",
     "meme",
     "z-image"
@@ -18,6 +19,7 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
+        "ai-influencer",
         "cinema-studio",
         "meme",
         "z-image"
@@ -32,6 +34,7 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
+        "ai-influencer",
         "cinema-studio",
         "meme",
         "z-image"
@@ -46,6 +49,7 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
+        "ai-influencer",
         "cinema-studio",
         "meme",
         "z-image"

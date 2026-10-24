@@ -101,6 +101,85 @@ def prefix_outputs(api: Api, app_id: str) -> None:
             node["inputs"]["filename_prefix"] = f"freefield/{app_id}"
 
 
+# ---------------------------------------------------------------- MiniMax H3 specifics
+def h3_local(api: Api) -> None:
+    """Comfy's MiniMax H3 templates on Freefield's weights, without the turbo LoRA.
+
+    The templates load an NVFP4 text encoder (it needs a Blackwell GPU); the int8 one reshoot already uses goes
+    in its place. Their turbo switch (a PrimitiveBoolean, off by default) picks lightx2v's 8-step LoRA or the
+    plain 20 steps; the plain branch is wired straight in and the LoRA goes, since its model card states no
+    license."""
+    swap_files(api, {"qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"})
+    turbo = find(api, "PrimitiveBoolean")
+    switches = [i for i, n in api.items() if n["class_type"] == "ComfySwitchNode" and n["inputs"].get("switch") == [turbo, 0]]
+    assert len(switches) == 2, switches
+    for sw in switches:
+        rewire(api, [sw, 0], api[sw]["inputs"]["on_false"])
+    fast_steps = [api[sw]["inputs"]["on_true"][0] for sw in switches if api[api[sw]["inputs"]["on_true"][0]]["class_type"] == "PrimitiveInt"]
+    drop(api, *switches, turbo, find(api, "LoraLoaderModelOnly"), *fast_steps)
+
+
+def h3_from_photo(api: Api, megapixels: float) -> None:
+    """Size the H3 clip from the photo (the template's unused scale + size nodes) instead of a fixed aspect."""
+    scale, size = find(api, "ImageScaleToTotalPixels"), find(api, "GetImageSize")
+    photo, h3 = find(api, "LoadImage"), find(api, "MiniMaxH3ImageToVideo")
+    put(api, scale, "image", [photo, 0])
+    put(api, scale, "megapixels", megapixels)
+    put(api, scale, "upscale_method", "lanczos")
+    put(api, h3, "first_frame", [scale, 0])
+    put(api, h3, "width", [size, 0])
+    put(api, h3, "height", [size, 1])
+    drop(api, find(api, "ResolutionSelector"))
+
+
+def h3_extend(api: Api) -> None:
+    """H3 image-to-video from the clip's last frame, joined after the clip: frames with ImageBatch (it scales the
+    new frames to the clip's size), sound with AudioConcat, at the clip's frame rate."""
+    photo = find(api, "LoadImage")
+    api["ff_clip"] = {"class_type": "LoadVideo", "inputs": {"file": "clip.mp4"}, "_meta": {"title": "Clip to extend"}}
+    api["ff_parts"] = {"class_type": "GetVideoComponents", "inputs": {"video": ["ff_clip", 0]}, "_meta": {"title": "Frames, sound, fps"}}
+    api["ff_last"] = {"class_type": "ImageFromBatch", "inputs": {"image": ["ff_parts", 0], "batch_index": -1, "length": 1},
+                      "_meta": {"title": "Last frame"}}
+    rewire(api, [photo, 0], ["ff_last", 0])
+    drop(api, photo)
+    decode = find(api, "VAEDecode")
+    audio = find(api, "VAEDecodeAudio")
+    out = find(api, "CreateVideo")
+    api["ff_frames"] = {"class_type": "ImageBatch", "inputs": {"image1": ["ff_parts", 0], "image2": [decode, 0]}, "_meta": {"title": "Clip + continuation"}}
+    api["ff_sound"] = {"class_type": "AudioConcat", "inputs": {"audio1": ["ff_parts", 1], "audio2": [audio, 0], "direction": "after"},
+                       "_meta": {"title": "Sound + new sound"}}
+    put(api, out, "images", ["ff_frames", 0])
+    put(api, out, "audio", ["ff_sound", 0])
+    put(api, out, "fps", ["ff_parts", 2])
+
+
+def video_remove_bg(birefnet: Api) -> Api:
+    """BiRefNet (the remove-bg template's two nodes) on every frame of a clip, from core video nodes: the cutout
+    over a solid color with the clip's sound, and the matte (white subject on black) for compositing."""
+    loader = birefnet[find(birefnet, "LoadBackgroundRemovalModel")]
+    save = {"format": "auto", "format.codec": "auto", "filename_prefix": "freefield/video-remove-bg"}
+    return {
+        "1": {"class_type": "LoadVideo", "inputs": {"file": "clip.mp4"}, "_meta": {"title": "Clip"}},
+        "2": {"class_type": "Video Slice", "inputs": {"video": ["1", 0], "start_time": 0.0, "duration": 10.0, "strict_duration": False},
+              "_meta": {"title": "First 10 s"}},
+        "3": {"class_type": "GetVideoComponents", "inputs": {"video": ["2", 0]}, "_meta": {"title": "Frames, sound, fps"}},
+        "4": {"class_type": "ImageScaleToTotalPixels", "inputs": {"image": ["3", 0], "upscale_method": "area", "megapixels": 0.9, "resolution_steps": 2},
+              "_meta": {"title": "Frames at 0.9 MP"}},
+        "5": json.loads(json.dumps(loader)),
+        "6": {"class_type": "RemoveBackground", "inputs": {"image": ["4", 0], "bg_removal_model": ["5", 0]}, "_meta": {"title": "Subject mask per frame"}},
+        "7": {"class_type": "GetImageSize", "inputs": {"image": ["4", 0]}, "_meta": {"title": "Size"}},
+        "8": {"class_type": "EmptyImage", "inputs": {"width": ["7", 0], "height": ["7", 1], "batch_size": ["7", 2], "color": 45376},
+              "_meta": {"title": "Background color"}},
+        "9": {"class_type": "ImageCompositeMasked", "inputs": {"destination": ["8", 0], "source": ["4", 0], "x": 0, "y": 0, "resize_source": False,
+                                                               "mask": ["6", 0]}, "_meta": {"title": "Subject over the color"}},
+        "10": {"class_type": "CreateVideo", "inputs": {"images": ["9", 0], "fps": ["3", 2], "audio": ["3", 1]}, "_meta": {"title": "Cutout video"}},
+        "11": {"class_type": "SaveVideo", "inputs": {"video": ["10", 0], **save}, "_meta": {"title": "Save cutout"}},
+        "12": {"class_type": "MaskToImage", "inputs": {"mask": ["6", 0]}, "_meta": {"title": "Matte"}},
+        "13": {"class_type": "CreateVideo", "inputs": {"images": ["12", 0], "fps": ["3", 2]}, "_meta": {"title": "Matte video"}},
+        "14": {"class_type": "SaveVideo", "inputs": {"video": ["13", 0], **save}, "_meta": {"title": "Save matte"}},
+    }
+
+
 # ---------------------------------------------------------------- LTX specifics
 LTX_INT8 = {
     "ltx-2.5-22b-distilled-transformer-bf16.safetensors": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
@@ -578,6 +657,28 @@ def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None)
     out["music"] = tpl("audio_minimax_music_3.json")
     out["sfx"] = tpl("audio_stable_audio_3_medium.json")
     out["motion-transfer"] = tpl("video_wan_animate2_distilled.json")
+    dm = tpl("utility_moge_depth_estimation.json")
+    # MoGe-2 (the geometry model reshoot loads too): one render saved, the map picked in the app; the depth and
+    # mask previews go
+    colored = find(dm, "MoGeRender", output="depth_colored")
+    to_save_image(dm, find(dm, "PreviewImage", images=[colored, 0]), "freefield/depth-map")
+    drop(dm, find(dm, "PreviewImage"), find(dm, "MaskPreview"))
+    drop(dm, find(dm, "ImageToMask"))
+    drop(dm, find(dm, "MoGeRender", output="depth"), find(dm, "MoGeRender", output="mask"))
+    out["depth-map"] = dm
+    out["video-remove-bg"] = video_remove_bg(tpl("utility_birefnet_remove_background.json"))
+    h3t = tpl("video_minimax_h3_t2v.json")
+    h3_local(h3t)
+    out["h3-video"] = h3t
+    h3i = tpl("video_minimax_h3_i2v.json")
+    h3_local(h3i)
+    h3_from_photo(h3i, 0.6)
+    out["h3-photo"] = h3i
+    ext = tpl("video_minimax_h3_i2v.json")
+    h3_local(ext)
+    h3_from_photo(ext, 0.6)
+    h3_extend(ext)
+    out["extend-video"] = ext
     if reshoot:
         # Comfy's own reference app (Comfy-Org/comfy-reshoot, MIT), already in API format
         out["reshoot"] = json.loads((reshoot / "generate.api.json").read_text(encoding="utf-8"))

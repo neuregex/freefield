@@ -17,6 +17,7 @@
   },
   "image": {
     "apps": [
+      "ai-influencer",
       "cinema-studio",
       "meme",
       "z-image"
@@ -38,6 +39,7 @@
       "commercial-faces",
       "edit",
       "edit-text",
+      "expand-image",
       "face-swap",
       "fashion-factory",
       "figure-3d",
@@ -99,19 +101,24 @@
   },
   "upscale": {
     "apps": [
+      "depth-map",
       "remove-bg",
       "smooth",
       "upscale",
-      "upscale-video"
+      "upscale-video",
+      "video-remove-bg"
     ],
-    "download_gb": 4.47,
+    "download_gb": 5.13,
     "needs_hf_token": false
   },
   "video-h3": {
     "apps": [
+      "extend-video",
+      "h3-photo",
+      "h3-video",
       "reshoot"
     ],
-    "download_gb": 54.75,
+    "download_gb": 75.72,
     "needs_hf_token": false
   },
   "video-ltx25": {
@@ -174,9 +181,12 @@
   },
   "video-wan-effects": {
     "apps": [
+      "bullet-time-scene",
+      "bullet-time-splash",
+      "bullet-time-white",
       "effects"
     ],
-    "download_gb": 34.03,
-    "needs_hf_token": false
+    "download_gb": 45.06,
+    "needs_hf_token": true
   }
 }

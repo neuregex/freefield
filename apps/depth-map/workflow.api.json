@@ -1,0 +1,145 @@
+{
+  "9": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "alien_world.png"
+    },
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "17": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "49:23",
+        0
+      ],
+      "filename_prefix": "freefield/depth-map"
+    },
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "49:13": {
+    "class_type": "MoGeInference",
+    "inputs": {
+      "moge_model": [
+        "49:32",
+        0
+      ],
+      "image": [
+        "49:53",
+        0
+      ],
+      "resolution_level": 2,
+      "fov_x_degrees": 0,
+      "batch_size": 4,
+      "force_projection": true,
+      "apply_mask": true,
+      "refine_steps": 3
+    },
+    "_meta": {
+      "title": "Run MoGe Inference"
+    }
+  },
+  "49:23": {
+    "class_type": "MoGeRender",
+    "inputs": {
+      "moge_geometry": [
+        "49:13",
+        0
+      ],
+      "output": "depth_colored"
+    },
+    "_meta": {
+      "title": "Render MoGe Geometry"
+    }
+  },
+  "49:32": {
+    "class_type": "LoadMoGeModel",
+    "inputs": {
+      "model_name": "moge_2_vitl_normal_fp16.safetensors"
+    },
+    "_meta": {
+      "title": "Load MoGe Model"
+    }
+  },
+  "49:36": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "values.a": [
+        "49:37",
+        0
+      ],
+      "expression": "a > 2048"
+    },
+    "_meta": {
+      "title": "Math Expression"
+    }
+  },
+  "49:37": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "9",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Get Image Size"
+    }
+  },
+  "49:42": {
+    "class_type": "ComfySwitchNode",
+    "inputs": {
+      "on_false": [
+        "9",
+        0
+      ],
+      "on_true": [
+        "49:70",
+        0
+      ],
+      "switch": [
+        "49:36",
+        2
+      ]
+    },
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  },
+  "49:53": {
+    "class_type": "ComfySwitchNode",
+    "inputs": {
+      "on_false": [
+        "9",
+        0
+      ],
+      "on_true": [
+        "49:42",
+        0
+      ],
+      "switch": true
+    },
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  },
+  "49:70": {
+    "class_type": "ResizeImageMaskNode",
+    "inputs": {
+      "input": [
+        "9",
+        0
+      ],
+      "resize_type": "scale longer dimension",
+      "resize_type.longer_size": 2048,
+      "scale_method": "lanczos"
+    },
+    "_meta": {
+      "title": "Resize Image/Mask"
+    }
+  }
+}

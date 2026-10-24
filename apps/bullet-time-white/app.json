@@ -1,0 +1,262 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "bullet-time-white",
+  "name": "Bullet Time White",
+  "section": "video",
+  "summary": "Puts the subject mid-jump on a white studio backdrop, then freezes time and circles the camera around them.",
+  "higgsfield_feature": "Bullet Time White",
+  "pack": "video-wan-effects",
+  "status": "ready",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_to_video_wan.json",
+    "comfyui": "0.42.0",
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/effects's (built by tools/build_apps.py) with Wan21_I2V_rotation_000003750.safetensors as the effect LoRA (node ff_effect), after FLUX 3 Klein (apps/edit, merged in as edit:*) redraws the photo with a fixed instruction (node edit:4: \"Put this exact person on a seamless pure white studio background, mid-jump with arms spread, soft even studio light. Keep the face, hair and outfit identical.\"); Wan starts from Klein's image; the prompt below is fixed and \"Extra direction\" is appended to it."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Your photo",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "52",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "subject",
+      "type": "text",
+      "label": "Who or what is in the photo",
+      "default": "a person mid-jump",
+      "required": true
+    },
+    {
+      "id": "details",
+      "type": "textarea",
+      "label": "Extra direction",
+      "default": "",
+      "help": "Added at the end of the app's prompt.",
+      "bind": [
+        {
+          "node": "6",
+          "field": "text",
+          "template": "rw360xz，人物定在空中，相机视角围绕人物向一个方向旋转。The video shows {subject}, frozen in mid-air on a seamless white studio background while the camera circles around them in one direction. {details}"
+        }
+      ]
+    },
+    {
+      "id": "strength",
+      "type": "slider",
+      "label": "Effect strength",
+      "min": 0.5,
+      "max": 1.4,
+      "step": 0.05,
+      "default": 1.0,
+      "bind": [
+        {
+          "node": "ff_effect",
+          "field": "strength_model"
+        }
+      ]
+    },
+    {
+      "id": "aspect",
+      "type": "select",
+      "label": "Format",
+      "default": "portrait",
+      "options": [
+        {
+          "value": "portrait",
+          "label": "9:16",
+          "sets": [
+            {
+              "node": "50",
+              "field": "width",
+              "value": 480
+            },
+            {
+              "node": "50",
+              "field": "height",
+              "value": 832
+            }
+          ]
+        },
+        {
+          "value": "landscape",
+          "label": "16:9",
+          "sets": [
+            {
+              "node": "50",
+              "field": "width",
+              "value": 832
+            },
+            {
+              "node": "50",
+              "field": "height",
+              "value": 480
+            }
+          ]
+        },
+        {
+          "value": "square",
+          "label": "1:1",
+          "sets": [
+            {
+              "node": "50",
+              "field": "width",
+              "value": 624
+            },
+            {
+              "node": "50",
+              "field": "height",
+              "value": 624
+            }
+          ]
+        }
+      ],
+      "help": "Your photo is center-cropped to this shape."
+    },
+    {
+      "id": "frames",
+      "type": "select",
+      "label": "Length",
+      "default": 81,
+      "options": [
+        {
+          "value": 49,
+          "label": "3 s"
+        },
+        {
+          "value": 81,
+          "label": "5 s"
+        }
+      ],
+      "bind": [
+        {
+          "node": "50",
+          "field": "length"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "3",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "56",
+      "type": "video",
+      "label": "Result"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
+      "file": "split_files/diffusion_models/wan2.1_i2v_480p_14B_fp8_scaled.safetensors",
+      "dir": "diffusion_models",
+      "gb": 16.4,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
+      "file": "split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "dir": "text_encoders",
+      "gb": 6.74,
+      "phase": "encode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
+      "file": "split_files/clip_vision/clip_vision_h.safetensors",
+      "dir": "clip_vision",
+      "gb": 1.26,
+      "phase": "encode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
+      "file": "split_files/vae/wan_2.1_vae.safetensors",
+      "dir": "vae",
+      "gb": 0.25,
+      "phase": "decode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Kijai/WanVideo_comfy",
+      "file": "Lightx2v/lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors",
+      "dir": "loras",
+      "gb": 0.74,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "joyfox/Wan2.1-BulletTime-LoRA",
+      "file": "Wan21_I2V_rotation_000003750.safetensors",
+      "dir": "loras",
+      "gb": 0.36,
+      "phase": "denoise",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "phase": "denoise",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "phase": "encode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "decode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    }
+  ],
+  "credits": [
+    "Effect LoRAs by Remade-AI (Apache-2.0)",
+    "Bullet time, Money rain and Clones LoRAs by joyfox (Apache-2.0; the repos moved there from valiantcat and laozou)",
+    "Dolly zoom LoRA by ostris (Apache-2.0)",
+    "Steam LoRA by lvfengchun (Apache-2.0)",
+    "Wan 2.1 image-to-video 14B by Wan-AI, Alibaba (Apache-2.0)",
+    "Step-distill LoRA by lightx2v, packaged for ComfyUI by Kijai",
+    "Workflow: ComfyUI official template",
+    "FLUX 3 Image Klein by Black Forest Labs (FLUX Kommunity License)"
+  ],
+  "test": {
+    "image": "test/portrait.png",
+    "duration": 2,
+    "subject": "a man in a red jacket, jeans and white sneakers"
+  }
+}

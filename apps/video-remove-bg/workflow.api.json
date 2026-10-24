@@ -1,0 +1,212 @@
+{
+  "1": {
+    "class_type": "LoadVideo",
+    "inputs": {
+      "file": "clip.mp4"
+    },
+    "_meta": {
+      "title": "Clip"
+    }
+  },
+  "2": {
+    "class_type": "Video Slice",
+    "inputs": {
+      "video": [
+        "1",
+        0
+      ],
+      "start_time": 0.0,
+      "duration": 10.0,
+      "strict_duration": false
+    },
+    "_meta": {
+      "title": "First 10 s"
+    }
+  },
+  "3": {
+    "class_type": "GetVideoComponents",
+    "inputs": {
+      "video": [
+        "2",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Frames, sound, fps"
+    }
+  },
+  "4": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "3",
+        0
+      ],
+      "upscale_method": "area",
+      "megapixels": 0.9,
+      "resolution_steps": 2
+    },
+    "_meta": {
+      "title": "Frames at 0.9 MP"
+    }
+  },
+  "5": {
+    "class_type": "LoadBackgroundRemovalModel",
+    "inputs": {
+      "bg_removal_name": "birefnet.safetensors"
+    },
+    "_meta": {
+      "title": "Load Background Removal Model"
+    }
+  },
+  "6": {
+    "class_type": "RemoveBackground",
+    "inputs": {
+      "image": [
+        "4",
+        0
+      ],
+      "bg_removal_model": [
+        "5",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Subject mask per frame"
+    }
+  },
+  "7": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "4",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Size"
+    }
+  },
+  "8": {
+    "class_type": "EmptyImage",
+    "inputs": {
+      "width": [
+        "7",
+        0
+      ],
+      "height": [
+        "7",
+        1
+      ],
+      "batch_size": [
+        "7",
+        2
+      ],
+      "color": 45376
+    },
+    "_meta": {
+      "title": "Background color"
+    }
+  },
+  "9": {
+    "class_type": "ImageCompositeMasked",
+    "inputs": {
+      "destination": [
+        "8",
+        0
+      ],
+      "source": [
+        "4",
+        0
+      ],
+      "x": 0,
+      "y": 0,
+      "resize_source": false,
+      "mask": [
+        "6",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Subject over the color"
+    }
+  },
+  "10": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "9",
+        0
+      ],
+      "fps": [
+        "3",
+        2
+      ],
+      "audio": [
+        "3",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "Cutout video"
+    }
+  },
+  "11": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "10",
+        0
+      ],
+      "format": "auto",
+      "format.codec": "auto",
+      "filename_prefix": "freefield/video-remove-bg"
+    },
+    "_meta": {
+      "title": "Save cutout"
+    }
+  },
+  "12": {
+    "class_type": "MaskToImage",
+    "inputs": {
+      "mask": [
+        "6",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Matte"
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "12",
+        0
+      ],
+      "fps": [
+        "3",
+        2
+      ]
+    },
+    "_meta": {
+      "title": "Matte video"
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "format": "auto",
+      "format.codec": "auto",
+      "filename_prefix": "freefield/video-remove-bg"
+    },
+    "_meta": {
+      "title": "Save matte"
+    }
+  }
+}

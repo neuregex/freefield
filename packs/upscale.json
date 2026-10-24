@@ -1,12 +1,14 @@
 {
   "pack": "upscale",
   "apps": [
+    "depth-map",
     "remove-bg",
     "smooth",
     "upscale",
-    "upscale-video"
+    "upscale-video",
+    "video-remove-bg"
   ],
-  "download_gb": 4.47,
+  "download_gb": 5.13,
   "needs_hf_token": false,
   "custom_nodes": [],
   "models": [
@@ -19,7 +21,8 @@
       "gated": false,
       "license": "MIT",
       "used_by": [
-        "remove-bg"
+        "remove-bg",
+        "video-remove-bg"
       ]
     },
     {
@@ -45,6 +48,18 @@
       "license": "Apache-2.0 (FILM, Google Research)",
       "used_by": [
         "smooth"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MoGe",
+      "file": "geometry_estimation/moge_2_vitl_normal_fp16.safetensors",
+      "dir": "geometry_estimation",
+      "gb": 0.66,
+      "name": "moge_2_vitl_normal_fp16.safetensors",
+      "gated": false,
+      "license": "MIT",
+      "used_by": [
+        "depth-map"
       ]
     },
     {

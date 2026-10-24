@@ -1,0 +1,195 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "ai-influencer",
+  "name": "AI Influencer",
+  "section": "image",
+  "summary": "Makes a feed-ready photo of a made-up influencer in their niche, with natural skin (Z-Image Turbo).",
+  "higgsfield_feature": "Influencer IA",
+  "pack": "image",
+  "status": "ready",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_z_image_turbo_int8.json",
+    "comfyui": "0.42.0",
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/z-image's (built by tools/build_apps.py); the prompt below is fixed and \"Extra direction\" is appended to it."
+  },
+  "inputs": [
+    {
+      "id": "who",
+      "type": "text",
+      "label": "Who",
+      "default": "a woman in her late twenties from Mexico City with curly dark hair",
+      "required": true,
+      "help": "Describe a person who does not exist: age, origin, hair, style."
+    },
+    {
+      "id": "niche",
+      "type": "select",
+      "label": "Niche",
+      "default": "fitness influencer stretching on a rooftop at sunrise in workout clothes",
+      "options": [
+        {
+          "value": "fitness influencer stretching on a rooftop at sunrise in workout clothes",
+          "label": "Fitness"
+        },
+        {
+          "value": "travel influencer with a backpack at a viewpoint above a coastal town",
+          "label": "Travel"
+        },
+        {
+          "value": "fashion influencer posing on a city street in a tailored camel coat",
+          "label": "Fashion"
+        },
+        {
+          "value": "food influencer tasting a dish at a busy street food stall at night",
+          "label": "Food"
+        },
+        {
+          "value": "tech influencer at a desk with a laptop and a camera on a tripod, warm desk lamp",
+          "label": "Tech"
+        }
+      ]
+    },
+    {
+      "id": "details",
+      "type": "textarea",
+      "label": "Extra direction",
+      "default": "",
+      "help": "Added at the end of the app's prompt.",
+      "bind": [
+        {
+          "node": "57:27",
+          "field": "text",
+          "template": "A vertical phone photo for a social media feed of {who}, a {niche}. Natural skin texture with visible pores, candid moment, realistic photo, no text, no logos. {details}"
+        }
+      ]
+    },
+    {
+      "id": "width",
+      "type": "select",
+      "label": "Width",
+      "default": 768,
+      "options": [
+        {
+          "value": 768,
+          "label": "768"
+        },
+        {
+          "value": 1024,
+          "label": "1024"
+        },
+        {
+          "value": 1280,
+          "label": "1280"
+        },
+        {
+          "value": 1536,
+          "label": "1536"
+        }
+      ],
+      "bind": [
+        {
+          "node": "57:13",
+          "field": "width"
+        }
+      ]
+    },
+    {
+      "id": "height",
+      "type": "select",
+      "label": "Height",
+      "default": 1280,
+      "options": [
+        {
+          "value": 768,
+          "label": "768"
+        },
+        {
+          "value": 1024,
+          "label": "1024"
+        },
+        {
+          "value": 1280,
+          "label": "1280"
+        },
+        {
+          "value": 1536,
+          "label": "1536"
+        }
+      ],
+      "bind": [
+        {
+          "node": "57:13",
+          "field": "height"
+        }
+      ]
+    },
+    {
+      "id": "steps",
+      "type": "slider",
+      "label": "Steps",
+      "min": 4,
+      "max": 16,
+      "step": 1,
+      "default": 8,
+      "bind": [
+        {
+          "node": "57:3",
+          "field": "steps"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "57:3",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "9",
+      "type": "image",
+      "label": "Result"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/z_image_turbo",
+      "file": "split_files/diffusion_models/z_image_turbo_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 6.2,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/z_image_turbo",
+      "file": "split_files/text_encoders/qwen_3_4b_fp8_mixed.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.63,
+      "phase": "encode",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "Comfy-Org/z_image_turbo",
+      "file": "split_files/vae/ae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "decode",
+      "license": "Apache-2.0"
+    }
+  ],
+  "credits": [
+    "Z-Image Turbo by Tongyi-MAI (Apache-2.0)"
+  ],
+  "test": {
+    "niche": "fitness influencer stretching on a rooftop at sunrise in workout clothes"
+  }
+}

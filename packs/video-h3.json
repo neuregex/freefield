@@ -1,9 +1,12 @@
 {
   "pack": "video-h3",
   "apps": [
+    "extend-video",
+    "h3-photo",
+    "h3-video",
     "reshoot"
   ],
-  "download_gb": 54.75,
+  "download_gb": 75.72,
   "needs_hf_token": false,
   "custom_nodes": [
     {
@@ -12,6 +15,20 @@
     }
   ],
   "models": [
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 20.97,
+      "name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "gated": false,
+      "license": "MiniMax H3 Community License",
+      "used_by": [
+        "extend-video",
+        "h3-photo",
+        "h3-video"
+      ]
+    },
     {
       "repo": "Comfy-Org/MiniMax-H3",
       "file": "diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors",
@@ -69,6 +86,9 @@
       "gated": false,
       "license": "MiniMax H3 Community License",
       "used_by": [
+        "extend-video",
+        "h3-photo",
+        "h3-video",
         "reshoot"
       ]
     },
@@ -81,6 +101,9 @@
       "gated": false,
       "license": "MiniMax H3 Community License",
       "used_by": [
+        "extend-video",
+        "h3-photo",
+        "h3-video",
         "reshoot"
       ]
     },
@@ -93,6 +116,9 @@
       "gated": false,
       "license": "MiniMax H3 Community License",
       "used_by": [
+        "extend-video",
+        "h3-photo",
+        "h3-video",
         "reshoot"
       ]
     }

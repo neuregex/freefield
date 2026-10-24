@@ -1,0 +1,129 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "video-remove-bg",
+  "name": "Video Background Remover",
+  "section": "video",
+  "summary": "Cuts the subject out of every frame of a clip with BiRefNet: the clip over a solid color, with its sound, and the matte for compositing.",
+  "higgsfield_feature": "Video Background Remover",
+  "pack": "upscale",
+  "status": "ready",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "utility_birefnet_remove_background.json",
+    "comfyui": "0.42.0",
+    "notes": "BiRefNet's two nodes from Comfy's remove-background template, run on every frame with core video nodes (tools/build_apps.py: video_remove_bg)."
+  },
+  "inputs": [
+    {
+      "id": "clip",
+      "type": "video",
+      "label": "Your clip",
+      "required": true,
+      "limits": {
+        "max_mb": 100
+      },
+      "bind": [
+        {
+          "node": "1",
+          "field": "file"
+        }
+      ]
+    },
+    {
+      "id": "background",
+      "type": "select",
+      "label": "Background",
+      "default": "green",
+      "options": [
+        {
+          "value": "green",
+          "label": "Green screen",
+          "sets": [
+            {
+              "node": "8",
+              "field": "color",
+              "value": 45376
+            }
+          ]
+        },
+        {
+          "value": "white",
+          "label": "White",
+          "sets": [
+            {
+              "node": "8",
+              "field": "color",
+              "value": 16777215
+            }
+          ]
+        },
+        {
+          "value": "black",
+          "label": "Black",
+          "sets": [
+            {
+              "node": "8",
+              "field": "color",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "value": "blue",
+          "label": "Blue screen",
+          "sets": [
+            {
+              "node": "8",
+              "field": "color",
+              "value": 18175
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seconds",
+      "type": "slider",
+      "label": "Seconds to process",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 10,
+      "help": "From the start of the clip; every frame is cut out.",
+      "bind": [
+        {
+          "node": "2",
+          "field": "duration"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "11",
+      "type": "video",
+      "label": "Cutout"
+    },
+    {
+      "node": "14",
+      "type": "video",
+      "label": "Matte"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/BiRefNet",
+      "file": "background_removal/birefnet.safetensors",
+      "dir": "background_removal",
+      "gb": 0.44,
+      "phase": "all",
+      "license": "MIT"
+    }
+  ],
+  "credits": [
+    "BiRefNet (MIT)"
+  ],
+  "test": {
+    "clip": "test/clip.mp4"
+  }
+}

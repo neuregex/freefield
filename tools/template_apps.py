@@ -18,6 +18,11 @@ these bases, all workflows built by tools/build_apps.py:
   morph      FLUX 3 Klein draws the last frame from the photo and LTX-2.5 + the transition LoRA moves
              the photo into it (apps/morph): for clips where the scene must change around a subject
              that has to stay the same (a face, a product); "klein" is that fixed instruction
+  effect     Wan 2.1 image-to-video with one effect LoRA fixed (apps/effects); "effect_lora" names it
+  effect-klein  the same, after FLUX 3 Klein redraws the photo with the fixed "klein" instruction
+             (merged in as edit:*): for effects that need another background or something added first
+  edit + outpaint  the edit pipeline on a padded canvas: the sampler starts from the photo with gray borders
+             and a noise mask on them, so only the new border is drawn; a select sets the padding
 The app folder gets the base workflow (copied, or with the few edits noted in BASES) and a manifest
 whose "details" input carries the prompt as a bind template; selects feed {placeholders} in that
 prompt. The base app's models and credits are copied as they are (qwen-edit swaps the LoRA).
@@ -50,7 +55,14 @@ BASES = {
                   "output": {"node": "12", "type": "image"}},
     "morph": {"app": "morph", "section": "video", "pack": "video-ltx25", "image": ("31", "image"), "prompt": ("251:252", "value"), "klein": ("edit:4", "text"),
               "keep": ("aspect", "duration", "strength", "seed"), "output": {"node": "68", "type": "video"}},
+    "effect": {"app": "effects", "section": "video", "pack": "video-wan-effects", "image": ("52", "image"), "prompt": ("6", "text"),
+               "keep": ("strength", "aspect", "frames", "seed"), "output": {"node": "56", "type": "video"}},
+    "effect-klein": {"app": "effects", "section": "video", "pack": "video-wan-effects", "image": ("52", "image"), "prompt": ("6", "text"),
+                     "klein": ("edit:4", "text"), "keep": ("strength", "aspect", "frames", "seed"), "output": {"node": "56", "type": "video"}},
 }
+BULLET_TIME = "Wan21_I2V_rotation_000003750.safetensors"   # joyfox's Bullet Time LoRA (Apache-2.0), the effects app's "Bullet time"
+BULLET_TRIGGER = "rw360xz，人物定在空中，相机视角围绕人物向一个方向旋转。"   # its trigger words, as on its model card
+
 
 # MediaPipe Face Landmarker as ComfyUI's native nodes load it (comfy_extras/nodes_mediapipe.py, blueprint "Image Face Detection")
 FACE_MODEL = {"repo": "Comfy-Org/mediapipe", "file": "detection/mediapipe_face_fp32.safetensors", "dir": "detection", "gb": 0.01, "phase": "encode",
@@ -104,12 +116,18 @@ T = []
 
 
 def A(id_, name, feature, cat, base, image_label, summary, prompt, inputs=(), ref=None, values=None, note="", image2_label=None, ref2=None, lora=None, help_=None,
-      defaults=None, klein=None, face_mask=False):
-    """defaults: new defaults for settings kept from the base app (say, the LTX enhancer off); klein: the morph base's Klein instruction;
-    face_mask (edit2): redraw only the face oval MediaPipe finds in the first image, so the rest of it stays as it is."""
+      defaults=None, klein=None, face_mask=False, effect_lora=None, outpaint=False):
+    """defaults: new defaults for settings kept from the base app (say, the LTX enhancer off); klein: the morph and effect-klein bases' Klein
+    instruction; face_mask (edit2): redraw only the face oval MediaPipe finds in the first image, so the rest of it stays as it is;
+    effect_lora: the effect bases' LoRA file; outpaint (edit): draw only a border added around the photo (a select's sets pad it)."""
     T.append(dict(id=id_, name=name, feature=feature, cat=cat, base=base, image_label=image_label, summary=summary, prompt=prompt,
                   inputs=list(inputs), ref=ref, values=values or {}, note=note, image2_label=image2_label, ref2=ref2, lora=lora, help=help_,
-                  defaults=defaults or {}, klein=klein, face_mask=face_mask))
+                  defaults=defaults or {}, klein=klein, face_mask=face_mask, effect_lora=effect_lora, outpaint=outpaint))
+
+
+def pad(left, top, right, bottom):
+    """The sets of an outpaint select option: pixels added on each side of the photo (scaled to 1 MP first)."""
+    return [{"node": "op_pad", "field": f, "value": v} for f, v in (("left", left), ("top", top), ("right", right), ("bottom", bottom))]
 
 
 # ---------------------------------------------------------------- ads & products (apps/edit pipeline, a product photo)
@@ -483,6 +501,53 @@ A("idol", "Idol", "Idol", "clips", "video", "Your photo",
   "crowd cheering and a pop beat.",
   [], WOMAN, {"aspect": PORTRAIT}, "Stage, confetti, pose.")
 
+# ---------------------------------------------------------------- the canvas, a new person, one effect LoRA
+A("expand-image", "Expand Image", "Expand Image", "style", "edit", "Your photo",
+  "Grows a photo past its edges: FLUX 3 Image Klein draws only the new border, so the original stays as it was.",
+  "Extend this photo outward into the gray border around it: continue the scene, its objects, light and perspective naturally past the "
+  "original edges, as if the camera had pulled back. The original part of the photo stays exactly the same; no frame, no border, no text.",
+  [{"id": "direction", "type": "select", "label": "Expand", "default": "out", "options": [
+      {"value": "out", "label": "Zoom out", "sets": pad(192, 192, 192, 192)},
+      {"value": "wide", "label": "Wider", "sets": pad(320, 0, 320, 0)},
+      {"value": "tall", "label": "Taller", "sets": pad(0, 320, 0, 320)}]}],
+  LAKE, {"direction": "out"}, "Does the border continue the lake, rock and sky, with no seam or gray left?", outpaint=True)
+A("ai-influencer", "AI Influencer", "Influencer IA", "portraits", "z-image", None,
+  "Makes a feed-ready photo of a made-up influencer in their niche, with natural skin (Z-Image Turbo).",
+  "A vertical phone photo for a social media feed of {who}, a {niche}. Natural skin texture with visible pores, candid moment, "
+  "realistic photo, no text, no logos.",
+  [txt("who", "Who", "a woman in her late twenties from Mexico City with curly dark hair", required=True,
+       help_="Describe a person who does not exist: age, origin, hair, style."),
+   sel("niche", "Niche", [("Fitness", "fitness influencer stretching on a rooftop at sunrise in workout clothes"),
+                          ("Travel", "travel influencer with a backpack at a viewpoint above a coastal town"),
+                          ("Fashion", "fashion influencer posing on a city street in a tailored camel coat"),
+                          ("Food", "food influencer tasting a dish at a busy street food stall at night"),
+                          ("Tech", "tech influencer at a desk with a laptop and a camera on a tripod, warm desk lamp")])],
+  None, {"niche": "fitness influencer stretching on a rooftop at sunrise in workout clothes"}, "A believable person, not a glossy render?",
+  defaults={"width": 768, "height": 1280})
+A("bullet-time-scene", "Bullet Time Scene", "Bullet Time Scene", "camera", "effect", "Your photo",
+  "Freezes the moment and circles the camera around the subject, in their own scene (Wan 2.1 + Bullet Time LoRA).",
+  BULLET_TRIGGER + "The video shows {subject}, frozen in mid-air while the camera circles around them in one direction; the whole scene is frozen too.",
+  [txt("subject", "Who or what is in the photo", "a person mid-jump", required=True)],
+  "ref-fx-jump", {"subject": "a parkour athlete in a black t-shirt leaping between two rooftops"},
+  "Does the camera orbit while the athlete and the city stay frozen?", effect_lora=BULLET_TIME)
+A("bullet-time-white", "Bullet Time White", "Bullet Time White", "camera", "effect-klein", "Your photo",
+  "Puts the subject mid-jump on a white studio backdrop, then freezes time and circles the camera around them.",
+  BULLET_TRIGGER + "The video shows {subject}, frozen in mid-air on a seamless white studio background while the camera circles around them in one direction.",
+  [txt("subject", "Who or what is in the photo", "a person mid-jump", required=True)],
+  CHARACTER, {"subject": "a man in a red jacket, jeans and white sneakers"},
+  "White backdrop, same person and outfit, smooth orbit?", effect_lora=BULLET_TIME,
+  klein="Put this exact person on a seamless pure white studio background, mid-jump with arms spread, soft even studio light. "
+        "Keep the face, hair and outfit identical.")
+A("bullet-time-splash", "Bullet Time Splash", "Bullet Time Splash", "camera", "effect-klein", "Your photo",
+  "Bursts frozen water around the subject, then circles the camera through the suspended drops.",
+  BULLET_TRIGGER + "The video shows {subject}, frozen in mid-air inside a burst of suspended water droplets while the camera circles around them in one direction.",
+  [txt("subject", "Who or what is in the photo", "a person", required=True)],
+  "ref-fx-runner", {"subject": "a sprinter in a red and white running outfit"},
+  "Do the drops stay frozen in the air while the camera moves?", effect_lora=BULLET_TIME,
+  klein="Add a frozen splash of clear water bursting around this exact person, droplets and ribbons of water suspended in the air, "
+        "same place and light. Keep the face, hair and outfit identical.")
+
+
 # ---------------------------------------------------------------- camera LoRAs on Qwen-Image-Edit-2509 (the relight pipeline, other LoRA)
 MOVES = [("Move forward", "将镜头向前移动 Move the camera forward."), ("Move back", "将镜头向后移动 Move the camera backward."),
          ("Move left", "将镜头向左移动 Move the camera left."), ("Move right", "将镜头向右移动 Move the camera right."),
@@ -534,8 +599,9 @@ def check() -> None:
         assert t["base"] in BASES, t["id"]
         used = set(re.findall(r"\{([a-z][a-z0-9_]*)\}", t["prompt"] + " " + (t["klein"] or "")))
         have = {i["id"] for i in t["inputs"]}
+        setters = {i["id"] for i in t["inputs"] if any("sets" in o for o in i.get("options", []))}   # selects that write node fields
         assert used <= have, (t["id"], used - have)
-        assert have <= used, (t["id"], have - used)
+        assert have - setters <= used, (t["id"], have - setters - used)
         for i in t["inputs"]:
             assert i["id"] not in ("image", "image2", "details", "steps", "seed", "width", "height", "duration", "enhance", "aspect"), (t["id"], i["id"])
         if t["base"] == "z-image":
@@ -544,7 +610,9 @@ def check() -> None:
             assert t["ref"], t["id"]
         assert (t["base"] == "edit2") == bool(t["image2_label"] and t["ref2"]), t["id"]
         assert (t["base"] == "qwen-edit") == (t["lora"] in QWEN_LORAS), t["id"]
-        assert (t["base"] == "morph") == bool(t["klein"]), t["id"]
+        assert (t["base"] in ("morph", "effect-klein")) == bool(t["klein"]), t["id"]
+        assert (t["base"] in ("effect", "effect-klein")) == bool(t["effect_lora"]), t["id"]
+        assert not t["outpaint"] or t["base"] == "edit", t["id"]
         assert not t["face_mask"] or t["base"] == "edit2", t["id"]
         for k in t["defaults"]:
             assert k in BASES[t["base"]]["keep"], (t["id"], k)
@@ -588,6 +656,19 @@ def manifest(t: dict) -> dict:
         credits = credits + ["MediaPipe Face Landmarker (Google, Apache-2.0), ComfyUI port: Comfy-Org/mediapipe"]
     if t["base"] == "morph":
         notes += f" with a fixed Klein instruction for the last frame (node edit:4: \"{t['klein']}\")"
+    if t["base"] in ("effect", "effect-klein"):
+        effects = {s["value"] for i in src["inputs"] if i["id"] == "effect" for o in i["options"] for s in o.get("sets", []) if s["field"] == "lora_name"}
+        models = [m for m in models if m["file"].split("/")[-1] not in effects or m["file"].split("/")[-1] == t["effect_lora"]]
+        notes += f" with {t['effect_lora']} as the effect LoRA (node ff_effect)"
+    if t["base"] == "effect-klein":
+        edit = json.loads((ROOT / "apps" / "edit" / "app.json").read_text(encoding="utf-8"))
+        models = models + edit["models"]
+        credits = credits + [c for c in edit.get("credits", []) if c not in credits]
+        notes += (f", after FLUX 3 Klein (apps/edit, merged in as edit:*) redraws the photo with a fixed instruction (node edit:4: \"{t['klein']}\"); "
+                  "Wan starts from Klein's image")
+    if t["outpaint"]:
+        notes += ("; the sampler starts from the photo scaled to 1 MP and padded by ImagePadForOutpaint (the select sets the padding), with a noise "
+                  "mask on the border only, and the unpadded photo stays Klein's reference")
     if t["lora"]:
         lora = QWEN_LORAS[t["lora"]]
         models = [m for m in models if "Relight" not in m["file"]] + [{"repo": lora["repo"], "file": lora["file"], "dir": "loras", "gb": lora["gb"], "phase": "denoise", "license": lora["license"]}]
@@ -608,6 +689,10 @@ def manifest(t: dict) -> dict:
         "credits": credits,
         "test": test,
     }
+
+
+def is_link(v) -> bool:
+    return isinstance(v, list) and len(v) == 2 and isinstance(v[0], str)
 
 
 def workflow(t: dict) -> dict:
@@ -635,7 +720,33 @@ def workflow(t: dict) -> dict:
         api["7"]["inputs"]["latent_image"] = ["fm_latent", 0]
         api["17"]["inputs"]["images.image0"] = ["12", 0]   # the face photo is the only reference: with both, Klein copied the first face back
         del api["17"]["inputs"]["images.image1"]
-    if t["base"] == "morph":   # the last frame Klein draws is fixed per template (placeholders filled with the defaults)
+    if t["base"] in ("effect", "effect-klein"):
+        api["ff_effect"]["inputs"]["lora_name"] = t["effect_lora"]
+    if t["base"] == "effect-klein":   # Klein redraws the photo first; Wan's start image and CLIP vision read Klein's output
+        edit = json.loads((ROOT / "apps" / "edit" / "workflow.api.json").read_text(encoding="utf-8"))
+        for i, n in edit.items():
+            node = json.loads(json.dumps(n))
+            for k, v in node["inputs"].items():
+                if is_link(v):
+                    node["inputs"][k] = [f"edit:{v[0]}", v[1]]
+            api[f"edit:{i}"] = node
+        del api["edit:9"], api["edit:11"]   # Klein's own save, and its own LoadImage: it reads the app's photo
+        for i, n in api.items():
+            for k, v in n["inputs"].items():
+                if is_link(v) and v[0] == "edit:11":
+                    n["inputs"][k] = ["52", 0]
+                elif is_link(v) and v[0] == "52" and not i.startswith("edit:"):
+                    n["inputs"][k] = ["edit:8", 0]
+    if t["outpaint"]:   # draw only the border: start from the padded photo, noise mask on the padding, the photo as reference
+        api["op_scale"] = {"class_type": "ImageScaleToTotalPixels", "inputs": {"image": ["11", 0], "upscale_method": "lanczos", "megapixels": 1.0,
+                                                                                "resolution_steps": 16}, "_meta": {"title": "Photo at 1 MP"}}
+        api["op_pad"] = {"class_type": "ImagePadForOutpaint", "inputs": {"image": ["op_scale", 0], "left": 192, "top": 192, "right": 192, "bottom": 192,
+                                                                          "feathering": 24}, "_meta": {"title": "Border to draw"}}
+        api["op_encode"] = {"class_type": "VAEEncode", "inputs": {"pixels": ["op_pad", 0], "vae": ["3", 0]}, "_meta": {"title": "Encode the padded photo"}}
+        api["op_latent"] = {"class_type": "SetLatentNoiseMask", "inputs": {"samples": ["op_encode", 0], "mask": ["op_pad", 1]},
+                            "_meta": {"title": "Only the border is drawn"}}
+        api["7"]["inputs"]["latent_image"] = ["op_latent", 0]
+    if t["base"] in ("morph", "effect-klein"):   # the image Klein draws is fixed per template (placeholders filled with the defaults)
         defaults = {i["id"]: i.get("default", "") for i in t["inputs"]}
         api[base["klein"][0]]["inputs"][base["klein"][1]] = re.sub(r"\{([a-z][a-z0-9_]*)\}", lambda m: str(defaults.get(m.group(1), "")), t["klein"])
     if t["lora"]:   # the relight pipeline with another LoRA; node 14 prepends the Relight trigger, so it is blanked

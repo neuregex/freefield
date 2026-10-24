@@ -1,10 +1,13 @@
 {
   "pack": "video-wan-effects",
   "apps": [
+    "bullet-time-scene",
+    "bullet-time-splash",
+    "bullet-time-white",
     "effects"
   ],
-  "download_gb": 34.03,
-  "needs_hf_token": false,
+  "download_gb": 45.06,
+  "needs_hf_token": true,
   "custom_nodes": [],
   "models": [
     {
@@ -16,7 +19,23 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
+        "bullet-time-scene",
+        "bullet-time-splash",
+        "bullet-time-white",
         "effects"
+      ]
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "name": "flux3-image-klein-int8-convrot.safetensors",
+      "gated": true,
+      "license": "FLUX Kommunity License",
+      "used_by": [
+        "bullet-time-splash",
+        "bullet-time-white"
       ]
     },
     {
@@ -28,6 +47,9 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
+        "bullet-time-scene",
+        "bullet-time-splash",
+        "bullet-time-white",
         "effects"
       ]
     },
@@ -76,6 +98,9 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
+        "bullet-time-scene",
+        "bullet-time-splash",
+        "bullet-time-white",
         "effects"
       ]
     },
@@ -256,6 +281,9 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
+        "bullet-time-scene",
+        "bullet-time-splash",
+        "bullet-time-white",
         "effects"
       ]
     },
@@ -332,6 +360,19 @@
       ]
     },
     {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "name": "qwen3vl_4b_int8_convrot.safetensors",
+      "gated": true,
+      "license": "FLUX Kommunity License",
+      "used_by": [
+        "bullet-time-splash",
+        "bullet-time-white"
+      ]
+    },
+    {
       "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
       "file": "split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
       "dir": "text_encoders",
@@ -340,7 +381,23 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
+        "bullet-time-scene",
+        "bullet-time-splash",
+        "bullet-time-white",
         "effects"
+      ]
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "name": "flux2-vae.safetensors",
+      "gated": true,
+      "license": "FLUX Kommunity License",
+      "used_by": [
+        "bullet-time-splash",
+        "bullet-time-white"
       ]
     },
     {
@@ -352,6 +409,9 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
+        "bullet-time-scene",
+        "bullet-time-splash",
+        "bullet-time-white",
         "effects"
       ]
     }

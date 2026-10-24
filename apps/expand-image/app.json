@@ -1,0 +1,204 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "expand-image",
+  "name": "Expand Image",
+  "section": "image",
+  "summary": "Grows a photo past its edges: FLUX 3 Image Klein draws only the new border, so the original stays as it was.",
+  "higgsfield_feature": "Expand Image",
+  "pack": "image-flux3",
+  "status": "ready",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_flux3_klein_distilled_image_edit.json",
+    "comfyui": "0.42.0",
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py); the sampler starts from the photo scaled to 1 MP and padded by ImagePadForOutpaint (the select sets the padding), with a noise mask on the border only, and the unpadded photo stays Klein's reference; the prompt below is fixed and \"Extra direction\" is appended to it."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Your photo",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "11",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "direction",
+      "type": "select",
+      "label": "Expand",
+      "default": "out",
+      "options": [
+        {
+          "value": "out",
+          "label": "Zoom out",
+          "sets": [
+            {
+              "node": "op_pad",
+              "field": "left",
+              "value": 192
+            },
+            {
+              "node": "op_pad",
+              "field": "top",
+              "value": 192
+            },
+            {
+              "node": "op_pad",
+              "field": "right",
+              "value": 192
+            },
+            {
+              "node": "op_pad",
+              "field": "bottom",
+              "value": 192
+            }
+          ]
+        },
+        {
+          "value": "wide",
+          "label": "Wider",
+          "sets": [
+            {
+              "node": "op_pad",
+              "field": "left",
+              "value": 320
+            },
+            {
+              "node": "op_pad",
+              "field": "top",
+              "value": 0
+            },
+            {
+              "node": "op_pad",
+              "field": "right",
+              "value": 320
+            },
+            {
+              "node": "op_pad",
+              "field": "bottom",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "value": "tall",
+          "label": "Taller",
+          "sets": [
+            {
+              "node": "op_pad",
+              "field": "left",
+              "value": 0
+            },
+            {
+              "node": "op_pad",
+              "field": "top",
+              "value": 320
+            },
+            {
+              "node": "op_pad",
+              "field": "right",
+              "value": 0
+            },
+            {
+              "node": "op_pad",
+              "field": "bottom",
+              "value": 320
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "details",
+      "type": "textarea",
+      "label": "Extra direction",
+      "default": "",
+      "help": "Added at the end of the app's prompt.",
+      "bind": [
+        {
+          "node": "4",
+          "field": "text",
+          "template": "Extend this photo outward into the gray border around it: continue the scene, its objects, light and perspective naturally past the original edges, as if the camera had pulled back. The original part of the photo stays exactly the same; no frame, no border, no text. {details}"
+        }
+      ]
+    },
+    {
+      "id": "steps",
+      "type": "slider",
+      "label": "Steps",
+      "min": 8,
+      "max": 32,
+      "step": 1,
+      "default": 16,
+      "bind": [
+        {
+          "node": "7",
+          "field": "steps"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "7",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "9",
+      "type": "image",
+      "label": "Result"
+    }
+  ],
+  "models": [
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "phase": "denoise",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "phase": "encode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "decode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    }
+  ],
+  "credits": [
+    "FLUX 3 Image Klein by Black Forest Labs (FLUX Kommunity License)"
+  ],
+  "test": {
+    "image": "test/portrait.png",
+    "direction": "out"
+  }
+}
