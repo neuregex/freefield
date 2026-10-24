@@ -52,6 +52,8 @@ export const videoTabOf = (id) => VIDEO_TABS.find((tab) => tab.apps.includes(id)
 export const FEATURED = [{ id: "recast", tag: "featured" }, { id: "speak", tag: "new" }, { id: "relight", tag: null }];
 
 /** Big cards on the Explore page, in this order when they have an example. */
+// the hosted demo opens with these, each loaded with its lab example: quick first, then the big video models
+export const START_HERE = ["face-swap", "morph", "mixed-media", "dub", "reshoot"];
 export const HERO = ["effects", "recast", "motion-transfer", "speak", "camera-moves", "talking", "transitions", "vfx-day-to-night", "video-t2v", "relight", "styles"];
 
 /** Prompt-first apps get the floating composer; upload-first apps get the sidebar. */

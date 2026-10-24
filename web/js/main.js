@@ -2,9 +2,9 @@
 //   #/                 Explore         #/apps      the app store       #/app/<id>  an app's workspace
 //   #/image #/video #/audio            the studios (open the last app used there)
 //   #/library          history and lab examples                       #/vram      the VRAM map
-import { el, closePopover, toast } from "./util.js";
+import { el, closePopover, toast, api } from "./util.js";
 import { t } from "./i18n.js";
-import { loadCatalog, byId, lastAppFor, studioOf, FEATURED } from "./catalog.js";
+import { loadCatalog, byId, lastAppFor, studioOf, FEATURED, hosted } from "./catalog.js";
 import { topbar, gpuState, pollGpu } from "./nav.js";
 import { exploreView, appsView, libraryView, vramView } from "./views.js";
 import { workspaceView, recreate } from "./workspace.js";
@@ -81,6 +81,21 @@ async function boot() {
   buildBar();
   window.addEventListener("hashchange", () => render());
   render();
+  if (hosted) wakeOnce();
+}
+
+// on the hosted demo the GPU starts when someone opens the page, so it is warm by the time they press Generate
+async function wakeOnce() {
+  try { if (sessionStorage.getItem("ff.woke") === "1") return; } catch { /* no storage: wake every visit */ }
+  try {
+    const g = await api("/api/gpu");
+    if (g.configured && !g.warm && !g.waking) {
+      await api("/api/gpu/wake", { method: "POST" });
+      toast(t("gpu.autowake"));
+      pollGpu();
+    }
+    try { sessionStorage.setItem("ff.woke", "1"); } catch { /* fine */ }
+  } catch { /* the pill still offers the button */ }
 }
 
 window.addEventListener("unhandledrejection", (e) => {

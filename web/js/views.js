@@ -1,10 +1,10 @@
 // The pages that are not a workspace: Explore (home), Apps (the store), Library and the VRAM map.
 import { el, icon, masonry } from "./util.js";
 import { t } from "./i18n.js";
-import { apps, byId, CATEGORIES, HERO, tagline, iconOf, fitOf, categoryOf, studioOf } from "./catalog.js";
+import { apps, byId, CATEGORIES, HERO, START_HERE, hosted, tagline, iconOf, fitOf, categoryOf, studioOf } from "./catalog.js";
 import { exampleItem, thumb, hoverPlay, optionTile } from "./media.js";
 import { feed, feedView, hooks } from "./feed.js";
-import { pickOption } from "./workspace.js";
+import { pickOption, recreate } from "./workspace.js";
 import { flags, flagButton } from "./flags.js";
 
 const go = (hash) => () => { location.hash = hash; };
@@ -72,7 +72,23 @@ export function exploreView() {
     ];
   })).flat();
 
+  // hosted demo: five apps one click away from a live run (their lab example goes into the form)
+  const starters = hosted ? START_HERE.map((id) => byId.get(id)).filter((a) => a?.example?.full) : [];
+  const start = starters.length ? [
+    el("div", { class: "sec-head", style: { marginTop: "6px" } },
+      el("div", {}, el("h2", { class: "display" }, t("start.title")), el("p", {}, t("start.sub")))),
+    el("div", { class: "start5" }, ...starters.map((a) => {
+      const item = exampleItem(a);
+      const gpu = (item.gpu || "").split(",")[0].replace("NVIDIA ", "").replace(" 80GB HBM3", "");
+      return el("button", { class: "start-card", type: "button", onclick: () => recreate(item) },
+        thumb(item, { play: "visible" }),
+        el("span", { class: "nm" }, a.name),
+        el("span", { class: "dim" }, item.seconds ? t("start.secs", { s: Math.round(item.seconds), gpu: gpu || "GPU" }) : tagline(a)));
+    })),
+  ] : [];
+
   const node = el("div", { class: "page" },
+    ...start,
     hero.length ? el("div", { class: "hero-wrap" }, row, prevBtn, nextBtn) : null,
     el("section", { class: "promo" },
       el("div", { class: "promo-lead" },
