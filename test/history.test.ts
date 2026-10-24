@@ -6,7 +6,8 @@ import { join } from "node:path";
 import type { ComfyEvent } from "@comfyorg/sdk";
 import { loadRegistry } from "../server/registry.ts";
 import { resolveValues } from "../server/runner.ts";
-import { History, pickOutputs, type JobLike } from "../server/history.ts";
+import { History, Meter, pickOutputs, type JobLike } from "../server/history.ts";
+import { parseSse, type Frame } from "../server/runner.ts";
 
 const { apps } = loadRegistry();
 const byId = (id: string) => apps.find((a) => a.id === id)!;
@@ -85,6 +86,55 @@ test("the app's declared output nodes come first; the backend also lists what Lo
   assert.deepEqual(pickOutputs([given, made], ["ff_hdr_save", "4852"]), [made], "declared nodes that made nothing are skipped");
   assert.deepEqual(pickOutputs([given, made, latent], []), [given, made], "no declaration: every media output");
   assert.deepEqual(pickOutputs([given, made], ["999"]), [given, made], "a wrong declaration still shows the results");
+});
+
+test("the progress bar is ours: nodes finished over the workflow's node count, never backwards, never full", () => {
+  const m = new Meter(20, (id) => ({ "3": "KSampler" })[id] ?? null);
+  // comfy-api-proxy's first progress_state: the one node touched so far has finished → it says 1/1 = 1.0
+  assert.equal(m.feed({ value: 1, nodes_done: 1, nodes_total: 1, step: null, steps: null }).value, 0.05);
+  // a per-node frame (nodes_total 0) carries the sampler steps of the running node
+  const p = m.feed({ value: 0.5, nodes_done: 0, nodes_total: 0, step: 4, steps: 8, current_node: "3" });
+  assert.deepEqual(p, { value: 0.075, step: 4, steps: 8, node: "KSampler" });
+  // a lower frame after a drop does not move it back
+  assert.equal(m.feed({ value: 0.1, nodes_done: 0, nodes_total: 0, step: 1, steps: 8 }).value, 0.075);
+  // all nodes done but the job not over yet: 0.99, not 1
+  assert.equal(m.feed({ value: 1, nodes_done: 20, nodes_total: 20 }).value, 0.99);
+});
+
+test("a job is followed through the raw event stream when the history has one", async () => {
+  const { history, done } = tempHistory();
+  const sent: Frame[] = [
+    { event: "status", data: { status: "running", queue_position: null } },
+    { event: "progress", data: { value: 1, nodes_done: 1, nodes_total: 1 } },
+    { event: "progress", data: { value: 0.25, nodes_done: 0, nodes_total: 0, step: 2, steps: 8, current_node: "3" } },
+  ];
+  const seen: number[] = [];
+  let entryId = "";
+  const withFrames = new History(history.dir, {
+    appInfo: () => ({ outputs: ["9"], nodes: 10, classOf: () => "KSampler" }),
+    frames: async function* (jobId) { assert.equal(jobId, "job-1"); for (const f of sent) { yield f; seen.push(withFrames.get(entryId)!.progress?.value ?? -1); await new Promise((r) => setTimeout(r, 1)); } },
+  });
+  try {
+    const app = byId("z-image");
+    const entry = withFrames.start(app, resolveValues(app, { prompt: "a fox" }));
+    entryId = entry.id;
+    const ended = await withFrames.follow(entry, fakeJob("succeeded"));
+    assert.equal(ended.status, "succeeded");
+    assert.deepEqual(seen, [-1, 0.1, 0.125], "1/1 reads as one node of ten, then the sampler's 2/8 adds a quarter node");
+  } finally { done(); }
+});
+
+test("server-sent events are read frame by frame, across chunk boundaries", async () => {
+  const text = "event: progress\ndata: {\"value\": 0.5}\n\n: comment\nevent: preview\ndata: {\"data_base64\": \"AA==\",\ndata: \"content_type\": \"image/jpeg\"}\n\ndata: tail";
+  const chunks = [text.slice(0, 17), text.slice(17, 40), text.slice(40)];
+  const body = new ReadableStream<Uint8Array>({ start(c) { for (const ch of chunks) c.enqueue(new TextEncoder().encode(ch)); c.close(); } });
+  const frames: Frame[] = [];
+  for await (const f of parseSse(body)) frames.push(f);
+  assert.deepEqual(frames, [
+    { event: "progress", data: { value: 0.5 } },
+    { event: "preview", data: { data_base64: "AA==", content_type: "image/jpeg" } },
+    { event: "message", data: { text: "tail" } },
+  ]);
 });
 
 test("a failed job keeps the node and the message", async () => {

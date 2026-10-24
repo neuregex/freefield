@@ -212,4 +212,70 @@ export class Runner {
   jobs() {
     return this.comfy.jobs;
   }
+
+  /**
+   * The job's event stream (GET /api/v2/jobs/{id}/events) read as it comes, frame by frame, without the SDK's
+   * job.events(): that one drops any progress frame lower than the last, and comfy-api-proxy's first frames
+   * can say 1.0 (history.ts, Meter). Reconnects while the signal is alive; a stream that answers anything
+   * but 200 (the job is gone) ends quietly: the poll decides.
+   */
+  async *frames(jobId: string, signal: AbortSignal): AsyncIterable<Frame> {
+    const url = `${this.baseUrl}/api/v2/jobs/${encodeURIComponent(jobId)}/events`;
+    const headers = { accept: "text/event-stream", ...(this.token ? { authorization: `Bearer ${this.token}` } : {}) };
+    let failures = 0;
+    while (!signal.aborted) {
+      let res: Response;
+      try {
+        res = await this.doFetch(url, { headers, signal });
+      } catch {
+        if (signal.aborted || ++failures > 20) return;
+        await new Promise((r) => setTimeout(r, Math.min(10_000, 1000 * failures)));
+        continue;
+      }
+      if (res.status !== 200 || !res.body) return;
+      failures = 0;
+      try {
+        yield* parseSse(res.body);
+      } catch {
+        if (signal.aborted) return;
+      }
+      if (!signal.aborted) await new Promise((r) => setTimeout(r, 1000));
+    }
+  }
+}
+
+export type Frame = { event: string; data: Record<string, unknown> };
+
+/** Server-sent events, as the spec reads them: `event:` and `data:` lines, a blank line ends a frame. */
+export async function* parseSse(body: ReadableStream<Uint8Array>): AsyncIterable<Frame> {
+  const reader = body.getReader();
+  const decoder = new TextDecoder();
+  let buf = "", event = "message", data: string[] = [];
+  const flush = (): Frame | null => {
+    const out = data.length ? { event, data: safeJson(data.join("\n")) } : null;
+    event = "message"; data = [];
+    return out;
+  };
+  for (;;) {
+    const { value, done } = await reader.read();
+    buf += done ? "\n\n" : decoder.decode(value, { stream: true });
+    let nl: number;
+    while ((nl = buf.indexOf("\n")) >= 0) {
+      const line = buf.slice(0, nl).replace(/\r$/, "");
+      buf = buf.slice(nl + 1);
+      if (line === "") { const f = flush(); if (f) yield f; }
+      else if (line.startsWith("event:")) event = line.slice(6).trim();
+      else if (line.startsWith("data:")) data.push(line.slice(5).replace(/^ /, ""));
+    }
+    if (done) return;
+  }
+}
+
+function safeJson(text: string): Record<string, unknown> {
+  try {
+    const v = JSON.parse(text);
+    return v && typeof v === "object" ? (v as Record<string, unknown>) : { value: v };
+  } catch {
+    return { text };
+  }
 }

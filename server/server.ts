@@ -44,7 +44,16 @@ const WARM_MS = 9 * 60 * 1000;
 let lastContact = 0;
 let waking: { since: number; error?: string } | null = null;
 const contact = () => { lastContact = Date.now(); };
-const history = new History(join(root, "out", "history"), contact, (id) => (apps.find((a) => a.id === id)?.outputs ?? []).map((o) => o.node));
+const history = new History(join(root, "out", "history"), {
+  onContact: contact,
+  appInfo: (id) => {
+    const app = apps.find((a) => a.id === id);
+    if (!app) return undefined;
+    const graph = app.graph ?? {};
+    return { outputs: app.outputs.map((o) => o.node), nodes: Object.keys(graph).length, classOf: (n) => graph[n]?.class_type ?? null };
+  },
+  frames: (jobId, signal) => getRunner().frames(jobId, signal),
+});
 const flags = new Flags(join(root, "lab", "flags.json"), apps);
 
 const MIME: Record<string, string> = {

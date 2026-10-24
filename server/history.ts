@@ -10,7 +10,7 @@ import { extname, join } from "node:path";
 import { randomBytes } from "node:crypto";
 import type { ComfyEvent } from "@comfyorg/sdk";
 import { isFileInput, type App } from "./registry.ts";
-import type { FileValue, Values } from "./runner.ts";
+import type { FileValue, Frame, Values } from "./runner.ts";
 
 export type Status = "starting" | "queued" | "running" | "succeeded" | "failed" | "canceled" | "expired" | "lost";
 const TERMINAL = new Set<Status>(["succeeded", "failed", "canceled", "expired", "lost"]);
@@ -50,6 +50,18 @@ export type JobLike = {
   cancel(signal?: AbortSignal): Promise<unknown>;
 };
 
+
+/** What the history needs to know about an app: its declared output nodes, how many nodes its workflow
+ * has (for the progress bar) and the class of a node id (for the "KSampler 4/8" label). */
+export type AppInfo = { outputs: string[]; nodes: number; classOf: (id: string) => string | null };
+
+export type HistoryOptions = {
+  onContact?: () => void;
+  appInfo?: (appId: string) => AppInfo | undefined;
+  /** The raw event stream of a job, read without the SDK (see Meter). Absent: job.events() is used. */
+  frames?: (jobId: string, signal: AbortSignal) => AsyncIterable<Frame>;
+};
+
 type Live = {
   job?: JobLike;
   cancelRequested?: boolean;
@@ -57,6 +69,46 @@ type Live = {
   queue: number | null;
   preview: { bytes: Uint8Array; type: string; n: number } | null;
 };
+
+/**
+ * Our own progress figure, because the stream's `value` cannot be shown as it comes. comfy-api-proxy derives it
+ * from ComfyUI's progress_state, which only lists the nodes touched so far: after the first node finishes and
+ * before the next starts the frame says 1/1 = 1.0. The SDK's job.events() then drops every later frame as
+ * "going backwards" (first web runs through the gateway, 23 oct: the bar sat at 100 % for two minutes). So the
+ * bar is (nodes finished + the running node's step fraction) / the workflow's node count, never backwards and
+ * never full before the job ends. Per-node `progress` frames (nodes_total 0) carry the sampler steps.
+ */
+export class Meter {
+  private done = 0;
+  private total: number;
+  private classOf: (id: string) => string | null;
+  value = 0;
+  step: number | null = null;
+  steps: number | null = null;
+  node: string | null = null;
+
+  constructor(expectedNodes: number, classOf: (id: string) => string | null = () => null) {
+    this.total = Math.max(1, expectedNodes);
+    this.classOf = classOf;
+  }
+
+  /** Feed one progress snapshot (an SSE frame's data or the SDK's Progress); returns the figure to show. */
+  feed(d: { value?: unknown; nodes_done?: unknown; nodes_total?: unknown; step?: unknown; steps?: unknown; current_node?: unknown }) {
+    const n = (x: unknown) => (typeof x === "number" && Number.isFinite(x) ? x : null);
+    const nodesTotal = n(d.nodes_total) ?? 0;
+    if (nodesTotal > 0) {
+      this.done = Math.max(this.done, n(d.nodes_done) ?? 0);
+      this.total = Math.max(this.total, nodesTotal);
+    }
+    const step = n(d.step), steps = n(d.steps);
+    const inNode = steps && steps > 0 && step !== null ? Math.min(1, Math.max(0, step / steps)) : 0;
+    this.value = Math.max(this.value, Math.min(0.99, (this.done + inNode) / this.total));
+    if (steps && steps > 1) { this.step = step; this.steps = steps; } else if (nodesTotal > 0) { this.step = null; this.steps = null; }
+    const id = typeof d.current_node === "string" ? d.current_node : null;
+    if (id) this.node = this.classOf(id) ?? this.node;
+    return { value: this.value, step: this.step, steps: this.steps, node: this.node };
+  }
+}
 
 const ID = /^\d{8}-\d{9}-[0-9a-f]{4}$/;
 const EXT: Record<string, string> = {
@@ -151,13 +203,14 @@ export class History {
 
   readonly dir: string;
   private onContact: () => void;
-  private outputNodes: (appId: string) => string[];
+  private appInfo: (appId: string) => AppInfo | undefined;
+  private frames?: (jobId: string, signal: AbortSignal) => AsyncIterable<Frame>;
 
-  /** outputNodes(app): the nodes app.json declares as outputs, in order; [] means "keep every media output". */
-  constructor(dir: string, onContact: () => void = () => {}, outputNodes: (appId: string) => string[] = () => []) {
+  constructor(dir: string, opts: HistoryOptions = {}) {
     this.dir = dir;
-    this.onContact = onContact;
-    this.outputNodes = outputNodes;
+    this.onContact = opts.onContact ?? (() => {});
+    this.appInfo = opts.appInfo ?? (() => undefined);
+    this.frames = opts.frames;
     mkdirSync(dir, { recursive: true });
   }
 
@@ -219,20 +272,38 @@ export class History {
       if (s === "running") entry.started ??= new Date().toISOString();
       this.save(entry);
     };
+    const info = this.appInfo(entry.app);
+    const meter = new Meter(info?.nodes ?? 0, info?.classOf);
     const stop = new AbortController();
     // live progress from the event stream; the poll in wait() below stays the source of truth
     const stream = (async () => {
       try {
-        for await (const ev of job.events(stop.signal)) {
-          this.onContact();
-          if (ev.kind === "progress") {
-            live.progress = { value: Number(ev.value) || 0, step: ev.step, steps: ev.steps, node: ev.currentNodeClass };
-            setStatus("running");
-          } else if (ev.kind === "preview") {
-            live.preview = { bytes: ev.data, type: ev.contentType || "image/jpeg", n: (live.preview?.n ?? 0) + 1 };
-          } else if (ev.kind === "statusChange") {
-            live.queue = ev.queuePosition;
-            setStatus(normStatus(ev.status));
+        if (this.frames) {
+          for await (const f of this.frames(job.id, stop.signal)) {
+            this.onContact();
+            if (f.event === "progress") {
+              live.progress = meter.feed(f.data);
+              setStatus("running");
+            } else if (f.event === "preview" && typeof f.data.data_base64 === "string") {
+              live.preview = { bytes: Buffer.from(f.data.data_base64, "base64"), type: String(f.data.content_type || "image/jpeg"), n: (live.preview?.n ?? 0) + 1 };
+            } else if (f.event === "status") {
+              live.queue = typeof f.data.queue_position === "number" ? f.data.queue_position : null;
+              setStatus(normStatus(String(f.data.status ?? "")));
+            }
+          }
+        } else {
+          for await (const ev of job.events(stop.signal)) {
+            this.onContact();
+            if (ev.kind === "progress") {
+              live.progress = meter.feed({ nodes_done: ev.nodesDone, nodes_total: ev.nodesTotal, step: ev.step, steps: ev.steps, current_node: ev.currentNode });
+              if (ev.currentNodeClass) live.progress.node = ev.currentNodeClass;
+              setStatus("running");
+            } else if (ev.kind === "preview") {
+              live.preview = { bytes: ev.data, type: ev.contentType || "image/jpeg", n: (live.preview?.n ?? 0) + 1 };
+            } else if (ev.kind === "statusChange") {
+              live.queue = ev.queuePosition;
+              setStatus(normStatus(ev.status));
+            }
           }
         }
       } catch {
@@ -244,8 +315,10 @@ export class History {
       setStatus(normStatus(job.status));
       if (job.queuePosition !== undefined) live.queue = job.queuePosition ?? live.queue;
       const p = job.progress;
-      if (p && (!live.progress || p.value > live.progress.value)) {
-        live.progress = { value: p.value, step: p.step, steps: p.steps, node: p.currentNodeClass };
+      if (p && (p.step !== null || (p.value > 0 && p.value > meter.value))) {
+        // a backend whose poll carries a live snapshot (comfy-api-proxy's does not: 0, 0/0)
+        live.progress = meter.feed({ nodes_done: p.value * (info?.nodes ?? 0), nodes_total: info?.nodes ?? 0, step: p.step, steps: p.steps });
+        if (p.currentNodeClass) live.progress.node = p.currentNodeClass;
       }
     }, 1000);
 
@@ -278,7 +351,7 @@ export class History {
       if (entry.status === "succeeded") {
         const folder = join(this.dir, entry.id);
         let n = 0;
-        for (const out of pickOutputs(job.outputs, this.outputNodes(entry.app))) {
+        for (const out of pickOutputs(job.outputs, info?.outputs ?? [])) {
           try {
             const bytes = await out.toBytes();
             const ext = safeExt(out.name, out.contentType);
@@ -393,8 +466,13 @@ export class History {
     if (!ID.test(id)) return null;
     try {
       const entry = JSON.parse(readFileSync(join(this.dir, id, "meta.json"), "utf-8")) as Entry;
-      // entries saved before mediaKind() carry the SDK's type: fix them as they are read
+      // entries saved before mediaKind() and pickOutputs() carry the SDK's type and every output the backend
+      // listed, the given clip first: fix them as they are read (the files stay on disk)
       for (const o of entry.outputs ?? []) o.type = mediaKind(extname(o.file).toLowerCase(), o.type);
+      if (entry.outputs?.length > 1) {
+        entry.outputs = pickOutputs(entry.outputs.map((o) => ({ ...o, nodeId: o.node })), this.appInfo(entry.app)?.outputs ?? [])
+          .map(({ nodeId: _, ...o }) => o);
+      }
       return entry;
     } catch {
       return null;
