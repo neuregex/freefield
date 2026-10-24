@@ -359,10 +359,13 @@ class Lab:
                 raise RuntimeError(f"{detail.get('node_type', '')}: {detail.get('exception_message', 'execution error')}".strip())
             out_dir = self.results_dir / cid
             out_dir.mkdir(parents=True, exist_ok=True)
-            wanted = {o["node"] for o in manifest["outputs"]}
+            # the app's declared outputs, in the declared order: ComfyUI lists them in the order the nodes ran, and the
+            # first file becomes the web example (reshoot's showed its warp guide, holes and all, instead of the result)
+            outs = entry.get("outputs") or {}
             saved = []
-            for node_id, out in (entry.get("outputs") or {}).items():
-                if node_id not in wanted:
+            for node_id in [o["node"] for o in manifest["outputs"]]:
+                out = outs.get(node_id)
+                if not out:
                     continue
                 for items in out.values():
                     if not isinstance(items, list):
