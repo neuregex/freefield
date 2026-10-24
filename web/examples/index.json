@@ -688,7 +688,7 @@
       "seconds": 16.1,
       "peak_vram_gb": 12.47,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261023-044125-h100"
+      "run": "20261023-225832-h100"
     },
     "recast": {
       "case": "recast-walk",
@@ -1341,15 +1341,15 @@
         }
       ],
       "values": {
-        "look": "teal and orange blockbuster",
+        "look": "a strong teal and orange cinematic grade, shadows pushed to deep teal, skin tones and highlights warm orange, high contrast, slightly lifted blacks, fine film grain, like a blockbuster movie still",
         "details": "",
         "steps": 16
       },
       "seed": 42,
       "seconds": 4.0,
-      "peak_vram_gb": 11.49,
+      "peak_vram_gb": 11.18,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261023-225832-h100"
     },
     "comic-book": {
       "case": "tpl-comic-book",
@@ -1394,15 +1394,15 @@
         }
       ],
       "values": {
-        "use": "a skincare advert, clean beauty lighting",
+        "use": "a sportswear campaign shot: the same person in a black athletic top, a light sheen of sweat, dramatic low-key lighting with a rim light, dark concrete gym background, intense look at the camera, editorial composition.",
         "details": "",
         "steps": 16
       },
       "seed": 42,
-      "seconds": 4.2,
-      "peak_vram_gb": 12.86,
+      "seconds": 4.0,
+      "peak_vram_gb": 11.18,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261023-225832-h100"
     },
     "edit-text": {
       "case": "tpl-edit-text",
@@ -1661,15 +1661,15 @@
         }
       ],
       "values": {
-        "effect": "glitch distortion with RGB split",
+        "effect": "a heavy digital glitch effect: strong horizontal displacement bands, red and cyan RGB channel split, blocky pixel corruption, scan lines and data-mosh smears across the frame",
         "details": "",
         "steps": 16
       },
       "seed": 42,
       "seconds": 4.3,
-      "peak_vram_gb": 11.17,
+      "peak_vram_gb": 11.5,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261023-225832-h100"
     },
     "j-magazine": {
       "case": "tpl-j-magazine",
@@ -2110,9 +2110,9 @@
       },
       "seed": 42,
       "seconds": 4.2,
-      "peak_vram_gb": 11.17,
+      "peak_vram_gb": 11.18,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261023-225832-h100"
     },
     "sketch-to-real": {
       "case": "tpl-sketch-to-real",
@@ -2210,15 +2210,15 @@
         }
       ],
       "values": {
-        "where": "in a bright kitchen",
+        "where": "a bright kitchen",
         "details": "",
         "steps": 16
       },
       "seed": 42,
-      "seconds": 4.0,
-      "peak_vram_gb": 11.23,
+      "seconds": 13.0,
+      "peak_vram_gb": 27.93,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261023-225832-h100"
     },
     "victory-card": {
       "case": "tpl-victory-card",
@@ -2242,9 +2242,9 @@
       },
       "seed": 42,
       "seconds": 4.0,
-      "peak_vram_gb": 11.17,
+      "peak_vram_gb": 11.18,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261023-225832-h100"
     },
     "angles": {
       "case": "tpl-angles",
@@ -2464,15 +2464,15 @@
       ],
       "values": {
         "details": "",
-        "duration": 5,
-        "enhance": true,
-        "aspect": "16:9 (Widescreen)"
+        "aspect": "portrait",
+        "duration": 4,
+        "strength": 1.0
       },
       "seed": 42,
-      "seconds": 28.2,
-      "peak_vram_gb": 46.5,
+      "seconds": 62.2,
+      "peak_vram_gb": 49.91,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261023-225832-h100"
     },
     "face-swap": {
       "case": "tpl-face-swap",
@@ -2798,15 +2798,15 @@
       ],
       "values": {
         "details": "",
-        "duration": 5,
-        "enhance": true,
-        "aspect": "9:16 (Portrait Widescreen)"
+        "aspect": "portrait",
+        "duration": 4,
+        "strength": 1.0
       },
       "seed": 42,
-      "seconds": 28.3,
-      "peak_vram_gb": 46.09,
+      "seconds": 26.1,
+      "peak_vram_gb": 49.91,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261023-225832-h100"
     },
     "shots": {
       "case": "tpl-shots",
@@ -2853,14 +2853,14 @@
       "values": {
         "details": "",
         "duration": 5,
-        "enhance": true,
+        "enhance": false,
         "aspect": "16:9 (Widescreen)"
       },
       "seed": 42,
-      "seconds": 31.1,
-      "peak_vram_gb": 46.5,
+      "seconds": 53.4,
+      "peak_vram_gb": 42.78,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261023-225832-h100"
     },
     "truck-ad": {
       "case": "tpl-truck-ad",
@@ -2881,14 +2881,14 @@
       "values": {
         "details": "",
         "duration": 5,
-        "enhance": true,
+        "enhance": false,
         "aspect": "16:9 (Widescreen)"
       },
       "seed": 42,
-      "seconds": 28.3,
-      "peak_vram_gb": 46.47,
+      "seconds": 52.0,
+      "peak_vram_gb": 41.8,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261023-225832-h100"
     },
     "try-on": {
       "case": "tpl-try-on",
@@ -2942,15 +2942,15 @@
       ],
       "values": {
         "details": "",
-        "duration": 5,
-        "enhance": true,
-        "aspect": "16:9 (Widescreen)"
+        "aspect": "landscape",
+        "duration": 4,
+        "strength": 1.0
       },
       "seed": 42,
-      "seconds": 27.1,
-      "peak_vram_gb": 46.5,
+      "seconds": 63.1,
+      "peak_vram_gb": 50.28,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261023-225832-h100"
     },
     "whats-next": {
       "case": "tpl-whats-next",
@@ -3741,5 +3741,5 @@
       }
     }
   },
-  "updated_from": "20261023-162024-h100"
+  "updated_from": "20261023-225832-h100"
 }
