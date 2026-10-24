@@ -31,7 +31,7 @@
      "note": "Exploratory: should output a matte of the moving subjects."},
 
 
-    {"id": "baseline-t2v", "showcase": true, "app": "video-t2v", "values": {"prompt": "A glass of water tips over on a wooden table and water splashes, macro shot", "duration": 4, "enhance": false},
+    {"id": "baseline-t2v", "app": "video-t2v", "values": {"prompt": "A glass of water tips over on a wooden table and water splashes, macro shot", "duration": 4, "enhance": false},
      "note": "No LoRA. Compare against the slow-motion and fluid cases, same prompt and seed."},
     {"id": "lora-slow-motion", "app": "video-t2v", "values": {"prompt": "A glass of water tips over on a wooden table and water splashes, macro shot, slow motion", "duration": 4, "enhance": false},
      "loras": [{"repo": "Lightricks/LTX-2.5-22b-LoRA-Slow-Motion-Control", "file": "ltx-2.5-22b-lora-slow-motion-control-1.0.safetensors", "strength": 1.0, "gb": 0.65}],
@@ -442,6 +442,8 @@
     {"id": "h3-video-tacos", "showcase": true, "app": "h3-video", "values": {"prompt": "A street cook in Mexico City flips tacos on a hot griddle, steam and sizzling sound, he looks up and says: \"Two more coming right up!\"", "aspect": "16:9 (Widescreen)", "duration": 4}, "note": "Speech, sizzle and picture from one model: does the line come out clearly and in sync?"},
     {"id": "h3-photo-man", "showcase": true, "app": "h3-photo", "values": {"image": "@case:ref-fx-man-b", "prompt": "The man laughs, looks at the camera and says: \"Hey, good to see you.\"", "duration": 4}, "note": "Same face as the photo, the line spoken with lip sync?"},
     {"id": "extend-stroll", "showcase": true, "app": "extend-video", "values": {"clip": "@case:ref-stroll", "prompt": "She keeps walking along the path, slows down and looks up at the trees; birds sing and leaves rustle.", "duration": 3}, "note": "Does the new part start where the clip ends (same woman, dress, park) with no jump?"},
+
+    {"id": "t2v-trumpet", "showcase": true, "app": "video-t2v", "values": {"prompt": "A street musician plays a trumpet on a rainy night street in New Orleans, neon signs reflected in the wet pavement, the camera slowly pushes in toward him, warm jazz trumpet and soft rain", "duration": 4, "enhance": false}, "note": "Showcase since 24 Oct: the glass in baseline-t2v filled up instead of tipping over (run 20261020-133620-l40s). Sound and picture from one pass: trumpet, rain, a slow push-in."},
 
     {"id": "ref-tpl-sketch", "app": "z-image", "values": {"prompt": "A rough pencil sketch on white paper of a cat sitting on a windowsill next to a potted plant, loose lines, no color", "width": 1024, "height": 1024},
      "note": "Reference sketch for Sketch to Real."},

@@ -24,7 +24,7 @@
         {
           "node": "57:27",
           "field": "text",
-          "template": "{prompt}, shot on a {camera}, using a {lens} at {focal}, {aperture}, cinematic lighting, natural color science, high dynamic range, professional photography, ultra-detailed"
+          "template": "A cinematic film still: {prompt}. The picture looks as if it was shot on a {camera} with a {lens} at {focal}, {aperture}; no camera, lens or film gear appears in the frame. Cinematic lighting, natural color science, high dynamic range, ultra-detailed"
         }
       ]
     },
