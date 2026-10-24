@@ -177,8 +177,8 @@
       "dir": "loras",
       "gb": 2.47,
       "phase": "denoise",
-      "gated": true,
-      "license": "LTX-2.x Community License"
+      "license": "LTX-2.x Community License",
+      "gated": true
     }
   ],
   "custom_nodes": [

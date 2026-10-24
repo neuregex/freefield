@@ -11,7 +11,7 @@
   "source": {
     "template": "image_flux3_klein_distilled_image_edit.json",
     "comfyui": "0.42.0",
-    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py) and the prompt below is fixed; \"Extra direction\" is appended to it."
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py); the prompt below is fixed and \"Extra direction\" is appended to it."
   },
   "inputs": [
     {
@@ -33,46 +33,46 @@
       "id": "effect",
       "type": "select",
       "label": "Effect",
-      "default": "glitch distortion with RGB split",
+      "default": "a heavy digital glitch effect: strong horizontal displacement bands, red and cyan RGB channel split, blocky pixel corruption, scan lines and data-mosh smears across the frame",
       "options": [
         {
-          "value": "glitch distortion with RGB split",
+          "value": "a heavy digital glitch effect: strong horizontal displacement bands, red and cyan RGB channel split, blocky pixel corruption, scan lines and data-mosh smears across the frame",
           "label": "Glitch"
         },
         {
-          "value": "double exposure with a forest",
+          "value": "a double exposure: the silhouette of the main subject filled with a pine forest and mountains at dusk, the background faded to white, a soft fine-art blend",
           "label": "Double exposure"
         },
         {
-          "value": "neon outline glow",
+          "value": "glowing neon outlines: bright pink and cyan neon tubes trace the edges of the subject and the main shapes, the rest of the photo darkened to near black",
           "label": "Neon outline"
         },
         {
-          "value": "pencil sketch",
+          "value": "a graphite pencil sketch look: the whole photo redrawn as a detailed pencil drawing on white paper, hatching for the shadows, no color",
           "label": "Pencil sketch"
         },
         {
-          "value": "watercolor painting",
+          "value": "a watercolor painting look: soft washes of color bleeding into each other, visible paper texture, loose brush edges, white paper showing through",
           "label": "Watercolor"
         },
         {
-          "value": "pop art screen print",
+          "value": "a pop art look: bold flat colors, thick black outlines and halftone dots, like a 1960s comic print",
           "label": "Pop art"
         },
         {
-          "value": "vintage faded film",
+          "value": "a vintage 1970s film photo look: faded warm colors, lifted blacks, heavy film grain, light leaks and a slight blur",
           "label": "Vintage film"
         },
         {
-          "value": "infrared false-color",
+          "value": "an infrared photo look: foliage and skin turned pale white and pink, dark skies, high contrast, a dreamy glow",
           "label": "Infrared"
         },
         {
-          "value": "anaglyph 3D",
+          "value": "a red-cyan anaglyph 3D look: the image doubled, a red copy shifted left and a cyan copy shifted right, like an old 3D-glasses print",
           "label": "Anaglyph 3D"
         },
         {
-          "value": "thermal camera",
+          "value": "a thermal camera look: false colors from deep blue for cold to yellow and white for warm, people glowing orange and yellow, no fine texture",
           "label": "Thermal camera"
         }
       ]
@@ -87,7 +87,7 @@
         {
           "node": "4",
           "field": "text",
-          "template": "Apply a {effect} effect to the photo from <ref_image_0>; keep the composition. {details}"
+          "template": "Apply {effect} to this photo; the scene stays recognizable. {details}"
         }
       ]
     },
@@ -161,6 +161,6 @@
   ],
   "test": {
     "image": "test/portrait.png",
-    "effect": "glitch distortion with RGB split"
+    "effect": "a heavy digital glitch effect: strong horizontal displacement bands, red and cyan RGB channel split, blocky pixel corruption, scan lines and data-mosh smears across the frame"
   }
 }

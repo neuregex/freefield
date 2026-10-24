@@ -11,7 +11,7 @@
   "source": {
     "template": "image_flux3_klein_distilled_image_edit.json",
     "comfyui": "0.42.0",
-    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py) and the prompt below is fixed; \"Extra direction\" is appended to it."
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py); the prompt below is fixed and \"Extra direction\" is appended to it."
   },
   "inputs": [
     {
@@ -33,30 +33,30 @@
       "id": "look",
       "type": "select",
       "label": "Look",
-      "default": "teal and orange blockbuster",
+      "default": "a strong teal and orange cinematic grade, shadows pushed to deep teal, skin tones and highlights warm orange, high contrast, slightly lifted blacks, fine film grain, like a blockbuster movie still",
       "options": [
         {
-          "value": "teal and orange blockbuster",
+          "value": "a strong teal and orange cinematic grade, shadows pushed to deep teal, skin tones and highlights warm orange, high contrast, slightly lifted blacks, fine film grain, like a blockbuster movie still",
           "label": "Teal and orange"
         },
         {
-          "value": "warm vintage film",
+          "value": "a warm vintage film grade, golden-brown midtones, faded blacks, soft contrast, a slight green in the shadows and fine grain",
           "label": "Warm vintage film"
         },
         {
-          "value": "cold desaturated noir",
+          "value": "a cold noir grade, heavily desaturated, blue-black shadows, pale cool skin, crushed blacks, hard contrast, a faint cyan tint in the highlights",
           "label": "Cold noir"
         },
         {
-          "value": "soft pastel",
+          "value": "a soft pastel grade, low contrast, lifted shadows, pale pink, mint and lavender tints, bright airy highlights",
           "label": "Pastel"
         },
         {
-          "value": "high-contrast black and white",
+          "value": "a high-contrast black and white grade, no color at all, deep blacks, bright whites, strong local contrast and visible grain",
           "label": "High-contrast B&W"
         },
         {
-          "value": "golden hour glow",
+          "value": "a golden hour grade, warm amber light over everything, warm highlights on the skin, a soft orange glow, gentle contrast",
           "label": "Golden hour"
         }
       ]
@@ -71,7 +71,7 @@
         {
           "node": "4",
           "field": "text",
-          "template": "Color grade the photo from <ref_image_0> with a {look} look; keep every detail and the composition. {details}"
+          "template": "Color grade this photo with {look}; keep every detail and the composition. {details}"
         }
       ]
     },
@@ -145,6 +145,6 @@
   ],
   "test": {
     "image": "test/portrait.png",
-    "look": "teal and orange blockbuster"
+    "look": "a strong teal and orange cinematic grade, shadows pushed to deep teal, skin tones and highlights warm orange, high contrast, slightly lifted blacks, fine film grain, like a blockbuster movie still"
   }
 }

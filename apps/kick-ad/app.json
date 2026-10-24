@@ -39,7 +39,7 @@
         {
           "node": "398:376",
           "field": "value",
-          "template": "The product stands in the center; plain grey unmarked boxes slide in from the sides and the product knocks them away with a swift cartoon kick, they tumble off screen; comedic whoosh and thud sounds. {details}"
+          "template": "The product stays centered and upright on the surface; the camera is locked. Each plain grey box that slides toward it is flicked away by a short hop of the product, which lands back on the same spot; the boxes tumble off screen. The product is in the center of the frame until the last frame. Comedic whoosh and thud sounds. {details}"
         }
       ]
     },
@@ -62,7 +62,7 @@
       "id": "enhance",
       "type": "toggle",
       "label": "Enhance prompt",
-      "default": true,
+      "default": false,
       "help": "Rewrites your prompt with a small Gemma 4 model first",
       "bind": [
         {
@@ -193,6 +193,7 @@
   "test": {
     "image": "test/portrait.png",
     "duration": 2,
-    "aspect": "16:9 (Widescreen)"
+    "aspect": "16:9 (Widescreen)",
+    "enhance": false
   }
 }

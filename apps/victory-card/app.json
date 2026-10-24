@@ -11,7 +11,7 @@
   "source": {
     "template": "image_flux3_klein_distilled_image_edit.json",
     "comfyui": "0.42.0",
-    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py) and the prompt below is fixed; \"Extra direction\" is appended to it."
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py); the prompt below is fixed and \"Extra direction\" is appended to it."
   },
   "inputs": [
     {
@@ -39,7 +39,7 @@
         {
           "node": "4",
           "field": "text",
-          "template": "The person from <ref_image_0> as the face of a king or queen playing card in a winning poker hand, ornate card design, gold foil, five cards fanned on green felt. {details}"
+          "template": "Make one large ornate playing card, the queen of hearts, lying on green casino felt next to a stack of poker chips. The card's portrait is this person's face, large and clearly recognizable, drawn in the classic playing-card illustration style with gold foil borders and the Q and heart symbols in the corners. {details}"
         }
       ]
     },

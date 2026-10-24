@@ -11,7 +11,7 @@
   "source": {
     "template": "image_z_image_turbo_int8.json",
     "comfyui": "0.42.0",
-    "notes": "Template app written by tools/template_apps.py: the workflow is apps/z-image's (built by tools/build_apps.py) and the prompt below is fixed; \"Extra direction\" is appended to it."
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/z-image's (built by tools/build_apps.py); the prompt below is fixed and \"Extra direction\" is appended to it."
   },
   "inputs": [
     {

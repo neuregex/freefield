@@ -11,7 +11,7 @@
   "source": {
     "template": "image_flux3_klein_distilled_image_edit.json",
     "comfyui": "0.42.0",
-    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py) and the prompt below is fixed; \"Extra direction\" is appended to it."
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py); the prompt below is fixed and \"Extra direction\" is appended to it."
   },
   "inputs": [
     {
@@ -33,18 +33,18 @@
       "id": "where",
       "type": "select",
       "label": "Where",
-      "default": "in a bright kitchen",
+      "default": "a bright kitchen",
       "options": [
         {
-          "value": "in a bright kitchen",
+          "value": "a bright kitchen",
           "label": "Bright kitchen"
         },
         {
-          "value": "at a cafe table",
+          "value": "a busy cafe",
           "label": "Cafe table"
         },
         {
-          "value": "outdoors in a park",
+          "value": "a sunny park",
           "label": "Outdoors in a park"
         }
       ]
@@ -59,7 +59,7 @@
         {
           "node": "4",
           "field": "text",
-          "template": "A casual phone photo of a hand holding the product from <ref_image_0> {where}, natural light, slightly tilted framing, like a social media post. Keep the product identical: shape, label, text and colors. {details}"
+          "template": "Add a hand holding this product from below and replace the background with {where}, as a casual phone snapshot with slightly tilted framing and natural light. The product itself does not change: same angle, same size, and the label text stays sharp and perfectly legible, exactly as written in the photo. {details}"
         }
       ]
     },

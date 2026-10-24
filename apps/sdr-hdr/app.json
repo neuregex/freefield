@@ -152,8 +152,8 @@
       "dir": "loras",
       "gb": 1.31,
       "phase": "denoise",
-      "gated": true,
-      "license": "LTX-2.x Community License"
+      "license": "LTX-2.x Community License",
+      "gated": true
     },
     {
       "repo": "Lightricks/LTX-2.5-22b-IC-LoRA-SDR-To-HDR",
@@ -161,8 +161,8 @@
       "dir": "embeddings",
       "gb": 0.01,
       "phase": "encode",
-      "gated": true,
-      "license": "LTX-2.x Community License"
+      "license": "LTX-2.x Community License",
+      "gated": true
     }
   ],
   "custom_nodes": [

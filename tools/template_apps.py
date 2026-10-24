@@ -13,6 +13,9 @@ these bases, all workflows built by tools/build_apps.py:
   z-image    Z-Image Turbo (apps/z-image), text to image
   video      LTX-2.5 image-to-video (apps/video), with its own audio
   qwen-edit  Qwen-Image-Edit-2509 (apps/relight) with a different LoRA: Multiple Angles or next-scene
+  morph      FLUX 3 Klein draws the last frame from the photo and LTX-2.5 + the transition LoRA moves
+             the photo into it (apps/morph): for clips where the scene must change around a subject
+             that has to stay the same (a face, a product); "klein" is that fixed instruction
 The app folder gets the base workflow (copied, or with the few edits noted in BASES) and a manifest
 whose "details" input carries the prompt as a bind template; selects feed {placeholders} in that
 prompt. The base app's models and credits are copied as they are (qwen-edit swaps the LoRA).
@@ -43,6 +46,8 @@ BASES = {
               "keep": ("duration", "enhance", "aspect", "seed"), "output": {"node": "75", "type": "video"}},
     "qwen-edit": {"app": "relight", "section": "image", "pack": "image-qwen-edit", "image": ("11", "image"), "prompt": ("15", "value"), "keep": ("seed",),
                   "output": {"node": "12", "type": "image"}},
+    "morph": {"app": "morph", "section": "video", "pack": "video-ltx25", "image": ("31", "image"), "prompt": ("251:252", "value"), "klein": ("edit:4", "text"),
+              "keep": ("aspect", "duration", "strength", "seed"), "output": {"node": "68", "type": "video"}},
 }
 
 # LoRAs the qwen-edit templates load instead of Relight (file name as ComfyUI sees it)
@@ -92,9 +97,12 @@ def txt(id_, label, default="", required=False, help_=None):
 T = []
 
 
-def A(id_, name, feature, cat, base, image_label, summary, prompt, inputs=(), ref=None, values=None, note="", image2_label=None, ref2=None, lora=None, help_=None):
+def A(id_, name, feature, cat, base, image_label, summary, prompt, inputs=(), ref=None, values=None, note="", image2_label=None, ref2=None, lora=None, help_=None,
+      defaults=None, klein=None):
+    """defaults: new defaults for settings kept from the base app (say, the LTX enhancer off); klein: the morph base's Klein instruction."""
     T.append(dict(id=id_, name=name, feature=feature, cat=cat, base=base, image_label=image_label, summary=summary, prompt=prompt,
-                  inputs=list(inputs), ref=ref, values=values or {}, note=note, image2_label=image2_label, ref2=ref2, lora=lora, help=help_))
+                  inputs=list(inputs), ref=ref, values=values or {}, note=note, image2_label=image2_label, ref2=ref2, lora=lora, help=help_,
+                  defaults=defaults or {}, klein=klein))
 
 
 # ---------------------------------------------------------------- ads & products (apps/edit pipeline, a product photo)
@@ -141,9 +149,10 @@ A("fridge-ad", "Fridge Ad", "Fridge Ad", "ads", "edit", "Product photo",
   [], PRODUCT, {}, "Fridge interior with the bottle on a shelf.")
 A("ugc-shot", "UGC Shot", "Marketing (UGC)", "ads", "edit", "Product photo",
   "A casual phone photo of a hand holding your product, like a social media post.",
-  "A casual phone photo of a hand holding the product from <ref_image_0> {where}, natural light, slightly tilted framing, like a social media post." + KEEP_PRODUCT,
-  [sel("where", "Where", [("Bright kitchen", "in a bright kitchen"), ("Cafe table", "at a cafe table"), ("Outdoors in a park", "outdoors in a park")])],
-  PRODUCT, {}, "A hand holding the bottle; snapshot look, not studio.")
+  "Add a hand holding this product from below and replace the background with {where}, as a casual phone snapshot with slightly tilted framing and natural "
+  "light. The product itself does not change: same angle, same size, and the label text stays sharp and perfectly legible, exactly as written in the photo.",
+  [sel("where", "Where", [("Bright kitchen", "a bright kitchen"), ("Cafe table", "a busy cafe"), ("Outdoors in a park", "a sunny park")])],
+  PRODUCT, {}, "A hand holding the bottle; snapshot look, label legible (tplx-ugc-shot-a, 23 Oct).")
 
 # ---------------------------------------------------------------- portraits & looks (a photo of a person)
 A("headshot", "Studio Headshot", "AI Headshot Generator", "portraits", "edit", "Your selfie",
@@ -157,10 +166,17 @@ A("headshot", "Studio Headshot", "AI Headshot Generator", "portraits", "edit", "
   WOMAN, {}, "Same face, studio light, blazer; shoulders-up.")
 A("commercial-faces", "Commercial Faces", "Commercial Faces", "portraits", "edit", "Your photo",
   "Campaign portraits of you: skincare, corporate, sportswear or editorial.",
-  "A commercial campaign portrait of the same person as in <ref_image_0> for {use}, professional lighting, editorial composition, magazine print quality." + KEEP_FACE,
-  [sel("use", "Campaign", [("Skincare advert", "a skincare advert, clean beauty lighting"), ("Corporate brochure", "a bank's corporate brochure"),
-                            ("Sportswear", "a sportswear campaign, dynamic pose"), ("Fashion editorial", "a fashion editorial, dramatic side light")])],
-  MAN, {}, "Campaign look with his face unchanged.")
+  "Turn this photo into {use} Keep the face identical. No text, letters or logos anywhere in the image.",
+  [sel("use", "Campaign", [
+      ("Sportswear", "a sportswear campaign shot: the same person in a black athletic top, a light sheen of sweat, dramatic low-key lighting with a rim light, "
+                     "dark concrete gym background, intense look at the camera, editorial composition."),
+      ("Skincare advert", "a skincare advertisement: the same person in a soft white top with glowing dewy skin, holding a small white jar of face cream near "
+                          "the cheek, bright white studio with soft beauty-dish lighting, clean pastel backdrop, glossy magazine composition."),
+      ("Corporate brochure", "a corporate brochure portrait: the same person in a tailored navy suit, standing in a bright glass office with a blurred city "
+                             "view behind, soft window light, confident friendly expression, crisp professional photography."),
+      ("Fashion editorial", "a fashion editorial shot: the same person in a structured designer coat, dramatic side light carving the face, a seamless "
+                            "colored paper backdrop, a strong pose, high-end magazine photography.")])],
+  MAN, {}, "Campaign look with his face unchanged and no invented text (tplx-commercial-faces-b, 23 Oct).")
 A("style-snap", "Style Snap", "Style Snap", "portraits", "edit", "Your photo",
   "You in a complete new outfit: streetwear, business, gala, athleisure, 70s or monochrome.",
   "The same person as in <ref_image_0> wearing a complete {style} outfit, full-length shot in a matching setting, natural pose." + KEEP_FACE,
@@ -199,9 +215,10 @@ A("plushie", "Plushie", "Plushies", "play", "edit", "Your photo",
   [], "ref-fx-duck", {}, "A plush duck with seams and embroidered eyes.")
 A("render-3d", "3D Render", "3D Render", "play", "edit", "Your photo",
   "A stylized 3D render of your photo: clay-like materials, soft studio light.",
-  "The subject of <ref_image_0> as a stylized 3D render: smooth clay-like materials, big expressive proportions, soft studio lighting, subtle subsurface scattering, "
-  "clean gradient background.",
-  [], WOMAN, {}, "3D look, recognizable features.")
+  "Turn this photo into a stylized 3D character render like a still from a modern animated film: the same person as a 3D cartoon character with smooth "
+  "skin, large expressive eyes, exaggerated proportions, matte clay-like materials, soft studio lighting with subsurface scattering, clean gradient "
+  "background; same hairstyle and clothes.",
+  [], WOMAN, {}, "3D character look, recognizable hair and clothes (tplx-render-3d-a, 23 Oct).")
 A("figure-3d", "3D Figure", "3D Figure", "play", "edit", "Your photo",
   "Your photo as a collectible figure in a blister pack on a shelf.",
   "The subject of <ref_image_0> as a collectible 3D figure in a clear blister pack with a printed cardboard backing, on a shelf, product photography lighting.",
@@ -251,8 +268,9 @@ A("cafe-60s", "60s Cafe", "60s Cafe", "templates", "edit", "Your photo",
   [], MAN, {}, "Period look, same face.")
 A("victory-card", "Victory Card", "Victory Card", "templates", "edit", "Your photo",
   "Your face on a playing card in a winning poker hand.",
-  "The person from <ref_image_0> as the face of a king or queen playing card in a winning poker hand, ornate card design, gold foil, five cards fanned on green felt.",
-  [], WOMAN, {}, "Her face on the court card.")
+  "Make one large ornate playing card, the queen of hearts, lying on green casino felt next to a stack of poker chips. The card's portrait is this person's "
+  "face, large and clearly recognizable, drawn in the classic playing-card illustration style with gold foil borders and the Q and heart symbols in the corners.",
+  [], WOMAN, {}, "Her face on the queen of hearts (tplx-victory-card-a, 23 Oct).")
 A("j-poster", "J-Poster", "J-Poster", "templates", "edit", "Your photo",
   "A Japanese-style graphic poster of you.",
   "A Japanese-style poster featuring the person from <ref_image_0>: bold red and black graphic design, vertical typography, rising-sun rays, print texture." + KEEP_FACE,
@@ -295,17 +313,34 @@ A("edit-text", "Edit Text", "Edit Text", "templates", "edit", "Image with text",
   "ref-tpl-sign", {"old": "OPEN", "new": "CLOSED"}, "The sign now reads CLOSED in the same style.")
 A("image-effects", "Image Effects", "Image Effects", "templates", "edit", "Your photo",
   "Ten effects for a photo: glitch, double exposure, neon, sketch, watercolor and more.",
-  "Apply a {effect} effect to the photo from <ref_image_0>; keep the composition.",
-  [sel("effect", "Effect", [("Glitch", "glitch distortion with RGB split"), ("Double exposure", "double exposure with a forest"), ("Neon outline", "neon outline glow"),
-                              ("Pencil sketch", "pencil sketch"), ("Watercolor", "watercolor painting"), ("Pop art", "pop art screen print"), ("Vintage film", "vintage faded film"),
-                              ("Infrared", "infrared false-color"), ("Anaglyph 3D", "anaglyph 3D"), ("Thermal camera", "thermal camera")])],
-  SCENE, {"effect": "glitch distortion with RGB split"}, "RGB split and glitch bands over the cafe.")
+  "Apply {effect} to this photo; the scene stays recognizable.",
+  [sel("effect", "Effect", [
+      ("Glitch", "a heavy digital glitch effect: strong horizontal displacement bands, red and cyan RGB channel split, blocky pixel corruption, scan lines and data-mosh smears across the frame"),
+      ("Double exposure", "a double exposure: the silhouette of the main subject filled with a pine forest and mountains at dusk, the background faded to "
+                          "white, a soft fine-art blend"),
+      ("Neon outline", "glowing neon outlines: bright pink and cyan neon tubes trace the edges of the subject and the main shapes, the rest of the photo "
+                       "darkened to near black"),
+      ("Pencil sketch", "a graphite pencil sketch look: the whole photo redrawn as a detailed pencil drawing on white paper, hatching for the shadows, no color"),
+      ("Watercolor", "a watercolor painting look: soft washes of color bleeding into each other, visible paper texture, loose brush edges, white paper "
+                     "showing through"),
+      ("Pop art", "a pop art look: bold flat colors, thick black outlines and halftone dots, like a 1960s comic print"),
+      ("Vintage film", "a vintage 1970s film photo look: faded warm colors, lifted blacks, heavy film grain, light leaks and a slight blur"),
+      ("Infrared", "an infrared photo look: foliage and skin turned pale white and pink, dark skies, high contrast, a dreamy glow"),
+      ("Anaglyph 3D", "a red-cyan anaglyph 3D look: the image doubled, a red copy shifted left and a cyan copy shifted right, like an old 3D-glasses print"),
+      ("Thermal camera", "a thermal camera look: false colors from deep blue for cold to yellow and white for warm, people glowing orange and yellow, no fine "
+                         "texture")])],
+  SCENE, {"effect": "a heavy digital glitch effect: strong horizontal displacement bands, red and cyan RGB channel split, blocky pixel corruption, scan lines and data-mosh smears across the frame"}, "Strong RGB split and glitch bands over the cafe (tplx-image-effects-a, 23 Oct).")
 A("color-grade", "Color Grade", "Color Grading", "templates", "edit", "Your photo",
   "Six color grades for a photo: teal and orange, vintage film, noir, pastel, B&W, golden hour.",
-  "Color grade the photo from <ref_image_0> with a {look} look; keep every detail and the composition.",
-  [sel("look", "Look", [("Teal and orange", "teal and orange blockbuster"), ("Warm vintage film", "warm vintage film"), ("Cold noir", "cold desaturated noir"),
-                         ("Pastel", "soft pastel"), ("High-contrast B&W", "high-contrast black and white"), ("Golden hour", "golden hour glow")])],
-  SCENE, {"look": "teal and orange blockbuster"}, "Only the colors change.")
+  "Color grade this photo with {look}; keep every detail and the composition.",
+  [sel("look", "Look", [
+      ("Teal and orange", "a strong teal and orange cinematic grade, shadows pushed to deep teal, skin tones and highlights warm orange, high contrast, slightly lifted blacks, fine film grain, like a blockbuster movie still"),
+      ("Warm vintage film", "a warm vintage film grade, golden-brown midtones, faded blacks, soft contrast, a slight green in the shadows and fine grain"),
+      ("Cold noir", "a cold noir grade, heavily desaturated, blue-black shadows, pale cool skin, crushed blacks, hard contrast, a faint cyan tint in the highlights"),
+      ("Pastel", "a soft pastel grade, low contrast, lifted shadows, pale pink, mint and lavender tints, bright airy highlights"),
+      ("High-contrast B&W", "a high-contrast black and white grade, no color at all, deep blacks, bright whites, strong local contrast and visible grain"),
+      ("Golden hour", "a golden hour grade, warm amber light over everything, warm highlights on the skin, a soft orange glow, gentle contrast")])],
+  SCENE, {"look": "a strong teal and orange cinematic grade, shadows pushed to deep teal, skin tones and highlights warm orange, high contrast, slightly lifted blacks, fine film grain, like a blockbuster movie still"}, "Teal shadows, orange skin; nothing else changes (tplx-color-grade-a, 23 Oct).")
 
 # ---------------------------------------------------------------- two reference images (edit2: person + garment, scene + person, photo + face)
 A("fashion-factory", "Fashion Factory", "Fashion Factory", "portraits", "edit2", "Your photo",
@@ -375,35 +410,46 @@ A("magic-button", "Magic Button", "Magic button", "ads", "video", "Product photo
   "levitating and turning slowly; a magical chime.",
   [], PRODUCT, {"aspect": PORTRAIT}, "Button, sparks, the bottle floats.")
 A("truck-ad", "Truck Ad", "Truck Ad", "ads", "video", "Product photo",
-  "Your product printed huge on the side of a passing delivery truck.",
-  "The camera pulls back from the product to reveal it printed huge on the side of a delivery truck driving along a city avenue, the truck passing by with "
-  "sunlight flashing on it; traffic sound.",
-  [], PRODUCT, {"aspect": "16:9 (Widescreen)"}, "The bottle on a truck's side, truck moving.")
+  "A toy delivery truck with your product printed on its side drives up and parks beside it.",
+  "The product stays in the center of the frame, in sharp focus, camera locked. A toy-sized white delivery truck drives into the frame along the surface, "
+  "this exact product printed on its side panel, and parks beside the product. Soft toy engine sound.",
+  [], PRODUCT, {"aspect": "16:9 (Widescreen)", "enhance": False}, "A toy truck with the bottle printed on it parks beside it (tplx-truck-ad-b, 23 Oct).",
+  defaults={"enhance": False})
 A("kick-ad", "Kick Ad", "Kick Ad", "ads", "video", "Product photo",
   "Your product kicks the plain grey competition off screen.",
-  "The product stands in the center; plain grey unmarked boxes slide in from the sides and the product knocks them away with a swift cartoon kick, they tumble "
-  "off screen; comedic whoosh and thud sounds.",
-  [], PRODUCT, {"aspect": "16:9 (Widescreen)"}, "Grey boxes tumble; cartoon sounds. No real brands.")
-A("volcano-ad", "Volcano Ad", "Volcano Ad", "ads", "video", "Product photo",
-  "Your product in front of an erupting volcano.",
-  "The product stands on dark volcanic rock in front of an erupting volcano, lava fountains and glowing ash in the background, heat shimmer, slow camera "
-  "push-in; a deep rumbling sound.",
-  [], PRODUCT, {"aspect": "16:9 (Widescreen)"}, "Lava behind the bottle; rumble.")
-A("roller-coaster", "Roller Coaster", "Roller Coaster", "clips", "video", "Your photo",
-  "You on a roller coaster, camera mounted on the car.",
-  "The person rides a roller coaster: the camera is mounted on the car facing them, the track climbs then drops, hair whipping, hands up, laughing with joy; "
-  "clattering track and wind.",
-  [], WOMAN, {"aspect": PORTRAIT}, "Climb, drop, hair flying.")
+  "The product stays centered and upright on the surface; the camera is locked. Each plain grey box that slides toward it is flicked away by a short hop "
+  "of the product, which lands back on the same spot; the boxes tumble off screen. The product is in the center of the frame until the last frame. "
+  "Comedic whoosh and thud sounds.",
+  [], PRODUCT, {"aspect": "16:9 (Widescreen)", "enhance": False}, "Boxes fly off; the bottle stays put (tplx-kick-ad-b, 23 Oct). No real brands.",
+  defaults={"enhance": False})
+A("volcano-ad", "Volcano Ad", "Volcano Ad", "ads", "morph", "Product photo",
+  "The background turns into an erupting volcano behind your product.",
+  "The background behind the product dissolves into an erupting volcano: lava fountains and glowing ash rise behind it while the product stays in the center, "
+  "a red glow spreading over it; a deep rumble.",
+  [], PRODUCT, {"aspect": "landscape", "duration": 4}, "The kitchen turns into a volcano behind the bottle; the label stays (first run on the morph base).",
+  defaults={"aspect": "landscape"},
+  klein="Place this exact product on dark volcanic rock in front of an erupting volcano at dusk: lava fountains and glowing ash behind it, a red glow on "
+        "the product, the product large and centered, its shape, colors and label unchanged.")
+A("roller-coaster", "Roller Coaster", "Roller Coaster", "clips", "morph", "Your photo",
+  "You on a roller coaster: the photo turns into the ride, same face.",
+  "The scene turns into a roller coaster ride: the car crests the top and drops, the person screams with joy, hands up, hair whipping, the track rushing "
+  "behind; clattering track and wind.",
+  [], WOMAN, {"aspect": "portrait", "duration": 4}, "Front seat, hands up, same face (tplx-roller-coaster-m, 23 Oct).",
+  klein="Put this exact person in the front seat of a roller coaster car at the top of the first drop: a padded safety bar across the chest, hands in the "
+        "air, hair blown back, a wide excited grin, the camera mounted on the car facing them, blue sky and the steel track behind. Keep the face identical.")
 A("storm-creature", "Storm Creature", "Storm Creature", "clips", "video", "Your photo",
-  "A creature of clouds and lightning rises over your scene.",
-  "A towering creature made of storm clouds and lightning rises from the clouds over the landscape, lightning flashing inside its body, rain starting; "
-  "thunder and wind.",
-  [], STORM, {"aspect": "16:9 (Widescreen)"}, "A cloud giant with lightning inside.")
-A("cloud-surf", "Cloud Surf", "Cloud Surf", "clips", "video", "Your photo",
-  "You surfing across pink clouds at sunset.",
-  "The person surfs on a surfboard across fluffy pink clouds at sunset, carving through the cloud tops, spray of cloud mist, dynamic tracking shot; wind "
-  "and a cheerful whoosh.",
-  [], MAN, {"aspect": "16:9 (Widescreen)"}, "Surfboard on clouds; same face.")
+  "A giant made of storm clouds and lightning rises behind your scene.",
+  "The storm clouds over the scene gather into the shape of a colossal cloud giant standing behind it: a face, broad shoulders, two arms spreading wide, "
+  "lightning flashing inside its chest, the scene small in front of it; rain starts. Thunder and wind.",
+  [], STORM, {"aspect": "16:9 (Widescreen)", "enhance": False}, "A cloud giant with lightning in its chest behind the tree (tplx-storm-creature-b, 23 Oct).",
+  defaults={"enhance": False})
+A("cloud-surf", "Cloud Surf", "Cloud Surf", "clips", "morph", "Your photo",
+  "You surfing across pink clouds at sunset, same face.",
+  "The scene turns into a ride across pink clouds at sunset: the person carves over the cloud tops on the surfboard, mist spraying, a dynamic tracking "
+  "shot staying close to them; wind and a cheerful whoosh.",
+  [], MAN, {"aspect": "portrait", "duration": 4}, "Surfboard on pink clouds, same face (tplx-cloud-surf-m, 23 Oct).",
+  klein="Put this exact person standing on a surfboard riding across fluffy pink clouds at sunset, knees bent, arms out for balance, cloud mist spraying "
+        "around the board, seen from a low dynamic angle, the face large and clear. Keep the face identical.")
 A("mukbang", "Mukbang", "Mukbang", "clips", "video", "Your photo",
   "You at a table full of food, eating for the camera.",
   "A mukbang video: the person sits at a table loaded with food in front of a microphone, picks up a piece and eats with relish, nodding at the camera; "
@@ -486,6 +532,10 @@ def check() -> None:
             assert t["ref"], t["id"]
         assert (t["base"] == "edit2") == bool(t["image2_label"] and t["ref2"]), t["id"]
         assert (t["base"] == "qwen-edit") == (t["lora"] in QWEN_LORAS), t["id"]
+        assert (t["base"] == "morph") == bool(t["klein"]), t["id"]
+        assert not t["klein"] or not re.search(r"\{[a-z]", t["klein"]), (t["id"], "the Klein instruction is fixed")
+        for k in t["defaults"]:
+            assert k in BASES[t["base"]]["keep"], (t["id"], k)
         for k in t["values"]:   # lab values name the template's own inputs or the settings kept from the base app
             assert k in have or k in BASES[t["base"]]["keep"], (t["id"], k)
 
@@ -505,7 +555,7 @@ def manifest(t: dict) -> dict:
     # the default "" matters: an optional input with no value is skipped everywhere, and the template with it
     inputs.append({"id": "details", "type": "textarea", "label": "Extra direction", "default": "", "help": "Added at the end of the app's prompt.",
                    "bind": [{"node": base["prompt"][0], "field": base["prompt"][1], "template": t["prompt"] + " {details}"}]})
-    inputs += [keep[k] for k in base["keep"]]
+    inputs += [{**keep[k], "default": t["defaults"][k]} if k in t["defaults"] else keep[k] for k in base["keep"]]
     test = {"image": "test/portrait.png"} if base["image"] else {}
     if base.get("image2"):
         test["image2"] = "test/second.png"
@@ -516,6 +566,8 @@ def manifest(t: dict) -> dict:
     notes = f"Template app written by tools/template_apps.py: the workflow is apps/{base['app']}'s (built by tools/build_apps.py)"
     if t["base"] == "edit2":
         notes += " plus a second LoadImage on ReferenceMultiLatent's images.image1"
+    if t["base"] == "morph":
+        notes += f" with a fixed Klein instruction for the last frame (node edit:4: \"{t['klein']}\")"
     if t["lora"]:
         lora = QWEN_LORAS[t["lora"]]
         models = [m for m in models if "Relight" not in m["file"]] + [{"repo": lora["repo"], "file": lora["file"], "dir": "loras", "gb": lora["gb"], "phase": "denoise", "license": lora["license"]}]
@@ -545,6 +597,8 @@ def workflow(t: dict) -> dict:
     if t["base"] == "edit2":   # a second reference image into the same ReferenceMultiLatent
         api["12"] = {"class_type": "LoadImage", "inputs": {"image": "second.png"}, "_meta": {"title": "Second reference"}}
         api["17"]["inputs"]["images.image1"] = ["12", 0]
+    if t["base"] == "morph":   # the last frame Klein draws is fixed per template
+        api[base["klein"][0]]["inputs"][base["klein"][1]] = t["klein"]
     if t["lora"]:   # the relight pipeline with another LoRA; node 14 prepends the Relight trigger, so it is blanked
         api["10:118"]["inputs"]["lora_name"] = QWEN_LORAS[t["lora"]]["file"]
         api["14"]["inputs"]["string_a"] = ""

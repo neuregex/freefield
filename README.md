@@ -127,10 +127,10 @@ command that makes every example. Add a line to the table there, not a folder by
 | `magic-button` | Magic button | `video` | product photo |
 | `truck-ad` | Truck Ad | `video` | product photo |
 | `kick-ad` | Kick Ad | `video` | product photo |
-| `volcano-ad` | Volcano Ad | `video` | product photo |
-| `roller-coaster` | Roller Coaster | `video` | your photo |
+| `volcano-ad` | Volcano Ad | `morph` | product photo |
+| `roller-coaster` | Roller Coaster | `morph` | your photo |
 | `storm-creature` | Storm Creature | `video` | your photo |
-| `cloud-surf` | Cloud Surf | `video` | your photo |
+| `cloud-surf` | Cloud Surf | `morph` | your photo |
 | `mukbang` | Mukbang | `video` | your photo |
 | `melting-doodle` | Melting Doodle | `video` | your photo |
 | `rap-video` | Rap God | `video` | your photo |

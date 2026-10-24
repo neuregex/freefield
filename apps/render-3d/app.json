@@ -11,7 +11,7 @@
   "source": {
     "template": "image_flux3_klein_distilled_image_edit.json",
     "comfyui": "0.42.0",
-    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py) and the prompt below is fixed; \"Extra direction\" is appended to it."
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py); the prompt below is fixed and \"Extra direction\" is appended to it."
   },
   "inputs": [
     {
@@ -39,7 +39,7 @@
         {
           "node": "4",
           "field": "text",
-          "template": "The subject of <ref_image_0> as a stylized 3D render: smooth clay-like materials, big expressive proportions, soft studio lighting, subtle subsurface scattering, clean gradient background. {details}"
+          "template": "Turn this photo into a stylized 3D character render like a still from a modern animated film: the same person as a 3D cartoon character with smooth skin, large expressive eyes, exaggerated proportions, matte clay-like materials, soft studio lighting with subsurface scattering, clean gradient background; same hairstyle and clothes. {details}"
         }
       ]
     },

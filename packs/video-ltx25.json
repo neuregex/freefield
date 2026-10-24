@@ -51,8 +51,11 @@
       "gated": true,
       "license": "FLUX Kommunity License",
       "used_by": [
+        "cloud-surf",
         "mixed-media",
-        "morph"
+        "morph",
+        "roller-coaster",
+        "volcano-ad"
       ]
     },
     {
@@ -123,7 +126,6 @@
         "asmr-whisper",
         "behind-the-scenes",
         "chameleon",
-        "cloud-surf",
         "idol",
         "kick-ad",
         "magic-button",
@@ -131,14 +133,12 @@
         "mixed-media",
         "mukbang",
         "rap-video",
-        "roller-coaster",
         "speak",
         "storm-creature",
         "talking",
         "truck-ad",
         "video",
-        "video-t2v",
-        "volcano-ad"
+        "video-t2v"
       ]
     },
     {
@@ -270,8 +270,11 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
+        "cloud-surf",
         "morph",
-        "transitions"
+        "roller-coaster",
+        "transitions",
+        "volcano-ad"
       ]
     },
     {
@@ -362,8 +365,11 @@
       "gated": true,
       "license": "FLUX Kommunity License",
       "used_by": [
+        "cloud-surf",
         "mixed-media",
-        "morph"
+        "morph",
+        "roller-coaster",
+        "volcano-ad"
       ]
     },
     {
@@ -375,8 +381,11 @@
       "gated": true,
       "license": "FLUX Kommunity License",
       "used_by": [
+        "cloud-surf",
         "mixed-media",
-        "morph"
+        "morph",
+        "roller-coaster",
+        "volcano-ad"
       ]
     },
     {

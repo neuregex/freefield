@@ -3,7 +3,7 @@
   "id": "storm-creature",
   "name": "Storm Creature",
   "section": "video",
-  "summary": "A creature of clouds and lightning rises over your scene.",
+  "summary": "A giant made of storm clouds and lightning rises behind your scene.",
   "higgsfield_feature": "Storm Creature",
   "pack": "video-ltx25",
   "status": "ready",
@@ -39,7 +39,7 @@
         {
           "node": "398:376",
           "field": "value",
-          "template": "A towering creature made of storm clouds and lightning rises from the clouds over the landscape, lightning flashing inside its body, rain starting; thunder and wind. {details}"
+          "template": "The storm clouds over the scene gather into the shape of a colossal cloud giant standing behind it: a face, broad shoulders, two arms spreading wide, lightning flashing inside its chest, the scene small in front of it; rain starts. Thunder and wind. {details}"
         }
       ]
     },
@@ -62,7 +62,7 @@
       "id": "enhance",
       "type": "toggle",
       "label": "Enhance prompt",
-      "default": true,
+      "default": false,
       "help": "Rewrites your prompt with a small Gemma 4 model first",
       "bind": [
         {
@@ -193,6 +193,7 @@
   "test": {
     "image": "test/portrait.png",
     "duration": 2,
-    "aspect": "16:9 (Widescreen)"
+    "aspect": "16:9 (Widescreen)",
+    "enhance": false
   }
 }

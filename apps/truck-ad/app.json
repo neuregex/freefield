@@ -3,7 +3,7 @@
   "id": "truck-ad",
   "name": "Truck Ad",
   "section": "video",
-  "summary": "Your product printed huge on the side of a passing delivery truck.",
+  "summary": "A toy delivery truck with your product printed on its side drives up and parks beside it.",
   "higgsfield_feature": "Truck Ad",
   "pack": "video-ltx25",
   "status": "ready",
@@ -39,7 +39,7 @@
         {
           "node": "398:376",
           "field": "value",
-          "template": "The camera pulls back from the product to reveal it printed huge on the side of a delivery truck driving along a city avenue, the truck passing by with sunlight flashing on it; traffic sound. {details}"
+          "template": "The product stays in the center of the frame, in sharp focus, camera locked. A toy-sized white delivery truck drives into the frame along the surface, this exact product printed on its side panel, and parks beside the product. Soft toy engine sound. {details}"
         }
       ]
     },
@@ -62,7 +62,7 @@
       "id": "enhance",
       "type": "toggle",
       "label": "Enhance prompt",
-      "default": true,
+      "default": false,
       "help": "Rewrites your prompt with a small Gemma 4 model first",
       "bind": [
         {
@@ -193,6 +193,7 @@
   "test": {
     "image": "test/portrait.png",
     "duration": 2,
-    "aspect": "16:9 (Widescreen)"
+    "aspect": "16:9 (Widescreen)",
+    "enhance": false
   }
 }

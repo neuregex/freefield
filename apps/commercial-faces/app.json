@@ -11,7 +11,7 @@
   "source": {
     "template": "image_flux3_klein_distilled_image_edit.json",
     "comfyui": "0.42.0",
-    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py) and the prompt below is fixed; \"Extra direction\" is appended to it."
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py); the prompt below is fixed and \"Extra direction\" is appended to it."
   },
   "inputs": [
     {
@@ -33,22 +33,22 @@
       "id": "use",
       "type": "select",
       "label": "Campaign",
-      "default": "a skincare advert, clean beauty lighting",
+      "default": "a sportswear campaign shot: the same person in a black athletic top, a light sheen of sweat, dramatic low-key lighting with a rim light, dark concrete gym background, intense look at the camera, editorial composition.",
       "options": [
         {
-          "value": "a skincare advert, clean beauty lighting",
-          "label": "Skincare advert"
-        },
-        {
-          "value": "a bank's corporate brochure",
-          "label": "Corporate brochure"
-        },
-        {
-          "value": "a sportswear campaign, dynamic pose",
+          "value": "a sportswear campaign shot: the same person in a black athletic top, a light sheen of sweat, dramatic low-key lighting with a rim light, dark concrete gym background, intense look at the camera, editorial composition.",
           "label": "Sportswear"
         },
         {
-          "value": "a fashion editorial, dramatic side light",
+          "value": "a skincare advertisement: the same person in a soft white top with glowing dewy skin, holding a small white jar of face cream near the cheek, bright white studio with soft beauty-dish lighting, clean pastel backdrop, glossy magazine composition.",
+          "label": "Skincare advert"
+        },
+        {
+          "value": "a corporate brochure portrait: the same person in a tailored navy suit, standing in a bright glass office with a blurred city view behind, soft window light, confident friendly expression, crisp professional photography.",
+          "label": "Corporate brochure"
+        },
+        {
+          "value": "a fashion editorial shot: the same person in a structured designer coat, dramatic side light carving the face, a seamless colored paper backdrop, a strong pose, high-end magazine photography.",
           "label": "Fashion editorial"
         }
       ]
@@ -63,7 +63,7 @@
         {
           "node": "4",
           "field": "text",
-          "template": "A commercial campaign portrait of the same person as in <ref_image_0> for {use}, professional lighting, editorial composition, magazine print quality. Keep the face, hairstyle and build identical. {details}"
+          "template": "Turn this photo into {use} Keep the face identical. No text, letters or logos anywhere in the image. {details}"
         }
       ]
     },

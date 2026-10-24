@@ -3,15 +3,15 @@
   "id": "volcano-ad",
   "name": "Volcano Ad",
   "section": "video",
-  "summary": "Your product in front of an erupting volcano.",
+  "summary": "The background turns into an erupting volcano behind your product.",
   "higgsfield_feature": "Volcano Ad",
   "pack": "video-ltx25",
   "status": "ready",
   "workflow": "workflow.api.json",
   "source": {
-    "template": "video_ltx2_5_i2v.json",
+    "template": "comfyui_workflow_templates video_ltx2_5_flf2v.json (0.1.115) + image_flux3_klein_distilled_image_edit.json",
     "comfyui": "0.42.0",
-    "notes": "Template app written by tools/template_apps.py: the workflow is apps/video's (built by tools/build_apps.py); the prompt below is fixed and \"Extra direction\" is appended to it."
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/morph's (built by tools/build_apps.py) with a fixed Klein instruction for the last frame (node edit:4: \"Place this exact product on dark volcanic rock in front of an erupting volcano at dusk: lava fountains and glowing ash behind it, a red glow on the product, the product large and centered, its shape, colors and label unchanged.\"); the prompt below is fixed and \"Extra direction\" is appended to it."
   },
   "inputs": [
     {
@@ -24,7 +24,7 @@
       },
       "bind": [
         {
-          "node": "395",
+          "node": "31",
           "field": "image"
         }
       ]
@@ -37,9 +37,65 @@
       "help": "Added at the end of the app's prompt.",
       "bind": [
         {
-          "node": "398:376",
+          "node": "251:252",
           "field": "value",
-          "template": "The product stands on dark volcanic rock in front of an erupting volcano, lava fountains and glowing ash in the background, heat shimmer, slow camera push-in; a deep rumbling sound. {details}"
+          "template": "The background behind the product dissolves into an erupting volcano: lava fountains and glowing ash rise behind it while the product stays in the center, a red glow spreading over it; a deep rumble. {details}"
+        }
+      ]
+    },
+    {
+      "id": "aspect",
+      "type": "select",
+      "label": "Format",
+      "default": "landscape",
+      "options": [
+        {
+          "value": "portrait",
+          "label": "9:16",
+          "sets": [
+            {
+              "node": "251:215",
+              "field": "value",
+              "value": 720
+            },
+            {
+              "node": "251:216",
+              "field": "value",
+              "value": 1280
+            }
+          ]
+        },
+        {
+          "value": "landscape",
+          "label": "16:9",
+          "sets": [
+            {
+              "node": "251:215",
+              "field": "value",
+              "value": 1280
+            },
+            {
+              "node": "251:216",
+              "field": "value",
+              "value": 720
+            }
+          ]
+        },
+        {
+          "value": "square",
+          "label": "1:1",
+          "sets": [
+            {
+              "node": "251:215",
+              "field": "value",
+              "value": 960
+            },
+            {
+              "node": "251:216",
+              "field": "value",
+              "value": 960
+            }
+          ]
         }
       ]
     },
@@ -48,64 +104,28 @@
       "type": "slider",
       "label": "Seconds",
       "min": 2,
-      "max": 10,
+      "max": 6,
       "step": 1,
-      "default": 5,
+      "default": 4,
       "bind": [
         {
-          "node": "398:362",
+          "node": "251:198",
           "field": "value"
         }
       ]
     },
     {
-      "id": "enhance",
-      "type": "toggle",
-      "label": "Enhance prompt",
-      "default": true,
-      "help": "Rewrites your prompt with a small Gemma 4 model first",
+      "id": "strength",
+      "type": "slider",
+      "label": "Transition strength",
+      "min": 0,
+      "max": 1.5,
+      "step": 0.05,
+      "default": 1.0,
       "bind": [
         {
-          "node": "398:383",
-          "field": "value"
-        }
-      ]
-    },
-    {
-      "id": "aspect",
-      "type": "select",
-      "label": "Aspect ratio",
-      "default": "16:9 (Widescreen)",
-      "options": [
-        {
-          "value": "16:9 (Widescreen)",
-          "label": "16:9"
-        },
-        {
-          "value": "9:16 (Portrait Widescreen)",
-          "label": "9:16"
-        },
-        {
-          "value": "1:1 (Square)",
-          "label": "1:1"
-        },
-        {
-          "value": "4:3 (Standard)",
-          "label": "4:3"
-        },
-        {
-          "value": "3:4 (Portrait Standard)",
-          "label": "3:4"
-        },
-        {
-          "value": "21:9 (Ultrawide)",
-          "label": "21:9"
-        }
-      ],
-      "bind": [
-        {
-          "node": "403",
-          "field": "aspect_ratio"
+          "node": "ff_lora",
+          "field": "strength_model"
         }
       ]
     },
@@ -117,15 +137,19 @@
       "help": "-1 picks a random seed",
       "bind": [
         {
-          "node": "398:339",
+          "node": "251:196",
           "field": "noise_seed"
+        },
+        {
+          "node": "edit:7",
+          "field": "seed"
         }
       ]
     }
   ],
   "outputs": [
     {
-      "node": "75",
+      "node": "68",
       "type": "video",
       "label": "Result"
     }
@@ -168,15 +192,6 @@
       "license": "LTX-2.x Community License"
     },
     {
-      "repo": "Lightricks/LTX-2.5",
-      "file": "latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors",
-      "dir": "latent_upscale_models",
-      "gb": 1.0,
-      "phase": "aux",
-      "gated": true,
-      "license": "LTX-2.x Community License"
-    },
-    {
       "repo": "Comfy-Org/gemma-4",
       "file": "text_encoders/gemma4_e2b_it_int8_convrot.safetensors",
       "dir": "text_encoders",
@@ -184,15 +199,52 @@
       "phase": "encode",
       "license": "Apache-2.0",
       "optional": true
+    },
+    {
+      "repo": "joyfox/LTX-2.3-Transition-LORA",
+      "file": "ltx2.3-transition.safetensors",
+      "dir": "loras",
+      "gb": 0.39,
+      "phase": "denoise",
+      "license": "Apache-2.0"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "phase": "aux",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "phase": "aux",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "aux",
+      "gated": true,
+      "license": "FLUX Kommunity License"
     }
   ],
   "credits": [
     "LTX-2.5 by Lightricks",
-    "Workflow adapted from ComfyUI's official LTX-2.5 template"
+    "FLUX 3 Image Klein by Black Forest Labs",
+    "Transition LoRA by joyfox (Apache-2.0)",
+    "Workflow adapted from ComfyUI's official LTX-2.5 and FLUX 3 Klein templates"
   ],
   "test": {
     "image": "test/portrait.png",
-    "duration": 2,
-    "aspect": "16:9 (Widescreen)"
+    "duration": 4,
+    "aspect": "landscape"
   }
 }

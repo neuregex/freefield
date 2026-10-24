@@ -1703,31 +1703,6 @@
       "measured_peak_gb": null
     },
     {
-      "id": "cloud-surf",
-      "name": "Cloud Surf",
-      "section": "video",
-      "pack": "video-ltx25",
-      "status": "ready",
-      "whole_gb": 39.7,
-      "phases_gb": {
-        "encode": 15.37,
-        "denoise": 21.5,
-        "denoise2": 0.0,
-        "decode": 1.83,
-        "aux": 1.0
-      },
-      "largest_phase": "denoise",
-      "largest_phase_gb": 21.5,
-      "optional_gb": 5.2,
-      "biggest_file": {
-        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
-        "gb": 21.5
-      },
-      "verdict_24gb": "tight (by phases)",
-      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
-    },
-    {
       "id": "idol",
       "name": "Idol",
       "section": "video",
@@ -1878,31 +1853,6 @@
       "measured_peak_gb": null
     },
     {
-      "id": "roller-coaster",
-      "name": "Roller Coaster",
-      "section": "video",
-      "pack": "video-ltx25",
-      "status": "ready",
-      "whole_gb": 39.7,
-      "phases_gb": {
-        "encode": 15.37,
-        "denoise": 21.5,
-        "denoise2": 0.0,
-        "decode": 1.83,
-        "aux": 1.0
-      },
-      "largest_phase": "denoise",
-      "largest_phase_gb": 21.5,
-      "optional_gb": 5.2,
-      "biggest_file": {
-        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
-        "gb": 21.5
-      },
-      "verdict_24gb": "tight (by phases)",
-      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
-    },
-    {
       "id": "speak",
       "name": "Speak",
       "section": "video",
@@ -2030,31 +1980,6 @@
     {
       "id": "video-t2v",
       "name": "Text to Video",
-      "section": "video",
-      "pack": "video-ltx25",
-      "status": "ready",
-      "whole_gb": 39.7,
-      "phases_gb": {
-        "encode": 15.37,
-        "denoise": 21.5,
-        "denoise2": 0.0,
-        "decode": 1.83,
-        "aux": 1.0
-      },
-      "largest_phase": "denoise",
-      "largest_phase_gb": 21.5,
-      "optional_gb": 5.2,
-      "biggest_file": {
-        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
-        "gb": 21.5
-      },
-      "verdict_24gb": "tight (by phases)",
-      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": null
-    },
-    {
-      "id": "volcano-ad",
-      "name": "Volcano Ad",
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
@@ -2253,8 +2178,58 @@
       "measured_peak_gb": null
     },
     {
+      "id": "cloud-surf",
+      "name": "Cloud Surf",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 50.12,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.89,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 5.83
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.89,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
       "id": "morph",
       "name": "Transformations",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 50.12,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.89,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 5.83
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.89,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "roller-coaster",
+      "name": "Roller Coaster",
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
@@ -2290,6 +2265,31 @@
         "denoise2": 0.0,
         "decode": 1.83,
         "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 21.89,
+      "optional_gb": 5.2,
+      "biggest_file": {
+        "name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "gb": 21.5
+      },
+      "verdict_24gb": "tight (by phases)",
+      "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
+      "measured_peak_gb": null
+    },
+    {
+      "id": "volcano-ad",
+      "name": "Volcano Ad",
+      "section": "video",
+      "pack": "video-ltx25",
+      "status": "ready",
+      "whole_gb": 50.12,
+      "phases_gb": {
+        "encode": 15.37,
+        "denoise": 21.89,
+        "denoise2": 0.0,
+        "decode": 1.83,
+        "aux": 5.83
       },
       "largest_phase": "denoise",
       "largest_phase_gb": 21.89,
