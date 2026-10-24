@@ -493,8 +493,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null,
-      "measured_on": null
+      "measured_peak_gb": 11.47,
+      "measured_on": "H100 · 20261024-174729-h100"
     },
     {
       "id": "face-swap",
@@ -1481,8 +1481,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": 12.36,
-      "measured_on": "L40S · 20261020-133620-l40s"
+      "measured_peak_gb": 13.15,
+      "measured_on": "H100 · 20261024-174729-h100"
     },
     {
       "id": "meme",

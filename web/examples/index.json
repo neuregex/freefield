@@ -101,17 +101,17 @@
       "full": "examples/cinema-studio/full.jpg",
       "inputs": [],
       "values": {
-        "prompt": "A detective lighting a cigarette under a streetlamp",
-        "camera": "grand format 70mm film camera",
-        "lens": "1970s cinema prime lens",
-        "focal": "35mm (natural cinematic perspective)",
+        "prompt": "A detective in a trench coat lights a cigarette under a streetlamp on a rainy night",
+        "camera": "the rich detail and fine grain of large-format 70mm film",
+        "lens": "the warm, slightly soft rendering of 1970s cinema glass",
+        "focal": "a natural 35mm perspective",
         "aperture": "aperture f/1.4, shallow depth of field, creamy bokeh"
       },
       "seed": 42,
-      "seconds": 9.2,
-      "peak_vram_gb": 12.36,
-      "gpu": "NVIDIA L40S, 46068 MiB",
-      "run": "20261020-133620-l40s"
+      "seconds": 24.7,
+      "peak_vram_gb": 13.15,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-174729-h100"
     },
     "edit": {
       "case": "edit-jacket",
@@ -3973,7 +3973,34 @@
       "peak_vram_gb": 6.73,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
       "run": "20261024-172353-h100"
+    },
+    "expand-image": {
+      "case": "tpl-expand-image",
+      "type": "image",
+      "card": "examples/expand-image/card.jpg",
+      "poster": null,
+      "full": "examples/expand-image/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/expand-image/input-image.jpg",
+          "full": "examples/expand-image/input-image-full.jpg",
+          "from_case": "ref-fx-lake"
+        }
+      ],
+      "values": {
+        "direction": "out",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 19.3,
+      "peak_vram_gb": 11.47,
+      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
+      "run": "20261024-174729-h100"
     }
   },
-  "updated_from": "20261024-172353-h100"
+  "updated_from": "20261024-174729-h100"
 }
