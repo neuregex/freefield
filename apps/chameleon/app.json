@@ -3,7 +3,7 @@
   "id": "chameleon",
   "name": "Chameleon",
   "section": "video",
-  "summary": "A chameleon appears on your product and takes its colors; the product stays as it is.",
+  "summary": "A chameleon in your product's colors appears on it; the product stays as it is.",
   "higgsfield_feature": "Chameleon",
   "pack": "video-ltx25",
   "status": "ready",
@@ -11,7 +11,7 @@
   "source": {
     "template": "comfyui_workflow_templates video_ltx2_5_flf2v.json (0.1.115) + image_flux3_klein_distilled_image_edit.json",
     "comfyui": "0.42.0",
-    "notes": "Template app written by tools/template_apps.py: the workflow is apps/morph's (built by tools/build_apps.py) with a fixed Klein instruction for the last frame (node edit:4: \"Add a chameleon perched on top of this exact product. The chameleon's skin copies the product's colors and pattern exactly, so it blends into it. The product itself unchanged, same background, macro product photo.\"); the prompt below is fixed and \"Extra direction\" is appended to it."
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/morph's (built by tools/build_apps.py) with a fixed Klein instruction for the last frame (node edit:4: \"Add a chameleon perched on top of this exact product. The chameleon is {colors} on its head, back and tail, the same colors as the product, so it blends into it. The product itself unchanged, same background, macro product photo.\"); the prompt below is fixed and \"Extra direction\" is appended to it."
   },
   "inputs": [
     {
@@ -30,6 +30,14 @@
       ]
     },
     {
+      "id": "colors",
+      "type": "text",
+      "label": "Product colors",
+      "default": "bright white with bold red patches",
+      "required": true,
+      "help": "The product's main colors; the chameleon takes them on, so it blends into the product."
+    },
+    {
       "id": "details",
       "type": "textarea",
       "label": "Extra direction",
@@ -40,6 +48,11 @@
           "node": "251:252",
           "field": "value",
           "template": "A chameleon climbs up onto the product and its skin shifts to the product's own colors and pattern, it blinks and rolls one eye; soft jungle ambience. {details}"
+        },
+        {
+          "node": "edit:4",
+          "field": "text",
+          "template": "Add a chameleon perched on top of this exact product. The chameleon is {colors} on its head, back and tail, the same colors as the product, so it blends into it. The product itself unchanged, same background, macro product photo."
         }
       ]
     },
@@ -245,6 +258,7 @@
   "test": {
     "image": "test/portrait.png",
     "duration": 4,
-    "aspect": "landscape"
+    "aspect": "landscape",
+    "colors": "bright white with bold red patches"
   }
 }

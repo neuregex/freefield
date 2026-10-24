@@ -10,7 +10,8 @@ Each entry below is a Higgsfield app (its name in `feature`) rebuilt as a prompt
 these bases, all workflows built by tools/build_apps.py:
   edit       FLUX 3 Image Klein's edit pipeline (apps/edit), one reference image
   edit2      the same with a second reference image (a garment, another person, a face); with
-             face_mask, MediaPipe finds the face in the first image and Klein redraws only that oval
+             face_mask, MediaPipe finds the face in the first image and Klein redraws only that oval,
+             with the second image as its only reference (with both, it copied the first face back)
   z-image    Z-Image Turbo (apps/z-image), text to image
   video      LTX-2.5 image-to-video (apps/video), with its own audio
   qwen-edit  Qwen-Image-Edit-2509 (apps/relight) with a different LoRA: Multiple Angles or next-scene
@@ -379,8 +380,8 @@ A("character-swap", "Character Swap", "Character Swap", "identity", "edit2", "Sc
   [], SCENE, {}, "The woman sits in the cafe in the man's place and pose.", image2_label="Photo of the new person", ref2=WOMAN)
 A("face-swap", "Face Swap", "Face Swap", "identity", "edit2", "Photo to edit",
   "Puts the face from a second photo onto the first; for faces you own or have permission to use.",
-  "Give the person in image 1 the face of the person in image 2: the eyes, nose, mouth, brows and face shape of image 2, blended into image 1's head "
-  "angle, expression, lighting and skin tone.",
+  "Give this person the face of the person in image 1: the eyes, nose, mouth, brows and face shape of image 1, matching the head angle, expression, "
+  "lighting and skin tone around it.",
   [], PERSON, {}, "Her portrait with the other woman's face; hair, jacket and background untouched.", image2_label="Photo of the face", ref2=WOMAN,
   help_="Only faces you own or have permission to use.", face_mask=True)
 
@@ -406,12 +407,15 @@ A("asmr-host", "ASMR Host", "ASMR Host", "clips", "video", "Your photo",
   "brush; close whispering sound.",
   [], MAN, {"aspect": PORTRAIT}, "Studio, mic, whisper.")
 A("chameleon", "Chameleon", "Chameleon", "ads", "morph", "Product photo",
-  "A chameleon appears on your product and takes its colors; the product stays as it is.",
+  "A chameleon in your product's colors appears on it; the product stays as it is.",
   "A chameleon climbs up onto the product and its skin shifts to the product's own colors and pattern, it blinks and rolls one eye; soft jungle ambience.",
-  [], SNEAKER, {"aspect": "landscape", "duration": 4}, "A white and red chameleon on the sneaker; the sneaker unchanged.",
+  [txt("colors", "Product colors", "bright white with bold red patches", required=True,
+       help_="The product's main colors; the chameleon takes them on, so it blends into the product.")],
+  SNEAKER, {"aspect": "landscape", "duration": 4, "colors": "bright white with bold red patches"},
+  "A white and red chameleon on the sneaker; the sneaker unchanged (tplx-chameleon-m2, 24 Oct).",
   defaults={"aspect": "landscape"},
-  klein="Add a chameleon perched on top of this exact product. The chameleon's skin copies the product's colors and pattern exactly, so it blends into it. "
-        "The product itself unchanged, same background, macro product photo.")
+  klein="Add a chameleon perched on top of this exact product. The chameleon is {colors} on its head, back and tail, the same colors as the product, "
+        "so it blends into it. The product itself unchanged, same background, macro product photo.")
 A("magic-button", "Magic Button", "Magic button", "ads", "video", "Product photo",
   "A glowing button turns the scene around your product magical.",
   "A hand presses a big glowing button next to the product; the scene transforms into a magical world with floating sparks and soft light, the product "
@@ -528,7 +532,7 @@ def check() -> None:
         assert t["id"] not in existing or (ROOT / "apps" / t["id"] / "app.json").exists() and "tools/template_apps.py" in (ROOT / "apps" / t["id"] / "app.json").read_text(encoding="utf-8"), f"{t['id']} is a hand-made app"
         assert len(t["name"]) <= 40 and len(t["summary"]) <= 160, t["id"]
         assert t["base"] in BASES, t["id"]
-        used = set(re.findall(r"\{([a-z][a-z0-9_]*)\}", t["prompt"]))
+        used = set(re.findall(r"\{([a-z][a-z0-9_]*)\}", t["prompt"] + " " + (t["klein"] or "")))
         have = {i["id"] for i in t["inputs"]}
         assert used <= have, (t["id"], used - have)
         assert have <= used, (t["id"], have - used)
@@ -542,7 +546,6 @@ def check() -> None:
         assert (t["base"] == "qwen-edit") == (t["lora"] in QWEN_LORAS), t["id"]
         assert (t["base"] == "morph") == bool(t["klein"]), t["id"]
         assert not t["face_mask"] or t["base"] == "edit2", t["id"]
-        assert not t["klein"] or not re.search(r"\{[a-z]", t["klein"]), (t["id"], "the Klein instruction is fixed")
         for k in t["defaults"]:
             assert k in BASES[t["base"]]["keep"], (t["id"], k)
         for k in t["values"]:   # lab values name the template's own inputs or the settings kept from the base app
@@ -562,8 +565,11 @@ def manifest(t: dict) -> dict:
                        "bind": [{"node": base["image2"][0], "field": base["image2"][1]}]})
     inputs += t["inputs"]
     # the default "" matters: an optional input with no value is skipped everywhere, and the template with it
+    binds = [{"node": base["prompt"][0], "field": base["prompt"][1], "template": t["prompt"] + " {details}"}]
+    if t["klein"] and re.search(r"\{[a-z]", t["klein"]):   # the Klein instruction takes the template's own inputs too
+        binds.append({"node": base["klein"][0], "field": base["klein"][1], "template": t["klein"]})
     inputs.append({"id": "details", "type": "textarea", "label": "Extra direction", "default": "", "help": "Added at the end of the app's prompt.",
-                   "bind": [{"node": base["prompt"][0], "field": base["prompt"][1], "template": t["prompt"] + " {details}"}]})
+                   "bind": binds})
     inputs += [{**keep[k], "default": t["defaults"][k]} if k in t["defaults"] else keep[k] for k in base["keep"]]
     test = {"image": "test/portrait.png"} if base["image"] else {}
     if base.get("image2"):
@@ -577,7 +583,7 @@ def manifest(t: dict) -> dict:
         notes += " plus a second LoadImage on ReferenceMultiLatent's images.image1"
     if t["face_mask"]:
         notes += ("; the sampler starts from the first image (scaled to 1 MP, encoded) with a noise mask on the face oval that the native "
-                  "MediaPipe nodes find, grown by 16 px, so only the face is redrawn")
+                  "MediaPipe nodes find, grown by 16 px, so only the face is redrawn, and the second image is Klein's only reference")
         models = models + [FACE_MODEL]
         credits = credits + ["MediaPipe Face Landmarker (Google, Apache-2.0), ComfyUI port: Comfy-Org/mediapipe"]
     if t["base"] == "morph":
@@ -625,8 +631,11 @@ def workflow(t: dict) -> dict:
         api["fm_latent"] = {"class_type": "SetLatentNoiseMask", "inputs": {"samples": ["fm_encode", 0], "mask": ["fm_grow", 0]},
                             "_meta": {"title": "Only the face is redrawn"}}
         api["7"]["inputs"]["latent_image"] = ["fm_latent", 0]
-    if t["base"] == "morph":   # the last frame Klein draws is fixed per template
-        api[base["klein"][0]]["inputs"][base["klein"][1]] = t["klein"]
+        api["17"]["inputs"]["images.image0"] = ["12", 0]   # the face photo is the only reference: with both, Klein copied the first face back
+        del api["17"]["inputs"]["images.image1"]
+    if t["base"] == "morph":   # the last frame Klein draws is fixed per template (placeholders filled with the defaults)
+        defaults = {i["id"]: i.get("default", "") for i in t["inputs"]}
+        api[base["klein"][0]]["inputs"][base["klein"][1]] = re.sub(r"\{([a-z][a-z0-9_]*)\}", lambda m: str(defaults.get(m.group(1), "")), t["klein"])
     if t["lora"]:   # the relight pipeline with another LoRA; node 14 prepends the Relight trigger, so it is blanked
         api["10:118"]["inputs"]["lora_name"] = QWEN_LORAS[t["lora"]]["file"]
         api["14"]["inputs"]["string_a"] = ""

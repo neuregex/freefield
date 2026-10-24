@@ -123,7 +123,7 @@ command that makes every example. Add a line to the table there, not a folder by
 | `asmr-product` | ASMR Add-On | `video` | product photo |
 | `asmr-whisper` | ASMR Classic | `video` | your photo |
 | `asmr-host` | ASMR Host | `video` | your photo |
-| `chameleon` | Chameleon | `morph` | product photo |
+| `chameleon` | Chameleon | `morph` | product photo, product colors |
 | `magic-button` | Magic button | `video` | product photo |
 | `truck-ad` | Truck Ad | `video` | product photo |
 | `kick-ad` | Kick Ad | `video` | product photo |
@@ -231,6 +231,20 @@ the cases that read the same reference together so each reference is made once (
 6). The GPU time stays about the same, plus loading the models once per container; the wait drops to about 1/N.
 The groups write to `<run_id>-s1`, `-s2`… on the volume and come back merged into one `lab/results/<run_id>`, with one
 `review.html`; `--pull <run_id>` merges them the same way.
+
+Runs can also come from a queue, so that someone working on the repo (an assistant included) can ask for a run
+without waiting for you to type it. You start the watcher once, in a terminal where `modal` is logged in:
+
+```sh
+python tools/lab_queue.py            # watches lab/queue/; Ctrl+C stops it, a file lab/queue/STOP pauses it
+```
+
+A job is a file `lab/queue/<name>.job.json` such as `{"only": "tpl-face-swap,tplx-face-swap-*", "note": "why"}`. The
+watcher runs exactly `modal run lab/lab_modal.py --only <only>` (plus `--shards N` if the job asks, up to 4), one job
+at a time, saves the output to `<name>.log` and writes `<name>.done.json` with the exit code, the run id and the
+"N/M ok" line. It accepts nothing else: no deploy, no other command, only case ids and patterns that exist in
+`lab/cases.json`, at most 60 cases per job and 12 jobs a day (`--max-cases`, `--max-jobs`); a job outside that gets a
+`<name>.refused.json` with the reason. Your Modal login never leaves your machine.
 
 `--detach` keeps the GPU job running if the terminal closes; the run id is printed at the start. Missing models are
 downloaded first on a CPU container, so no GPU is billed while they arrive (the whole catalog is

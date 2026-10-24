@@ -126,15 +126,11 @@
         0
       ],
       "images.image0": [
-        "11",
+        "12",
         0
       ],
       "resolution": "resize",
-      "resolution.megapixels": 1,
-      "images.image1": [
-        "12",
-        0
-      ]
+      "resolution.megapixels": 1
     },
     "_meta": {
       "title": "Set Reference Multi Latent"
