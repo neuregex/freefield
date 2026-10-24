@@ -27,7 +27,7 @@ COMFY_DIR = "/comfyui"
 MODELS_DIR = "/models"
 MODEL_DIRS = ["diffusion_models", "text_encoders", "vae", "loras", "checkpoints", "clip_vision",
               "latent_upscale_models", "upscale_models", "model_patches", "geometry_estimation",
-              "background_removal", "frame_interpolation", "audio_encoders", "embeddings"]
+              "background_removal", "frame_interpolation", "audio_encoders", "embeddings", "detection"]
 
 models_volume = modal.Volume.from_name("freefield-models", create_if_missing=True)
 lab_volume = modal.Volume.from_name("freefield-lab", create_if_missing=True)

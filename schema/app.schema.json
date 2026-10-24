@@ -167,7 +167,7 @@
           "enum": [
             "diffusion_models", "text_encoders", "vae", "loras", "checkpoints", "clip_vision",
             "latent_upscale_models", "upscale_models", "model_patches", "geometry_estimation",
-            "background_removal", "frame_interpolation", "audio_encoders", "embeddings"
+            "background_removal", "frame_interpolation", "audio_encoders", "embeddings", "detection"
           ],
           "description": "ComfyUI models/ subfolder."
         },

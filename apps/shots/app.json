@@ -157,6 +157,7 @@
     "Workflow: ComfyUI official template"
   ],
   "test": {
-    "image": "test/portrait.png"
+    "image": "test/portrait.png",
+    "shot": "将镜头转为特写镜头 Turn the camera to a close-up."
   }
 }

@@ -51,6 +51,7 @@
       "gated": true,
       "license": "FLUX Kommunity License",
       "used_by": [
+        "chameleon",
         "cloud-surf",
         "mixed-media",
         "morph",
@@ -125,7 +126,6 @@
         "asmr-product",
         "asmr-whisper",
         "behind-the-scenes",
-        "chameleon",
         "idol",
         "kick-ad",
         "magic-button",
@@ -270,6 +270,7 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
+        "chameleon",
         "cloud-surf",
         "morph",
         "roller-coaster",
@@ -365,6 +366,7 @@
       "gated": true,
       "license": "FLUX Kommunity License",
       "used_by": [
+        "chameleon",
         "cloud-surf",
         "mixed-media",
         "morph",
@@ -381,6 +383,7 @@
       "gated": true,
       "license": "FLUX Kommunity License",
       "used_by": [
+        "chameleon",
         "cloud-surf",
         "mixed-media",
         "morph",

@@ -50,10 +50,22 @@
     "ugc-shot",
     "victory-card"
   ],
-  "download_gb": 11.03,
+  "download_gb": 11.04,
   "needs_hf_token": true,
   "custom_nodes": [],
   "models": [
+    {
+      "repo": "Comfy-Org/mediapipe",
+      "file": "detection/mediapipe_face_fp32.safetensors",
+      "dir": "detection",
+      "gb": 0.01,
+      "name": "mediapipe_face_fp32.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "face-swap"
+      ]
+    },
     {
       "repo": "black-forest-labs/flux-3-image-klein-comfy",
       "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",

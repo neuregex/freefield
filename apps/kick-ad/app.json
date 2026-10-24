@@ -3,7 +3,7 @@
   "id": "kick-ad",
   "name": "Kick Ad",
   "section": "video",
-  "summary": "Your product kicks the plain grey competition off screen.",
+  "summary": "Plain grey boxes slide at your product and get knocked off screen while it stands still.",
   "higgsfield_feature": "Kick Ad",
   "pack": "video-ltx25",
   "status": "ready",
@@ -39,7 +39,7 @@
         {
           "node": "398:376",
           "field": "value",
-          "template": "The product stays centered and upright on the surface; the camera is locked. Each plain grey box that slides toward it is flicked away by a short hop of the product, which lands back on the same spot; the boxes tumble off screen. The product is in the center of the frame until the last frame. Comedic whoosh and thud sounds. {details}"
+          "template": "The product stands in the exact center of the frame and does not move at all for the whole shot; the camera is locked. Plain grey cardboard boxes slide in from the left and from the right and are knocked away the moment they touch it, flying off and tumbling out of the frame, while the product stays still and upright in the center until the last frame. Cartoon whoosh and thud sounds. {details}"
         }
       ]
     },

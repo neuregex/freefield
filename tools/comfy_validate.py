@@ -32,7 +32,7 @@ ROOT = Path(__file__).resolve().parent.parent
 MODEL_EXT = (".safetensors", ".gguf", ".pt", ".pth", ".bin", ".ckpt", ".sft")
 MODEL_DIRS = ["diffusion_models", "text_encoders", "vae", "loras", "checkpoints", "clip_vision",
               "latent_upscale_models", "upscale_models", "model_patches", "geometry_estimation",
-              "background_removal", "frame_interpolation", "audio_encoders", "embeddings", "unet", "clip"]
+              "background_removal", "frame_interpolation", "audio_encoders", "embeddings", "detection", "unet", "clip"]
 IMAGE_EXT = (".png", ".jpg", ".jpeg", ".webp")
 VIDEO_EXT = (".mp4", ".webm", ".mov", ".mkv")
 AUDIO_EXT = (".wav", ".mp3", ".flac", ".ogg", ".m4a")

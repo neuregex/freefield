@@ -58,8 +58,8 @@
         1
       ],
       "latent_image": [
-        "17",
-        2
+        "fm_latent",
+        0
       ],
       "seed": 563228241303057,
       "steps": 16,
@@ -159,6 +159,109 @@
     },
     "_meta": {
       "title": "Second reference"
+    }
+  },
+  "fm_scale": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "11",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 16
+    },
+    "_meta": {
+      "title": "First image at 1 MP"
+    }
+  },
+  "fm_model": {
+    "class_type": "LoadMediaPipeFaceLandmarker",
+    "inputs": {
+      "model_name": "mediapipe_face_fp32.safetensors"
+    },
+    "_meta": {
+      "title": "MediaPipe face model"
+    }
+  },
+  "fm_find": {
+    "class_type": "MediaPipeFaceLandmarker",
+    "inputs": {
+      "face_detection_model": [
+        "fm_model",
+        0
+      ],
+      "image": [
+        "fm_scale",
+        0
+      ],
+      "detector_variant": "both",
+      "num_faces": 1,
+      "min_confidence": 0.5,
+      "missing_frame_fallback": "empty"
+    },
+    "_meta": {
+      "title": "Find the face"
+    }
+  },
+  "fm_mask": {
+    "class_type": "MediaPipeFaceMask",
+    "inputs": {
+      "face_landmarks": [
+        "fm_find",
+        0
+      ],
+      "regions": "all"
+    },
+    "_meta": {
+      "title": "Face oval"
+    }
+  },
+  "fm_grow": {
+    "class_type": "GrowMask",
+    "inputs": {
+      "mask": [
+        "fm_mask",
+        0
+      ],
+      "expand": 16,
+      "tapered_corners": true
+    },
+    "_meta": {
+      "title": "Grow the oval"
+    }
+  },
+  "fm_encode": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "fm_scale",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Encode the first image"
+    }
+  },
+  "fm_latent": {
+    "class_type": "SetLatentNoiseMask",
+    "inputs": {
+      "samples": [
+        "fm_encode",
+        0
+      ],
+      "mask": [
+        "fm_grow",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Only the face is redrawn"
     }
   }
 }

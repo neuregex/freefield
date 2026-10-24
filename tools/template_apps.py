@@ -9,7 +9,8 @@
 Each entry below is a Higgsfield app (its name in `feature`) rebuilt as a prompt template on one of
 these bases, all workflows built by tools/build_apps.py:
   edit       FLUX 3 Image Klein's edit pipeline (apps/edit), one reference image
-  edit2      the same with a second reference image (a garment, another person, a face)
+  edit2      the same with a second reference image (a garment, another person, a face); with
+             face_mask, MediaPipe finds the face in the first image and Klein redraws only that oval
   z-image    Z-Image Turbo (apps/z-image), text to image
   video      LTX-2.5 image-to-video (apps/video), with its own audio
   qwen-edit  Qwen-Image-Edit-2509 (apps/relight) with a different LoRA: Multiple Angles or next-scene
@@ -49,6 +50,10 @@ BASES = {
     "morph": {"app": "morph", "section": "video", "pack": "video-ltx25", "image": ("31", "image"), "prompt": ("251:252", "value"), "klein": ("edit:4", "text"),
               "keep": ("aspect", "duration", "strength", "seed"), "output": {"node": "68", "type": "video"}},
 }
+
+# MediaPipe Face Landmarker as ComfyUI's native nodes load it (comfy_extras/nodes_mediapipe.py, blueprint "Image Face Detection")
+FACE_MODEL = {"repo": "Comfy-Org/mediapipe", "file": "detection/mediapipe_face_fp32.safetensors", "dir": "detection", "gb": 0.01, "phase": "encode",
+              "license": "Apache-2.0"}
 
 # LoRAs the qwen-edit templates load instead of Relight (file name as ComfyUI sees it)
 QWEN_LORAS = {
@@ -98,11 +103,12 @@ T = []
 
 
 def A(id_, name, feature, cat, base, image_label, summary, prompt, inputs=(), ref=None, values=None, note="", image2_label=None, ref2=None, lora=None, help_=None,
-      defaults=None, klein=None):
-    """defaults: new defaults for settings kept from the base app (say, the LTX enhancer off); klein: the morph base's Klein instruction."""
+      defaults=None, klein=None, face_mask=False):
+    """defaults: new defaults for settings kept from the base app (say, the LTX enhancer off); klein: the morph base's Klein instruction;
+    face_mask (edit2): redraw only the face oval MediaPipe finds in the first image, so the rest of it stays as it is."""
     T.append(dict(id=id_, name=name, feature=feature, cat=cat, base=base, image_label=image_label, summary=summary, prompt=prompt,
                   inputs=list(inputs), ref=ref, values=values or {}, note=note, image2_label=image2_label, ref2=ref2, lora=lora, help=help_,
-                  defaults=defaults or {}, klein=klein))
+                  defaults=defaults or {}, klein=klein, face_mask=face_mask))
 
 
 # ---------------------------------------------------------------- ads & products (apps/edit pipeline, a product photo)
@@ -373,10 +379,10 @@ A("character-swap", "Character Swap", "Character Swap", "identity", "edit2", "Sc
   [], SCENE, {}, "The woman sits in the cafe in the man's place and pose.", image2_label="Photo of the new person", ref2=WOMAN)
 A("face-swap", "Face Swap", "Face Swap", "identity", "edit2", "Photo to edit",
   "Puts the face from a second photo onto the first; for faces you own or have permission to use.",
-  "The photo from <ref_image_0> with the face replaced by the face of the person in <ref_image_1>, matching the original head angle, expression, lighting "
-  "and skin tone; everything else unchanged.",
-  [], PERSON, {}, "Her portrait with the other woman's face; lighting matched.", image2_label="Photo of the face", ref2=WOMAN_B,
-  help_="Only faces you own or have permission to use.")
+  "Give the person in image 1 the face of the person in image 2: the eyes, nose, mouth, brows and face shape of image 2, blended into image 1's head "
+  "angle, expression, lighting and skin tone.",
+  [], PERSON, {}, "Her portrait with the other woman's face; hair, jacket and background untouched.", image2_label="Photo of the face", ref2=WOMAN,
+  help_="Only faces you own or have permission to use.", face_mask=True)
 
 # ---------------------------------------------------------------- video templates (LTX-2.5 image-to-video, with sound)
 A("behind-the-scenes", "Behind the Scenes", "Behind the Scenes", "clips", "video", "Your photo",
@@ -399,11 +405,13 @@ A("asmr-host", "ASMR Host", "ASMR Host", "clips", "video", "Your photo",
   "The person sits in a cozy ASMR studio with a large microphone in front of them, fairy lights behind, and whispers into the mic while gently handling a soft "
   "brush; close whispering sound.",
   [], MAN, {"aspect": PORTRAIT}, "Studio, mic, whisper.")
-A("chameleon", "Chameleon", "Chameleon", "ads", "video", "Product photo",
-  "A chameleon climbs onto your product and takes its colors.",
-  "A chameleon crawls onto the product and slowly changes its skin to the exact colors and pattern of the product, blinking, macro lens; soft ambient "
-  "jungle sound.",
-  [], SNEAKER, {"aspect": "16:9 (Widescreen)"}, "The chameleon turns red and white like the sneaker.")
+A("chameleon", "Chameleon", "Chameleon", "ads", "morph", "Product photo",
+  "A chameleon appears on your product and takes its colors; the product stays as it is.",
+  "A chameleon climbs up onto the product and its skin shifts to the product's own colors and pattern, it blinks and rolls one eye; soft jungle ambience.",
+  [], SNEAKER, {"aspect": "landscape", "duration": 4}, "A white and red chameleon on the sneaker; the sneaker unchanged.",
+  defaults={"aspect": "landscape"},
+  klein="Add a chameleon perched on top of this exact product. The chameleon's skin copies the product's colors and pattern exactly, so it blends into it. "
+        "The product itself unchanged, same background, macro product photo.")
 A("magic-button", "Magic Button", "Magic button", "ads", "video", "Product photo",
   "A glowing button turns the scene around your product magical.",
   "A hand presses a big glowing button next to the product; the scene transforms into a magical world with floating sparks and soft light, the product "
@@ -416,11 +424,11 @@ A("truck-ad", "Truck Ad", "Truck Ad", "ads", "video", "Product photo",
   [], PRODUCT, {"aspect": "16:9 (Widescreen)", "enhance": False}, "A toy truck with the bottle printed on it parks beside it (tplx-truck-ad-b, 23 Oct).",
   defaults={"enhance": False})
 A("kick-ad", "Kick Ad", "Kick Ad", "ads", "video", "Product photo",
-  "Your product kicks the plain grey competition off screen.",
-  "The product stays centered and upright on the surface; the camera is locked. Each plain grey box that slides toward it is flicked away by a short hop "
-  "of the product, which lands back on the same spot; the boxes tumble off screen. The product is in the center of the frame until the last frame. "
-  "Comedic whoosh and thud sounds.",
-  [], PRODUCT, {"aspect": "16:9 (Widescreen)", "enhance": False}, "Boxes fly off; the bottle stays put (tplx-kick-ad-b, 23 Oct). No real brands.",
+  "Plain grey boxes slide at your product and get knocked off screen while it stands still.",
+  "The product stands in the exact center of the frame and does not move at all for the whole shot; the camera is locked. Plain grey cardboard boxes "
+  "slide in from the left and from the right and are knocked away the moment they touch it, flying off and tumbling out of the frame, while the product "
+  "stays still and upright in the center until the last frame. Cartoon whoosh and thud sounds.",
+  [], PRODUCT, {"aspect": "16:9 (Widescreen)", "enhance": False}, "Grey boxes fly off; the bottle never moves. No real brands.",
   defaults={"enhance": False})
 A("volcano-ad", "Volcano Ad", "Volcano Ad", "ads", "morph", "Product photo",
   "The background turns into an erupting volcano behind your product.",
@@ -490,7 +498,7 @@ A("shots", "Shots", "Shots", "camera", "qwen-edit", "Your photo",
                          ("Low angle", "将镜头转为仰视 Turn the camera to a low-angle view looking up."), ("Rotate 45° left", "将镜头向左旋转45度 Rotate the camera 45 degrees to the left."),
                          ("Rotate 45° right", "将镜头向右旋转45度 Rotate the camera 45 degrees to the right."), ("Rotate 90° left", "将镜头向左旋转90度 Rotate the camera 90 degrees to the left."),
                          ("From behind", "将镜头转到人物背后 Move the camera behind the subject.")])],
-  LAKE, {}, "The lake scene as a wide-angle shot.", lora="angles")
+  LAKE, {"shot": "将镜头转为特写镜头 Turn the camera to a close-up."}, "The hiker large in frame, seen from behind (the wide-angle showcase made him tiny).", lora="angles")
 A("zooms", "Zooms", "Zooms", "camera", "qwen-edit", "Your photo",
   "Zoom levels of one image, from a wide view to an extreme close-up.",
   "{zoom}",
@@ -533,6 +541,7 @@ def check() -> None:
         assert (t["base"] == "edit2") == bool(t["image2_label"] and t["ref2"]), t["id"]
         assert (t["base"] == "qwen-edit") == (t["lora"] in QWEN_LORAS), t["id"]
         assert (t["base"] == "morph") == bool(t["klein"]), t["id"]
+        assert not t["face_mask"] or t["base"] == "edit2", t["id"]
         assert not t["klein"] or not re.search(r"\{[a-z]", t["klein"]), (t["id"], "the Klein instruction is fixed")
         for k in t["defaults"]:
             assert k in BASES[t["base"]]["keep"], (t["id"], k)
@@ -566,6 +575,11 @@ def manifest(t: dict) -> dict:
     notes = f"Template app written by tools/template_apps.py: the workflow is apps/{base['app']}'s (built by tools/build_apps.py)"
     if t["base"] == "edit2":
         notes += " plus a second LoadImage on ReferenceMultiLatent's images.image1"
+    if t["face_mask"]:
+        notes += ("; the sampler starts from the first image (scaled to 1 MP, encoded) with a noise mask on the face oval that the native "
+                  "MediaPipe nodes find, grown by 16 px, so only the face is redrawn")
+        models = models + [FACE_MODEL]
+        credits = credits + ["MediaPipe Face Landmarker (Google, Apache-2.0), ComfyUI port: Comfy-Org/mediapipe"]
     if t["base"] == "morph":
         notes += f" with a fixed Klein instruction for the last frame (node edit:4: \"{t['klein']}\")"
     if t["lora"]:
@@ -597,6 +611,20 @@ def workflow(t: dict) -> dict:
     if t["base"] == "edit2":   # a second reference image into the same ReferenceMultiLatent
         api["12"] = {"class_type": "LoadImage", "inputs": {"image": "second.png"}, "_meta": {"title": "Second reference"}}
         api["17"]["inputs"]["images.image1"] = ["12", 0]
+    if t["face_mask"]:   # start from the first image and let the sampler change only the face oval
+        api["fm_scale"] = {"class_type": "ImageScaleToTotalPixels", "inputs": {"image": ["11", 0], "upscale_method": "lanczos", "megapixels": 1.0,
+                                                                                "resolution_steps": 16}, "_meta": {"title": "First image at 1 MP"}}
+        api["fm_model"] = {"class_type": "LoadMediaPipeFaceLandmarker", "inputs": {"model_name": FACE_MODEL["file"].split("/")[-1]},
+                           "_meta": {"title": "MediaPipe face model"}}
+        api["fm_find"] = {"class_type": "MediaPipeFaceLandmarker", "inputs": {"face_detection_model": ["fm_model", 0], "image": ["fm_scale", 0],
+                                                                               "detector_variant": "both", "num_faces": 1, "min_confidence": 0.5,
+                                                                               "missing_frame_fallback": "empty"}, "_meta": {"title": "Find the face"}}
+        api["fm_mask"] = {"class_type": "MediaPipeFaceMask", "inputs": {"face_landmarks": ["fm_find", 0], "regions": "all"}, "_meta": {"title": "Face oval"}}
+        api["fm_grow"] = {"class_type": "GrowMask", "inputs": {"mask": ["fm_mask", 0], "expand": 16, "tapered_corners": True}, "_meta": {"title": "Grow the oval"}}
+        api["fm_encode"] = {"class_type": "VAEEncode", "inputs": {"pixels": ["fm_scale", 0], "vae": ["3", 0]}, "_meta": {"title": "Encode the first image"}}
+        api["fm_latent"] = {"class_type": "SetLatentNoiseMask", "inputs": {"samples": ["fm_encode", 0], "mask": ["fm_grow", 0]},
+                            "_meta": {"title": "Only the face is redrawn"}}
+        api["7"]["inputs"]["latent_image"] = ["fm_latent", 0]
     if t["base"] == "morph":   # the last frame Klein draws is fixed per template
         api[base["klein"][0]]["inputs"][base["klein"][1]] = t["klein"]
     if t["lora"]:   # the relight pipeline with another LoRA; node 14 prepends the Relight trigger, so it is blanked

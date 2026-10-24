@@ -123,7 +123,7 @@ command that makes every example. Add a line to the table there, not a folder by
 | `asmr-product` | ASMR Add-On | `video` | product photo |
 | `asmr-whisper` | ASMR Classic | `video` | your photo |
 | `asmr-host` | ASMR Host | `video` | your photo |
-| `chameleon` | Chameleon | `video` | product photo |
+| `chameleon` | Chameleon | `morph` | product photo |
 | `magic-button` | Magic button | `video` | product photo |
 | `truck-ad` | Truck Ad | `video` | product photo |
 | `kick-ad` | Kick Ad | `video` | product photo |
