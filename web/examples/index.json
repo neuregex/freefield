@@ -685,10 +685,10 @@
         "steps": 8
       },
       "seed": 42,
-      "seconds": 16.1,
-      "peak_vram_gb": 12.47,
+      "seconds": 31.4,
+      "peak_vram_gb": 14.08,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261023-225832-h100"
+      "run": "20261024-000821-h100"
     },
     "recast": {
       "case": "recast-walk",
@@ -2402,15 +2402,15 @@
       ],
       "values": {
         "details": "",
-        "duration": 5,
-        "enhance": true,
-        "aspect": "16:9 (Widescreen)"
+        "aspect": "landscape",
+        "duration": 4,
+        "strength": 1.0
       },
       "seed": 42,
-      "seconds": 98.3,
-      "peak_vram_gb": 46.5,
+      "seconds": 64.8,
+      "peak_vram_gb": 50.28,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261024-000821-h100"
     },
     "character-swap": {
       "case": "tpl-character-swap",
@@ -2590,14 +2590,14 @@
       "values": {
         "details": "",
         "duration": 5,
-        "enhance": true,
+        "enhance": false,
         "aspect": "16:9 (Widescreen)"
       },
       "seed": 42,
-      "seconds": 29.1,
-      "peak_vram_gb": 46.5,
+      "seconds": 58.9,
+      "peak_vram_gb": 46.69,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261024-000821-h100"
     },
     "magic-button": {
       "case": "tpl-magic-button",
@@ -2825,14 +2825,14 @@
         }
       ],
       "values": {
-        "shot": "将镜头转为广角镜头 Turn the camera to a wide-angle lens.",
+        "shot": "将镜头转为特写镜头 Turn the camera to a close-up.",
         "details": ""
       },
       "seed": 42,
-      "seconds": 51.9,
-      "peak_vram_gb": 38.24,
+      "seconds": 39.4,
+      "peak_vram_gb": 38.2,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "run": "20261024-000821-h100"
     },
     "storm-creature": {
       "case": "tpl-storm-creature",
@@ -3741,5 +3741,5 @@
       }
     }
   },
-  "updated_from": "20261023-225832-h100"
+  "updated_from": "20261024-000821-h100"
 }
