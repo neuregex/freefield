@@ -23,6 +23,7 @@ the wait is about 1/N.
 from __future__ import annotations
 
 import json
+from fnmatch import fnmatch
 import os
 import re
 import sys
@@ -205,18 +206,20 @@ def finish(run_id: str, publish: bool) -> None:
 @app.local_entrypoint()
 def main(cases: str = "lab/cases.json", only: str = "", apps: str = "", showcase: bool = False,
          run_id: str = "", publish: bool = True, pull: str = "", shards: int = 1):
-    """--showcase (one case per app), --only case,ids or --apps app,ids; their reference cases come along.
+    """--showcase (one case per app), --only case,ids (a pattern like tplx-* works) or --apps app,ids; their reference cases come along.
     --shards N splits them over N GPU containers that run at the same time.
     --pull <run_id> only copies an earlier run back (say, after the terminal closed) and publishes it."""
     if pull:
         finish(pull, publish)
         return
     spec = json.loads(Path(cases).read_text(encoding="utf-8"))["cases"]
-    keep = set(filter(None, only.split(","))) | {c["id"] for c in spec if c["app"] in set(filter(None, apps.split(",")))}
+    ids = {c["id"] for c in spec}
+    wanted = list(filter(None, only.split(",")))   # ids, or patterns like tplx-* (fnmatch)
+    keep = {i for w in wanted for i in ids if fnmatch(i, w)} | {c["id"] for c in spec if c["app"] in set(filter(None, apps.split(",")))}
     if showcase:
         keep |= {c["id"] for c in spec if c.get("showcase")}
     if only or apps or showcase:
-        unknown = set(filter(None, only.split(","))) - {c["id"] for c in spec}
+        unknown = [w for w in wanted if not any(fnmatch(i, w) for i in ids)]
         if unknown:
             raise SystemExit(f"unknown case id(s): {', '.join(sorted(unknown))}")
         spec = with_dependencies(spec, keep)
