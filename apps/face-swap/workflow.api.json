@@ -221,11 +221,11 @@
         "fm_mask",
         0
       ],
-      "expand": 16,
+      "expand": 0,
       "tapered_corners": true
     },
     "_meta": {
-      "title": "Grow the oval"
+      "title": "Grow or shrink the oval (px)"
     }
   },
   "fm_encode": {

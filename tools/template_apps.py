@@ -380,9 +380,9 @@ A("character-swap", "Character Swap", "Character Swap", "identity", "edit2", "Sc
   [], SCENE, {}, "The woman sits in the cafe in the man's place and pose.", image2_label="Photo of the new person", ref2=WOMAN)
 A("face-swap", "Face Swap", "Face Swap", "identity", "edit2", "Photo to edit",
   "Puts the face from a second photo onto the first; for faces you own or have permission to use.",
-  "Give this person the face of the person in image 1: the eyes, nose, mouth, brows and face shape of image 1, matching the head angle, expression, "
-  "lighting and skin tone around it.",
-  [], PERSON, {}, "Her portrait with the other woman's face; hair, jacket and background untouched.", image2_label="Photo of the face", ref2=WOMAN,
+  "Give this person exactly the face of the person in image 1: the same eyes, nose, mouth, brows and face shape as image 1. Keep this photo's own "
+  "hairline and hair; match its head angle, expression, lighting and skin tone.",
+  [], PERSON, {}, "Her portrait with the other woman's face; hair, jacket and background untouched (tplx-face-swap-g, 24 Oct).", image2_label="Photo of the face", ref2=WOMAN,
   help_="Only faces you own or have permission to use.", face_mask=True)
 
 # ---------------------------------------------------------------- video templates (LTX-2.5 image-to-video, with sound)
@@ -583,7 +583,7 @@ def manifest(t: dict) -> dict:
         notes += " plus a second LoadImage on ReferenceMultiLatent's images.image1"
     if t["face_mask"]:
         notes += ("; the sampler starts from the first image (scaled to 1 MP, encoded) with a noise mask on the face oval that the native "
-                  "MediaPipe nodes find, grown by 16 px, so only the face is redrawn, and the second image is Klein's only reference")
+                  "MediaPipe nodes find, so only the face is redrawn, and the second image is Klein's only reference")
         models = models + [FACE_MODEL]
         credits = credits + ["MediaPipe Face Landmarker (Google, Apache-2.0), ComfyUI port: Comfy-Org/mediapipe"]
     if t["base"] == "morph":
@@ -617,7 +617,8 @@ def workflow(t: dict) -> dict:
     if t["base"] == "edit2":   # a second reference image into the same ReferenceMultiLatent
         api["12"] = {"class_type": "LoadImage", "inputs": {"image": "second.png"}, "_meta": {"title": "Second reference"}}
         api["17"]["inputs"]["images.image1"] = ["12", 0]
-    if t["face_mask"]:   # start from the first image and let the sampler change only the face oval
+    if t["face_mask"]:   # start from the first image and let the sampler change only the face oval (as found: grown 16 px it reached
+                         # the hairline and Klein drew a high bare forehead, run 20261024-032920-l40s)
         api["fm_scale"] = {"class_type": "ImageScaleToTotalPixels", "inputs": {"image": ["11", 0], "upscale_method": "lanczos", "megapixels": 1.0,
                                                                                 "resolution_steps": 16}, "_meta": {"title": "First image at 1 MP"}}
         api["fm_model"] = {"class_type": "LoadMediaPipeFaceLandmarker", "inputs": {"model_name": FACE_MODEL["file"].split("/")[-1]},
@@ -626,7 +627,8 @@ def workflow(t: dict) -> dict:
                                                                                "detector_variant": "both", "num_faces": 1, "min_confidence": 0.5,
                                                                                "missing_frame_fallback": "empty"}, "_meta": {"title": "Find the face"}}
         api["fm_mask"] = {"class_type": "MediaPipeFaceMask", "inputs": {"face_landmarks": ["fm_find", 0], "regions": "all"}, "_meta": {"title": "Face oval"}}
-        api["fm_grow"] = {"class_type": "GrowMask", "inputs": {"mask": ["fm_mask", 0], "expand": 16, "tapered_corners": True}, "_meta": {"title": "Grow the oval"}}
+        api["fm_grow"] = {"class_type": "GrowMask", "inputs": {"mask": ["fm_mask", 0], "expand": 0, "tapered_corners": True},
+                          "_meta": {"title": "Grow or shrink the oval (px)"}}
         api["fm_encode"] = {"class_type": "VAEEncode", "inputs": {"pixels": ["fm_scale", 0], "vae": ["3", 0]}, "_meta": {"title": "Encode the first image"}}
         api["fm_latent"] = {"class_type": "SetLatentNoiseMask", "inputs": {"samples": ["fm_encode", 0], "mask": ["fm_grow", 0]},
                             "_meta": {"title": "Only the face is redrawn"}}

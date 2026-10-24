@@ -11,7 +11,7 @@
   "source": {
     "template": "image_flux3_klein_distilled_image_edit.json",
     "comfyui": "0.42.0",
-    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py) plus a second LoadImage on ReferenceMultiLatent's images.image1; the sampler starts from the first image (scaled to 1 MP, encoded) with a noise mask on the face oval that the native MediaPipe nodes find, grown by 16 px, so only the face is redrawn, and the second image is Klein's only reference; the prompt below is fixed and \"Extra direction\" is appended to it."
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py) plus a second LoadImage on ReferenceMultiLatent's images.image1; the sampler starts from the first image (scaled to 1 MP, encoded) with a noise mask on the face oval that the native MediaPipe nodes find, so only the face is redrawn, and the second image is Klein's only reference; the prompt below is fixed and \"Extra direction\" is appended to it."
   },
   "inputs": [
     {
@@ -55,7 +55,7 @@
         {
           "node": "4",
           "field": "text",
-          "template": "Give this person the face of the person in image 1: the eyes, nose, mouth, brows and face shape of image 1, matching the head angle, expression, lighting and skin tone around it. {details}"
+          "template": "Give this person exactly the face of the person in image 1: the same eyes, nose, mouth, brows and face shape as image 1. Keep this photo's own hairline and hair; match its head angle, expression, lighting and skin tone. {details}"
         }
       ]
     },
