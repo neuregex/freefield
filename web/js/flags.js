@@ -4,6 +4,7 @@
 // "<app>/<input>/<option>" for one option of a gallery select (the effects picker).
 import { api, el, icon, toast } from "./util.js";
 import { t } from "./i18n.js";
+import { hosted } from "./catalog.js";
 
 let marks = {};
 const subs = new Set();
@@ -43,6 +44,7 @@ function paint(b) {
 export function flagButton(key, { mini = false } = {}) {
   const b = el("button", { class: mini ? "mini flag" : "btn ghost flag", type: "button", "data-flag-key": key, ...(mini ? {} : { "data-flag-label": "1" }) },
     icon("thumbdown"), mini ? null : el("span", {}, ""));
+  if (hosted) b.hidden = true;   // marks are written to lab/flags.json, which a hosted demo does not keep
   paint(b);
   b.addEventListener("click", async (ev) => {
     ev.stopPropagation();

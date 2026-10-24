@@ -14,6 +14,9 @@
 //   GET    /api/flags                        lab examples marked "mediocre" from the UI (lab/flags.json)
 //   POST   /api/flags                        JSON { key, mediocre, note? }: mark or unmark one example
 // Everything else is served from web/ when it exists (with byte ranges, so videos seek everywhere).
+// Hosted (server/guard.ts): FREEFIELD_PASSCODE closes every route behind a passcode, FREEFIELD_MAX_RUNS_PER_DAY and
+// FREEFIELD_MAX_ACTIVE cap the runs (429 past them), lab marks become read-only and uploads are capped at
+// FREEFIELD_MAX_UPLOAD_MB. FREEFIELD_OUT moves out/ (history, the run count), FREEFIELD_HOST the listening address.
 // web/examples/ holds one example per app, written by lab/publish.py; /api/apps carries it along.
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { createReadStream, existsSync, readFileSync, statSync } from "node:fs";
@@ -22,6 +25,7 @@ import { loadRegistry, repoRoot, isFileInput, type App } from "./registry.ts";
 import { explainSubmitError, InputError, resolveValues, Runner, type Values } from "./runner.ts";
 import { History } from "./history.ts";
 import { Flags } from "./flags.ts";
+import { DOOR_HTML, Guard } from "./guard.ts";
 
 const root = repoRoot();
 const { apps, problems } = loadRegistry(root);
@@ -37,6 +41,9 @@ const vram = new Map<string, VramRow>(
 let runner: Runner | null = null;
 const getRunner = () => (runner ??= new Runner());
 const draftsAllowed = process.env.FREEFIELD_DRAFTS === "1";
+const outDir = process.env.FREEFIELD_OUT || join(root, "out");
+const guard = Guard.fromEnv(join(outDir, "limits.json"));
+const maxUploadMb = Number(process.env.FREEFIELD_MAX_UPLOAD_MB || (guard.hosted ? 100 : 0));
 
 // the backend scales to zero 10 minutes after its last request (infra/modal_app.py scaledown_window).
 // lastContact only moves on real work (a run, a wake): status checks must not keep the GPU alive.
@@ -44,7 +51,7 @@ const WARM_MS = 9 * 60 * 1000;
 let lastContact = 0;
 let waking: { since: number; error?: string } | null = null;
 const contact = () => { lastContact = Date.now(); };
-const history = new History(join(root, "out", "history"), {
+const history = new History(join(outDir, "history"), {
   onContact: contact,
   appInfo: (id) => {
     const app = apps.find((a) => a.id === id);
@@ -127,7 +134,12 @@ function sendFile(req: IncomingMessage, res: ServerResponse, file: string, cache
 
 async function toRequest(req: IncomingMessage): Promise<Request> {
   const chunks: Buffer[] = [];
-  for await (const c of req) chunks.push(c as Buffer);
+  let size = 0;
+  for await (const c of req) {
+    size += (c as Buffer).byteLength;
+    if (maxUploadMb && size > maxUploadMb * 2 ** 20) throw new InputError(`uploads are limited to ${maxUploadMb} MB here`);
+    chunks.push(c as Buffer);
+  }
   return new Request(`http://local${req.url}`, {
     method: req.method,
     headers: req.headers as Record<string, string>,
@@ -180,14 +192,18 @@ function startRun(app: App, values: Values, preset?: string) {
   return history.view(entry);
 }
 
+const DONE = ["succeeded", "failed", "canceled", "expired", "lost"];
+const activeRuns = () => history.list(undefined, 50).filter((e) => !DONE.includes(e.status)).length;
+
 let gpuCache: { at: number; body: unknown } | null = null;
 async function gpuStatus(withDevice = false) {
   const configured = Boolean(process.env.COMFY_BASE_URL);
-  const host = configured ? new URL(process.env.COMFY_BASE_URL!).host : null;
+  const host = configured ? (guard.hosted ? "Modal" : new URL(process.env.COMFY_BASE_URL!).host) : null;
   const warm = Date.now() - lastContact < WARM_MS;
+  const running = activeRuns();
   const base = { configured, host, warm, last_contact: lastContact ? new Date(lastContact).toISOString() : null,
     waking: waking ? { seconds: Math.round((Date.now() - waking.since) / 1000), error: waking.error ?? null } : null,
-    running: history.list(undefined, 50).filter((e) => !["succeeded", "failed", "canceled", "expired", "lost"].includes(e.status)).length };
+    running, demo: guard.hosted ? guard.status(running) : null };
   // only on request and only while warm: looking never starts a GPU, and the background poll never touches it
   if (!withDevice || !warm || !configured) return { ...base, device: null };
   if (gpuCache && Date.now() - gpuCache.at < 5000) return { ...base, device: gpuCache.body };
@@ -227,6 +243,20 @@ const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url ?? "/", "http://local");
     const parts = url.pathname.split("/").filter(Boolean).map(decodeURIComponent);
+    if (guard.passcode) {
+      const key = url.searchParams.get("key");
+      const cookie = key !== null ? guard.login(key) : null;
+      if (cookie) {   // the passcode leaves the address bar and lives on as a cookie
+        url.searchParams.delete("key");
+        res.writeHead(303, { "set-cookie": cookie, location: url.pathname + url.search, "cache-control": "no-store" });
+        return res.end();
+      }
+      if (!guard.admits(req.headers.cookie)) {
+        if (parts[0] === "api") return send(res, 401, { error: "this demo needs its passcode: open the link you were given" });
+        res.writeHead(401, { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" });
+        return res.end(DOOR_HTML);
+      }
+    }
     if (parts[0] === "api") {
       const [, area, id, sub, arg] = parts;
       if (req.method === "GET" && area === "apps" && parts.length === 2) {
@@ -234,15 +264,20 @@ const server = createServer(async (req, res) => {
         const sorted = [...apps].sort((a, b) => order[a.section] - order[b.section]
           || Number(b.status === "ready") - Number(a.status === "ready") || a.name.localeCompare(b.name));
         const examples = loadExamples();
-        return send(res, 200, { apps: sorted.map((a) => ({ ...publicApp(a), example: examples[a.id] ?? null })), drafts: draftsAllowed });
+        return send(res, 200, { apps: sorted.map((a) => ({ ...publicApp(a), example: examples[a.id] ?? null })), drafts: draftsAllowed,
+          hosted: guard.hosted });
       }
       if (req.method === "POST" && area === "apps" && sub === "run") {
         const app = byId.get(id);
         if (!app) return send(res, 404, { error: "unknown app" });
         if (!app.workflowPath) throw new InputError(`${app.id} has no workflow yet`);
         if (!runnable(app)) throw new InputError(`${app.id} is a draft; start the server with FREEFIELD_DRAFTS=1 to run it anyway`);
+        const refused = guard.refuse(activeRuns());
+        if (refused) return send(res, 429, { error: refused });
         const { values, preset } = await readValues(app, await toRequest(req));
-        return send(res, 202, startRun(app, resolveValues(app, values), preset));
+        const view = startRun(app, resolveValues(app, values), preset);
+        guard.record();
+        return send(res, 202, view);
       }
       if (area === "history") {
         if (req.method === "GET" && !id) return send(res, 200, { entries: history.list(url.searchParams.get("app") || undefined) });
@@ -273,6 +308,7 @@ const server = createServer(async (req, res) => {
       if (area === "flags" && parts.length === 2) {
         if (req.method === "GET") return send(res, 200, { mediocre: flags.list() });
         if (req.method === "POST") {
+          if (guard.hosted) return send(res, 403, { error: "lab marks are read-only on the hosted demo" });
           const body = await (await toRequest(req)).json().catch(() => null) as { key?: unknown; mediocre?: unknown; note?: unknown } | null;
           if (!body || typeof body.key !== "string" || typeof body.mediocre !== "boolean") throw new InputError("expected JSON { key, mediocre, note? }");
           try {
@@ -312,4 +348,6 @@ const server = createServer(async (req, res) => {
 history.resume(async (jobId) => getRunner().jobs().get(jobId));
 
 const port = Number(process.env.PORT ?? 3000);
-server.listen(port, "127.0.0.1", () => console.log(`freefield on http://127.0.0.1:${port} (${apps.length} apps)`));
+const host = process.env.FREEFIELD_HOST || "127.0.0.1";
+server.listen(port, host, () => console.log(`freefield on http://${host}:${port} (${apps.length} apps)`
+  + (guard.passcode ? " · passcode required" : "") + (guard.maxRunsPerDay ? ` · ${guard.maxRunsPerDay} runs a day` : "")));

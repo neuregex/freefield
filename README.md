@@ -204,6 +204,23 @@ the values, the seed that was used, and timings), so they survive a closed tab, 
 restart; runs still going when the server stops are picked up again. *Recreate* puts any result's inputs and settings
 back in the form.
 
+### A private link to the studio
+
+To let someone else use your Freefield (a reviewer, a friend) without installing anything, the same web app runs on
+Modal next to the backend, behind a passcode:
+
+```sh
+python tools/setup_demo.py            # once: a passcode → Modal secret "freefield-demo" and .env
+modal deploy infra/web_app.py         # the web UI on a small CPU container that scales to zero
+python tools/setup_demo.py --link     # the link to share: https://<workspace>--freefield-demo.modal.run/?key=…
+```
+
+The link sets the passcode as a cookie; without it every page and API call gets a passcode page. Runs are capped at
+30 a day (UTC) and 2 at a time, so a shared link cannot run up the GPU bill (`FREEFIELD_MAX_RUNS_PER_DAY` and
+`FREEFIELD_MAX_ACTIVE` at deploy time change that); the GPU pill shows how many are left. Lab marks are read-only
+there, uploads stop at 100 MB, and the history lives in the `freefield-web` volume. Running `setup_demo.py` again
+changes the passcode and locks out the old link once you redeploy.
+
 Any ComfyUI works as the backend: run `comfy-api-proxy` next to it and `python infra/gateway.py` in front, and point
 `COMFY_BASE_URL` at the gateway. Pointing it straight at a `comfy-api-proxy` (or another Comfy API v2 endpoint) works
 too; only the unload-between-apps step is skipped. An app marked `draft` (none is, today) stays locked in the UI and

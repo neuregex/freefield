@@ -62,6 +62,7 @@ function gpuPill() {
         if (g.device?.app) lines.push(el("p", { class: "help" }, `${t("gpu.pop.loaded")}: ${byId.get(g.device.app)?.name ?? g.device.app}`));
       } else lines.push(el("p", { class: "help" }, t("gpu.pop.asleep")), wake);
       if (g.running) lines.push(el("p", { class: "help" }, t("gpu.pop.running", { n: g.running })));
+      if (g.demo?.max_runs_per_day) lines.push(el("p", { class: "help" }, t("gpu.pop.demo", { n: g.demo.runs_left, max: g.demo.max_runs_per_day })));
     }
     popover(pill, el("div", { class: "pad", style: { width: "300px" } }, ...lines), { align: "end" });
   };
