@@ -19,22 +19,24 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 
 | | |
 |---|---|
-| Apps | 112, all *ready*: 33 apps with a workflow of their own, the 5 IC-LoRA apps (`genjutsu`, `reframe`, `sdr-hdr`, `mixed-media`, `dub`), `morph`, 71 template apps (a fixed prompt over one of those pipelines, written by `tools/template_apps.py`) and 2 model-free smoke apps. The 110 that use models each have a lab example made on a GPU |
+| Apps | 114: 113 *ready* (34 apps with a workflow of their own, the 5 IC-LoRA apps (`genjutsu`, `reframe`, `sdr-hdr`, `mixed-media`, `dub`), `morph`, 71 template apps (a fixed prompt over one of those pipelines, written by `tools/template_apps.py`) and 2 model-free smoke apps) and `moss-image` as a draft. The 112 that use models each have a lab example made on a GPU |
 | Open weights | No API or partner nodes. Every model is a file you download, listed in its app's `app.json` with its Hugging Face repo, size and license; the cloud text-encoder branch of Lightricks' examples is removed |
 | Workflows | Built from official sources by `tools/build_apps.py` (ComfyUI's templates, Lightricks' ComfyUI-LTXVideo examples, Comfy's `comfy-reshoot`); the template apps reuse those bases and the two smoke apps are hand-written. `tools/import_workflow.py` drafts a new app from any other ComfyUI workflow. All accepted by ComfyUI's validator: ComfyUI `e3bee7f` (0.42.0), ComfyUI-LTXVideo `44c8a36`, ComfyUI-CrossViewWarp `fbb1e93` |
-| GPU runs | 32 lab runs on Modal from 20 to 24 Oct (L40S and H100), 607 of 630 cases ok. Every example in the web UI comes from one of them, with its time and peak VRAM. Run by run, and what each one changed: [`docs/lab-runs.md`](docs/lab-runs.md) |
+| GPU runs | 34 lab runs on Modal from 20 to 24 Oct (L40S and H100), 646 of 669 cases ok. Every example in the web UI comes from one of them, with its time and peak VRAM. Run by run, and what each one changed: [`docs/lab-runs.md`](docs/lab-runs.md) |
 | End to end | Run from the browser on 23 Oct, web UI → server → gateway on Modal → ComfyUI on an H100: `morph` 160.8 s from the button to the video (128.7 s of it on the GPU), `mixed-media` 149 s, `dub` 72 s. On 24 Oct through the hosted demo (`infra/web_app.py`, the same web app on Modal behind a passcode): `face-swap` 25.2 s on the GPU. The model-free smoke apps cover the same path in CI |
-| LoRA lab | 268 cases: one showcase per app (110), one per effect (24), one per look of `mixed-media` (16) and one per transformation of `morph` (15), 36 references the others start from, 6 candidate portraits for those references (`refx-*`), 12 style-drift experiments (`mmx-*`), 36 template experiments (`tplx-*`), 2 runs of `reshoot` without its Turbo LoRA and 2 soundtrack candidates for the demo video; each experiment has its verdict in the note |
+| LoRA lab | 300 cases: one showcase per app (111), one per effect (24), one per look of `mixed-media` (16) and one per transformation of `morph` (15), 36 references the others start from, 6 candidate portraits for those references (`refx-*`), 12 style-drift experiments (`mmx-*`), 36 template experiments (`tplx-*`), 2 runs of `reshoot` without its Turbo LoRA, 30 image-model comparisons (`cmp-*`, below) and 4 soundtrack candidates for the demo video; each experiment has its verdict in the note |
 | CI | `.github/workflows/validate.yml` on every push: the manifest validator, the tests, the type check, the generated packs and VRAM map, and a CPU-only ComfyUI that accepts every workflow and the prompt of every lab case (about 3 minutes) |
 
 ## Apps
 
 | App | Rebuilds | Model | On a 24 GB card | Status |
 |---|---|---|---|---|
-| `z-image` | Create Image | Z-Image Turbo (int8) | fits whole, 12.2 GB | ready |
+| `create-image` | Create Image | FLUX 3 Image Klein (int8) + BFL's 9B prompt upsampler (an on/off toggle); a layout table in JSON can follow the prompt | fits whole, 17.8 GB | ready |
+| `z-image` | Create Image, fast drafts | Z-Image Turbo (int8); the lab makes its reference photos with it | fits whole, 12.2 GB | ready |
+| `moss-image` | Create Image with a layout | MOSS-Image SFT (int8), Apache-2.0; also takes a layout JSON with a box per text and object | fits whole, 13.0 GB | draft |
 | `styles` | Image styles | Krea 2 Turbo (int8) + Krea's nine official style LoRAs, picked from a list | fits whole, 19.4 GB | ready |
 | `style-reference` | Style transfer | Krea 2 Turbo (int8) + style-reference LoRA | fits whole, 19.4 GB | ready |
-| `cinema-studio` | Cinematic Cameras | Z-Image Turbo + camera/lens vocabulary | fits whole, 12.2 GB | ready |
+| `cinema-studio` | Cinematic Cameras | FLUX 3 Image Klein + camera/lens vocabulary, 16:9 | fits whole, 11.0 GB | ready |
 | `edit` | Inpaint / Edit | FLUX 3 Image Klein (int8) | fits whole, 11.0 GB | ready |
 | `relight` | Relight | Qwen Image Edit 2509 (fp8) + Relight and Lightning LoRAs, light presets | tight: 21.5 GB largest phase | ready |
 | `upscale`, `upscale-video` | Upscale | SeedVR2 3B (int8) | fits whole, 4.0 GB | ready |
@@ -67,13 +69,28 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 | `talking` | Lipsync / Speak | LTX-2.5 audio-to-video (int8) | tight: 21.5 GB largest phase | ready |
 | `smoke`, `smoke-invert` | — | none | — | ready |
 
+### Which image model
+
+Create Image ran on Z-Image Turbo until 24 Oct. Artificial Analysis' text-to-image arena (October 2026) ranks FLUX 3
+Image Klein first among open-weights models (1043 Elo; Qwen-Image-2.1 1042, Bria's Fibo 2.0 1039, Krea 2 up to 1034)
+and Z-Image Turbo at 936, and Klein is the file the edit apps already download. The lab ran six prompts on five
+models with the same seed (run `20261024-230058-l40s`, below): Klein kept the counts (three apples, five lemons) where
+Z-Image drew four apples, wrote the label Krea 2 left blank, kept the top-down view Krea missed, and read a JSON prompt
+as a scene where Z-Image printed its keys on the sign. So `create-image`, `cinema-studio`, `ai-influencer` and `meme`
+run on Klein. BFL's 9B upsampler is a toggle in Create Image (on by default: it turns a short prompt into a full
+caption, about 8 s more). Z-Image stays for fast drafts and for the lab's reference photos, so earlier examples keep
+their inputs. MOSS-Image (Apache-2.0) is in as a draft for layout prompts. Fibo 2.0, trained on JSON prompts, needs a
+newer ComfyUI than the one pinned here and its weights are licensed for non-commercial use only.
+
+![Six prompts (a portrait, a product with text, counting, a JSON prompt, a poster, a watercolor) on Z-Image Turbo, FLUX 3 Klein with and without the upsampler, Krea 2 Turbo and MOSS-Image, with GPU seconds and peak VRAM under each](docs/media/image-models.jpg)
+
 ### Template apps
 
 Higgsfield's catalog is mostly fixed prompts over a few pipelines, and so is this: each of these apps is one of
 Freefield's pipelines with its prompt baked in, selects that fill parts of it, and an "Extra direction" box appended
 to it. The bases: `edit` (FLUX 3 Image Klein, one reference image), `edit` with a second reference (a garment, another
 person; for `face-swap`, MediaPipe's face oval from core ComfyUI nodes masks the edit and the face photo is Klein's only
-reference; for `expand-image`, the photo gets a border that only Klein draws), `z-image` (text to image), `video`
+reference; for `expand-image`, the photo gets a border that only Klein draws), `create-image` without its upsampler (Klein text to image), `video`
 (LTX-2.5 image-to-video with its own audio), `morph` (Klein draws the last frame from a fixed instruction, LTX-2.5
 and the transition LoRA move the photo into it), `effects`' Wan 2.1 pipeline with one effect LoRA fixed (joyfox's
 Bullet Time; for `bullet-time-white` and `-splash`, Klein redraws the photo first) and `relight`'s
@@ -109,7 +126,7 @@ command that makes every example. Add a line to the table there, not a folder by
 | `paint-app` | Paint App | `edit` | your photo |
 | `mural` | Signboard | `edit` | your photo |
 | `micro-beasts` | Surrounded by Animals | `edit` | your photo, animals |
-| `meme` | Meme Generator | `z-image` | scene, top text, bottom text |
+| `meme` | Meme Generator | `create-image` | scene, top text, bottom text |
 | `j-magazine` | J-Magazine | `edit` | your photo |
 | `cafe-60s` | 60s Cafe | `edit` | your photo |
 | `victory-card` | Victory Card | `edit` | your photo |
@@ -147,7 +164,7 @@ command that makes every example. Add a line to the table there, not a folder by
 | `rap-video` | Rap God | `video` | your photo |
 | `idol` | Idol | `video` | your photo |
 | `expand-image` | Expand Image | `edit` | your photo, expand |
-| `ai-influencer` | AI Influencer | `z-image` | who, niche |
+| `ai-influencer` | AI Influencer | `create-image` | who, niche |
 | `bullet-time-scene` | Bullet Time Scene | `effects` | your photo, who or what is in the photo |
 | `bullet-time-white` | Bullet Time White | `edit + effects` | your photo, who or what is in the photo |
 | `bullet-time-splash` | Bullet Time Splash | `edit + effects` | your photo, who or what is in the photo |
@@ -183,7 +200,7 @@ modal deploy infra/modal_app.py                   # FREEFIELD_GPU=A10G to try th
 npm install
 # in .env (made by step 1): COMFY_BASE_URL = the URL printed by step 3
 npm run serve                                     # http://127.0.0.1:3000
-npm run app -- z-image --set prompt="a red bicycle against a white wall"   # or from the terminal
+npm run app -- create-image --set prompt="a red bicycle against a white wall"   # or from the terminal
 ```
 
 On Windows PowerShell, environment variables go before the command as `$env:FREEFIELD_GPU = "A10G"; modal deploy ...`.
@@ -245,7 +262,7 @@ the CLI until you set `FREEFIELD_DRAFTS=1` (or pass `--draft` to `npm run app`).
 runs on them with a fixed seed. Each app has a *showcase* case, so one command makes an example of every app:
 
 ```sh
-modal run --detach lab/lab_modal.py --showcase    # one example per app + the references they need (138 cases)
+modal run --detach lab/lab_modal.py --showcase    # one example per app + the references they need (139 cases)
 modal run lab/lab_modal.py --pull <run_id>        # only if the terminal closed before the end: copy back and publish
 ```
 

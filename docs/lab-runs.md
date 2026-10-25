@@ -3,7 +3,7 @@
 Every GPU run of the lab (`lab/lab_modal.py`) from 20 to 24 Oct 2026, in order. Each run is a folder
 `lab/results/<run id>` with `results.jsonl` (one row per case: status, seconds, peak VRAM), `run.json` (GPU, start
 time) and `review.html`. Peaks are the highest of the run; on an 80 GB H100 ComfyUI can keep the models of earlier
-steps loaded, so a peak there is not the least an app needs. 32 runs, 607 of 630 cases ok: 22 of the 23 failures are
+steps loaded, so a peak there is not the least an app needs. 34 runs, 646 of 669 cases ok: 22 of the 23 failures are
 the first IC-LoRA run, before the gated licenses were accepted, and the other is `recast` in the first run.
 
 | Run | GPU | What ran | Cases ok | Longest case | Peak |
@@ -40,6 +40,8 @@ the first IC-LoRA run, before the gated licenses were accepted, and the other is
 | `20261024-181216-h100` | H100 | Queue job 10: the runner in a teal and black kit (the red and white one had a brand logo) | 3 / 3 | 189 s | 39.9 GB |
 | `20261024-182254-h100` | H100 | Queue job 11: Klein removes the logo from the runner's top; Bullet Time Splash and Hero run re-made | 4 / 4 | 192 s | 40.3 GB |
 | `20261024-192222-h100` | 3 × H100 | Queue job 12: brand logos out of the road photo, the athlete, Mascot and Style Snap; `reshoot` without the Turbo LoRA | 16 / 16 | 346 s | 59.0 GB |
+| `20261024-230058-l40s` | 3 × L40S | Queue job 13: six prompts on five image models (`cmp-*`); Cinema Studio, AI Influencer and Meme on FLUX 3 Klein; `whats-next` from the lake | 37 / 37 | 37 s | 28.7 GB |
+| `20261024-232228-l40s` | L40S | Queue job 14: two soundtracks of two minutes for the demo video | 2 / 2 | 161 s | 37.0 GB |
 
 A run with several GPUs (`--shards N`) splits the cases into N groups that run at the same time and comes back as
 one folder. The cases a run lists include the reference images, clips and songs that the others read.
@@ -89,6 +91,14 @@ one folder. The cases a run lists include the reference images, clips and songs 
 - **`reshoot` without the Turbo LoRA** (lightx2v's, whose model card states no license): on the same clip, 20 and 30
   plain steps were not better than the 8 Turbo steps, softer with the same holes, and took 249 s and 346 s against
   190 s. The app keeps the Turbo LoRA and shows the license note next to it.
+
+- **The image model.** Run 13 put six prompts on Z-Image Turbo, FLUX 3 Klein (with and without BFL's 9B prompt
+  upsampler), Krea 2 Turbo and MOSS-Image, same seed. Klein followed the prompts best: three apples and five lemons
+  where Z-Image drew four apples, the label text Krea 2 left out, the top-down view Krea missed, and a JSON prompt read
+  as a scene where Z-Image printed its keys on the sign. Create Image, Cinema Studio, AI Influencer and Meme moved to
+  Klein; the upsampler added about 8 s on an L40S. The comparison sheet is `docs/media/image-models.jpg`.
+- **Soundtrack.** With empty lyrics MiniMax Music 3 made 20 s pieces (job 13); listing the song's sections as tags
+  gave 130 s, and Stable Audio 3's music category gave 120 s with a quiet intro and a clean ending (job 14).
 
 ## End to end from the browser (23 Oct)
 
