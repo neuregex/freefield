@@ -55,6 +55,10 @@
 
     {"id": "ref-song", "showcase": true, "app": "music", "values": {"style": "warm acoustic folk song, clear female lead vocal, gentle guitar, 92 bpm", "lyrics": "[verse]\nMorning light across the window\nCoffee warm and the city slow\n[chorus]\nSing it out, sing it out\nEvery little thing we know", "seconds": 10},
      "note": "Vocal reference for the talking avatar (MiniMax Music 3, original lyrics)."},
+    {"id": "demo-music-a", "app": "music", "values": {"style": "instrumental electronic pop, driving synth bass, crisp punchy drums, bright plucked arpeggios, uplifting and modern, steady 120 bpm, no vocals", "lyrics": "", "seconds": 130},
+     "note": "Soundtrack candidate for the demo video (made in Freefield, MiniMax Music 3)."},
+    {"id": "demo-music-b", "app": "music", "values": {"style": "instrumental synthwave, pulsing analog bass, gated drums, shimmering pads, confident cinematic build, steady 120 bpm, no vocals", "lyrics": "", "seconds": 130},
+     "note": "Soundtrack candidate for the demo video (made in Freefield, MiniMax Music 3)."},
     {"id": "talking-sing", "showcase": true, "app": "talking", "values": {"portrait": "@case:ref-face-a", "audio": "@case:ref-song", "prompt": "She sings along to the song, natural lip movement, subtle head motion, expressive eyes, soft studio light", "duration": 5},
      "note": "Baseline audio-to-video: the lips should follow the vocal and the face should stay hers."},
     {"id": "lora-talking-head", "app": "talking", "values": {"portrait": "@case:ref-face-a", "audio": "@case:ref-song", "prompt": "She sings along to the song, natural lip movement, subtle head motion, expressive eyes, soft studio light", "duration": 5},
