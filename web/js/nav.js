@@ -1,8 +1,9 @@
-// The top bar: studios, featured apps, the VRAM map, language, and the GPU pill that tells
+// The top bar: studios (with a menu of their apps on hover, menu.js), featured apps, the VRAM map, language, and the GPU pill that tells
 // whether the backend is warm (and wakes it on request; looking never starts it).
 import { el, icon, logoMark, api, popover, closePopover, toast, live } from "./util.js";
 import { t, lang, LANGS, setLang } from "./i18n.js";
 import { byId, FEATURED } from "./catalog.js";
+import { attachMenus } from "./menu.js";
 
 export const gpuState = { data: null, listeners: new Set() };
 let pollTimer = null;
@@ -106,6 +107,7 @@ export function topbar({ onLang }) {
     el("a", { class: "logo", href: "#/", "aria-label": "Freefield" }, logoMark(), el("span", { class: "word" }, "freefield")),
     nav,
     el("div", { class: "nav-right" }, vram, langBtn, gpuPill(), el("a", { class: "btn lime small cta", href: "#/image" }, icon("spark"), t("nav.create"))));
+  attachMenus(bar, links);
   if (!pollTimer) pollGpu();
   return {
     node: bar,

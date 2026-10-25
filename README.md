@@ -210,6 +210,8 @@ On Windows PowerShell, environment variables go before the command as `$env:FREE
 `npm run serve` opens a studio laid out like the one it rebuilds:
 
 - **Explore**: featured apps as video cards, the studios, and one lab example per app.
+- Pointing at **Image**, **Video** or **Audio** in the top bar opens a menu with every app of that studio, grouped as
+  in the studio, and a column with the open models behind them and how many apps use each.
 - **Image** and **Audio**: prompt-first apps. Results fill the page and a floating bar holds the prompt, reference
   images (click **+**, drop or paste them), one chip per setting, the number of generations and **Generate**, which shows
   how long the lab example took on the GPU.

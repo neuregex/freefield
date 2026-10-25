@@ -6,6 +6,7 @@ import { store } from "./util.js";
 const en = {
   "nav.explore": "Explore", "nav.image": "Image", "nav.video": "Video", "nav.audio": "Audio", "nav.apps": "Apps", "nav.library": "Library",
   "nav.vram": "VRAM map", "nav.create": "Create", "nav.lang": "Language",
+  "menu.features": "Features", "menu.models": "Models", "menu.used": "{n} apps", "menu.used1": "1 app",
   "tag.featured": "Featured", "tag.new": "New", "tag.draft": "Draft", "tag.top": "Top",
   "gpu.none": "No backend", "gpu.asleep": "GPU asleep", "gpu.waking": "Waking GPU · {s}s", "gpu.ready": "GPU ready", "gpu.failed": "Wake failed",
   "gpu.pop.none": "Put the URL that `modal deploy infra/modal_app.py` printed in .env as COMFY_BASE_URL, then restart `npm run serve`.",
@@ -89,6 +90,7 @@ const en = {
 const es = {
   "nav.explore": "Explorar", "nav.image": "Imagen", "nav.video": "Video", "nav.audio": "Audio", "nav.apps": "Apps", "nav.library": "Biblioteca",
   "nav.vram": "Mapa de VRAM", "nav.create": "Crear", "nav.lang": "Idioma",
+  "menu.features": "Funciones", "menu.models": "Modelos", "menu.used": "{n} apps", "menu.used1": "1 app",
   "tag.featured": "Destacado", "tag.new": "Nuevo", "tag.draft": "Borrador", "tag.top": "Top",
   "gpu.none": "Sin backend", "gpu.asleep": "GPU dormida", "gpu.waking": "Despertando GPU · {s}s", "gpu.ready": "GPU lista", "gpu.failed": "No despertó",
   "gpu.pop.none": "Pon en .env, como COMFY_BASE_URL, la URL que imprimió `modal deploy infra/modal_app.py` y reinicia `npm run serve`.",

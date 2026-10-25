@@ -1,7 +1,7 @@
 // The pages that are not a workspace: Explore (home), Apps (the store), Library and the VRAM map.
 import { el, icon, masonry } from "./util.js";
 import { t } from "./i18n.js";
-import { apps, byId, CATEGORIES, HERO, START_HERE, hosted, tagline, iconOf, fitOf, categoryOf, studioOf } from "./catalog.js";
+import { apps, byId, CATEGORIES, HERO, START_HERE, hosted, tagline, iconOf, fitOf, categoryOf, studioOf, menuGroups } from "./catalog.js";
 import { exampleItem, thumb, hoverPlay, optionTile } from "./media.js";
 import { feed, feedView, hooks } from "./feed.js";
 import { pickOption, recreate } from "./workspace.js";
@@ -48,7 +48,8 @@ export function exploreView() {
   row.addEventListener("scroll", arrows, { passive: true });
   requestAnimationFrame(arrows);
 
-  const count = (studio) => apps.filter((a) => studioOf(a) === studio).length;
+  // the same apps the top bar's menu lists for that studio
+  const count = (studio) => menuGroups(studio).reduce((n, g) => n + g.apps.length, 0);
   const tiles = [
     ["image", "image", "#/image", count("image")], ["video", "video", "#/video", count("video")], ["audio", "audio", "#/audio", count("audio")],
     ["apps", "layers", "#/apps", apps.length], ["library", "film", "#/library", null], ["vram", "chip", "#/vram", null],
