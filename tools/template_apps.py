@@ -519,7 +519,7 @@ A("expand-image", "Expand Image", "Expand Image", "style", "edit", "Your photo",
 A("ai-influencer", "AI Influencer", "AI Influencer", "portraits", "klein", None,
   "Makes a feed-ready photo of a made-up influencer in their niche, with natural skin (FLUX 3 Klein).",
   "A vertical phone photo for a social media feed of {who}, a {niche}. Natural skin texture with visible pores, candid moment, "
-  "realistic photo, no text. Plain unbranded clothes and shoes with no logos, stripes or brand marks.",
+  "realistic photo, no text, no logos.",
   [txt("who", "Who", "a woman in her late twenties from Mexico City with curly dark hair", required=True,
        help_="Describe a person who does not exist: age, origin, hair, style."),
    sel("niche", "Niche", [("Fitness", "fitness influencer stretching on a rooftop at sunrise in workout clothes"),

@@ -60,7 +60,7 @@
         {
           "node": "18:17",
           "field": "value",
-          "template": "A vertical phone photo for a social media feed of {who}, a {niche}. Natural skin texture with visible pores, candid moment, realistic photo, no text. Plain unbranded clothes and shoes with no logos, stripes or brand marks. {details}"
+          "template": "A vertical phone photo for a social media feed of {who}, a {niche}. Natural skin texture with visible pores, candid moment, realistic photo, no text, no logos. {details}"
         }
       ]
     },
