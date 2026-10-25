@@ -1,12 +1,12 @@
 {
   "$schema": "../../schema/app.schema.json",
   "id": "z-image",
-  "name": "Create Image",
+  "name": "Z-Image Turbo",
   "section": "image",
   "pack": "image",
   "status": "ready",
   "higgsfield_feature": "Create Image",
-  "summary": "Text to image with Z-Image Turbo, 8 steps.",
+  "summary": "Fast text to image with Z-Image Turbo, 8 steps; the lab makes its reference photos with it.",
   "workflow": "workflow.api.json",
   "source": {
     "template": "image_z_image_turbo_int8.json",

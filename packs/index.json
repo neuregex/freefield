@@ -17,9 +17,6 @@
   },
   "image": {
     "apps": [
-      "ai-influencer",
-      "cinema-studio",
-      "meme",
       "z-image"
     ],
     "download_gb": 12.17,
@@ -27,6 +24,7 @@
   },
   "image-flux3": {
     "apps": [
+      "ai-influencer",
       "billboard",
       "breakdown",
       "brick-toy",
@@ -34,9 +32,11 @@
       "cafe-60s",
       "character",
       "character-swap",
+      "cinema-studio",
       "color-grade",
       "comic-book",
       "commercial-faces",
+      "create-image",
       "edit",
       "edit-text",
       "expand-image",
@@ -57,6 +57,7 @@
       "macro-product",
       "macro-scene",
       "mascot",
+      "meme",
       "micro-beasts",
       "mural",
       "outfit-shot",
@@ -77,7 +78,7 @@
       "ugc-shot",
       "victory-card"
     ],
-    "download_gb": 11.04,
+    "download_gb": 17.76,
     "needs_hf_token": true
   },
   "image-krea2": {
@@ -86,6 +87,13 @@
       "styles"
     ],
     "download_gb": 23.67,
+    "needs_hf_token": false
+  },
+  "image-moss": {
+    "apps": [
+      "moss-image"
+    ],
+    "download_gb": 13.0,
     "needs_hf_token": false
   },
   "image-qwen-edit": {

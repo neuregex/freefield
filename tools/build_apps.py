@@ -545,8 +545,33 @@ def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None)
     out: dict[str, Api] = {"smoke": json.loads(json.dumps(SMOKE)), "smoke-invert": json.loads(json.dumps(SMOKE_INVERT))}
 
     z = tpl("image_z_image_turbo_int8.json")
-    out["z-image"] = z
-    out["cinema-studio"] = json.loads(json.dumps(z))
+    out["z-image"] = z   # Z-Image Turbo: fast drafts, and the lab's reference photos
+
+    k = tpl("image_flux3_klein_distilled_t2i.json")
+    # FLUX 3 Image Klein text to image, the same distilled file that edit loads. The bounding-box tool goes (a layout
+    # table can be typed at the end of the prompt as the JSON Flux3LayoutPrompt writes) and so does the resolution
+    # helper: width and height are set on the latent. BFL's 9B prompt upsampler stays behind its switch, on.
+    drop(k, "19", "23", "24", "25")
+    put(k, "18:6", "width", 1024)
+    put(k, "18:6", "height", 1024)
+    put(k, "18:16", "switch", True)
+    put(k, "18:17", "value", "A rainy neon street in Mexico City at night, cinematic, 35mm")
+    out["create-image"] = k
+    cs = json.loads(json.dumps(k))
+    # Cinema Studio (and the text-to-image templates) write the whole prompt themselves: no upsampler
+    rewire(cs, ["18:16", 0], ["18:17", 0])
+    drop(cs, "18:11", "18:12", "18:14", "18:16")
+    put(cs, "18:6", "width", 1344)   # a film still: 16:9 at about 1 MP
+    put(cs, "18:6", "height", 768)
+    out["cinema-studio"] = cs
+
+    ms = tpl("image_moss_image_t2i.json")
+    # MOSS-Image SFT (OpenMOSS, Apache-2.0). Its Qwen3.5-9B text encoder also rewrites a short prompt into a caption
+    # (TextGenerate, behind the template's switch, on); a layout JSON typed as the prompt needs the rewrite off.
+    drop(ms, "19")
+    put(ms, "18:6", "width", 1024)
+    put(ms, "18:6", "height", 1024)
+    out["moss-image"] = ms
 
     e = tpl("image_flux3_klein_distilled_image_edit.json")
     # keep load → reference latent → sample → save; drop the bounding-box layout tool,

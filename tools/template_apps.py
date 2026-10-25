@@ -47,6 +47,8 @@ BASES = {
              "output": {"node": "9", "type": "image"}},
     "edit2": {"app": "edit", "section": "image", "pack": "image-flux3", "image": ("11", "image"), "image2": ("12", "image"), "prompt": ("4", "text"),
               "keep": ("steps", "seed"), "output": {"node": "9", "type": "image"}},
+    "klein": {"app": "create-image", "section": "image", "pack": "image-flux3", "image": None, "prompt": ("18:17", "value"),
+              "keep": ("width", "height", "steps", "seed"), "output": {"node": "9", "type": "image"}},
     "z-image": {"app": "z-image", "section": "image", "pack": "image", "image": None, "prompt": ("57:27", "text"), "keep": ("width", "height", "steps", "seed"),
                 "output": {"node": "9", "type": "image"}},
     "video": {"app": "video", "section": "video", "pack": "video-ltx25", "image": ("395", "image"), "prompt": ("398:376", "value"),
@@ -277,7 +279,7 @@ A("micro-beasts", "Micro-Beasts", "Surrounded by Animals", "play", "edit", "Your
   "The person from <ref_image_0> surrounded by tiny cute animals: {animals} climbing on their shoulders and hands, sharp detail, soft daylight." + KEEP_FACE,
   [sel("animals", "Animals", [("Hamsters and kittens", "hamsters and kittens"), ("Ducklings and bunnies", "ducklings and bunnies"), ("Tiny puppies", "tiny puppies"), ("Baby otters", "baby otters")])],
   WOMAN, {}, "Small animals on her shoulders; same face.")
-A("meme", "Meme Generator", "Meme Generator", "play", "z-image", None,
+A("meme", "Meme Generator", "Meme Generator", "play", "klein", None,
   "A meme image from a scene and two captions (Z-Image Turbo).",
   "A meme image: {scene}. Bold white capital letters in a thick Impact-style font with a black outline read \"{top}\" at the top and \"{bottom}\" at the bottom of the image.",
   [{"id": "scene", "type": "textarea", "label": "Scene", "required": True, "default": "a cat staring at a laptop screen with a worried face"},
@@ -514,7 +516,7 @@ A("expand-image", "Expand Image", "Expand Image", "style", "edit", "Your photo",
       {"value": "wide", "label": "Wider", "sets": pad(320, 0, 320, 0)},
       {"value": "tall", "label": "Taller", "sets": pad(0, 320, 0, 320)}]}],
   LAKE, {"direction": "out"}, "Does the border continue the lake, rock and sky, with no seam or gray left?", outpaint=True)
-A("ai-influencer", "AI Influencer", "AI Influencer", "portraits", "z-image", None,
+A("ai-influencer", "AI Influencer", "AI Influencer", "portraits", "klein", None,
   "Makes a feed-ready photo of a made-up influencer in their niche, with natural skin (Z-Image Turbo).",
   "A vertical phone photo for a social media feed of {who}, a {niche}. Natural skin texture with visible pores, candid moment, "
   "realistic photo, no text, no logos.",
@@ -607,7 +609,7 @@ def check() -> None:
         assert have - setters <= used, (t["id"], have - setters - used)
         for i in t["inputs"]:
             assert i["id"] not in ("image", "image2", "details", "steps", "seed", "width", "height", "duration", "enhance", "aspect"), (t["id"], i["id"])
-        if t["base"] == "z-image":
+        if t["base"] in ("z-image", "klein"):
             assert t["ref"] is None and t["image_label"] is None
         else:
             assert t["ref"], t["id"]
@@ -652,6 +654,9 @@ def manifest(t: dict) -> dict:
     notes = f"Template app written by tools/template_apps.py: the workflow is apps/{base['app']}'s (built by tools/build_apps.py)"
     if t["base"] == "edit2":
         notes += " plus a second LoadImage on ReferenceMultiLatent's images.image1"
+    if t["base"] == "klein":   # the template writes the whole prompt: no upsampler, and no input to turn it on
+        models = [m for m in models if "prompt_upsampler" not in m["file"]]
+        notes += " without the 9B prompt upsampler (the prompt goes straight to the text encoder)"
     if t["face_mask"]:
         notes += ("; the sampler starts from the first image (scaled to 1 MP, encoded) with a noise mask on the face oval that the native "
                   "MediaPipe nodes find, so only the face is redrawn, and the second image is Klein's only reference")
@@ -702,6 +707,13 @@ def workflow(t: dict) -> dict:
     """The base app's workflow, with the few edits a base needs."""
     base = BASES[t["base"]]
     api = json.loads((ROOT / "apps" / base["app"] / "workflow.api.json").read_text(encoding="utf-8"))
+    if t["base"] == "klein":   # no upsampler: the template's prompt goes straight to the text encoder
+        for i, n in api.items():
+            for k, v in n["inputs"].items():
+                if is_link(v) and v[0] == "18:16":
+                    n["inputs"][k] = ["18:17", 0]
+        for i in ("18:11", "18:12", "18:14", "18:16"):
+            del api[i]
     if t["base"] == "edit2":   # a second reference image into the same ReferenceMultiLatent
         api["12"] = {"class_type": "LoadImage", "inputs": {"image": "second.png"}, "_meta": {"title": "Second reference"}}
         api["17"]["inputs"]["images.image1"] = ["12", 0]

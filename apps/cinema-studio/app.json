@@ -3,15 +3,15 @@
   "id": "cinema-studio",
   "name": "Cinema Studio",
   "section": "image",
-  "pack": "image",
+  "pack": "image-flux3",
   "status": "ready",
   "higgsfield_feature": "Cinematic Cameras",
   "summary": "Pick a camera body, lens, focal length and aperture; they become part of the prompt.",
   "workflow": "workflow.api.json",
   "source": {
-    "template": "image_z_image_turbo_int8.json",
+    "template": "image_flux3_klein_distilled_t2i.json",
     "comfyui": "0.42.0",
-    "notes": "Camera and lens vocabulary from open-higgsfield-ai (MIT), src/lib/promptUtils.js. Camera, lens and focal options write the look they give, not the gear: with \"shot on a <camera>\" Z-Image drew the camera into the picture (run 20261020-133620-l40s), and \"no camera in the frame\" did not stop it (run 20261024-172353-h100)."
+    "notes": "Camera and lens vocabulary from open-higgsfield-ai (MIT), src/lib/promptUtils.js. Camera, lens and focal options write the look they give, not the gear: with \"shot on a <camera>\" Z-Image drew the camera into the picture (run 20261020-133620-l40s), and \"no camera in the frame\" did not stop it (run 20261024-172353-h100). Since 25 Oct the still is drawn by FLUX 3 Image Klein (16:9, 1344x768) instead of Z-Image Turbo, without the prompt upsampler: the app writes the whole prompt."
   },
   "inputs": [
     {
@@ -22,8 +22,8 @@
       "default": "A detective in a trench coat lights a cigarette under a streetlamp on a rainy night",
       "bind": [
         {
-          "node": "57:27",
-          "field": "text",
+          "node": "18:17",
+          "field": "value",
           "template": "A cinematic film still: {prompt}. The look: {camera}; {lens}; {focal}; {aperture}. Cinematic lighting, natural color science, high dynamic range, ultra-detailed"
         }
       ]
@@ -172,7 +172,7 @@
       "help": "-1 picks a random seed",
       "bind": [
         {
-          "node": "57:3",
+          "node": "18:7",
           "field": "seed"
         }
       ]
@@ -187,32 +187,35 @@
   ],
   "models": [
     {
-      "repo": "Comfy-Org/z_image_turbo",
-      "file": "split_files/diffusion_models/z_image_turbo_int8_convrot.safetensors",
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
       "dir": "diffusion_models",
-      "gb": 6.2,
+      "gb": 5.83,
       "phase": "denoise",
-      "license": "Apache-2.0"
+      "gated": true,
+      "license": "FLUX Kommunity License"
     },
     {
-      "repo": "Comfy-Org/z_image_turbo",
-      "file": "split_files/text_encoders/qwen_3_4b_fp8_mixed.safetensors",
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
       "dir": "text_encoders",
-      "gb": 5.63,
+      "gb": 4.86,
       "phase": "encode",
-      "license": "Apache-2.0"
+      "gated": true,
+      "license": "FLUX Kommunity License"
     },
     {
-      "repo": "Comfy-Org/z_image_turbo",
-      "file": "split_files/vae/ae.safetensors",
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
       "dir": "vae",
       "gb": 0.34,
       "phase": "decode",
-      "license": "Apache-2.0"
+      "gated": true,
+      "license": "FLUX Kommunity License"
     }
   ],
   "credits": [
-    "Z-Image Turbo by Tongyi-MAI (Apache-2.0)",
+    "FLUX 3 Image Klein by Black Forest Labs (FLUX Kommunity License)",
     "Camera presets from open-higgsfield-ai (MIT)"
   ],
   "test": {

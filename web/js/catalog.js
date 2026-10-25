@@ -22,7 +22,7 @@ export async function loadCatalog() {
 
 /** Apps grouped like a store: a card can only sit in one row. */
 export const CATEGORIES = [
-  { id: "create", apps: ["z-image", "cinema-studio", "styles", "video-t2v", "video", "h3-video", "h3-photo", "music", "sfx"] },
+  { id: "create", apps: ["create-image", "cinema-studio", "z-image", "moss-image", "styles", "video-t2v", "video", "h3-video", "h3-photo", "music", "sfx"] },
   { id: "identity", apps: ["character", "speak", "talking", "recast", "motion-transfer", "genjutsu", "dub", "character-swap", "face-swap"] },
   { id: "camera", apps: ["camera-moves", "camera-copy", "reshoot", "reframe", "extend-video", "transitions", "angles", "shots", "zooms", "whats-next", "bullet-time-scene", "bullet-time-white", "bullet-time-splash"] },
   { id: "style", apps: ["relight", "style-reference", "mixed-media", "upscale", "upscale-video", "sdr-hdr", "smooth", "remove-bg", "video-remove-bg", "depth-map", "expand-image"] },

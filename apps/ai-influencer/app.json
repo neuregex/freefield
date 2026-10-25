@@ -5,13 +5,13 @@
   "section": "image",
   "summary": "Makes a feed-ready photo of a made-up influencer in their niche, with natural skin (Z-Image Turbo).",
   "higgsfield_feature": "AI Influencer",
-  "pack": "image",
+  "pack": "image-flux3",
   "status": "ready",
   "workflow": "workflow.api.json",
   "source": {
-    "template": "image_z_image_turbo_int8.json",
+    "template": "image_flux3_klein_distilled_t2i.json",
     "comfyui": "0.42.0",
-    "notes": "Template app written by tools/template_apps.py: the workflow is apps/z-image's (built by tools/build_apps.py); the prompt below is fixed and \"Extra direction\" is appended to it."
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/create-image's (built by tools/build_apps.py) without the 9B prompt upsampler (the prompt goes straight to the text encoder); the prompt below is fixed and \"Extra direction\" is appended to it."
   },
   "inputs": [
     {
@@ -58,8 +58,8 @@
       "help": "Added at the end of the app's prompt.",
       "bind": [
         {
-          "node": "57:27",
-          "field": "text",
+          "node": "18:17",
+          "field": "value",
           "template": "A vertical phone photo for a social media feed of {who}, a {niche}. Natural skin texture with visible pores, candid moment, realistic photo, no text, no logos. {details}"
         }
       ]
@@ -89,7 +89,7 @@
       ],
       "bind": [
         {
-          "node": "57:13",
+          "node": "18:6",
           "field": "width"
         }
       ]
@@ -119,7 +119,7 @@
       ],
       "bind": [
         {
-          "node": "57:13",
+          "node": "18:6",
           "field": "height"
         }
       ]
@@ -128,13 +128,13 @@
       "id": "steps",
       "type": "slider",
       "label": "Steps",
-      "min": 4,
-      "max": 16,
+      "min": 8,
+      "max": 24,
       "step": 1,
-      "default": 8,
+      "default": 15,
       "bind": [
         {
-          "node": "57:3",
+          "node": "18:7",
           "field": "steps"
         }
       ]
@@ -147,7 +147,7 @@
       "help": "-1 picks a random seed",
       "bind": [
         {
-          "node": "57:3",
+          "node": "18:7",
           "field": "seed"
         }
       ]
@@ -162,32 +162,35 @@
   ],
   "models": [
     {
-      "repo": "Comfy-Org/z_image_turbo",
-      "file": "split_files/diffusion_models/z_image_turbo_int8_convrot.safetensors",
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
       "dir": "diffusion_models",
-      "gb": 6.2,
+      "gb": 5.83,
       "phase": "denoise",
-      "license": "Apache-2.0"
+      "gated": true,
+      "license": "FLUX Kommunity License"
     },
     {
-      "repo": "Comfy-Org/z_image_turbo",
-      "file": "split_files/text_encoders/qwen_3_4b_fp8_mixed.safetensors",
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
       "dir": "text_encoders",
-      "gb": 5.63,
+      "gb": 4.86,
       "phase": "encode",
-      "license": "Apache-2.0"
+      "gated": true,
+      "license": "FLUX Kommunity License"
     },
     {
-      "repo": "Comfy-Org/z_image_turbo",
-      "file": "split_files/vae/ae.safetensors",
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
       "dir": "vae",
       "gb": 0.34,
       "phase": "decode",
-      "license": "Apache-2.0"
+      "gated": true,
+      "license": "FLUX Kommunity License"
     }
   ],
   "credits": [
-    "Z-Image Turbo by Tongyi-MAI (Apache-2.0)"
+    "FLUX 3 Image Klein and its prompt upsampler by Black Forest Labs (FLUX Kommunity License)"
   ],
   "test": {
     "niche": "fitness influencer stretching on a rooftop at sunrise in workout clothes"

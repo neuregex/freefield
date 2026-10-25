@@ -1,9 +1,6 @@
 {
   "pack": "image",
   "apps": [
-    "ai-influencer",
-    "cinema-studio",
-    "meme",
     "z-image"
   ],
   "download_gb": 12.17,
@@ -19,9 +16,6 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
-        "ai-influencer",
-        "cinema-studio",
-        "meme",
         "z-image"
       ]
     },
@@ -34,9 +28,6 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
-        "ai-influencer",
-        "cinema-studio",
-        "meme",
         "z-image"
       ]
     },
@@ -49,9 +40,6 @@
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [
-        "ai-influencer",
-        "cinema-studio",
-        "meme",
         "z-image"
       ]
     }

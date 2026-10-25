@@ -1,0 +1,47 @@
+{
+  "pack": "image-moss",
+  "apps": [
+    "moss-image"
+  ],
+  "download_gb": 13.0,
+  "needs_hf_token": false,
+  "custom_nodes": [],
+  "models": [
+    {
+      "repo": "Comfy-Org/MOSS-Image",
+      "file": "diffusion_models/moss_image_sft_int8_convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.41,
+      "name": "moss_image_sft_int8_convrot.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "moss-image"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MOSS-Image",
+      "file": "text_encoders/qwen3.5_9b_w4a8_gptq.safetensors",
+      "dir": "text_encoders",
+      "gb": 7.34,
+      "name": "qwen3.5_9b_w4a8_gptq.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "moss-image"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MOSS-Image",
+      "file": "vae/flux2-vae_small.safetensors",
+      "dir": "vae",
+      "gb": 0.25,
+      "name": "flux2-vae_small.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "moss-image"
+      ]
+    }
+  ]
+}

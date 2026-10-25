@@ -3,7 +3,7 @@
     "class_type": "SaveImage",
     "inputs": {
       "images": [
-        "57:8",
+        "18:8",
         0
       ],
       "filename_prefix": "freefield/ai-influencer"
@@ -12,29 +12,99 @@
       "title": "Save Image"
     }
   },
-  "57:3": {
+  "18:1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "flux3-image-klein-int8-convrot.safetensors",
+      "weight_dtype": "default"
+    },
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "18:2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_4b_int8_convrot.safetensors",
+      "type": "flux3",
+      "device": "default"
+    },
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "18:3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "flux2-vae.safetensors"
+    },
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "18:4": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "18:2",
+        0
+      ],
+      "text": [
+        "18:13",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Positive Prompt"
+    }
+  },
+  "18:5": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "18:2",
+        0
+      ],
+      "text": ""
+    },
+    "_meta": {
+      "title": "Negative Prompt (empty = reference default)"
+    }
+  },
+  "18:6": {
+    "class_type": "EmptyFlux2LatentImage",
+    "inputs": {
+      "batch_size": 1,
+      "width": 1024,
+      "height": 1024
+    },
+    "_meta": {
+      "title": "Empty Flux 2 Latent"
+    }
+  },
+  "18:7": {
     "class_type": "KSampler",
     "inputs": {
       "model": [
-        "57:11",
+        "18:1",
         0
       ],
       "positive": [
-        "57:27",
+        "18:4",
         0
       ],
       "negative": [
-        "57:33",
+        "18:5",
         0
       ],
       "latent_image": [
-        "57:13",
+        "18:6",
         0
       ],
-      "seed": 121725701057393,
-      "steps": 8,
+      "seed": 3,
+      "steps": 15,
       "cfg": 1,
-      "sampler_name": "res_multistep",
+      "sampler_name": "er_sde",
       "scheduler": "simple",
       "denoise": 1
     },
@@ -42,15 +112,15 @@
       "title": "KSampler"
     }
   },
-  "57:8": {
+  "18:8": {
     "class_type": "VAEDecode",
     "inputs": {
       "samples": [
-        "57:3",
+        "18:7",
         0
       ],
       "vae": [
-        "57:29",
+        "18:3",
         0
       ]
     },
@@ -58,83 +128,25 @@
       "title": "VAE Decode"
     }
   },
-  "57:11": {
-    "class_type": "ModelSamplingAuraFlow",
+  "18:13": {
+    "class_type": "PreviewAny",
     "inputs": {
-      "model": [
-        "57:28",
-        0
-      ],
-      "shift": 3
-    },
-    "_meta": {
-      "title": "ModelSamplingAuraFlow"
-    }
-  },
-  "57:13": {
-    "class_type": "EmptySD3LatentImage",
-    "inputs": {
-      "width": 1024,
-      "height": 1024,
-      "batch_size": 1
-    },
-    "_meta": {
-      "title": "EmptySD3LatentImage"
-    }
-  },
-  "57:27": {
-    "class_type": "CLIPTextEncode",
-    "inputs": {
-      "clip": [
-        "57:30",
-        0
-      ],
-      "text": "Dramatic black and white high fashion studio portrait, close-up bust shot, pale platinum blonde woman with sleek low ponytail, head tilted upward, eyes softly closed, wearing a fitted black turtleneck top. A large translucent pale white butterfly hovers gently right at her lips, delicate detailed wing veins visible. Hard rim light creates glowing bright white halo around her hair and face, deep inky pure black minimalist background, stark high contrast chiaroscuro lighting, film grain texture, moody ethereal atmosphere, monochrome, editorial fashion photography, shot on 35mm film, soft subtle skin texture, sharp focus on butterfly and facial profile, vertical composition, minimalist dark aesthetic, artistic surreal fashion"
-    },
-    "_meta": {
-      "title": "CLIP Text Encode (Prompt)"
-    }
-  },
-  "57:28": {
-    "class_type": "UNETLoader",
-    "inputs": {
-      "unet_name": "z_image_turbo_int8_convrot.safetensors",
-      "weight_dtype": "default"
-    },
-    "_meta": {
-      "title": "Load Diffusion Model"
-    }
-  },
-  "57:29": {
-    "class_type": "VAELoader",
-    "inputs": {
-      "vae_name": "ae.safetensors"
-    },
-    "_meta": {
-      "title": "Load VAE"
-    }
-  },
-  "57:30": {
-    "class_type": "CLIPLoader",
-    "inputs": {
-      "clip_name": "qwen_3_4b_fp8_mixed.safetensors",
-      "type": "lumina2",
-      "device": "default"
-    },
-    "_meta": {
-      "title": "Load CLIP"
-    }
-  },
-  "57:33": {
-    "class_type": "ConditioningZeroOut",
-    "inputs": {
-      "conditioning": [
-        "57:27",
+      "source": [
+        "18:17",
         0
       ]
     },
     "_meta": {
-      "title": "Conditioning Zero Out"
+      "title": "Preview as Text"
+    }
+  },
+  "18:17": {
+    "class_type": "PrimitiveStringMultiline",
+    "inputs": {
+      "value": "A rainy neon street in Mexico City at night, cinematic, 35mm"
+    },
+    "_meta": {
+      "title": "Text (Multiline)"
     }
   }
 }

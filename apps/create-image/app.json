@@ -1,0 +1,184 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "create-image",
+  "name": "Create Image",
+  "section": "image",
+  "pack": "image-flux3",
+  "status": "ready",
+  "higgsfield_feature": "Create Image",
+  "summary": "Text to image with FLUX 3 Image Klein, the top open-weights model in Artificial Analysis' arena; a 9B upsampler can expand your prompt.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_flux3_klein_distilled_t2i.json",
+    "comfyui": "0.42.0",
+    "notes": "The same distilled Klein file as apps/edit. The template's bounding-box tool is left out: a layout table can be typed at the end of the prompt as the JSON that Flux3LayoutPrompt writes, [{\"id\": \"obj_1\", \"bbox\": [y0, x0, y1, x1], \"desc\": \"...\"}] with coordinates from 0 to 1000 (turn the upsampler off for it)."
+  },
+  "inputs": [
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "Prompt",
+      "required": true,
+      "default": "A rainy neon street in Mexico City at night, cinematic, 35mm",
+      "bind": [
+        {
+          "node": "18:17",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "expand",
+      "type": "toggle",
+      "label": "Expand my prompt",
+      "default": true,
+      "help": "BFL's 9B upsampler rewrites a short prompt into a detailed caption before Klein draws it. Turn it off for long prompts or a JSON layout.",
+      "bind": [
+        {
+          "node": "18:16",
+          "field": "switch"
+        }
+      ]
+    },
+    {
+      "id": "width",
+      "type": "select",
+      "label": "Width",
+      "default": 1024,
+      "options": [
+        {
+          "value": 768,
+          "label": "768"
+        },
+        {
+          "value": 1024,
+          "label": "1024"
+        },
+        {
+          "value": 1280,
+          "label": "1280"
+        },
+        {
+          "value": 1536,
+          "label": "1536"
+        }
+      ],
+      "bind": [
+        {
+          "node": "18:6",
+          "field": "width"
+        }
+      ]
+    },
+    {
+      "id": "height",
+      "type": "select",
+      "label": "Height",
+      "default": 1024,
+      "options": [
+        {
+          "value": 768,
+          "label": "768"
+        },
+        {
+          "value": 1024,
+          "label": "1024"
+        },
+        {
+          "value": 1280,
+          "label": "1280"
+        },
+        {
+          "value": 1536,
+          "label": "1536"
+        }
+      ],
+      "bind": [
+        {
+          "node": "18:6",
+          "field": "height"
+        }
+      ]
+    },
+    {
+      "id": "steps",
+      "type": "slider",
+      "label": "Steps",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "default": 15,
+      "bind": [
+        {
+          "node": "18:7",
+          "field": "steps"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "18:7",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "9",
+      "type": "image",
+      "label": "Image"
+    }
+  ],
+  "models": [
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "phase": "denoise",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "phase": "encode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "decode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3.5_9b_flux3_prompt_upsampler_w4a8.safetensors",
+      "dir": "text_encoders",
+      "gb": 6.72,
+      "phase": "encode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    }
+  ],
+  "credits": [
+    "FLUX 3 Image Klein and its prompt upsampler by Black Forest Labs (FLUX Kommunity License)"
+  ],
+  "test": {
+    "prompt": "a red bicycle against a white wall",
+    "expand": false
+  }
+}

@@ -22,11 +22,11 @@ test("folder name and id agree, ids are unique", () => {
 });
 
 test("apps that share models produce the same model key, so switching between them does not unload", () => {
-  const z = apps.find((a) => a.id === "z-image")!;
-  const cinema = apps.find((a) => a.id === "cinema-studio")!;
+  const edit = apps.find((a) => a.id === "edit")!;
+  const cinema = apps.find((a) => a.id === "cinema-studio")!;   // FLUX 3 Klein text to image, the same three files as edit
   const video = apps.find((a) => a.id === "video")!;
-  assert.equal(modelKey(z), modelKey(cinema));
-  assert.notEqual(modelKey(z), modelKey(video));
+  assert.equal(modelKey(edit), modelKey(cinema));
+  assert.notEqual(modelKey(edit), modelKey(video));
 });
 
 test("templateVars finds placeholders", () => {
