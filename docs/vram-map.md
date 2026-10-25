@@ -47,7 +47,7 @@ is not the least the app needs.
 | `japanese-show` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 13.0 GB (H100) |
 | `macro-product` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.5 GB (H100) |
 | `macro-scene` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.2 GB (H100) |
-| `mascot` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.2 GB (H100) |
+| `mascot` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 24.0 GB (H100) |
 | `micro-beasts` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.3 GB (H100) |
 | `mural` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.2 GB (H100) |
 | `outfit-shot` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 13.0 GB (H100) |
@@ -63,7 +63,7 @@ is not the least the app needs.
 | `render-3d` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.3 GB (H100) |
 | `sketch-to-real` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.2 GB (H100) |
 | `skin-enhancer` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.2 GB (H100) |
-| `style-snap` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.3 GB (H100) |
+| `style-snap` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 12.0 GB (H100) |
 | `try-on` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.8 GB (H100) |
 | `ugc-shot` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 27.9 GB (H100) |
 | `victory-card` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.3 GB (H100) |

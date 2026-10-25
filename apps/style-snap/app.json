@@ -71,7 +71,7 @@
         {
           "node": "4",
           "field": "text",
-          "template": "The same person as in <ref_image_0> wearing a complete {style} outfit, full-length shot in a matching setting, natural pose. Keep the face, hairstyle and build identical. {details}"
+          "template": "The same person as in <ref_image_0> wearing a complete {style} outfit, full-length shot in a matching setting, natural pose. Every piece of clothing and both shoes are unbranded, plain designs with no logos or brand marks. Keep the face, hairstyle and build identical. {details}"
         }
       ]
     },

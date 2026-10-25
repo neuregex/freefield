@@ -63,7 +63,7 @@
         {
           "node": "4",
           "field": "text",
-          "template": "The person from <ref_image_0> in a full football club mascot costume: an oversized foam head of a {animal} held under one arm, team colors, standing on a stadium pitch, the crowd behind. Keep the face, hairstyle and build identical. {details}"
+          "template": "The person from <ref_image_0> in a full football club mascot costume: an oversized foam head of a {animal} held under one arm, team colors, standing on a stadium pitch, the crowd behind. The kit is a plain unbranded club kit with only a simple club crest: no sportswear brand logos, stripes or marks. Keep the face, hairstyle and build identical. {details}"
         }
       ]
     },

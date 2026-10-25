@@ -1023,10 +1023,10 @@
               "frames": 81
             },
             "seed": 42,
-            "seconds": 169.3,
-            "peak_vram_gb": 30.67,
+            "seconds": 186.3,
+            "peak_vram_gb": 30.77,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261021-195731-h100"
+            "run": "20261024-192222-h100"
           },
           "car-chase": {
             "case": "fx-car-chase",
@@ -1035,16 +1035,16 @@
             "poster": "examples/effects/options/effect/car-chase/poster.jpg",
             "values": {
               "effect": "car-chase",
-              "subject": "a red sports car on a winding mountain road at dusk",
+              "subject": "a red sports coupe on a winding mountain road at dusk",
               "strength": 1.0,
               "aspect": "landscape",
               "frames": 81
             },
             "seed": 42,
-            "seconds": 169.9,
-            "peak_vram_gb": 30.67,
+            "seconds": 195.1,
+            "peak_vram_gb": 30.77,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261021-140940-h100"
+            "run": "20261024-192222-h100"
           },
           "crane-down": {
             "case": "fx-crane-down",
@@ -1824,10 +1824,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 4.2,
-      "peak_vram_gb": 11.17,
+      "seconds": 12.2,
+      "peak_vram_gb": 23.99,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "run": "20261024-192222-h100"
     },
     "meme": {
       "case": "tpl-meme",
@@ -2188,10 +2188,10 @@
         "steps": 16
       },
       "seed": 42,
-      "seconds": 4.2,
-      "peak_vram_gb": 11.3,
+      "seconds": 16.4,
+      "peak_vram_gb": 11.97,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261024-164909-h100"
+      "run": "20261024-192222-h100"
     },
     "ugc-shot": {
       "case": "tpl-ugc-shot",
@@ -3775,7 +3775,7 @@
           "type": "image",
           "src": "examples/bullet-time-scene/input-image.jpg",
           "full": "examples/bullet-time-scene/input-image-full.jpg",
-          "from_case": "ref-fx-jump"
+          "from_case": "ref-fx-jump-plain"
         }
       ],
       "values": {
@@ -3786,10 +3786,10 @@
         "frames": 81
       },
       "seed": 42,
-      "seconds": 190.2,
-      "peak_vram_gb": 30.78,
+      "seconds": 176.8,
+      "peak_vram_gb": 30.83,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261024-172353-h100"
+      "run": "20261024-192222-h100"
     },
     "bullet-time-splash": {
       "case": "tpl-bullet-time-splash",
@@ -4002,5 +4002,5 @@
       "run": "20261024-174729-h100"
     }
   },
-  "updated_from": "20261024-182254-h100"
+  "updated_from": "20261024-192222-h100"
 }

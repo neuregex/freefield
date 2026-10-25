@@ -935,8 +935,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": 11.17,
-      "measured_on": "H100 · 20261022-035128-h100"
+      "measured_peak_gb": 23.99,
+      "measured_on": "H100 · 20261024-192222-h100"
     },
     {
       "id": "micro-beasts",
@@ -1351,8 +1351,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": 11.3,
-      "measured_on": "H100 · 20261024-164909-h100"
+      "measured_peak_gb": 11.97,
+      "measured_on": "H100 · 20261024-192222-h100"
     },
     {
       "id": "try-on",
@@ -1689,8 +1689,8 @@
       },
       "verdict_24gb": "fits by phases",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": 30.78,
-      "measured_on": "H100 · 20261024-172353-h100"
+      "measured_peak_gb": 30.83,
+      "measured_on": "H100 · 20261024-192222-h100"
     },
     {
       "id": "motion-transfer",

@@ -86,7 +86,7 @@ REFS = {
 REFS["ref-tpl-garment"] = ("Product photo of a mustard yellow knit cardigan laid flat on a plain white background, top-down, soft even light", 1024, 1024,
                            "A garment on its own, for the two-reference apps.")
 PERSON, MAN, WOMAN, PRODUCT, SNEAKER, SCENE, LAKE = "ref-face-a", "ref-fx-man-b", "ref-fx-woman-a", "ref-product", "ref-fx-sneaker", "ref-fx-cafe", "ref-fx-lake"
-WOMAN_B, STREET, STORM, ROAD, GARMENT, CHARACTER = "ref-fx-woman-b", "ref-fx-street", "ref-fx-storm", "ref-fx-road", "ref-tpl-garment", "ref-character"
+WOMAN_B, STREET, STORM, ROAD, GARMENT, CHARACTER = "ref-fx-woman-b", "ref-fx-street", "ref-fx-storm", "ref-fx-road-plain", "ref-tpl-garment", "ref-character"
 PORTRAIT = "9:16 (Portrait Widescreen)"
 
 KEEP_PRODUCT = " Keep the product identical: shape, label, text and colors."
@@ -206,7 +206,8 @@ A("commercial-faces", "Commercial Faces", "Commercial Faces", "portraits", "edit
   MAN, {}, "Campaign look with his face unchanged and no invented text (tplx-commercial-faces-b, 23 Oct).")
 A("style-snap", "Style Snap", "Style Snap", "portraits", "edit", "Your photo",
   "You in a complete new outfit: streetwear, business, gala, athleisure, 70s or monochrome.",
-  "The same person as in <ref_image_0> wearing a complete {style} outfit, full-length shot in a matching setting, natural pose." + KEEP_FACE,
+  "The same person as in <ref_image_0> wearing a complete {style} outfit, full-length shot in a matching setting, natural pose. "
+  "Every piece of clothing and both shoes are unbranded, plain designs with no logos or brand marks." + KEEP_FACE,
   [sel("style", "Style", [("Streetwear", "streetwear"), ("Business formal", "business formal"), ("Evening gala", "evening gala"), ("Athleisure", "sporty athleisure"),
                            ("Vintage 70s", "vintage 1970s"), ("Minimal monochrome", "minimalist monochrome")])],
   WOMAN, {"style": "streetwear"}, "Full-length, new outfit, same face.")
@@ -305,7 +306,7 @@ A("j-poster", "J-Poster", "J-Poster", "templates", "edit", "Your photo",
 A("mascot", "Mascot", "Mascot", "templates", "edit", "Your photo",
   "You in a football club mascot costume on the pitch.",
   "The person from <ref_image_0> in a full football club mascot costume: an oversized foam head of a {animal} held under one arm, team colors, standing on a stadium pitch, "
-  "the crowd behind." + KEEP_FACE,
+  "the crowd behind. The kit is a plain unbranded club kit with only a simple club crest: no sportswear brand logos, stripes or marks." + KEEP_FACE,
   [sel("animal", "Mascot", [("Lion", "lion"), ("Eagle", "eagle"), ("Bulldog", "bulldog"), ("Bear", "bear")])],
   MAN, {}, "Mascot suit, foam head under the arm, his face visible.")
 A("burning-sunset", "Burning Sunset", "Burning Sunset", "templates", "edit", "Your photo",
@@ -530,7 +531,7 @@ A("bullet-time-scene", "Bullet Time Scene", "Bullet Time Scene", "camera", "effe
   "Freezes the moment and circles the camera around the subject, in their own scene (Wan 2.1 + Bullet Time LoRA).",
   BULLET_TRIGGER + "The video shows {subject}, frozen in mid-air while the camera circles around them in one direction; the whole scene is frozen too.",
   [txt("subject", "Who or what is in the photo", "a person mid-jump", required=True)],
-  "ref-fx-jump", {"subject": "a parkour athlete in a black t-shirt leaping between two rooftops"},
+  "ref-fx-jump-plain", {"subject": "a parkour athlete in a black t-shirt leaping between two rooftops"},
   "Does the camera orbit while the athlete and the city stay frozen?", effect_lora=BULLET_TIME)
 A("bullet-time-white", "Bullet Time White", "Bullet Time White", "camera", "effect-klein", "Your photo",
   "Puts the subject mid-jump on a white studio backdrop, then freezes time and circles the camera around them.",
@@ -584,7 +585,7 @@ A("whats-next", "What's Next", "What's Next?", "camera", "qwen-edit", "Your phot
                                  ("Pan right", "the camera pans right, revealing more of the scene"), ("Someone enters", "a new character walks into the frame from the left"),
                                  ("Dusk falls", "time passes and the light turns to dusk, lights coming on"), ("Rain starts", "the weather turns and rain begins to fall"),
                                  ("Tilt up to the sky", "the camera tilts up toward the sky"), ("Reverse angle", "the camera cuts to the reverse angle, looking back the other way")])],
-  ROAD, {}, "The next shot of the road: wider, more landscape.", lora="next-scene")
+  LAKE, {}, "The next shot of the scene: same hiker and lake, a new angle.", lora="next-scene")
 
 
 def check() -> None:

@@ -119,6 +119,12 @@
      "note": "Wan Animate 2: compare with recast-walk (SCAIL-2) on the same inputs."},
     {"id": "reshoot-orbit", "showcase": true, "app": "reshoot", "values": {"clip": "@case:ref-alley", "azimuth": -30, "elevation": 15, "duration": 4},
      "note": "MiniMax H3 + MoGe: the alley from 30 degrees to the left. Needs 48 GB (its text encoder alone is 27 GB)."},
+    {"id": "reshoot-noturbo-20", "app": "reshoot", "values": {"clip": "@case:ref-alley", "azimuth": -30, "elevation": 15, "duration": 4},
+     "overrides": [{"node": "11", "field": "strength_model", "value": 0.0}, {"node": "32", "field": "steps", "value": 20}],
+     "note": "24 Oct experiment: the same orbit without lightx2v's Turbo LoRA (its model card states no license), 20 steps as in Comfy's H3 reference-to-video template. Verdict (run 20261024-192222-h100): not better. Softer, the same holes in the warped wall, 249 s against 190 s with the Turbo LoRA on the same clip; the app keeps the Turbo LoRA."},
+    {"id": "reshoot-noturbo-30", "app": "reshoot", "values": {"clip": "@case:ref-alley", "azimuth": -30, "elevation": 15, "duration": 4},
+     "overrides": [{"node": "11", "field": "strength_model", "value": 0.0}, {"node": "32", "field": "steps", "value": 30}],
+     "note": "24 Oct experiment: as reshoot-noturbo-20 with 30 steps. Verdict: as with 20 steps, 346 s."},
 
     {"id": "ref-stroll", "app": "video-t2v",
      "values": {"prompt": "Medium shot of a young woman with long wavy auburn hair in a flowing yellow summer dress walking toward the camera along a sunlit park path, trees and soft bokeh behind her, golden hour, gentle smile, cinematic, realistic", "duration": 4, "enhance": false},
@@ -244,8 +250,12 @@
      "note": "Reference still for the effects app (synthetic)."},
     {"id": "ref-fx-road", "app": "z-image", "values": {"prompt": "Wide shot of a red sports car driving fast on a winding mountain road at dusk, headlights on, cliffs and forest around, photorealistic", "width": 1280, "height": 768},
      "note": "Reference still for the effects app (synthetic)."},
+    {"id": "ref-fx-road-plain", "app": "edit", "values": {"image": "@case:ref-fx-road", "instruction": "Replace the car with a generic red two-door sports coupe that is not any real make or model, with smooth rounded bodywork and no badges, emblems or logos. Keep the same position, the winding road, the cliffs, the forest, the dusk light and the motion blur exactly the same."},
+     "note": "24 Oct: Z-Image draws a Ferrari, badge included, for a red sports car; Klein repaints it as a car of no real make before Car chase uses the photo. whats-next drew the badge back from the car's shape, so it now starts from the lake photo."},
     {"id": "ref-fx-jump", "app": "z-image", "values": {"prompt": "A parkour athlete in a black t-shirt frozen mid-leap between two rooftops at sunset, city skyline behind, photorealistic", "width": 1280, "height": 768},
      "note": "Reference still for the effects app (synthetic)."},
+    {"id": "ref-fx-jump-plain", "app": "edit", "values": {"image": "@case:ref-fx-jump", "instruction": "Make his black t-shirt and black shorts completely plain black fabric: no white stripes on the shorts and no logo on the shirt. Keep his face, pose, shoes, the rooftops, the skyline and the sunset light exactly the same."},
+     "note": "24 Oct: Z-Image put three white stripes on the shorts and a small logo on the shirt; Klein removes them before Bullet Time Scene and the Bullet time effect use the photo."},
 
     {"id": "fx-angry", "app": "effects", "values": {"image": "@case:ref-fx-man-a", "effect": "angry", "subject": "a man with short dark hair and a trimmed beard in a grey t-shirt", "aspect": "portrait"},
      "note": "Remade-AI angry-face. From neutral to yelling with arms up; same person throughout."},
@@ -279,9 +289,9 @@
      "note": "Remade-AI 360-Orbit. The camera circles the sneaker; the shoe keeps its shape from every side."},
     {"id": "fx-arc-shot", "app": "effects", "values": {"image": "@case:ref-fx-cafe", "effect": "arc-shot", "subject": "a man in a denim jacket sitting in a busy cafe", "aspect": "landscape"},
      "note": "Remade-AI Arc_shot. A smooth curved move around him; the cafe shows parallax."},
-    {"id": "fx-bullet-time", "app": "effects", "values": {"image": "@case:ref-fx-jump", "effect": "bullet-time", "subject": "a parkour athlete leaping between two rooftops", "aspect": "landscape"},
+    {"id": "fx-bullet-time", "app": "effects", "values": {"image": "@case:ref-fx-jump-plain", "effect": "bullet-time", "subject": "a parkour athlete leaping between two rooftops", "aspect": "landscape"},
      "note": "joyfox Wan2.1-BulletTime-LoRA. He stays frozen mid-leap while the camera circles him and the skyline stays the same (Remade's matrix-shot turned the city into trees in run 1)."},
-    {"id": "fx-car-chase", "app": "effects", "values": {"image": "@case:ref-fx-road", "effect": "car-chase", "subject": "a red sports car on a winding mountain road at dusk", "aspect": "landscape"},
+    {"id": "fx-car-chase", "app": "effects", "values": {"image": "@case:ref-fx-road-plain", "effect": "car-chase", "subject": "a red sports coupe on a winding mountain road at dusk", "aspect": "landscape"},
      "note": "Remade-AI Car-chase. Fast tracking shot with a pursuer; the red car stays the hero."},
     {"id": "fx-crane-down", "app": "effects", "values": {"image": "@case:ref-room", "effect": "crane-down", "subject": "a cozy old library with tall wooden bookshelves and a leather armchair", "aspect": "landscape"},
      "note": "Remade-AI Crane-down. The camera descends smoothly; the library stays consistent."},
@@ -582,7 +592,7 @@
      "note": "Expand Image. Does the border continue the lake, rock and sky, with no seam or gray left?"},
     {"id": "tpl-ai-influencer", "showcase": true, "app": "ai-influencer", "values": {"niche": "fitness influencer stretching on a rooftop at sunrise in workout clothes"},
      "note": "AI Influencer. A believable person, not a glossy render?"},
-    {"id": "tpl-bullet-time-scene", "showcase": true, "app": "bullet-time-scene", "values": {"image": "@case:ref-fx-jump", "subject": "a parkour athlete in a black t-shirt leaping between two rooftops"},
+    {"id": "tpl-bullet-time-scene", "showcase": true, "app": "bullet-time-scene", "values": {"image": "@case:ref-fx-jump-plain", "subject": "a parkour athlete in a black t-shirt leaping between two rooftops"},
      "note": "Bullet Time Scene. Does the camera orbit while the athlete and the city stay frozen?"},
     {"id": "tpl-bullet-time-white", "showcase": true, "app": "bullet-time-white", "values": {"image": "@case:ref-character", "subject": "a man in a red jacket, jeans and white sneakers"},
      "note": "Bullet Time White. White backdrop, same person and outfit, smooth orbit?"},
@@ -594,7 +604,7 @@
      "note": "Shots. The hiker large in frame, seen from behind (the wide-angle showcase made him tiny)."},
     {"id": "tpl-zooms", "showcase": true, "app": "zooms", "values": {"image": "@case:ref-fx-street"},
      "note": "Zooms. A close-up of the woman in the raincoat."},
-    {"id": "tpl-whats-next", "showcase": true, "app": "whats-next", "values": {"image": "@case:ref-fx-road"},
-     "note": "What's Next?. The next shot of the road: wider, more landscape."}
+    {"id": "tpl-whats-next", "showcase": true, "app": "whats-next", "values": {"image": "@case:ref-fx-lake"},
+     "note": "What's Next?. The next shot of the scene: same hiker and lake, a new angle."}
   ]
 }
