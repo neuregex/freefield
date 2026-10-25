@@ -280,7 +280,7 @@ A("micro-beasts", "Micro-Beasts", "Surrounded by Animals", "play", "edit", "Your
   [sel("animals", "Animals", [("Hamsters and kittens", "hamsters and kittens"), ("Ducklings and bunnies", "ducklings and bunnies"), ("Tiny puppies", "tiny puppies"), ("Baby otters", "baby otters")])],
   WOMAN, {}, "Small animals on her shoulders; same face.")
 A("meme", "Meme Generator", "Meme Generator", "play", "klein", None,
-  "A meme image from a scene and two captions (Z-Image Turbo).",
+  "A meme image from a scene and two captions (FLUX 3 Klein).",
   "A meme image: {scene}. Bold white capital letters in a thick Impact-style font with a black outline read \"{top}\" at the top and \"{bottom}\" at the bottom of the image.",
   [{"id": "scene", "type": "textarea", "label": "Scene", "required": True, "default": "a cat staring at a laptop screen with a worried face"},
    txt("top", "Top text", "WHEN THE BUILD", required=True), txt("bottom", "Bottom text", "PASSES ON FRIDAY", required=True)],
@@ -517,9 +517,9 @@ A("expand-image", "Expand Image", "Expand Image", "style", "edit", "Your photo",
       {"value": "tall", "label": "Taller", "sets": pad(0, 320, 0, 320)}]}],
   LAKE, {"direction": "out"}, "Does the border continue the lake, rock and sky, with no seam or gray left?", outpaint=True)
 A("ai-influencer", "AI Influencer", "AI Influencer", "portraits", "klein", None,
-  "Makes a feed-ready photo of a made-up influencer in their niche, with natural skin (Z-Image Turbo).",
+  "Makes a feed-ready photo of a made-up influencer in their niche, with natural skin (FLUX 3 Klein).",
   "A vertical phone photo for a social media feed of {who}, a {niche}. Natural skin texture with visible pores, candid moment, "
-  "realistic photo, no text, no logos.",
+  "realistic photo, no text. Plain unbranded clothes and shoes with no logos, stripes or brand marks.",
   [txt("who", "Who", "a woman in her late twenties from Mexico City with curly dark hair", required=True,
        help_="Describe a person who does not exist: age, origin, hair, style."),
    sel("niche", "Niche", [("Fitness", "fitness influencer stretching on a rooftop at sunrise in workout clothes"),

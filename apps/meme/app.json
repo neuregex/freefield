@@ -3,7 +3,7 @@
   "id": "meme",
   "name": "Meme Generator",
   "section": "image",
-  "summary": "A meme image from a scene and two captions (Z-Image Turbo).",
+  "summary": "A meme image from a scene and two captions (FLUX 3 Klein).",
   "higgsfield_feature": "Meme Generator",
   "pack": "image-flux3",
   "status": "ready",
