@@ -3,7 +3,7 @@
 Every GPU run of the lab (`lab/lab_modal.py`) from 20 to 24 Oct 2026, in order. Each run is a folder
 `lab/results/<run id>` with `results.jsonl` (one row per case: status, seconds, peak VRAM), `run.json` (GPU, start
 time) and `review.html`. Peaks are the highest of the run; on an 80 GB H100 ComfyUI can keep the models of earlier
-steps loaded, so a peak there is not the least an app needs. 31 runs, 591 of 614 cases ok: 22 of the 23 failures are
+steps loaded, so a peak there is not the least an app needs. 32 runs, 607 of 630 cases ok: 22 of the 23 failures are
 the first IC-LoRA run, before the gated licenses were accepted, and the other is `recast` in the first run.
 
 | Run | GPU | What ran | Cases ok | Longest case | Peak |
@@ -39,6 +39,7 @@ the first IC-LoRA run, before the gated licenses were accepted, and the other is
 | `20261024-180125-h100` | H100 | Queue job 09: the runner reference with a named person, and the two cases that read it | 3 / 3 | 197 s | 39.9 GB |
 | `20261024-181216-h100` | H100 | Queue job 10: the runner in a teal and black kit (the red and white one had a brand logo) | 3 / 3 | 189 s | 39.9 GB |
 | `20261024-182254-h100` | H100 | Queue job 11: Klein removes the logo from the runner's top; Bullet Time Splash and Hero run re-made | 4 / 4 | 192 s | 40.3 GB |
+| `20261024-192222-h100` | 3 × H100 | Queue job 12: brand logos out of the road photo, the athlete, Mascot and Style Snap; `reshoot` without the Turbo LoRA | 16 / 16 | 346 s | 59.0 GB |
 
 A run with several GPUs (`--shards N`) splits the cases into N groups that run at the same time and comes back as
 one folder. The cases a run lists include the reference images, clips and songs that the others read.
@@ -78,6 +79,16 @@ one folder. The cases a run lists include the reference images, clips and songs 
 - **The 20 Oct examples.** Reviewed one by one on 24 Oct. `video-t2v` got a new showcase (`t2v-trumpet`) and
   `cinema-studio` the change above; `camera-copy` (it moves forward more than it pans) and `motion-transfer` (the face
   leaves the frame at the end) are weak but kept.
+
+- **Brand logos.** On 24 Oct every published example was checked by eye for brand marks. Z-Image and Klein had
+  drawn a Ferrari, badge included, for the red sports car, three stripes and a logo on the parkour athlete, sports
+  brand logos on the runner, Adidas marks on Mascot's kit and Nike swooshes on Style Snap's sneakers. Klein now
+  repaints those references before other apps use them (`ref-fx-road-plain`, `ref-fx-jump-plain`,
+  `ref-fx-runner-plain`), and Mascot and Style Snap ask for unbranded clothes. `whats-next` drew the badge back from
+  the car's shape, so it moves to the lake photo.
+- **`reshoot` without the Turbo LoRA** (lightx2v's, whose model card states no license): on the same clip, 20 and 30
+  plain steps were not better than the 8 Turbo steps, softer with the same holes, and took 249 s and 346 s against
+  190 s. The app keeps the Turbo LoRA and shows the license note next to it.
 
 ## End to end from the browser (23 Oct)
 
