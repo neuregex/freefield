@@ -22,9 +22,9 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 | Apps | 112, all *ready*: 33 apps with a workflow of their own, the 5 IC-LoRA apps (`genjutsu`, `reframe`, `sdr-hdr`, `mixed-media`, `dub`), `morph`, 71 template apps (a fixed prompt over one of those pipelines, written by `tools/template_apps.py`) and 2 model-free smoke apps. The 110 that use models each have a lab example made on a GPU |
 | Open weights | No API or partner nodes. Every model is a file you download, listed in its app's `app.json` with its Hugging Face repo, size and license; the cloud text-encoder branch of Lightricks' examples is removed |
 | Workflows | Built from official sources by `tools/build_apps.py` (ComfyUI's templates, Lightricks' ComfyUI-LTXVideo examples, Comfy's `comfy-reshoot`); the template apps reuse those bases and the two smoke apps are hand-written. `tools/import_workflow.py` drafts a new app from any other ComfyUI workflow. All accepted by ComfyUI's validator: ComfyUI `e3bee7f` (0.42.0), ComfyUI-LTXVideo `44c8a36`, ComfyUI-CrossViewWarp `fbb1e93` |
-| GPU runs | 28 lab runs on Modal from 20 to 24 Oct (L40S and H100), 581 of 604 cases ok. Every example in the web UI comes from one of them, with its time and peak VRAM. Run by run, and what each one changed: [`docs/lab-runs.md`](docs/lab-runs.md) |
+| GPU runs | 31 lab runs on Modal from 20 to 24 Oct (L40S and H100), 591 of 614 cases ok. Every example in the web UI comes from one of them, with its time and peak VRAM. Run by run, and what each one changed: [`docs/lab-runs.md`](docs/lab-runs.md) |
 | End to end | Run from the browser on 23 Oct, web UI → server → gateway on Modal → ComfyUI on an H100: `morph` 160.8 s from the button to the video (128.7 s of it on the GPU), `mixed-media` 149 s, `dub` 72 s. On 24 Oct through the hosted demo (`infra/web_app.py`, the same web app on Modal behind a passcode): `face-swap` 25.2 s on the GPU. The model-free smoke apps cover the same path in CI |
-| LoRA lab | 261 cases: one showcase per app (110), one per effect (24), one per look of `mixed-media` (16) and one per transformation of `morph` (15), 33 references the others start from, 6 candidate portraits for those references (`refx-*`), 12 style-drift experiments (`mmx-*`) and 36 template experiments (`tplx-*`), each experiment with its verdict in the note |
+| LoRA lab | 262 cases: one showcase per app (110), one per effect (24), one per look of `mixed-media` (16) and one per transformation of `morph` (15), 34 references the others start from, 6 candidate portraits for those references (`refx-*`), 12 style-drift experiments (`mmx-*`) and 36 template experiments (`tplx-*`), each experiment with its verdict in the note |
 | CI | `.github/workflows/validate.yml` on every push: the manifest validator, the tests, the type check, the generated packs and VRAM map, and a CPU-only ComfyUI that accepts every workflow and the prompt of every lab case (about 3 minutes) |
 
 ## Apps
@@ -245,7 +245,7 @@ the CLI until you set `FREEFIELD_DRAFTS=1` (or pass `--draft` to `npm run app`).
 runs on them with a fixed seed. Each app has a *showcase* case, so one command makes an example of every app:
 
 ```sh
-modal run --detach lab/lab_modal.py --showcase    # one example per app + the references they need (137 cases)
+modal run --detach lab/lab_modal.py --showcase    # one example per app + the references they need (138 cases)
 modal run lab/lab_modal.py --pull <run_id>        # only if the terminal closed before the end: copy back and publish
 ```
 

@@ -3,7 +3,7 @@
 Every GPU run of the lab (`lab/lab_modal.py`) from 20 to 24 Oct 2026, in order. Each run is a folder
 `lab/results/<run id>` with `results.jsonl` (one row per case: status, seconds, peak VRAM), `run.json` (GPU, start
 time) and `review.html`. Peaks are the highest of the run; on an 80 GB H100 ComfyUI can keep the models of earlier
-steps loaded, so a peak there is not the least an app needs. 28 runs, 581 of 604 cases ok: 22 of the 23 failures are
+steps loaded, so a peak there is not the least an app needs. 31 runs, 591 of 614 cases ok: 22 of the 23 failures are
 the first IC-LoRA run, before the gated licenses were accepted, and the other is `recast` in the first run.
 
 | Run | GPU | What ran | Cases ok | Longest case | Peak |
@@ -36,6 +36,9 @@ the first IC-LoRA run, before the gated licenses were accepted, and the other is
 | `20261024-164909-h100` | H100 | Queue job 06: the three new woman references and the 40 examples made from them | 48 / 48 | 215 s | 50.0 GB |
 | `20261024-172353-h100` | 2 × H100 | Queue job 07: the ten new apps, `cinema-studio` and `video-t2v` | 20 / 20 | 204 s | 50.5 GB |
 | `20261024-174729-h100` | H100 | Queue job 08: `expand-image` on a blurred canvas, `cinema-studio` with looks instead of gear | 3 / 3 | 25 s | 13.2 GB |
+| `20261024-180125-h100` | H100 | Queue job 09: the runner reference with a named person, and the two cases that read it | 3 / 3 | 197 s | 39.9 GB |
+| `20261024-181216-h100` | H100 | Queue job 10: the runner in a teal and black kit (the red and white one had a brand logo) | 3 / 3 | 189 s | 39.9 GB |
+| `20261024-182254-h100` | H100 | Queue job 11: Klein removes the logo from the runner's top; Bullet Time Splash and Hero run re-made | 4 / 4 | 192 s | 40.3 GB |
 
 A run with several GPUs (`--shards N`) splits the cases into N groups that run at the same time and comes back as
 one folder. The cases a run lists include the reference images, clips and songs that the others read.
@@ -64,7 +67,10 @@ one folder. The cases a run lists include the reference images, clips and songs 
 - **References of people.** Z-Image tends to draw an East Asian face when a prompt names no one, and those portraits
   looked synthetic. On 24 Oct the three woman references (`ref-face-a`, `ref-fx-woman-a`, `ref-fx-woman-b`) got
   prompts that say who the person is, plus natural skin texture and no retouching; job 05 tried two candidates for
-  each (`refx-*`, the verdict in each note) and job 06 re-made the 40 examples that start from them.
+  each (`refx-*`, the verdict in each note) and job 06 re-made the 40 examples that start from them. The runner
+  (`ref-fx-runner`) got the same change in jobs 09 to 11. Z-Image also printed a sports brand logo on her top, in a
+  red and white kit and again in a teal one, whatever the prompt said, so Klein removes it (`ref-fx-runner-plain`)
+  before Bullet Time Splash and the Hero run effect use the photo.
 - **New apps.** Job 07 made the first examples of `depth-map`, `video-remove-bg`, `h3-video`, `h3-photo`,
   `extend-video`, `expand-image`, `ai-influencer` and the three Bullet Time apps. Two came back wrong and were fixed in
   job 08: `expand-image` drew a gray frame on the flat padding (it now starts from a blurred, stretched copy of the
