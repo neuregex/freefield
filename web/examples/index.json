@@ -1143,16 +1143,16 @@
             "poster": "examples/effects/options/effect/hero-run/poster.jpg",
             "values": {
               "effect": "hero-run",
-              "subject": "a female sprinter in a red and white running outfit on a stadium track",
+              "subject": "a female sprinter in a teal singlet and black shorts on a stadium track",
               "strength": 1.0,
               "aspect": "landscape",
               "frames": 81
             },
             "seed": 42,
-            "seconds": 169.0,
-            "peak_vram_gb": 30.67,
+            "seconds": 187.3,
+            "peak_vram_gb": 30.77,
             "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261021-140940-h100"
+            "run": "20261024-182254-h100"
           },
           "steam": {
             "case": "fx-steam",
@@ -3804,21 +3804,21 @@
           "type": "image",
           "src": "examples/bullet-time-splash/input-image.jpg",
           "full": "examples/bullet-time-splash/input-image-full.jpg",
-          "from_case": "ref-fx-runner"
+          "from_case": "ref-fx-runner-plain"
         }
       ],
       "values": {
-        "subject": "a sprinter in a red and white running outfit",
+        "subject": "a sprinter in a teal singlet and black shorts",
         "details": "",
         "strength": 1.0,
         "aspect": "portrait",
         "frames": 81
       },
       "seed": 42,
-      "seconds": 190.0,
-      "peak_vram_gb": 39.95,
+      "seconds": 191.8,
+      "peak_vram_gb": 40.25,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261024-172353-h100"
+      "run": "20261024-182254-h100"
     },
     "bullet-time-white": {
       "case": "tpl-bullet-time-white",
@@ -4002,5 +4002,5 @@
       "run": "20261024-174729-h100"
     }
   },
-  "updated_from": "20261024-174729-h100"
+  "updated_from": "20261024-182254-h100"
 }

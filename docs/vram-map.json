@@ -2599,8 +2599,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": 39.95,
-      "measured_on": "H100 · 20261024-172353-h100"
+      "measured_peak_gb": 40.25,
+      "measured_on": "H100 · 20261024-182254-h100"
     },
     {
       "id": "bullet-time-white",

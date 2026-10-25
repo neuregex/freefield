@@ -544,7 +544,7 @@ A("bullet-time-splash", "Bullet Time Splash", "Bullet Time Splash", "camera", "e
   "Bursts frozen water around the subject, then circles the camera through the suspended drops.",
   BULLET_TRIGGER + "The video shows {subject}, frozen in mid-air inside a burst of suspended water droplets while the camera circles around them in one direction.",
   [txt("subject", "Who or what is in the photo", "a person", required=True)],
-  "ref-fx-runner", {"subject": "a sprinter in a red and white running outfit"},
+  "ref-fx-runner-plain", {"subject": "a sprinter in a teal singlet and black shorts"},
   "Do the drops stay frozen in the air while the camera moves?", effect_lora=BULLET_TIME,
   klein="Add a frozen splash of clear water bursting around this exact person, droplets and ribbons of water suspended in the air, "
         "same place and light. Keep the face, hair and outfit identical.")
