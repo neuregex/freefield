@@ -3,7 +3,7 @@
 Every GPU run of the lab (`lab/lab_modal.py`) from 20 to 24 Oct 2026, in order. Each run is a folder
 `lab/results/<run id>` with `results.jsonl` (one row per case: status, seconds, peak VRAM), `run.json` (GPU, start
 time) and `review.html`. Peaks are the highest of the run; on an 80 GB H100 ComfyUI can keep the models of earlier
-steps loaded, so a peak there is not the least an app needs. 24 runs, 504 of 527 cases ok: 22 of the 23 failures are
+steps loaded, so a peak there is not the least an app needs. 28 runs, 581 of 604 cases ok: 22 of the 23 failures are
 the first IC-LoRA run, before the gated licenses were accepted, and the other is `recast` in the first run.
 
 | Run | GPU | What ran | Cases ok | Longest case | Peak |
@@ -32,6 +32,10 @@ the first IC-LoRA run, before the gated licenses were accepted, and the other is
 | `20261024-033622-l40s` | L40S | Queue job 02: face swap with MediaPipe's face oval as the mask | 5 / 5 | 20 s | 14.3 GB |
 | `20261024-034326-l40s` | L40S | Queue job 03: the face swap example | 3 / 3 | 26 s | 14.3 GB |
 | `20261024-035222-l40s` | L40S | Queue job 04: `reshoot`, its example now the result instead of the warp guide | 2 / 2 | 223 s | 44.1 GB |
+| `20261024-164414-h100` | H100 | Queue job 05: six candidate portraits for the three woman references (`refx-*`) | 6 / 6 | 50 s | 12.6 GB |
+| `20261024-164909-h100` | H100 | Queue job 06: the three new woman references and the 40 examples made from them | 48 / 48 | 215 s | 50.0 GB |
+| `20261024-172353-h100` | 2 × H100 | Queue job 07: the ten new apps, `cinema-studio` and `video-t2v` | 20 / 20 | 204 s | 50.5 GB |
+| `20261024-174729-h100` | H100 | Queue job 08: `expand-image` on a blurred canvas, `cinema-studio` with looks instead of gear | 3 / 3 | 25 s | 13.2 GB |
 
 A run with several GPUs (`--shards N`) splits the cases into N groups that run at the same time and comes back as
 one folder. The cases a run lists include the reference images, clips and songs that the others read.
@@ -56,6 +60,18 @@ one folder. The cases a run lists include the reference images, clips and songs 
 - **`reshoot`.** Its workflow has two outputs and the warp guide was saved first, so its web example showed the guide
   (the clip from the new angle with the holes in magenta). The lab now saves an app's outputs in the order the app
   declares them; job 04 re-made the example.
+
+- **References of people.** Z-Image tends to draw an East Asian face when a prompt names no one, and those portraits
+  looked synthetic. On 24 Oct the three woman references (`ref-face-a`, `ref-fx-woman-a`, `ref-fx-woman-b`) got
+  prompts that say who the person is, plus natural skin texture and no retouching; job 05 tried two candidates for
+  each (`refx-*`, the verdict in each note) and job 06 re-made the 40 examples that start from them.
+- **New apps.** Job 07 made the first examples of `depth-map`, `video-remove-bg`, `h3-video`, `h3-photo`,
+  `extend-video`, `expand-image`, `ai-influencer` and the three Bullet Time apps. Two came back wrong and were fixed in
+  job 08: `expand-image` drew a gray frame on the flat padding (it now starts from a blurred, stretched copy of the
+  photo), and `cinema-studio` drew a film camera because its options named camera gear (they now describe the look).
+- **The 20 Oct examples.** Reviewed one by one on 24 Oct. `video-t2v` got a new showcase (`t2v-trumpet`) and
+  `cinema-studio` the change above; `camera-copy` (it moves forward more than it pans) and `motion-transfer` (the face
+  leaves the frame at the end) are weak but kept.
 
 ## End to end from the browser (23 Oct)
 

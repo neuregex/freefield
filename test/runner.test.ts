@@ -42,7 +42,8 @@ test("cinema studio composes the prompt from every select", () => {
   const wf = recorder();
   applyInputs(app, values, wf, () => null);
   const text = wf.sets["57:27.text"] as string;
-  assert.match(text, /^a fox in snow, shot on a full-frame digital cinema camera, using a classic anamorphic lens at 35mm/);
+  assert.match(text, /^A cinematic film still: a fox in snow\. The look: the full-frame digital cinema look, natural and smooth; a classic anamorphic widescreen look with oval bokeh and blue streak flares; a natural 35mm perspective; aperture f\/1\.4/);
+  assert.ok(!/camera|lens/i.test(text), "the options describe the look, not the gear, so no camera is drawn");
   assert.ok(!text.includes("{"), "no placeholder left behind");
 });
 

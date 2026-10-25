@@ -2,6 +2,8 @@
 
 Open-source Higgsfield on ComfyUI: every app is one folder, every model is open weights.
 
+![Twelve of the apps' examples, each made on a GPU by the lab: Transformations, Mixed Media, Effects, Recast, Relight, Day to Night, Cinema Studio, Depth Map, Volcano Ad, H3 Video, Styles and Storm Creature](docs/media/examples.jpg)
+
 Freefield rebuilds Higgsfield's creative apps (image, video, VFX, audio) on top of ComfyUI and the Comfy SDK.
 There is no per-app code. Each app is a folder in `apps/` with an `app.json` manifest and a ComfyUI workflow in API
 format; the web UI, the runner, the model downloads, the VRAM map and the tests are all derived from those manifests.
@@ -17,12 +19,12 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 
 | | |
 |---|---|
-| Apps | 102, all *ready*: 28 apps with a workflow of their own, the 5 IC-LoRA apps (`genjutsu`, `reframe`, `sdr-hdr`, `mixed-media`, `dub`), `morph`, 66 template apps (a fixed prompt over one of those pipelines, written by `tools/template_apps.py`) and 2 model-free smoke apps. The 100 that use models each have a lab example made on a GPU |
+| Apps | 112, all *ready*: 33 apps with a workflow of their own, the 5 IC-LoRA apps (`genjutsu`, `reframe`, `sdr-hdr`, `mixed-media`, `dub`), `morph`, 71 template apps (a fixed prompt over one of those pipelines, written by `tools/template_apps.py`) and 2 model-free smoke apps. The 110 that use models each have a lab example made on a GPU |
 | Open weights | No API or partner nodes. Every model is a file you download, listed in its app's `app.json` with its Hugging Face repo, size and license; the cloud text-encoder branch of Lightricks' examples is removed |
-| Workflows | Built from official sources by `tools/build_apps.py` (ComfyUI's templates, Lightricks' ComfyUI-LTXVideo examples, Comfy's `comfy-reshoot`); the template apps reuse those bases and the two smoke apps are hand-written. All accepted by ComfyUI's validator: ComfyUI `e3bee7f` (0.42.0), ComfyUI-LTXVideo `44c8a36`, ComfyUI-CrossViewWarp `fbb1e93` |
-| GPU runs | 24 lab runs on Modal from 20 to 24 Oct (L40S and H100), 504 of 527 cases ok. Every example in the web UI comes from one of them, with its time and peak VRAM. Run by run, and what each one changed: [`docs/lab-runs.md`](docs/lab-runs.md) |
-| End to end | Run from the browser on 23 Oct, web UI → server → gateway on Modal → ComfyUI on an H100: `morph` 160.8 s from the button to the video (128.7 s of it on the GPU), `mixed-media` 149 s, `dub` 72 s. The model-free smoke apps cover the same path in CI |
-| LoRA lab | 244 cases: one showcase per app (100), one per effect (24), one per look of `mixed-media` (16) and one per transformation of `morph` (15), 33 references the others start from, 12 style-drift experiments (`mmx-*`) and 36 template experiments (`tplx-*`, each with its verdict in the note) |
+| Workflows | Built from official sources by `tools/build_apps.py` (ComfyUI's templates, Lightricks' ComfyUI-LTXVideo examples, Comfy's `comfy-reshoot`); the template apps reuse those bases and the two smoke apps are hand-written. `tools/import_workflow.py` drafts a new app from any other ComfyUI workflow. All accepted by ComfyUI's validator: ComfyUI `e3bee7f` (0.42.0), ComfyUI-LTXVideo `44c8a36`, ComfyUI-CrossViewWarp `fbb1e93` |
+| GPU runs | 28 lab runs on Modal from 20 to 24 Oct (L40S and H100), 581 of 604 cases ok. Every example in the web UI comes from one of them, with its time and peak VRAM. Run by run, and what each one changed: [`docs/lab-runs.md`](docs/lab-runs.md) |
+| End to end | Run from the browser on 23 Oct, web UI → server → gateway on Modal → ComfyUI on an H100: `morph` 160.8 s from the button to the video (128.7 s of it on the GPU), `mixed-media` 149 s, `dub` 72 s. On 24 Oct through the hosted demo (`infra/web_app.py`, the same web app on Modal behind a passcode): `face-swap` 25.2 s on the GPU. The model-free smoke apps cover the same path in CI |
+| LoRA lab | 261 cases: one showcase per app (110), one per effect (24), one per look of `mixed-media` (16) and one per transformation of `morph` (15), 33 references the others start from, 6 candidate portraits for those references (`refx-*`), 12 style-drift experiments (`mmx-*`) and 36 template experiments (`tplx-*`), each experiment with its verdict in the note |
 | CI | `.github/workflows/validate.yml` on every push: the manifest validator, the tests, the type check, the generated packs and VRAM map, and a CPU-only ComfyUI that accepts every workflow and the prompt of every lab case (about 3 minutes) |
 
 ## Apps
@@ -37,8 +39,12 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 | `relight` | Relight | Qwen Image Edit 2509 (fp8) + Relight and Lightning LoRAs, light presets | tight: 21.5 GB largest phase | ready |
 | `upscale`, `upscale-video` | Upscale | SeedVR2 3B (int8) | fits whole, 4.0 GB | ready |
 | `remove-bg` | Background removal | BiRefNet | fits whole, 0.4 GB | ready |
+| `video-remove-bg` | Remove Background (video), Video Background Remover | BiRefNet on every frame: the clip over a solid color with its sound, plus the matte | fits whole, 0.4 GB | ready |
+| `depth-map` | Depth Map | MoGe-2: a depth map (colored or grayscale) or a normal map of a photo | fits whole, 0.7 GB | ready |
 | `smooth` | Slow motion / smoothing | FILM frame interpolation | fits whole, 0.1 GB | ready |
 | `video`, `video-t2v` | Create Video (with audio) | LTX-2.5 22B distilled (int8) | tight: 21.5 GB largest phase | ready |
+| `h3-video`, `h3-photo` | Create Video (with audio) | MiniMax H3 (int8) from Comfy's templates: text or a photo to a clip with speech, sound and music, 20 steps, no turbo LoRA | needs Modal: 27.1 GB text encoder | ready |
+| `extend-video` | Extend Video | MiniMax H3 from the clip's last frame, the new part joined after it with its sound | needs Modal: 27.1 GB text encoder | ready |
 | `vfx-clean-plate`, `vfx-day-to-night`, `vfx-water` | VFX | LTX-2.5 + official IC-LoRAs | tight: 21.8–22.4 GB | ready |
 | `transitions` | Effects / Transitions | LTX-2.5 + transition LoRA (2.3) | tight: 21.9 GB | ready |
 | `camera-moves` | Camera Controls | Wan 2.2 Fun Camera (fp8): pans, zooms and rolls on an image, with a 4-step fast preset | fits by phases, 15.3 GB | ready |
@@ -67,10 +73,12 @@ Higgsfield's catalog is mostly fixed prompts over a few pipelines, and so is thi
 Freefield's pipelines with its prompt baked in, selects that fill parts of it, and an "Extra direction" box appended
 to it. The bases: `edit` (FLUX 3 Image Klein, one reference image), `edit` with a second reference (a garment, another
 person; for `face-swap`, MediaPipe's face oval from core ComfyUI nodes masks the edit and the face photo is Klein's only
-reference), `z-image` (text to image), `video` (LTX-2.5 image-to-video with its own audio), `morph` (Klein draws the
-last frame from a fixed instruction, LTX-2.5 and the transition LoRA move the photo into it) and `relight`'s
+reference; for `expand-image`, the photo gets a border that only Klein draws), `z-image` (text to image), `video`
+(LTX-2.5 image-to-video with its own audio), `morph` (Klein draws the last frame from a fixed instruction, LTX-2.5
+and the transition LoRA move the photo into it), `effects`' Wan 2.1 pipeline with one effect LoRA fixed (joyfox's
+Bullet Time; for `bullet-time-white` and `-splash`, Klein redraws the photo first) and `relight`'s
 Qwen-Image-Edit-2509 pipeline with another LoRA (dx8152's Multiple Angles for `angles`, `shots` and `zooms`; lovis93's
-next-scene v2 for `whats-next`). `tools/template_apps.py` holds the table and writes the 66 folders (manifest + the
+next-scene v2 for `whats-next`). `tools/template_apps.py` holds the table and writes the 71 folders (manifest + the
 base workflow, with the few edits a base needs) and their lab cases; `--readme` prints this list and `--lab` the
 command that makes every example. Add a line to the table there, not a folder by hand.
 
@@ -138,6 +146,11 @@ command that makes every example. Add a line to the table there, not a folder by
 | `melting-doodle` | Melting Doodle | `video` | your photo |
 | `rap-video` | Rap God | `video` | your photo |
 | `idol` | Idol | `video` | your photo |
+| `expand-image` | Expand Image | `edit` | your photo, expand |
+| `ai-influencer` | AI Influencer | `z-image` | who, niche |
+| `bullet-time-scene` | Bullet Time Scene | `effects` | your photo, who or what is in the photo |
+| `bullet-time-white` | Bullet Time White | `edit + effects` | your photo, who or what is in the photo |
+| `bullet-time-splash` | Bullet Time Splash | `edit + effects` | your photo, who or what is in the photo |
 | `angles` | Angles 2.0 | `relight + Qwen-Edit-2509-Multiple-angles` | your photo, camera move |
 | `shots` | Shots | `relight + Qwen-Edit-2509-Multiple-angles` | your photo, shot |
 | `zooms` | Zooms | `relight + Qwen-Edit-2509-Multiple-angles` | your photo, zoom |
@@ -232,7 +245,7 @@ the CLI until you set `FREEFIELD_DRAFTS=1` (or pass `--draft` to `npm run app`).
 runs on them with a fixed seed. Each app has a *showcase* case, so one command makes an example of every app:
 
 ```sh
-modal run --detach lab/lab_modal.py --showcase    # one example per app + the references they need (125 cases)
+modal run --detach lab/lab_modal.py --showcase    # one example per app + the references they need (137 cases)
 modal run lab/lab_modal.py --pull <run_id>        # only if the terminal closed before the end: copy back and publish
 ```
 
@@ -269,7 +282,7 @@ at a time, saves the output to `<name>.log` and writes `<name>.done.json` with t
 
 `--detach` keeps the GPU job running if the terminal closes; the run id is printed at the start. Missing models are
 downloaded first on a CPU container, so no GPU is billed while they arrive (the whole catalog is
-103 files, about 334 GB). Then one GPU container runs the cases, recording time and peak VRAM, and keeps going when one fails;
+104 files, about 355 GB). Then one GPU container runs the cases, recording time and peak VRAM, and keeps going when one fails;
 a case whose model could not be downloaded (say, a license not yet accepted) is skipped with the reason. Every output
 also gets small web versions (a card, a poster for videos, a web-sized copy). At the end the run is copied to
 `lab/results/<run_id>`, `review.html` is built there for rating, and `lab/publish.py` copies one example per app into
@@ -290,7 +303,8 @@ python tools/comfy_validate.py --comfy-dir /path/to/ComfyUI --placeholders --lab
 
 1. Get the workflow in API format: add a recipe to `tools/build_apps.py` (official template + explicit edits), or
    export it from ComfyUI with *Export (API)*. A fixed prompt over a pipeline that already runs is one line in
-   `tools/template_apps.py` instead (see *Template apps* above).
+   `tools/template_apps.py` instead (see *Template apps* above). For any other workflow, `tools/import_workflow.py`
+   writes the first draft of steps 1 and 2 (see below).
 2. Write `apps/<id>/app.json`: inputs and where each one binds (`node` + `field`), outputs, and every model with its
    Hugging Face repo, size and phase. The schema is `schema/app.schema.json`. A `select` option can carry `sets`
    (extra node fields written when it is chosen, like the LoRA file that goes with a style); a string in `sets` may
@@ -305,6 +319,18 @@ python tools/comfy_validate.py --comfy-dir /path/to/ComfyUI --placeholders --lab
    python tools/catalog.py all                     # packs and VRAM map
    npm test
    ```
+
+### From any ComfyUI workflow
+
+```sh
+python tools/import_workflow.py my_workflow.json --id my-app --name "My App"   # API or UI format
+```
+
+It reads the graph and writes `apps/my-app/app.json` + `workflow.api.json` as a draft: the image, video and audio
+loaders become inputs, the positive prompt, seed, steps, size and titled primitives become fields, every `Save…` node
+an output, and every loader file a model, with its Hugging Face repo, size and license when `packs/` already knows the
+file. Then it runs the validator on the new app and prints what to check by hand. Details and limits:
+[`docs/import-workflow.md`](docs/import-workflow.md).
 
 `tools/comfy_validate.py` creates empty model files and tiny inputs so ComfyUI's own validator can check a workflow on
 any machine, CPU included. `tools/ui2api.py` converts UI workflows (with subgraphs and dynamic widgets) to API format
