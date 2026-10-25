@@ -181,8 +181,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": 35.67,
-      "measured_on": "H100 · 20261024-172353-h100"
+      "measured_peak_gb": 9.9,
+      "measured_on": "L40S · 20261024-230058-l40s"
     },
     {
       "id": "billboard",
@@ -389,8 +389,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": 13.15,
-      "measured_on": "H100 · 20261024-174729-h100"
+      "measured_peak_gb": 9.75,
+      "measured_on": "L40S · 20261024-230058-l40s"
     },
     {
       "id": "color-grade",
@@ -1013,8 +1013,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": 12.66,
-      "measured_on": "H100 · 20261022-035128-h100"
+      "measured_peak_gb": 12.78,
+      "measured_on": "L40S · 20261024-230058-l40s"
     },
     {
       "id": "micro-beasts",
@@ -1559,8 +1559,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null,
-      "measured_on": null
+      "measured_peak_gb": 13.03,
+      "measured_on": "L40S · 20261024-230058-l40s"
     },
     {
       "id": "music",
@@ -1637,8 +1637,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null,
-      "measured_on": null
+      "measured_peak_gb": 15.39,
+      "measured_on": "L40S · 20261024-230058-l40s"
     },
     {
       "id": "style-reference",
@@ -2365,8 +2365,8 @@
       },
       "verdict_24gb": "tight (by phases)",
       "modal_gpu": "test on L4 / A10G; L40S (48 GB) is comfortable",
-      "measured_peak_gb": 42.87,
-      "measured_on": "H100 · 20261022-035829-h100"
+      "measured_peak_gb": 28.7,
+      "measured_on": "L40S · 20261024-230058-l40s"
     },
     {
       "id": "vfx-clean-plate",

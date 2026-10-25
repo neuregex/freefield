@@ -108,10 +108,10 @@
         "aperture": "aperture f/1.4, shallow depth of field, creamy bokeh"
       },
       "seed": 42,
-      "seconds": 24.7,
-      "peak_vram_gb": 13.15,
-      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261024-174729-h100"
+      "seconds": 11.2,
+      "peak_vram_gb": 9.75,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261024-230058-l40s"
     },
     "edit": {
       "case": "edit-jacket",
@@ -1843,13 +1843,13 @@
         "details": "",
         "width": 1024,
         "height": 1024,
-        "steps": 8
+        "steps": 15
       },
       "seed": 42,
-      "seconds": 13.2,
-      "peak_vram_gb": 12.66,
-      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035128-h100"
+      "seconds": 8.0,
+      "peak_vram_gb": 12.78,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261024-230058-l40s"
     },
     "micro-beasts": {
       "case": "tpl-micro-beasts",
@@ -2966,7 +2966,7 @@
           "type": "image",
           "src": "examples/whats-next/input-image.jpg",
           "full": "examples/whats-next/input-image-full.jpg",
-          "from_case": "ref-fx-road"
+          "from_case": "ref-fx-lake"
         }
       ],
       "values": {
@@ -2974,10 +2974,10 @@
         "details": ""
       },
       "seed": 42,
-      "seconds": 48.4,
-      "peak_vram_gb": 42.87,
-      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261022-035829-h100"
+      "seconds": 37.4,
+      "peak_vram_gb": 28.7,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261024-230058-l40s"
     },
     "zooms": {
       "case": "tpl-zooms",
@@ -3754,13 +3754,13 @@
         "details": "",
         "width": 768,
         "height": 1280,
-        "steps": 8
+        "steps": 15
       },
       "seed": 42,
-      "seconds": 12.0,
-      "peak_vram_gb": 35.67,
-      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261024-172353-h100"
+      "seconds": 9.0,
+      "peak_vram_gb": 9.9,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261024-230058-l40s"
     },
     "bullet-time-scene": {
       "case": "tpl-bullet-time-scene",
@@ -4000,7 +4000,47 @@
       "peak_vram_gb": 11.47,
       "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
       "run": "20261024-174729-h100"
+    },
+    "create-image": {
+      "case": "cmp-fisher-klx",
+      "type": "image",
+      "card": "examples/create-image/card.jpg",
+      "poster": null,
+      "full": "examples/create-image/full.jpg",
+      "inputs": [],
+      "values": {
+        "prompt": "Candid photo of a 60-year-old fisherman from Veracruz mending a fishing net on a wooden dock at golden hour, weathered skin, gray stubble, faded blue work shirt, gulls in the background, shot on 35mm film",
+        "expand": true,
+        "width": 1024,
+        "height": 1024,
+        "steps": 15
+      },
+      "seed": 42,
+      "seconds": 26.7,
+      "peak_vram_gb": 15.39,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261024-230058-l40s"
+    },
+    "moss-image": {
+      "case": "cmp-fisher-ms",
+      "type": "image",
+      "card": "examples/moss-image/card.jpg",
+      "poster": null,
+      "full": "examples/moss-image/full.jpg",
+      "inputs": [],
+      "values": {
+        "prompt": "Candid photo of a 60-year-old fisherman from Veracruz mending a fishing net on a wooden dock at golden hour, weathered skin, gray stubble, faded blue work shirt, gulls in the background, shot on 35mm film",
+        "rewrite": true,
+        "width": 1024,
+        "height": 1024,
+        "steps": 25
+      },
+      "seed": 42,
+      "seconds": 23.4,
+      "peak_vram_gb": 13.03,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261024-230058-l40s"
     }
   },
-  "updated_from": "20261024-192222-h100"
+  "updated_from": "20261024-230058-l40s"
 }
