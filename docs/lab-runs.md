@@ -3,7 +3,7 @@
 Every GPU run of the lab (`lab/lab_modal.py`) from 20 to 26 Oct 2026, in order. Each run is a folder
 `lab/results/<run id>` with `results.jsonl` (one row per case: status, seconds, peak VRAM), `run.json` (GPU, start
 time) and `review.html`. Peaks are the highest of the run; on an 80 GB H100 ComfyUI can keep the models of earlier
-steps loaded, so a peak there is not the least an app needs. 43 runs, 698 of 721 cases ok: 22 of the 23 failures are
+steps loaded, so a peak there is not the least an app needs. 44 runs, 700 of 723 cases ok: 22 of the 23 failures are
 the first IC-LoRA run, before the gated licenses were accepted, and the other is `recast` in the first run.
 
 | Run | GPU | What ran | Cases ok | Longest case | Peak |
@@ -51,6 +51,7 @@ the first IC-LoRA run, before the gated licenses were accepted, and the other is
 | `20261026-021210-l40s` | L40S | Queue job 21: the same with plain clothes and the photo mode keeping the hairstyle | 3 / 3 | 20 s | 12.3 GB |
 | `20261026-021507-l40s` | L40S | Queue job 22: the photo mode with plain shoes asked for | 2 / 2 | 18 s | 12.6 GB |
 | `20261026-021906-l40s` | L40S | Queue job 23: the photo mode example waist-up at a night food stall | 2 / 2 | 19 s | 13.2 GB |
+| `20261026-023750-l40s` | L40S | Queue job 24: for the demo video, AI Influencer's example animated by Image to Video, as *Use in…* does | 2 / 2 | 91 s | 43.9 GB |
 
 A run with several GPUs (`--shards N`) splits the cases into N groups that run at the same time and comes back as
 one folder. The cases a run lists include the reference images, clips and songs that the others read.
