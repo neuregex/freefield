@@ -110,7 +110,7 @@ pre.code { margin: 0; padding: 12px 14px; border-radius: 10px; background: #0d0d
 
 /* media tiles: a card that plays its loop on hover or when visible */
 .media { position: relative; overflow: hidden; background: #0d0d0f; }
-.media > img, .media > video { width: 100%; height: 100%; object-fit: cover; }
+.media > img, .media > video { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }   /* a tall photo in a wide card keeps the head */
 .media > img.contain { object-fit: contain; }
 .media .badges { position: absolute; left: 10px; bottom: 10px; display: flex; gap: 5px; flex-wrap: wrap; }
 .media .badges.top { top: 10px; bottom: auto; }
@@ -605,7 +605,7 @@ dl.vals dd { margin: 0; overflow-wrap: anywhere; }
 .mm-item[aria-current="page"] .nm { color: var(--accent); }
 .mm-thumb { display: grid; place-items: center; width: 38px; height: 38px; flex: none; overflow: hidden; border-radius: 9px; background: #1a1a1d;
   box-shadow: inset 0 0 0 1px #27272c; color: var(--dim); font-size: 17px; }
-.mm-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.mm-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
 .mm-thumb.glyph { color: #d6d6db; }
 .mm-txt { display: grid; gap: 1px; min-width: 0; }
 .mm-item.model .mm-txt { flex: 1; }
