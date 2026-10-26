@@ -88,6 +88,18 @@ newer ComfyUI than the one pinned here and its weights are licensed for non-comm
 
 ![Six prompts (a portrait, a product with text, counting, a JSON prompt, a poster, a watercolor) on Z-Image Turbo, FLUX 3 Klein with and without the upsampler, Krea 2 Turbo and MOSS-Image, with GPU seconds and peak VRAM under each](docs/media/image-models.jpg)
 
+### Soul ID without training
+
+Higgsfield's Soul ID trains a model of a person from their photos. Freefield does not train: `character` (one photo)
+and `character-3` (three photos) copy the person from the references on every run, 13.0 s of L40S time in the lab
+(about $0.007 at Modal's base price of $1.95 an hour). A character LoRA keeps a GPU busy for tens of minutes instead
+(an estimate, not measured here: 30 minutes of H100 at $3.95 an hour is about $2 per person), the hosted demo would
+bill that to its owner's Modal account, and a LoRA of someone's face has to be stored per user and with their consent,
+which a demo without user accounts cannot do. So training is left for later, and the path uses ComfyUI 0.42's own
+nodes: an app that takes 10 to 20 photos of one person → `VAEEncode` → `TrainLoraNode` on FLUX 3 Image Klein →
+`SaveLoRA` to the Modal volume, then `character` loads it with `LoraModelLoader`. Still to check: whether
+`TrainLoraNode` trains on the int8 Klein file Freefield downloads (5.83 GB) or needs the full weights.
+
 ### Template apps
 
 Higgsfield's catalog is mostly fixed prompts over a few pipelines, and so is this: each of these apps is one of
