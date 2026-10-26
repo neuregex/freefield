@@ -3,7 +3,7 @@
 Every GPU run of the lab (`lab/lab_modal.py`) from 20 to 26 Oct 2026, in order. Each run is a folder
 `lab/results/<run id>` with `results.jsonl` (one row per case: status, seconds, peak VRAM), `run.json` (GPU, start
 time) and `review.html`. Peaks are the highest of the run; on an 80 GB H100 ComfyUI can keep the models of earlier
-steps loaded, so a peak there is not the least an app needs. 44 runs, 700 of 723 cases ok: 22 of the 23 failures are
+steps loaded, so a peak there is not the least an app needs. 47 runs, 706 of 729 cases ok: 22 of the 23 failures are
 the first IC-LoRA run, before the gated licenses were accepted, and the other is `recast` in the first run.
 
 | Run | GPU | What ran | Cases ok | Longest case | Peak |
@@ -52,6 +52,9 @@ the first IC-LoRA run, before the gated licenses were accepted, and the other is
 | `20261026-021507-l40s` | L40S | Queue job 22: the photo mode with plain shoes asked for | 2 / 2 | 18 s | 12.6 GB |
 | `20261026-021906-l40s` | L40S | Queue job 23: the photo mode example waist-up at a night food stall | 2 / 2 | 19 s | 13.2 GB |
 | `20261026-023750-l40s` | L40S | Queue job 24: for the demo video, AI Influencer's example animated by Image to Video, as *Use in…* does | 2 / 2 | 91 s | 43.9 GB |
+| `20261026-034805-l40s` | L40S | Queue job 25: a second Mixed Media clip (a Japanese woman on a cherry blossom street) and its anime look | 2 / 2 | 121 s | 44.2 GB |
+| `20261026-040431-l40s` | L40S | Queue job 26: the Anime look asking for anime eyes and each person's own skin tone | 2 / 2 | 117 s | 44.2 GB |
+| `20261026-041209-l40s` | L40S | Queue job 27: the shot description also reaching Klein's first frame; the new Mixed Media example | 2 / 2 | 110 s | 44.2 GB |
 
 A run with several GPUs (`--shards N`) splits the cases into N groups that run at the same time and comes back as
 one folder. The cases a run lists include the reference images, clips and songs that the others read.
@@ -123,6 +126,10 @@ one folder. The cases a run lists include the reference images, clips and songs 
   several picks showed (face gems, glasses, headphones); its first runs drew a "G/O" print on a vest and brand-like
   marks on sneakers until the prompt asked for plain clothes and shoes, and the photo mode cut the hair short until it
   was told to keep the hairstyle unless a new one is picked.
+- **Mixed Media's anime, for the demo video (26 Oct).** On a new clip of a Japanese woman on a cherry blossom street the
+  anime first frame came out tan, narrow-eyed and heavy-faced: Klein kept her real proportions under warm light. Asking
+  the look for anime eyes and each person's own skin tone gave anime eyes but a frown; passing the shot description to
+  Klein as well (who is in it: a smiling woman in her twenties) gave the smile back. That clip is now the app's example.
 
 ## End to end from the browser (23 Oct)
 

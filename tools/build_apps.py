@@ -426,10 +426,15 @@ def ltx_union_control(api: Api, edit: Api) -> None:
     rewire(api, ["edit:11", 0], ["ff_first_frame", 0])
     drop(api, "edit:11")
     api["ff_edit_prompt"] = {"class_type": "StringConcatenate",
-                             "inputs": {"string_a": "Redraw this exact photo in this look, keeping the composition, the people and the place:",
+                             "inputs": {"string_a": "Redraw this exact photo in this look, keeping the composition, the people, their expressions and the place:",
                                         "string_b": ["ff_style", 0], "delimiter": " "},
                              "_meta": {"title": "Edit instruction"}}
-    put(api, "edit:4", "text", ["ff_edit_prompt", 0])
+    # the shot description reaches Klein too, so the first frame keeps who is in it (a smile, an age) as well as the layout
+    # (26 Oct: without it the anime first frame frowned and turned a smiling woman's face heavy)
+    api["ff_edit_full"] = {"class_type": "StringConcatenate",
+                           "inputs": {"string_a": ["ff_edit_prompt", 0], "string_b": ["5508", 0], "delimiter": ". "},
+                           "_meta": {"title": "Edit instruction + what is in the shot"}}
+    put(api, "edit:4", "text", ["ff_edit_full", 0])
     styled = find(api, "VAEDecode", vae=["edit:3", 0])
     load_image = find(api, "LoadImage")
     rewire(api, [load_image, 0], [styled, 0])

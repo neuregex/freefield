@@ -806,7 +806,7 @@
         0
       ],
       "text": [
-        "ff_edit_prompt",
+        "ff_edit_full",
         0
       ]
     },
@@ -915,7 +915,7 @@
   "ff_edit_prompt": {
     "class_type": "StringConcatenate",
     "inputs": {
-      "string_a": "Redraw this exact photo in this look, keeping the composition, the people and the place:",
+      "string_a": "Redraw this exact photo in this look, keeping the composition, the people, their expressions and the place:",
       "string_b": [
         "ff_style",
         0
@@ -924,6 +924,23 @@
     },
     "_meta": {
       "title": "Edit instruction"
+    }
+  },
+  "ff_edit_full": {
+    "class_type": "StringConcatenate",
+    "inputs": {
+      "string_a": [
+        "ff_edit_prompt",
+        0
+      ],
+      "string_b": [
+        "5508",
+        0
+      ],
+      "delimiter": ". "
+    },
+    "_meta": {
+      "title": "Edit instruction + what is in the shot"
     }
   }
 }

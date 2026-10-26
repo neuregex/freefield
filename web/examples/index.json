@@ -3069,7 +3069,7 @@
       "run": "20261022-181155-h100"
     },
     "mixed-media": {
-      "case": "mm-anime",
+      "case": "mm-anime-tokyo",
       "type": "video",
       "card": "examples/mixed-media/card.mp4",
       "poster": "examples/mixed-media/poster.jpg",
@@ -3081,40 +3081,40 @@
           "type": "video",
           "src": "examples/mixed-media/input-clip.jpg",
           "full": "examples/mixed-media/input-clip-full.mp4",
-          "from_case": "ref-stroll"
+          "from_case": "ref-stroll-tokyo"
         }
       ],
       "values": {
         "style": "anime",
-        "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
+        "details": "A smiling Japanese woman in her twenties with a black ponytail and fair skin, in a white blouse and a light blue cardigan, walks toward the camera along a street lined with cherry blossom trees, petals in the air",
         "negative": "photorealistic, photo, blurry, distorted",
         "size": 544,
         "strength": 0.7
       },
       "seed": 42,
-      "seconds": 109.4,
-      "peak_vram_gb": 51.25,
-      "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-      "run": "20261023-143551-h100",
+      "seconds": 109.6,
+      "peak_vram_gb": 44.16,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261026-041209-l40s",
       "options": {
         "style": {
           "anime": {
-            "case": "mm-anime",
+            "case": "mm-anime-tokyo",
             "type": "video",
             "card": "examples/mixed-media/options/style/anime/card.mp4",
             "poster": "examples/mixed-media/options/style/anime/poster.jpg",
             "values": {
               "style": "anime",
-              "details": "A young woman in a yellow summer dress walking toward the camera along a park path",
+              "details": "A smiling Japanese woman in her twenties with a black ponytail and fair skin, in a white blouse and a light blue cardigan, walks toward the camera along a street lined with cherry blossom trees, petals in the air",
               "negative": "photorealistic, photo, blurry, distorted",
               "size": 544,
               "strength": 0.7
             },
             "seed": 42,
-            "seconds": 109.4,
-            "peak_vram_gb": 51.25,
-            "gpu": "NVIDIA H100 80GB HBM3, 81559 MiB",
-            "run": "20261023-143551-h100"
+            "seconds": 109.6,
+            "peak_vram_gb": 44.16,
+            "gpu": "NVIDIA L40S, 46068 MiB",
+            "run": "20261026-041209-l40s"
           },
           "claymation": {
             "case": "mm-claymation",
@@ -4620,5 +4620,5 @@
       "run": "20261026-021906-l40s"
     }
   },
-  "updated_from": "20261026-021906-l40s"
+  "updated_from": "20261026-041209-l40s"
 }
