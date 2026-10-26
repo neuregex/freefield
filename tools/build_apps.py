@@ -621,6 +621,10 @@ def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None)
     pd["pd_b3"] = {"class_type": "ImageBatch", "inputs": {"image1": ["pd_b2", 0], "image2": ["pd_d3", 0]}}
     pd["pd_b4"] = {"class_type": "ImageBatch", "inputs": {"image1": ["pd_b3", 0], "image2": ["pd_d4", 0]}, "_meta": {"title": "The four photos"}}
     put(pd, "9", "images", ["pd_b4", 0])
+    # its own vertical canvas: started from the photo's latent shape, two of four photos kept the photo's framing (run 20261026-003153-l40s)
+    pd["ff_size"] = {"class_type": "EmptyFlux2LatentImage", "inputs": {"width": 832, "height": 1248, "batch_size": 1}, "_meta": {"title": "Phone photo, 2:3"}}
+    for ks in ("7", "pd_k2", "pd_k3", "pd_k4"):
+        put(pd, ks, "latent_image", ["ff_size", 0])
     out["photodump"] = pd
 
     ip = json.loads(json.dumps(e))

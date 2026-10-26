@@ -58,8 +58,8 @@
         1
       ],
       "latent_image": [
-        "17",
-        2
+        "ff_size",
+        0
       ],
       "seed": 563228241303057,
       "steps": 16,
@@ -212,8 +212,8 @@
         1
       ],
       "latent_image": [
-        "pd_r2",
-        2
+        "ff_size",
+        0
       ],
       "seed": 563228241303057,
       "steps": 16,
@@ -303,8 +303,8 @@
         1
       ],
       "latent_image": [
-        "pd_r3",
-        2
+        "ff_size",
+        0
       ],
       "seed": 563228241303057,
       "steps": 16,
@@ -394,8 +394,8 @@
         1
       ],
       "latent_image": [
-        "pd_r4",
-        2
+        "ff_size",
+        0
       ],
       "seed": 563228241303057,
       "steps": 16,
@@ -461,6 +461,17 @@
     },
     "_meta": {
       "title": "The four photos"
+    }
+  },
+  "ff_size": {
+    "class_type": "EmptyFlux2LatentImage",
+    "inputs": {
+      "width": 832,
+      "height": 1248,
+      "batch_size": 1
+    },
+    "_meta": {
+      "title": "Phone photo, 2:3"
     }
   }
 }

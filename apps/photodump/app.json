@@ -11,7 +11,7 @@
   "source": {
     "template": "image_flux3_klein_distilled_image_edit.json",
     "comfyui": "0.42.0",
-    "notes": "apps/edit's pipeline four times over the same photo: four prompts (the aesthetic select writes all four, nodes 4 and pd_t2-4), four ReferenceMultiLatent and four samplers with the same seed, joined with ImageBatch into one SaveImage. The prompts follow apps/character's wording (\"The same person as in <ref_image_0>, <scene>\"): with \"A candid phone photo of the same person\" the first run (20261026-002124-l40s) pasted the photo, same pose and framing, on four backgrounds."
+    "notes": "apps/edit's pipeline four times over the same photo: four prompts (the aesthetic select writes all four, nodes 4 and pd_t2-4), four ReferenceMultiLatent and four samplers with the same seed, joined with ImageBatch into one SaveImage. Each of the four starts from its own empty 2:3 latent (EmptyFlux2LatentImage, node ff_size) with its own framing: full body, half body, from the side, a mirror selfie. Runs 20261026-002124-l40s and -003153-l40s, which started from the photo's latent shape, kept the photo's pose and framing in two to four of the photos."
   },
   "inputs": [
     {
@@ -43,22 +43,22 @@
             {
               "node": "4",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, on a neon-lit street at night, rain on the pavement, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, on a neon-lit street at night, rain on the pavement, full body, walking toward the camera, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t2",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, at a rooftop bar at dusk with the city lights behind, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, at a rooftop bar at dusk with the city lights behind, half body, sitting and laughing, looking away from the camera, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t3",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, on an empty subway platform at night, a train arriving with motion blur, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, on a subway platform at night, a train arriving with motion blur, seen from the side, looking at something out of frame, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t4",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, in a diner booth late at night, a milkshake on the table, direct flash, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, in a diner restroom mirror late at night, direct flash, taking a mirror selfie, the phone partly covering the chin, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             }
           ]
         },
@@ -69,22 +69,22 @@
             {
               "node": "4",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, walking barefoot along the shoreline at golden hour, holding sandals, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, on the shoreline at golden hour, holding sandals, full body, walking toward the camera, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t2",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, at a beach bar table with a fresh coconut drink, laughing, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, at a beach bar table with a fresh coconut drink, half body, sitting and laughing, looking away from the camera, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t3",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, on a small boat with the sea behind, wind in the hair, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, on a small boat with the sea behind, wind in the hair, seen from the side, looking at something out of frame, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t4",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, in a sunny old-town street with whitewashed walls, eating an ice cream, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, in a beach house mirror, sun-bleached light, taking a mirror selfie, the phone partly covering the chin, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             }
           ]
         },
@@ -95,22 +95,22 @@
             {
               "node": "4",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, curled up on a couch under a knitted blanket, reading a book, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, in a small kitchen, carrying a pot of pasta, full body, walking toward the camera, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t2",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, cooking pasta in a small kitchen, steam rising, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, on a couch under a knitted blanket with a book, half body, sitting and laughing, looking away from the camera, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t3",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, holding a coffee mug by a rainy window in the morning, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, by a rainy window in the morning, holding a coffee mug, seen from the side, looking at something out of frame, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t4",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, sitting on the floor among house plants, sorting vinyl records, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, in a bathroom mirror in the morning light, taking a mirror selfie, the phone partly covering the chin, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             }
           ]
         },
@@ -121,22 +121,22 @@
             {
               "node": "4",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, on a forest hiking trail with a backpack, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, on a forest hiking trail with a backpack, full body, walking toward the camera, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t2",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, at a picnic on the grass in a park, friends out of focus, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, at a picnic on the grass in a park, friends out of focus, half body, sitting and laughing, looking away from the camera, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t3",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, riding a bicycle along a lakeside path, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, on a lakeside path next to a bicycle, seen from the side, looking at something out of frame, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t4",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, by a campfire at dusk, wrapped in a flannel shirt, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, in a cabin mirror, a flannel shirt on, taking a mirror selfie, the phone partly covering the chin, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             }
           ]
         },
@@ -147,22 +147,22 @@
             {
               "node": "4",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, on a colorful street in Coyoacán with papel picado overhead, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, on a colorful street in Coyoacán with papel picado overhead, full body, walking toward the camera, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t2",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, on a trajinera boat in Xochimilco, flowers on its arch, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, on a trajinera boat in Xochimilco, flowers on its arch, half body, sitting and laughing, looking away from the camera, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t3",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, at a market stall full of fruit, holding a mango on a stick, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, at a market stall full of fruit, holding a mango on a stick, seen from the side, looking at something out of frame, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t4",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, on a terrace at sunset with the city behind, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, in an elevator mirror of an old Roma Norte building, taking a mirror selfie, the phone partly covering the chin, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             }
           ]
         },
@@ -173,22 +173,22 @@
             {
               "node": "4",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, against a white wall, full body, direct flash, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, against a white wall, direct flash, full body, walking toward the camera, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t2",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, in a close-up with direct flash and a hard shadow behind, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, on a stool, direct flash and a hard shadow behind, half body, sitting and laughing, looking away from the camera, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t3",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, sitting on a stool, legs crossed, direct flash, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, against a red wall, direct flash, seen from the side, looking at something out of frame, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             },
             {
               "node": "pd_t4",
               "field": "text",
-              "value": "The same person as in <ref_image_0>, looking over the shoulder against a red wall, direct flash, in a new pose and clothes that suit the scene, seen from a new angle: a candid phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
+              "value": "The same person as in <ref_image_0>, in a studio mirror, direct flash, taking a mirror selfie, the phone partly covering the chin, in clothes that suit the scene: a candid vertical phone snapshot. Keep the face, hairstyle and build identical. No text, no logos. {details}"
             }
           ]
         }
