@@ -4413,25 +4413,25 @@
           "id": "photo1",
           "label": "Photo 1",
           "type": "image",
-          "src": null,
-          "full": null,
-          "from": "@case:ref-face-a"
+          "src": "examples/character-3/input-photo1.jpg",
+          "full": "examples/character-3/input-photo1-full.jpg",
+          "from_case": "ref-face-a"
         },
         {
           "id": "photo2",
           "label": "Photo 2",
           "type": "image",
-          "src": null,
-          "full": null,
-          "from": "@case:ref-face-a-side"
+          "src": "examples/character-3/input-photo2.jpg",
+          "full": "examples/character-3/input-photo2-full.jpg",
+          "from_case": "ref-face-a-side"
         },
         {
           "id": "photo3",
           "label": "Photo 3",
           "type": "image",
-          "src": null,
-          "full": null,
-          "from": "@case:ref-face-a-outdoor"
+          "src": "examples/character-3/input-photo3.jpg",
+          "full": "examples/character-3/input-photo3-full.jpg",
+          "from_case": "ref-face-a-outdoor"
         }
       ],
       "values": {
@@ -4457,16 +4457,16 @@
           "id": "image",
           "label": "Photo",
           "type": "image",
-          "src": null,
-          "full": null,
-          "from": "@case:ref-face-a"
+          "src": "examples/inpaint/input-image.jpg",
+          "full": "examples/inpaint/input-image-full.jpg",
+          "from_case": "ref-face-a"
         },
         {
           "id": "mask",
           "label": "Area to change",
           "type": "image",
-          "src": null,
-          "full": null,
+          "src": "examples/inpaint/input-mask-full.png",
+          "full": "examples/inpaint/input-mask-full.png",
           "from": "asset:mask-face-a-jacket.png"
         }
       ],
@@ -4491,9 +4491,9 @@
           "id": "photo",
           "label": "Your photo",
           "type": "image",
-          "src": null,
-          "full": null,
-          "from": "@case:ref-face-a"
+          "src": "examples/photodump/input-photo.jpg",
+          "full": "examples/photodump/input-photo-full.jpg",
+          "from_case": "ref-face-a"
         }
       ],
       "values": {
@@ -4518,25 +4518,25 @@
           "id": "style1",
           "label": "Reference 1",
           "type": "image",
-          "src": null,
-          "full": null,
-          "from": "@case:ref-mood-diner"
+          "src": "examples/moodboard/input-style1.jpg",
+          "full": "examples/moodboard/input-style1-full.jpg",
+          "from_case": "ref-mood-diner"
         },
         {
           "id": "style2",
           "label": "Reference 2",
           "type": "image",
-          "src": null,
-          "full": null,
-          "from": "@case:ref-mood-wagon"
+          "src": "examples/moodboard/input-style2.jpg",
+          "full": "examples/moodboard/input-style2-full.jpg",
+          "from_case": "ref-mood-wagon"
         },
         {
           "id": "style3",
           "label": "Reference 3",
           "type": "image",
-          "src": null,
-          "full": null,
-          "from": "@case:ref-mood-coffee"
+          "src": "examples/moodboard/input-style3.jpg",
+          "full": "examples/moodboard/input-style3-full.jpg",
+          "from_case": "ref-mood-coffee"
         }
       ],
       "values": {
@@ -4552,5 +4552,5 @@
       "run": "20261026-003153-l40s"
     }
   },
-  "updated_from": "20261026-003153-l40s"
+  "updated_from": "20261026-003753-l40s"
 }

@@ -197,6 +197,15 @@ def main(argv: list[str] | None = None) -> int:
                     inputs.append({"id": input_id, "label": labels.get(input_id, {}).get("label", input_id),
                                    "type": w.get("type"), "src": src, "full": playable, "from_case": source["id"]})
                     continue
+            if isinstance(raw, str) and raw.startswith("asset:") and (ROOT / "lab" / "assets" / raw[len("asset:"):]).exists():
+                # a file kept in lab/assets (inpaint's painted mask): copied as it is, so "Load this example" fills it in too
+                asset = ROOT / "lab" / "assets" / raw[len("asset:"):]
+                name = f"input-{input_id}-full{asset.suffix.lower()}"
+                shutil.copy(asset, dest / name)
+                rel = f"examples/{app_id}/{name}"
+                inputs.append({"id": input_id, "label": labels.get(input_id, {}).get("label", input_id),
+                               "type": labels.get(input_id, {}).get("type"), "src": rel, "full": rel, "from": raw})
+                continue
             inputs.append({"id": input_id, "label": labels.get(input_id, {}).get("label", input_id),
                            "type": labels.get(input_id, {}).get("type"), "src": None, "full": None, "from": raw})
 
