@@ -181,8 +181,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": 9.9,
-      "measured_on": "L40S · 20261024-230058-l40s"
+      "measured_peak_gb": 9.86,
+      "measured_on": "L40S · 20261026-002124-l40s"
     },
     {
       "id": "billboard",
@@ -363,8 +363,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null,
-      "measured_on": null
+      "measured_peak_gb": 12.18,
+      "measured_on": "L40S · 20261026-002124-l40s"
     },
     {
       "id": "character-swap",
@@ -415,8 +415,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": 9.75,
-      "measured_on": "L40S · 20261024-230058-l40s"
+      "measured_peak_gb": 11.61,
+      "measured_on": "L40S · 20261026-002124-l40s"
     },
     {
       "id": "color-grade",
@@ -883,8 +883,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null,
-      "measured_on": null
+      "measured_peak_gb": 11.03,
+      "measured_on": "L40S · 20261026-002124-l40s"
     },
     {
       "id": "j-magazine",
@@ -1117,8 +1117,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null,
-      "measured_on": null
+      "measured_peak_gb": 12.14,
+      "measured_on": "L40S · 20261026-003153-l40s"
     },
     {
       "id": "mural",
@@ -1299,8 +1299,8 @@
       },
       "verdict_24gb": "fits whole",
       "modal_gpu": "L4 / A10G (24 GB)",
-      "measured_peak_gb": null,
-      "measured_on": null
+      "measured_peak_gb": 10.93,
+      "measured_on": "L40S · 20261026-003753-l40s"
     },
     {
       "id": "pixel-game",

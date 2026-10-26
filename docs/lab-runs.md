@@ -42,6 +42,10 @@ the first IC-LoRA run, before the gated licenses were accepted, and the other is
 | `20261024-192222-h100` | 3 × H100 | Queue job 12: brand logos out of the road photo, the athlete, Mascot and Style Snap; `reshoot` without the Turbo LoRA | 16 / 16 | 346 s | 59.0 GB |
 | `20261024-230058-l40s` | 3 × L40S | Queue job 13: six prompts on five image models (`cmp-*`); Cinema Studio, AI Influencer and Meme on FLUX 3 Klein; `whats-next` from the lake | 37 / 37 | 37 s | 28.7 GB |
 | `20261024-232228-l40s` | L40S | Queue job 14: two soundtracks of two minutes for the demo video | 2 / 2 | 161 s | 37.0 GB |
+| `20261025-001104-l40s` | L40S | Queue job 15: AI Influencer asked for unbranded clothes; it drew striped sneakers, so the published example stayed | 1 / 1 | 15 s | 11.3 GB |
+| `20261026-002124-l40s` | 2 × L40S | Queue job 16, batch 1 of Higgsfield's image menu: the influencer builder and its 9 character types, Create Image's looks at 1.5K and 2K, Cinema Studio's genre, era, lighting and palette, Relight's controls, Moodboard, Character (3 Photos), Photodump, Inpaint | 24 / 24 | 50 s | 28.6 GB |
+| `20261026-003153-l40s` | L40S | Queue job 17: the animal heads asked as whole heads, Photodump with apps/character's wording, Moodboard with 1 MP references | 9 / 9 | 22 s | 12.6 GB |
+| `20261026-003753-l40s` | L40S | Queue job 18: Photodump from its own vertical canvas with four framings; insect and bird without human hair | 4 / 4 | 23 s | 14.3 GB |
 
 A run with several GPUs (`--shards N`) splits the cases into N groups that run at the same time and comes back as
 one folder. The cases a run lists include the reference images, clips and songs that the others read.
@@ -99,6 +103,13 @@ one folder. The cases a run lists include the reference images, clips and songs 
   Klein; the upsampler added about 8 s on an L40S. The comparison sheet is `docs/media/image-models.jpg`.
 - **Soundtrack.** With empty lyrics MiniMax Music 3 made 20 s pieces (job 13); listing the song's sections as tags
   gave 130 s, and Stable Audio 3's music category gave 120 s with a quiet intro and a clean ending (job 14).
+
+- **Batch 1 of Higgsfield's image menu (26 Oct).** The ten entries were read on Higgsfield and compared with the apps
+  here. AI Influencer became a builder with the same trait groups; the animal types first came out as masks over a
+  human face (frog, insect) or not at all (bird) and needed the whole animal head asked for and no human hair.
+  Photodump first pasted the photo on four backgrounds, then kept its pose in two of four; each photo now starts from
+  its own vertical canvas with its own framing. Moodboard took the references' look only once they went in at 1 MP
+  with the look described first. Inpaint (a brush in the web UI and a noise mask) changed only the painted jacket.
 
 ## End to end from the browser (23 Oct)
 
