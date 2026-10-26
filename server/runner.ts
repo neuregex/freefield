@@ -30,6 +30,7 @@ function coerce(input: Input, raw: unknown): unknown {
     case "toggle":
       return raw === true || raw === "true" || raw === "1" || raw === "on";
     case "select": {
+      if (input.multiple) return picks(input, raw);
       const opts = input.options ?? [];
       const hit = opts.find((o) => o.value === raw || String(o.value) === String(raw));
       if (!hit) throw new InputError(`${input.id}: "${String(raw)}" is not one of the options`);
@@ -40,13 +41,48 @@ function coerce(input: Input, raw: unknown): unknown {
   }
 }
 
+/** A multiple select's value: the picked option values in the order picked, no repeats. The form sends a JSON list. */
+function picks(input: Input, raw: unknown): string[] {
+  let list: unknown[];
+  if (Array.isArray(raw)) list = raw;
+  else if (typeof raw === "string" && raw.trim().startsWith("[")) {
+    try { list = JSON.parse(raw); } catch { throw new InputError(`${input.id}: expected a list`); }
+    if (!Array.isArray(list)) throw new InputError(`${input.id}: expected a list`);
+  } else list = raw === "" || raw === null || raw === undefined ? [] : [raw];
+  const out: string[] = [];
+  for (const r of list) {
+    const hit = (input.options ?? []).find((o) => String(o.value) === String(r));
+    if (!hit) throw new InputError(`${input.id}: "${String(r)}" is not one of the options`);
+    const v = String(hit.value);
+    if (v && !out.includes(v)) out.push(v);
+  }
+  const max = input.multiple?.max;
+  if (max && out.length > max) throw new InputError(`${input.id}: at most ${max}`);
+  return out;
+}
+
+/** The picks of a multiple select as the one string templates and binds get. */
+export function joinPicks(input: Input, list: unknown): string {
+  const items = Array.isArray(list) ? list.map(String).filter(Boolean) : [];
+  if (!items.length) return "";
+  const m = input.multiple ?? {};
+  return `${m.prefix ?? ""}${items.join(m.join ?? ", ")}${m.suffix ?? ""}`;
+}
+
+/** Values as the workflow gets them: multiple selects joined. */
+export function textValues(app: App, values: Values): Values {
+  const out: Values = { ...values };
+  for (const input of app.inputs) if (input.multiple && values[input.id] !== undefined) out[input.id] = joinPicks(input, values[input.id]);
+  return out;
+}
+
 /** Fill defaults, coerce types, check required fields. File inputs pass through as FileValue. */
 export function resolveValues(app: App, values: Values): Values {
   const out: Values = {};
   for (const input of app.inputs) {
     let v = values[input.id];
     // "" is a choice when a select offers it ("Any" in a builder writes nothing); elsewhere it means "use the default"
-    const emptyIsOption = input.type === "select" && (input.options ?? []).some((o) => o.value === "");
+    const emptyIsOption = input.type === "select" && (Boolean(input.multiple) || (input.options ?? []).some((o) => o.value === ""));
     if (v === undefined || (v === "" && !emptyIsOption)) v = input.default;
     if (input.type === "seed" && (v === undefined || v === -1 || v === "-1")) {
       v = Math.floor(Math.random() * 2 ** 48);
@@ -93,6 +129,7 @@ export function applyInputs(
   asset: (f: FileValue) => unknown,
   presetId?: string,
 ): void {
+  values = textValues(app, values);
   for (const input of app.inputs) {
     const v = values[input.id];
     if (v === undefined) continue;

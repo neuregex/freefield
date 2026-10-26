@@ -371,6 +371,19 @@ def morph(api: Api, edit: Api) -> None:
     put(api, "251:250", "value", False)   # the motion prompt is written per transformation: no enhancer rewrite
 
 
+def cinema_video(api: Api, still: Api) -> None:
+    """Cinema Studio's video mode: the LTX-2.5 image-to-video template with its first frame drawn in the same graph
+    by the Cinema Studio still (FLUX 3 Image Klein, merged in as still:*). The selects that set the look (camera, lens,
+    lighting, palette) reach the picture through that frame, which Klein follows closely; LTX-2.5 then moves it with
+    the camera moves, the pacing, the action and the sound the prompt describes. The still is saved as a second output."""
+    merge(api, still, "still")
+    put(api, "still:9", "filename_prefix", "freefield/cinema-video-still")
+    load = find(api, "LoadImage")
+    rewire(api, [load, 0], ["still:18:8", 0])
+    drop(api, load)
+    put(api, find(api, "SaveVideo"), "filename_prefix", "freefield/cinema-video")
+
+
 def ltx_union_control(api: Api, edit: Api) -> None:
     """Lightricks' Union Control IC-LoRA example (two stages) as a one-click restyle: the clip's first frame
     is redrawn in the chosen look by FLUX 3 Klein (the `edit` pipeline, merged in under "edit:"), that still
@@ -666,6 +679,9 @@ def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None)
     out["video"] = tpl("video_ltx2_5_i2v.json")
     out["speak"] = tpl("video_ltx2_5_i2v.json")   # LTX-2.5 voices a quoted line itself; the manifest builds the prompt
     out["video-t2v"] = tpl("video_ltx2_5_t2v.json")
+    cv = tpl("video_ltx2_5_i2v.json")
+    cinema_video(cv, cs)
+    out["cinema-video"] = cv
 
     t = tpl("video_ltx2_5_flf2v.json")
     add_lora_after(t, find(t, "UNETLoader"), "ltx2.3-transition.safetensors", 1.0)

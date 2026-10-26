@@ -151,6 +151,10 @@ def app_variants(app_dir: Path) -> list[tuple[str, dict]]:
     for i in manifest.get("inputs", []):   # the runner turns -1 into a random seed; any fixed one will do here
         if i["type"] == "seed" and values.get(i["id"]) in (None, -1, "-1"):
             values[i["id"]] = 42
+    for i in manifest.get("inputs", []):   # a multiple select reaches the workflow joined, as server/runner.ts writes it
+        if i.get("multiple") and isinstance(values.get(i["id"]), list):
+            m, items = i["multiple"], values[i["id"]]
+            values[i["id"]] = f'{m.get("prefix", "")}{m.get("join", ", ").join(map(str, items))}{m.get("suffix", "")}' if items else ""
 
     def render(t: str) -> str:
         import re

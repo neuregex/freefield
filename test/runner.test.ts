@@ -59,6 +59,35 @@ test("cinema studio composes the prompt from every select", () => {
   assert.ok(!text.includes("{"), "no placeholder left behind");
 });
 
+test("a multiple select keeps the picks in order and templates get them joined", () => {
+  const app = byId("cinema-video");
+  const values = resolveValues(app, { prompt: "a fox in snow", moves: JSON.stringify(["slowly dollies in toward the subject", "pans left", "pans left"]), seed: 1 });
+  assert.deepEqual(values.moves, ["slowly dollies in toward the subject", "pans left"], "the form's JSON list, repeats dropped, order kept");
+  const wf = recorder();
+  applyInputs(app, values, wf, () => null);
+  const motion = wf.sets["398:376.value"] as string;
+  assert.match(motion, /^The camera slowly dollies in toward the subject, then pans left\. a fox in snow\. The look of a film: /);
+  assert.ok(!(wf.sets["still:18:17.value"] as string).includes("dollies"), "the first frame gets the look, not the moves");
+  assert.ok(!/camera|lens/i.test(wf.sets["still:18:17.value"] as string), "and no gear words, so Klein draws no camera");
+  // none picked is a choice: the moves vanish from the prompt instead of falling back to the default
+  const none = resolveValues(app, { prompt: "a fox in snow", moves: "[]", seed: 1 });
+  const wf2 = recorder();
+  applyInputs(app, none, wf2, () => null);
+  assert.match(wf2.sets["398:376.value"] as string, /^a fox in snow\. The look/);
+  assert.deepEqual(resolveValues(app, { prompt: "x", seed: 1 }).moves, ["slowly dollies in toward the subject"], "no value at all takes the default list");
+  assert.throws(() => resolveValues(app, { prompt: "x", moves: JSON.stringify(["flies to the moon"]) }), /not one of the options/);
+  assert.throws(() => resolveValues(app, { prompt: "x", moves: JSON.stringify(["pans left", "pans right", "tilts up", "tilts down"]) }), /at most 3/);
+});
+
+test("the aspect select sizes the first frame and the video together", () => {
+  const app = byId("cinema-video");
+  const wf = recorder();
+  applyInputs(app, resolveValues(app, { prompt: "x", aspect: "9:16 (Portrait Widescreen)", seed: 1 }), wf, () => null);
+  assert.equal(wf.sets["403.aspect_ratio"], "9:16 (Portrait Widescreen)");
+  assert.equal(wf.sets["still:18:6.width"], 768);
+  assert.equal(wf.sets["still:18:6.height"], 1344);
+});
+
 test("file inputs go through the asset function", () => {
   const app = byId("edit");
   const file = { bytes: new Uint8Array([1]), name: "me.png" };

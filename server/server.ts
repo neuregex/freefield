@@ -89,6 +89,7 @@ function publicApp(a: App) {
     id: a.id, name: a.name, section: a.section, summary: a.summary ?? "", status: a.status, pack: a.pack,
     runnable: runnable(a),
     higgsfield_feature: a.higgsfield_feature ?? null,
+    modes: a.modes ?? null,
     inputs: a.inputs.map(({ bind: _bind, options, ...rest }) => ({
       ...rest, ...(options ? { options: options.map(({ sets: _sets, ...o }) => o) } : {}),
     })),

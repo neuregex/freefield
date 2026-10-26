@@ -43,6 +43,13 @@
         "notes": { "type": "string" }
       }
     },
+    "modes": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+      "description": "Sibling apps shown as a switch at the top of the form (Cinema Studio: image, video). Each app in the list includes itself and lists the same ids in the same order."
+    },
     "inputs": { "type": "array", "items": { "$ref": "#/$defs/input" } },
     "presets": { "type": "array", "items": { "$ref": "#/$defs/preset" } },
     "outputs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/output" } },
@@ -120,6 +127,18 @@
         "gallery": {
           "type": "boolean",
           "description": "Select only. lab/publish.py keeps one example per option and the UI shows the options as cards with those examples (the effects picker)."
+        },
+        "multiple": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Select only: several options at once (camera moves in a shot, traits of a character). The value is the list of picked option values, in the order picked; templates and binds get them joined: prefix + values joined by join + suffix, or \"\" when none is picked. Its options cannot carry sets.",
+          "properties": {
+            "max": { "type": "integer", "minimum": 2 },
+            "join": { "type": "string", "description": "Between two values. Default \", \"." },
+            "prefix": { "type": "string" },
+            "suffix": { "type": "string" },
+            "ordered": { "type": "boolean", "description": "The order of picking matters (camera moves): the UI numbers the picks." }
+          }
         },
         "paint": {
           "type": "string",

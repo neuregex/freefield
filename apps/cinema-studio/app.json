@@ -6,6 +6,10 @@
   "pack": "image-flux3",
   "status": "ready",
   "higgsfield_feature": "Cinematic Cameras",
+  "modes": [
+    "cinema-studio",
+    "cinema-video"
+  ],
   "summary": "Pick genre, era, camera body, lens, focal length, aperture, lighting and color palette; they become part of the prompt.",
   "workflow": "workflow.api.json",
   "source": {

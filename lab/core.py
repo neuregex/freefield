@@ -108,18 +108,46 @@ def set_value(value, values: dict):
     return render(value, values) if isinstance(value, str) and PLACEHOLDER.search(value) else value
 
 
+def picks(inp: dict, raw) -> list[str]:
+    """A multiple select's value: the picked option values in the order given, no repeats (as server/runner.ts)."""
+    items = raw if isinstance(raw, list) else ([] if raw in (None, "") else [raw])
+    allowed = [str(o["value"]) for o in inp.get("options", [])]
+    out: list[str] = []
+    for r in items:
+        if str(r) not in allowed:
+            raise ValueError(f'{inp["id"]}: "{r}" is not one of the options')
+        if str(r) and str(r) not in out:
+            out.append(str(r))
+    if inp["multiple"].get("max") and len(out) > inp["multiple"]["max"]:
+        raise ValueError(f'{inp["id"]}: at most {inp["multiple"]["max"]}')
+    return out
+
+
+def text_values(manifest: dict, values: dict) -> dict:
+    """Values as the workflow gets them: multiple selects joined (prefix + join + suffix, "" when none)."""
+    out = dict(values)
+    for inp in manifest.get("inputs", []):
+        if inp.get("multiple") and inp["id"] in values:
+            m, items = inp["multiple"], values[inp["id"]]
+            out[inp["id"]] = f'{m.get("prefix", "")}{m.get("join", ", ").join(items)}{m.get("suffix", "")}' if items else ""
+    return out
+
+
 def resolve_values(manifest: dict, given: dict) -> dict:
     values = {}
     for inp in manifest.get("inputs", []):
         v = given.get(inp["id"], inp.get("default"))
         if inp["type"] == "seed" and v in (None, -1, "-1"):
             v = 42   # fixed, so cases are comparable
+        if inp.get("multiple"):
+            v = picks(inp, v)
         if v is not None:
             values[inp["id"]] = v
     return values
 
 
 def apply(manifest: dict, api: dict, values: dict, preset: str | None = None) -> None:
+    values = text_values(manifest, values)
     for inp in manifest.get("inputs", []):
         if inp["id"] not in values:
             continue

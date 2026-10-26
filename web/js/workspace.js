@@ -16,6 +16,7 @@ const forms = new Map();
 
 function validValue(inp, v) {
   if (v === undefined || v === null) return false;
+  if (inp.multiple) return Array.isArray(v) && v.length <= (inp.multiple.max ?? Infinity) && v.every((x) => (inp.options || []).some((o) => String(o.value) === String(x)));
   if (inp.type === "select") return (inp.options || []).some((o) => String(o.value) === String(v));
   if (inp.type === "slider" || inp.type === "number") return Number.isFinite(Number(v)) && (inp.min === undefined || v >= inp.min) && (inp.max === undefined || v <= inp.max);
   return true;
@@ -28,7 +29,7 @@ export function formFor(app) {
   const values = {};
   for (const inp of app.inputs) {
     if (isMedia(inp.type)) continue;
-    const fallback = inp.type === "textarea" || inp.type === "text" ? "" : inp.type === "seed" ? -1 : inp.default ?? "";
+    const fallback = inp.type === "textarea" || inp.type === "text" ? "" : inp.type === "seed" ? -1 : inp.multiple ? [...(inp.default ?? [])] : inp.default ?? "";
     values[inp.id] = validValue(inp, saved[inp.id]) ? saved[inp.id] : fallback;
   }
   f = { values, files: {}, preset: (app.presets || []).some((p) => p.id === saved.__preset) ? saved.__preset : "", count: 1 };
@@ -111,6 +112,7 @@ function buildForm(app, { randomSeed = false } = {}) {
     if (isMedia(inp.type)) { const x = f.files[inp.id]; if (x) fd.append(inp.id, x.file, x.file.name); continue; }
     const v = f.values[inp.id];
     if (inp.type === "toggle") { fd.append(inp.id, v ? "true" : "false"); continue; }
+    if (inp.multiple) { fd.append(inp.id, JSON.stringify(Array.isArray(v) ? v : [])); continue; }   // none picked is a choice too
     if (inp.type === "seed" && (randomSeed || v === -1 || v === "-1" || v === "" || v === null)) continue;
     // "Any" in a builder select is the empty value: send it, or the server would fill in the default
     if (v === "" && inp.type === "select" && (inp.options || []).some((o) => o.value === "")) { fd.append(inp.id, ""); continue; }
@@ -202,8 +204,41 @@ function switcher(app) {
 }
 
 function optionLabel(inp, v) {
+  if (Array.isArray(v)) return v.length ? v.map((x) => optionLabel(inp, x)).join(inp.multiple?.ordered ? " → " : ", ") : t("ws.none");
   const o = (inp.options || []).find((x) => String(x.value) === String(v));
   return o ? o.label : String(v ?? "");
+}
+
+/** A multiple select's list: tap to add or remove; ordered ones number the picks, which is the order they run in. */
+function multiPicker(inp, f, onChange) {
+  const max = inp.multiple.max ?? Infinity;
+  const list = el("div", { class: "multi-list" });
+  const draw = () => {
+    const picked = f.values[inp.id] || [];
+    list.replaceChildren(...(inp.options || []).map((o) => {
+      const at = picked.findIndex((x) => String(x) === String(o.value));
+      return el("button", { class: "opt", type: "button", "aria-pressed": String(at >= 0), onclick: () => {
+        const cur = [...(f.values[inp.id] || [])];
+        if (at >= 0) cur.splice(at, 1);
+        else if (cur.length >= max) { toast(t("ws.multi.max", { n: max }), { error: true }); return; }
+        else cur.push(o.value);
+        f.values[inp.id] = cur;
+        onChange();
+        draw();
+      } }, o.label, at >= 0 ? el("span", { class: "pick" }, inp.multiple.ordered ? String(at + 1) : icon("check")) : null);
+    }));
+  };
+  draw();
+  const clear = el("button", { class: "mini-link", type: "button", onclick: () => { f.values[inp.id] = []; onChange(); draw(); } }, t("ws.multi.clear"));
+  return el("div", {}, el("h4", {}, inp.label, el("span", { class: "n" }, Number.isFinite(max) ? t(inp.multiple.ordered ? "ws.multi.upto.ordered" : "ws.multi.upto", { n: max }) : ""), clear), list);
+}
+
+/** The switch between sibling apps (Cinema Studio's image and video modes). */
+function modeSwitch(app) {
+  if (!app.modes) return null;
+  return el("div", { class: "seg modes", role: "group", "aria-label": app.name }, ...app.modes.map((id) => byId.get(id)).filter(Boolean).map((a) =>
+    el("button", { type: "button", "aria-pressed": String(a.id === app.id), onclick: () => { if (a.id !== app.id) location.hash = `#/app/${a.id}`; } },
+      icon(a.section === "video" ? "video" : "image"), t(`nav.${a.section}`))));
 }
 
 /** A select marked "gallery" (the effects picker): cards with each option's lab example, and the chosen one playing. */
@@ -318,6 +353,8 @@ function composerBar(app, rerenderBar) {
           icon(inp.type === "image" ? "image" : inp.type), inp.label))));
       } }, icon("plus")));
   }
+  const modes = modeSwitch(app);
+  if (modes) chips.push(modes);
   const model = el("button", { class: "chip model", type: "button", "aria-haspopup": "dialog",
     onclick: (ev) => popover(ev.currentTarget, switcher(app), { width: 360 }) },
     el("span", { class: "thumb" }, appThumb(app)), el("span", { class: "v" }, app.name), icon("chevD"));
@@ -382,7 +419,9 @@ function chipFor(app, inp, f) {
   draw();
   b.onclick = (ev) => {
     let content;
-    if (inp.type === "select") {
+    if (inp.multiple) {
+      content = multiPicker(inp, f, () => { persistSoon(); draw(); });
+    } else if (inp.type === "select") {
       content = el("div", {}, el("h4", {}, inp.label), ...(inp.options || []).map((o) => el("button", { class: "opt", type: "button",
         "aria-selected": String(String(o.value) === String(f.values[inp.id])), onclick: () => { set(o.value); draw(); closePopover(); } },
         o.label, el("span", { class: "chk" }, icon("check")))));
@@ -491,6 +530,12 @@ function sideField(app, inp, f, ui) {
     ui.refs[inp.id] = ta;
     return el("label", { class: "field" }, el("span", { class: "lbl" }, inp.label, inp.required ? null : el("small", {}, t("ws.optional"))), ta, help);
   }
+  if (inp.multiple) {
+    const val = el("span", { class: "v" }, optionLabel(inp, f.values[inp.id]));
+    const row = el("button", { class: "selrow", type: "button", "aria-haspopup": "dialog", "aria-label": inp.label }, val, icon("chevD"));
+    row.onclick = () => popover(row, multiPicker(inp, f, () => { persistSoon(); val.textContent = optionLabel(inp, f.values[inp.id]); }), { width: Math.max(280, row.offsetWidth) });
+    return el("div", { class: "field" }, el("span", { class: "lbl" }, inp.label), row, help);
+  }
   if (inp.type === "select" && inp.gallery) return galleryField(app, inp, f, set, help);
   if (inp.type === "select") {
     const opts = inp.options || [];
@@ -572,7 +617,7 @@ function sidebarPanel(app, rerenderSide) {
   if (app.presets?.length) adv.unshift(presetField(app, f));
   const advanced = adv.length ? el("details", { class: "adv" }, el("summary", {}, t("ws.advanced"), icon("chevD", "i-chev")), el("div", { class: "in" }, ...adv)) : null;
 
-  const scroll = el("div", { class: "side-scroll" }, card, ...main, advanced);
+  const scroll = el("div", { class: "side-scroll" }, card, modeSwitch(app), ...main, advanced);
   const note = el("p", { class: "side-note" }, !app.runnable ? (app.status === "draft" ? t("ws.draft") : t("ws.noworkflow")) : "");
   ui.clearMissing = () => { scroll.querySelectorAll(".missing").forEach((n) => n.classList.remove("missing")); };
   ui.markMissing = (id) => {

@@ -1,0 +1,819 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "cinema-video",
+  "name": "Cinema Studio Video",
+  "section": "video",
+  "pack": "video-ltx25",
+  "status": "ready",
+  "higgsfield_feature": "Cinema Studio (video)",
+  "modes": [
+    "cinema-studio",
+    "cinema-video"
+  ],
+  "summary": "Cinema Studio in motion: the same film look as the still, then up to three camera moves, a tempo and sound, on LTX-2.5.",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "video_ltx2_5_i2v.json",
+    "comfyui": "0.42.0",
+    "notes": "Higgsfield's Cinema Studio 4.0 has an image and a video mode with the same film settings (genre, era, tempo), camera (body, lens, aperture and 33 camera moves, several per shot in order), palette and lighting, read on 26 Oct. Here the video mode is the LTX-2.5 image-to-video template whose first frame is drawn in the same graph by cinema-studio's still (FLUX 3 Image Klein, nodes still:*): the look selects write the still's prompt, which Klein follows closely, and the motion prompt adds the camera moves in order, the tempo and the action. Camera move names from Higgsfield's list; each option writes the movement it describes."
+  },
+  "inputs": [
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "Scene",
+      "required": true,
+      "default": "A detective in a trench coat lights a cigarette under a streetlamp on a rainy night, then looks up as headlights sweep across his face",
+      "help": "What happens in the shot. The first frame is drawn from it with the look below, then the shot moves.",
+      "bind": [
+        {
+          "node": "still:18:17",
+          "field": "value",
+          "template": "A cinematic film still{genre}{era}: {prompt}. The look: {camera}; {lens}; {focal}; {aperture}. Lighting: {lighting}. Color: {palette}. High dynamic range, ultra-detailed"
+        },
+        {
+          "node": "398:376",
+          "field": "value",
+          "template": "{moves}{prompt}.{tempo} The look of a film{genre}{era}: {camera}; {lens}. Lighting: {lighting}. Color: {palette}."
+        }
+      ]
+    },
+    {
+      "id": "moves",
+      "type": "select",
+      "label": "Camera move",
+      "default": [
+        "slowly dollies in toward the subject"
+      ],
+      "multiple": {
+        "max": 3,
+        "join": ", then ",
+        "prefix": "The camera ",
+        "suffix": ". ",
+        "ordered": true
+      },
+      "help": "Up to 3, in order: the shot does them one after the other.",
+      "options": [
+        {
+          "value": "stays locked off on a tripod, perfectly still",
+          "label": "Static shot"
+        },
+        {
+          "value": "slowly dollies in toward the subject",
+          "label": "Dolly in"
+        },
+        {
+          "value": "slowly dollies back away from the subject",
+          "label": "Dolly out"
+        },
+        {
+          "value": "zooms in slowly",
+          "label": "Slow zoom in"
+        },
+        {
+          "value": "zooms out slowly",
+          "label": "Slow zoom out"
+        },
+        {
+          "value": "crash-zooms in fast on the subject",
+          "label": "Crash zoom"
+        },
+        {
+          "value": "dolly-zooms, moving in while zooming out so the background stretches behind the subject",
+          "label": "Dolly zoom"
+        },
+        {
+          "value": "pans left",
+          "label": "Pan left"
+        },
+        {
+          "value": "pans right",
+          "label": "Pan right"
+        },
+        {
+          "value": "whip-pans fast to the side with motion blur",
+          "label": "Whip pan"
+        },
+        {
+          "value": "tilts up",
+          "label": "Tilt up"
+        },
+        {
+          "value": "tilts down",
+          "label": "Tilt down"
+        },
+        {
+          "value": "trucks left, sliding sideways",
+          "label": "Truck left"
+        },
+        {
+          "value": "trucks right, sliding sideways",
+          "label": "Truck right"
+        },
+        {
+          "value": "glides left on a slider, close to the subject",
+          "label": "Slider left"
+        },
+        {
+          "value": "glides right on a slider, close to the subject",
+          "label": "Slider right"
+        },
+        {
+          "value": "arcs left around the subject",
+          "label": "Arc left"
+        },
+        {
+          "value": "arcs right around the subject",
+          "label": "Arc right"
+        },
+        {
+          "value": "rises straight up, staying level",
+          "label": "Pedestal up"
+        },
+        {
+          "value": "lowers straight down, staying level",
+          "label": "Pedestal down"
+        },
+        {
+          "value": "cranes up and back, rising over the scene",
+          "label": "Crane up"
+        },
+        {
+          "value": "cranes down from above toward the subject",
+          "label": "Crane down"
+        },
+        {
+          "value": "tracks behind the subject as they move",
+          "label": "Tracking"
+        },
+        {
+          "value": "tracks alongside the subject, moving sideways with them",
+          "label": "Side tracking"
+        },
+        {
+          "value": "is handheld, with a slight natural shake",
+          "label": "Handheld"
+        },
+        {
+          "value": "shows the character's point of view, moving as their eyes would",
+          "label": "POV"
+        },
+        {
+          "value": "is rigged to the actor's body, so their face stays fixed in the frame while the world sways behind them",
+          "label": "Snorricam"
+        },
+        {
+          "value": "sweeps around the subject in one fast, precise robotic-arm move",
+          "label": "Robot arm"
+        },
+        {
+          "value": "racks focus from the foreground to the background",
+          "label": "Rack focus"
+        },
+        {
+          "value": "orbits the scene from above like a drone",
+          "label": "Drone orbit"
+        },
+        {
+          "value": "pulls back and up into a high aerial view",
+          "label": "Aerial pullback"
+        },
+        {
+          "value": "flies over the scene from high above like a helicopter",
+          "label": "Helicopter shot"
+        },
+        {
+          "value": "circles around a frozen moment in slow motion, bullet-time style",
+          "label": "Bullet time"
+        }
+      ],
+      "bind": []
+    },
+    {
+      "id": "tempo",
+      "type": "select",
+      "label": "Tempo",
+      "default": "",
+      "help": "The editing rhythm. Single shot keeps one take; Dynamic and Chaotic ask for cuts.",
+      "options": [
+        {
+          "value": "",
+          "label": "Auto"
+        },
+        {
+          "value": " Calm pacing: slow, unhurried movement in one long take.",
+          "label": "Calm"
+        },
+        {
+          "value": " Dynamic pacing: brisk movement and a quick cut to a closer angle halfway through.",
+          "label": "Dynamic"
+        },
+        {
+          "value": " Chaotic pacing: frantic energy, fast action and several rapid cuts between angles.",
+          "label": "Chaotic"
+        },
+        {
+          "value": " One continuous shot, no cuts.",
+          "label": "Single shot"
+        }
+      ],
+      "bind": []
+    },
+    {
+      "id": "genre",
+      "type": "select",
+      "label": "Genre",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "General"
+        },
+        {
+          "value": " from a drama",
+          "label": "Drama"
+        },
+        {
+          "value": " from a film noir",
+          "label": "Noir"
+        },
+        {
+          "value": " from a comedy",
+          "label": "Comedy"
+        },
+        {
+          "value": " from a horror film",
+          "label": "Horror"
+        },
+        {
+          "value": " from an action film",
+          "label": "Action"
+        },
+        {
+          "value": " from an epic",
+          "label": "Epic"
+        },
+        {
+          "value": " from a science-fiction film",
+          "label": "Sci-fi"
+        },
+        {
+          "value": " from a western",
+          "label": "Western"
+        }
+      ],
+      "bind": [],
+      "help": "The kind of film the still comes from."
+    },
+    {
+      "id": "era",
+      "type": "select",
+      "label": "Era",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Any"
+        },
+        {
+          "value": " set in the 1920s",
+          "label": "1920s"
+        },
+        {
+          "value": " set in the 1950s",
+          "label": "1950s"
+        },
+        {
+          "value": " set in the 1960s",
+          "label": "1960s"
+        },
+        {
+          "value": " set in the 1970s",
+          "label": "1970s"
+        },
+        {
+          "value": " set in the 1980s",
+          "label": "1980s"
+        },
+        {
+          "value": " set in the 1990s",
+          "label": "1990s"
+        },
+        {
+          "value": " set in the 2000s",
+          "label": "2000s"
+        },
+        {
+          "value": " set in the present day",
+          "label": "Present day"
+        },
+        {
+          "value": " set in the near future",
+          "label": "Future"
+        }
+      ],
+      "bind": []
+    },
+    {
+      "id": "camera",
+      "type": "select",
+      "label": "Camera",
+      "default": "the full-frame digital cinema look, natural and smooth",
+      "options": [
+        {
+          "value": "the crisp, clean detail of 8K digital cinema",
+          "label": "Modular 8K Digital"
+        },
+        {
+          "value": "the full-frame digital cinema look, natural and smooth",
+          "label": "Full-Frame Cine Digital"
+        },
+        {
+          "value": "the rich detail and fine grain of large-format 70mm film",
+          "label": "Grand Format 70mm Film"
+        },
+        {
+          "value": "the polished Super 35 digital studio look",
+          "label": "Studio Digital S35"
+        },
+        {
+          "value": "the soft, grainy texture of 16mm film",
+          "label": "Classic 16mm Film"
+        },
+        {
+          "value": "the smooth, wide-latitude large-format digital look",
+          "label": "Premium Large Format Digital"
+        }
+      ]
+    },
+    {
+      "id": "lens",
+      "type": "select",
+      "label": "Lens",
+      "default": "a classic anamorphic widescreen look with oval bokeh and blue streak flares",
+      "options": [
+        {
+          "value": "tilt-shift selective focus",
+          "label": "Creative Tilt Lens"
+        },
+        {
+          "value": "subtle anamorphic oval bokeh and horizontal flares",
+          "label": "Compact Anamorphic"
+        },
+        {
+          "value": "extreme macro detail",
+          "label": "Extreme Macro"
+        },
+        {
+          "value": "the warm, slightly soft rendering of 1970s cinema glass",
+          "label": "70s Cinema Prime"
+        },
+        {
+          "value": "a classic anamorphic widescreen look with oval bokeh and blue streak flares",
+          "label": "Classic Anamorphic"
+        },
+        {
+          "value": "clean, sharp modern rendering",
+          "label": "Premium Modern Prime"
+        },
+        {
+          "value": "warm-toned cinematic rendering",
+          "label": "Warm Cinema Prime"
+        },
+        {
+          "value": "swirling vintage bokeh",
+          "label": "Swirl Bokeh Portrait"
+        },
+        {
+          "value": "soft vintage rendering with gentle flare",
+          "label": "Vintage Prime"
+        },
+        {
+          "value": "a halation glow around the highlights",
+          "label": "Halation Diffusion"
+        },
+        {
+          "value": "ultra-sharp clinical detail",
+          "label": "Clinical Sharp Prime"
+        }
+      ]
+    },
+    {
+      "id": "focal",
+      "type": "select",
+      "label": "Focal length",
+      "default": "a natural 35mm perspective",
+      "options": [
+        {
+          "value": "an ultra-wide 8mm perspective",
+          "label": "8 mm"
+        },
+        {
+          "value": "a wide-angle 14mm perspective",
+          "label": "14 mm"
+        },
+        {
+          "value": "a dynamic wide 24mm perspective",
+          "label": "24 mm"
+        },
+        {
+          "value": "a natural 35mm perspective",
+          "label": "35 mm"
+        },
+        {
+          "value": "a standard 50mm perspective",
+          "label": "50 mm"
+        },
+        {
+          "value": "a classic 85mm portrait perspective",
+          "label": "85 mm"
+        }
+      ]
+    },
+    {
+      "id": "aperture",
+      "type": "select",
+      "label": "Aperture",
+      "default": "aperture f/1.4, shallow depth of field, creamy bokeh",
+      "options": [
+        {
+          "value": "aperture f/1.4, shallow depth of field, creamy bokeh",
+          "label": "f/1.4"
+        },
+        {
+          "value": "aperture f/4, balanced depth of field",
+          "label": "f/4"
+        },
+        {
+          "value": "aperture f/11, deep focus clarity, sharp foreground to background",
+          "label": "f/11"
+        }
+      ]
+    },
+    {
+      "id": "lighting",
+      "type": "select",
+      "label": "Lighting",
+      "default": "cinematic lighting",
+      "options": [
+        {
+          "value": "cinematic lighting",
+          "label": "Auto"
+        },
+        {
+          "value": "the subject in silhouette against a bright background",
+          "label": "Silhouette"
+        },
+        {
+          "value": "lit only by practical lamps visible in the scene",
+          "label": "Practicals"
+        },
+        {
+          "value": "soft daylight from a single window at the side",
+          "label": "Window"
+        },
+        {
+          "value": "a hard light falling from straight above, deep shadows under the brow",
+          "label": "Overhead"
+        },
+        {
+          "value": "a strong light behind the subject, a glowing rim and flare",
+          "label": "Backlight"
+        },
+        {
+          "value": "two soft lights crossing from opposite sides",
+          "label": "Soft cross"
+        },
+        {
+          "value": "low-key lighting, mostly shadow, one small key light",
+          "label": "Low key"
+        },
+        {
+          "value": "colored light from neon signs, magenta and cyan",
+          "label": "Neon"
+        }
+      ],
+      "bind": []
+    },
+    {
+      "id": "palette",
+      "type": "select",
+      "label": "Color palette",
+      "default": "natural color science",
+      "options": [
+        {
+          "value": "natural color science",
+          "label": "Auto"
+        },
+        {
+          "value": "teal shadows and warm orange skin tones",
+          "label": "Teal and orange"
+        },
+        {
+          "value": "desaturated, high-contrast bleach-bypass color",
+          "label": "Bleach bypass"
+        },
+        {
+          "value": "warm amber and brown tones",
+          "label": "Warm amber"
+        },
+        {
+          "value": "cold blue and steel-gray tones",
+          "label": "Cold blue"
+        },
+        {
+          "value": "deep emerald greens with gold highlights",
+          "label": "Emerald and gold"
+        },
+        {
+          "value": "soft pastel colors, low contrast",
+          "label": "Pastel"
+        },
+        {
+          "value": "saturated magenta, cyan and violet",
+          "label": "Neon night"
+        },
+        {
+          "value": "faded film colors with lifted blacks",
+          "label": "Faded film"
+        },
+        {
+          "value": "black and white",
+          "label": "Monochrome"
+        },
+        {
+          "value": "sepia-toned",
+          "label": "Sepia"
+        },
+        {
+          "value": "deep crimson reds against black",
+          "label": "Crimson"
+        },
+        {
+          "value": "earthy ochre, olive and rust tones",
+          "label": "Earth tones"
+        }
+      ],
+      "bind": []
+    },
+    {
+      "id": "aspect",
+      "type": "select",
+      "label": "Aspect ratio",
+      "default": "16:9 (Widescreen)",
+      "options": [
+        {
+          "value": "16:9 (Widescreen)",
+          "label": "16:9",
+          "sets": [
+            {
+              "node": "still:18:6",
+              "field": "width",
+              "value": 1344
+            },
+            {
+              "node": "still:18:6",
+              "field": "height",
+              "value": 768
+            }
+          ]
+        },
+        {
+          "value": "21:9 (Ultrawide)",
+          "label": "21:9",
+          "sets": [
+            {
+              "node": "still:18:6",
+              "field": "width",
+              "value": 1536
+            },
+            {
+              "node": "still:18:6",
+              "field": "height",
+              "value": 640
+            }
+          ]
+        },
+        {
+          "value": "4:3 (Standard)",
+          "label": "4:3",
+          "sets": [
+            {
+              "node": "still:18:6",
+              "field": "width",
+              "value": 1152
+            },
+            {
+              "node": "still:18:6",
+              "field": "height",
+              "value": 864
+            }
+          ]
+        },
+        {
+          "value": "1:1 (Square)",
+          "label": "1:1",
+          "sets": [
+            {
+              "node": "still:18:6",
+              "field": "width",
+              "value": 1024
+            },
+            {
+              "node": "still:18:6",
+              "field": "height",
+              "value": 1024
+            }
+          ]
+        },
+        {
+          "value": "3:4 (Portrait Standard)",
+          "label": "3:4",
+          "sets": [
+            {
+              "node": "still:18:6",
+              "field": "width",
+              "value": 864
+            },
+            {
+              "node": "still:18:6",
+              "field": "height",
+              "value": 1152
+            }
+          ]
+        },
+        {
+          "value": "9:16 (Portrait Widescreen)",
+          "label": "9:16",
+          "sets": [
+            {
+              "node": "still:18:6",
+              "field": "width",
+              "value": 768
+            },
+            {
+              "node": "still:18:6",
+              "field": "height",
+              "value": 1344
+            }
+          ]
+        }
+      ],
+      "bind": [
+        {
+          "node": "403",
+          "field": "aspect_ratio"
+        }
+      ]
+    },
+    {
+      "id": "duration",
+      "type": "slider",
+      "label": "Seconds",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "bind": [
+        {
+          "node": "398:362",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "enhance",
+      "type": "toggle",
+      "label": "Enhance prompt",
+      "default": false,
+      "help": "Rewrites the motion prompt with a small Gemma 4 model first; off, the shot follows the camera moves and tempo word for word",
+      "bind": [
+        {
+          "node": "398:383",
+          "field": "value"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "bind": [
+        {
+          "node": "still:18:7",
+          "field": "seed"
+        },
+        {
+          "node": "398:339",
+          "field": "noise_seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "75",
+      "type": "video",
+      "label": "Video"
+    },
+    {
+      "node": "still:9",
+      "type": "image",
+      "label": "First frame"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 21.5,
+      "phase": "denoise",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 15.37,
+      "phase": "encode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-video-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 1.47,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "vae/ltx-2.5-audio-vae-bf16.safetensors",
+      "dir": "vae",
+      "gb": 0.36,
+      "phase": "decode",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Lightricks/LTX-2.5",
+      "file": "latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors",
+      "dir": "latent_upscale_models",
+      "gb": 1.0,
+      "phase": "aux",
+      "gated": true,
+      "license": "LTX-2.x Community License"
+    },
+    {
+      "repo": "Comfy-Org/gemma-4",
+      "file": "text_encoders/gemma4_e2b_it_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 5.2,
+      "phase": "encode",
+      "license": "Apache-2.0",
+      "optional": true
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "phase": "denoise",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "phase": "encode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "decode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    }
+  ],
+  "credits": [
+    "LTX-2.5 by Lightricks",
+    "FLUX 3 Image Klein by Black Forest Labs",
+    "Workflow adapted from ComfyUI's official LTX-2.5 image-to-video and FLUX 3 Klein templates",
+    "Camera and lens vocabulary from open-higgsfield-ai (MIT)"
+  ],
+  "test": {
+    "prompt": "a lighthouse on a cliff at dusk",
+    "duration": 2
+  }
+}

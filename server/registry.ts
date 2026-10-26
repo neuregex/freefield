@@ -20,6 +20,8 @@ export type Input = {
   step?: number;
   options?: Option[];
   gallery?: boolean;
+  /** selects: several options at once, in the order picked; templates get them joined */
+  multiple?: { max?: number; join?: string; prefix?: string; suffix?: string; ordered?: boolean };
   /** image inputs: the image input this one is painted over in the web UI (a white-on-black mask) */
   paint?: string;
   limits?: { max_mb?: number; seconds?: [number, number] };
@@ -46,6 +48,8 @@ export type AppManifest = {
   section: "image" | "video" | "audio" | "utility";
   summary?: string;
   higgsfield_feature?: string;
+  /** sibling apps shown as a switch at the top of the form (Cinema Studio: image, video) */
+  modes?: string[];
   pack: string;
   status: "draft" | "ready";
   workflow?: string;
@@ -135,6 +139,16 @@ function checkGraph(app: App, problems: Problem[], severity: Problem["severity"]
     if (input.type !== "image") say(`input "${input.id}": only an image input can be painted (paint)`);
     else if (!src || src.type !== "image" || src === input) say(`input "${input.id}": paint names "${input.paint}", which is not another image input`);
   }
+  for (const input of app.inputs) {
+    if (!input.multiple) continue;
+    if (input.type !== "select") { say(`input "${input.id}": only a select can be multiple`); continue; }
+    if ((input.options ?? []).some((o) => o.sets?.length)) say(`input "${input.id}": the options of a multiple select cannot carry sets`);
+    if (input.gallery) say(`input "${input.id}": a multiple select cannot be a gallery`);
+    const values = new Set((input.options ?? []).map((o) => String(o.value)));
+    if (input.default !== undefined && (!Array.isArray(input.default) || input.default.some((v) => !values.has(String(v))))) {
+      say(`input "${input.id}": the default of a multiple select is a list of its option values`);
+    }
+  }
   for (const p of app.presets ?? []) for (const s of p.sets) has(s.node, s.field, `preset "${p.id}"`);
   for (const input of app.inputs) {
     for (const o of input.options ?? []) for (const s of o.sets ?? []) has(s.node, s.field, `input "${input.id}" option "${o.label}"`);
@@ -207,6 +221,17 @@ export function loadRegistry(root = repoRoot()): { apps: App[]; problems: Proble
     }
     if (app.graph) checkGraph(app, problems, severity);
     apps.push(app);
+  }
+  // modes: every app in the switch exists and lists the same ids in the same order
+  const byId = new Map(apps.map((a) => [a.id, a]));
+  for (const app of apps) {
+    if (!app.modes) continue;
+    if (!app.modes.includes(app.id)) problems.push({ app: app.id, severity: "error", message: "modes must include the app itself" });
+    for (const id of app.modes) {
+      const other = byId.get(id);
+      if (!other) problems.push({ app: app.id, severity: "error", message: `modes: app "${id}" does not exist` });
+      else if (JSON.stringify(other.modes ?? []) !== JSON.stringify(app.modes)) problems.push({ app: app.id, severity: "error", message: `modes: "${id}" does not list the same apps` });
+    }
   }
   return { apps, problems };
 }
