@@ -1,9 +1,9 @@
 # Lab runs
 
-Every GPU run of the lab (`lab/lab_modal.py`) from 20 to 24 Oct 2026, in order. Each run is a folder
+Every GPU run of the lab (`lab/lab_modal.py`) from 20 to 26 Oct 2026, in order. Each run is a folder
 `lab/results/<run id>` with `results.jsonl` (one row per case: status, seconds, peak VRAM), `run.json` (GPU, start
 time) and `review.html`. Peaks are the highest of the run; on an 80 GB H100 ComfyUI can keep the models of earlier
-steps loaded, so a peak there is not the least an app needs. 34 runs, 646 of 669 cases ok: 22 of the 23 failures are
+steps loaded, so a peak there is not the least an app needs. 43 runs, 698 of 721 cases ok: 22 of the 23 failures are
 the first IC-LoRA run, before the gated licenses were accepted, and the other is `recast` in the first run.
 
 | Run | GPU | What ran | Cases ok | Longest case | Peak |
@@ -46,6 +46,11 @@ the first IC-LoRA run, before the gated licenses were accepted, and the other is
 | `20261026-002124-l40s` | 2 × L40S | Queue job 16, batch 1 of Higgsfield's image menu: the influencer builder and its 9 character types, Create Image's looks at 1.5K and 2K, Cinema Studio's genre, era, lighting and palette, Relight's controls, Moodboard, Character (3 Photos), Photodump, Inpaint | 24 / 24 | 50 s | 28.6 GB |
 | `20261026-003153-l40s` | L40S | Queue job 17: the animal heads asked as whole heads, Photodump with apps/character's wording, Moodboard with 1 MP references | 9 / 9 | 22 s | 12.6 GB |
 | `20261026-003753-l40s` | L40S | Queue job 18: Photodump from its own vertical canvas with four framings; insect and bird without human hair | 4 / 4 | 23 s | 14.3 GB |
+| `20261026-015446-l40s` | L40S | Queue job 19: Cinema Studio video (Klein first frame + LTX-2.5), one and two camera moves, Single shot and Dynamic tempo, enhancer on and off | 4 / 4 | 100 s | 44.4 GB |
+| `20261026-020747-l40s` | L40S | Queue job 20: AI Influencer with two picks in three groups; the photo mode | 3 / 3 | 33 s | 12.6 GB |
+| `20261026-021210-l40s` | L40S | Queue job 21: the same with plain clothes and the photo mode keeping the hairstyle | 3 / 3 | 20 s | 12.3 GB |
+| `20261026-021507-l40s` | L40S | Queue job 22: the photo mode with plain shoes asked for | 2 / 2 | 18 s | 12.6 GB |
+| `20261026-021906-l40s` | L40S | Queue job 23: the photo mode example waist-up at a night food stall | 2 / 2 | 19 s | 13.2 GB |
 
 A run with several GPUs (`--shards N`) splits the cases into N groups that run at the same time and comes back as
 one folder. The cases a run lists include the reference images, clips and songs that the others read.
@@ -110,6 +115,13 @@ one folder. The cases a run lists include the reference images, clips and songs 
   Photodump first pasted the photo on four backgrounds, then kept its pose in two of four; each photo now starts from
   its own vertical canvas with its own framing. Moodboard took the references' look only once they went in at 1 MP
   with the look described first. Inpaint (a brush in the web UI and a noise mask) changed only the painted jacket.
+- **Cinema Studio video and AI Influencer, refined (26 Oct).** The video mode draws its first frame with the still's
+  graph and moves it with LTX-2.5: the dolly-in and the single take held, and with the Gemma enhancer on the face held
+  better, so it defaults to on. Two camera moves in a row did not come out in order (crane down then arc right showed
+  only the arc; tracking then whip pan came out reversed), and Dynamic tempo did change the angle once. AI Influencer's
+  several picks showed (face gems, glasses, headphones); its first runs drew a "G/O" print on a vest and brand-like
+  marks on sneakers until the prompt asked for plain clothes and shoes, and the photo mode cut the hair short until it
+  was told to keep the hairstyle unless a new one is picked.
 
 ## End to end from the browser (23 Oct)
 

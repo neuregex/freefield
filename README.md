@@ -19,12 +19,12 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 
 | | |
 |---|---|
-| Apps | 118: 117 *ready* (38 apps with a workflow of their own, the 5 IC-LoRA apps (`genjutsu`, `reframe`, `sdr-hdr`, `mixed-media`, `dub`), `morph`, 71 template apps (a fixed prompt over one of those pipelines, written by `tools/template_apps.py`) and 2 model-free smoke apps) and `moss-image` as a draft. The 116 that use models each have a lab example made on a GPU |
+| Apps | 120: 119 *ready* (39 apps with a workflow of their own, the 5 IC-LoRA apps (`genjutsu`, `reframe`, `sdr-hdr`, `mixed-media`, `dub`), `morph`, 72 template apps (a fixed prompt over one of those pipelines, written by `tools/template_apps.py`) and 2 model-free smoke apps) and `moss-image` as a draft. The 118 that use models each have a lab example made on a GPU |
 | Open weights | No API or partner nodes. Every model is a file you download, listed in its app's `app.json` with its Hugging Face repo, size and license; the cloud text-encoder branch of Lightricks' examples is removed |
 | Workflows | Built from official sources by `tools/build_apps.py` (ComfyUI's templates, Lightricks' ComfyUI-LTXVideo examples, Comfy's `comfy-reshoot`); the template apps reuse those bases and the two smoke apps are hand-written. `tools/import_workflow.py` drafts a new app from any other ComfyUI workflow. All accepted by ComfyUI's validator: ComfyUI `e3bee7f` (0.42.0), ComfyUI-LTXVideo `44c8a36`, ComfyUI-CrossViewWarp `fbb1e93` |
-| GPU runs | 38 lab runs on Modal from 20 to 26 Oct (L40S and H100), 684 of 707 cases ok. Every example in the web UI comes from one of them, with its time and peak VRAM. Run by run, and what each one changed: [`docs/lab-runs.md`](docs/lab-runs.md) |
+| GPU runs | 43 lab runs on Modal from 20 to 26 Oct (L40S and H100), 698 of 721 cases ok. Every example in the web UI comes from one of them, with its time and peak VRAM. Run by run, and what each one changed: [`docs/lab-runs.md`](docs/lab-runs.md) |
 | End to end | Run from the browser on 23 Oct, web UI → server → gateway on Modal → ComfyUI on an H100: `morph` 160.8 s from the button to the video (128.7 s of it on the GPU), `mixed-media` 149 s, `dub` 72 s. On 24 Oct through the hosted demo (`infra/web_app.py`, the same web app on Modal behind a passcode): `face-swap` 25.2 s on the GPU. The model-free smoke apps cover the same path in CI |
-| LoRA lab | 321 cases: one showcase per app (115), one per effect (24), one per look of `mixed-media` (16), one per transformation of `morph` (15) and one per character type of `ai-influencer` (8 more), 41 references the others start from, 6 candidate portraits for those references (`refx-*`), 12 style-drift experiments (`mmx-*`), 36 template experiments (`tplx-*`), 2 runs of `reshoot` without its Turbo LoRA, 30 image-model comparisons (`cmp-*`, below), 4 soundtrack candidates for the demo video and 4 checks of new controls (Create Image's looks and 2K, Cinema Studio's genre and palette, Relight's direction); each experiment has its verdict in the note |
+| LoRA lab | 327 cases: one showcase per app (117), one per effect (24), one per look of `mixed-media` (16), one per transformation of `morph` (15) and one per character type of `ai-influencer` (8 more), 41 references the others start from, 6 candidate portraits for those references (`refx-*`), 12 style-drift experiments (`mmx-*`), 36 template experiments (`tplx-*`), 2 runs of `reshoot` without its Turbo LoRA, 30 image-model comparisons (`cmp-*`, below), 4 soundtrack candidates for the demo video and 4 checks of new controls (Create Image's looks and 2K, Cinema Studio's genre and palette, Relight's direction), 3 Cinema Studio video tests (two camera moves in order, a cut on Dynamic tempo, the enhancer off) and 1 check of several picks per group in AI Influencer; each experiment has its verdict in the note |
 | CI | `.github/workflows/validate.yml` on every push: the manifest validator, the tests, the type check, the generated packs and VRAM map, and a CPU-only ComfyUI that accepts every workflow and the prompt of every lab case (about 3 minutes) |
 
 ## Apps
@@ -37,6 +37,7 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 | `styles` | Image styles | Krea 2 Turbo (int8) + Krea's nine official style LoRAs, picked from a list | fits whole, 19.4 GB | ready |
 | `style-reference` | Style transfer | Krea 2 Turbo (int8) + style-reference LoRA | fits whole, 19.4 GB | ready |
 | `cinema-studio` | Cinematic Cameras | FLUX 3 Image Klein + genre, era, camera body, lens, focal length, aperture, lighting and color palette, written as the look they give; 6 aspect ratios, 1K to 2K | fits whole, 11.0 GB | ready |
+| `cinema-video` | Cinema Studio (video) | Cinema Studio's still (FLUX 3 Image Klein) as the first frame of LTX-2.5 image-to-video in one graph: the same look selects plus up to 3 camera moves in order (33, Higgsfield's list), tempo and duration; sound included | needs Modal, peak 44.3 GB on L40S | ready |
 | `edit` | Edit | FLUX 3 Image Klein (int8): a change described in words, no mask | fits whole, 11.0 GB | ready |
 | `inpaint` | Inpaint | FLUX 3 Image Klein with a noise mask: paint the area in the web UI's brush and only that area is redrawn, then pasted back over the photo | fits whole, 11.0 GB | ready |
 | `relight` | Relight | Qwen Image Edit 2509 (fp8) + Relight and Lightning LoRAs: light presets, or direction, softness, brightness and color | tight: 21.5 GB largest phase | ready |
@@ -180,7 +181,8 @@ command that makes every example. Add a line to the table there, not a folder by
 | `rap-video` | Rap God | `video` | your photo |
 | `idol` | Idol | `video` | your photo |
 | `expand-image` | Expand Image | `edit` | your photo, expand |
-| `ai-influencer` | AI Influencer | `create-image` | character type, gender, age, origin, skin tone, build, height, proportions, hairstyle, hair color, head shape, neck, eye shape, eye color, facial feature, facial hair, distinctive trait, style, accessory, scene |
+| `ai-influencer` | AI Influencer | `create-image` | character type, gender, age, origin, skin tone, build, height, proportions, hairstyle, hair color, head shape, neck, eye shape, eye color, facial features, facial hair, distinctive traits, style, accessories, scene |
+| `ai-influencer-photo` | AI Influencer (your photo) | `edit` | your photo, hairstyle, hair color, build, facial hair, facial features, distinctive traits, style, accessories, scene |
 | `bullet-time-scene` | Bullet Time Scene | `effects` | your photo, who or what is in the photo |
 | `bullet-time-white` | Bullet Time White | `edit + effects` | your photo, who or what is in the photo |
 | `bullet-time-splash` | Bullet Time Splash | `edit + effects` | your photo, who or what is in the photo |
@@ -236,6 +238,12 @@ On Windows PowerShell, environment variables go before the command as `$env:FREE
 - Every app has **History** (what you generated with it), **Library** (the lab example, *Load this example*) and
   **How it works** (models and licenses, VRAM by phase, the download and terminal commands, and *Download the
   workflow*: drop it on ComfyUI's canvas to open the app as nodes and chain it with others).
+- A select marked `multiple` takes up to a few options at once and sends them in the order picked (Cinema Studio
+  Video's camera moves are numbered; AI Influencer's facial features, distinctive traits and accessories). Apps that
+  list each other under `modes` show a switch at the top of the form: *Image / Video* in Cinema Studio, *New character
+  / Your photo* in AI Influencer.
+- **Use in…** on any image or video result (in History and in the viewer) puts the file into another app and opens
+  it: the usual next steps first (Image to Video, Motion Transfer, Relight, Upscale…), then every app that takes it.
 - An image input marked `paint` in `app.json` (`inpaint`) opens a brush over the photo it names: what you paint becomes
   a white-on-black mask the size of the photo (`web/js/paint.js`).
 - A thumbs-down on any lab example (Explore, Library, the viewer, the effects picker) marks it *mediocre*. The marks
