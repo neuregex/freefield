@@ -5,6 +5,11 @@
   "section": "image",
   "summary": "Build a made-up influencer trait by trait: type, body, hair, face, style and scene (FLUX 3 Klein).",
   "higgsfield_feature": "AI Influencer",
+  "modes": [
+    "ai-influencer",
+    "ai-influencer-photo"
+  ],
+  "mode_label": "New character",
   "pack": "image-flux3",
   "status": "ready",
   "workflow": "workflow.api.json",
@@ -635,13 +640,11 @@
     {
       "id": "feature",
       "type": "select",
-      "label": "Facial feature",
-      "default": "Freckles.",
+      "label": "Facial features",
+      "default": [
+        "Freckles."
+      ],
       "options": [
-        {
-          "value": "",
-          "label": "Any"
-        },
         {
           "value": "Freckles.",
           "label": "Freckles"
@@ -738,7 +741,12 @@
           "value": "A big forehead.",
           "label": "Big forehead"
         }
-      ]
+      ],
+      "help": "Up to 3.",
+      "multiple": {
+        "max": 3,
+        "join": " "
+      }
     },
     {
       "id": "facialhair",
@@ -787,13 +795,9 @@
     {
       "id": "trait",
       "type": "select",
-      "label": "Distinctive trait",
-      "default": "",
+      "label": "Distinctive traits",
+      "default": [],
       "options": [
-        {
-          "value": "",
-          "label": "Any"
-        },
         {
           "value": "Each eye a different color.",
           "label": "Different eye colors"
@@ -850,7 +854,12 @@
           "value": "A strip across the nose.",
           "label": "Nose strip"
         }
-      ]
+      ],
+      "help": "Up to 3.",
+      "multiple": {
+        "max": 3,
+        "join": " "
+      }
     },
     {
       "id": "style",
@@ -899,13 +908,9 @@
     {
       "id": "accessory",
       "type": "select",
-      "label": "Accessory",
-      "default": "",
+      "label": "Accessories",
+      "default": [],
       "options": [
-        {
-          "value": "",
-          "label": "Any"
-        },
         {
           "value": "Glasses.",
           "label": "Glasses"
@@ -926,7 +931,12 @@
           "value": "A bag over one shoulder.",
           "label": "Bag"
         }
-      ]
+      ],
+      "help": "Up to 3.",
+      "multiple": {
+        "max": 3,
+        "join": " "
+      }
     },
     {
       "id": "scene",
@@ -970,7 +980,7 @@
         {
           "node": "18:17",
           "field": "value",
-          "template": "A vertical photo for social media of a made-up character: {kind}. {gender}{age}{origin}. {skin} {build} {stature} {proportions} {hair} {haircolor} {head} {neck} {eyes} {eyecolor} {feature} {facialhair} {trait} {style} {accessory} {scene} Natural skin texture with visible pores, a believable photo, no text, no logos. {details}"
+          "template": "A vertical photo for social media of a made-up character: {kind}. {gender}{age}{origin}. {skin} {build} {stature} {proportions} {hair} {haircolor} {head} {neck} {eyes} {eyecolor} {feature} {facialhair} {trait} {style} {accessory} {scene} Natural skin texture with visible pores, a believable photo. The clothes and shoes are plain, with no letters, prints, labels or logos anywhere. {details}"
         }
       ]
     },

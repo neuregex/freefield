@@ -4550,7 +4550,75 @@
       "peak_vram_gb": 12.14,
       "gpu": "NVIDIA L40S, 46068 MiB",
       "run": "20261026-003153-l40s"
+    },
+    "cinema-video": {
+      "case": "cinema-video-detective-enh",
+      "type": "video",
+      "card": "examples/cinema-video/card.mp4",
+      "poster": "examples/cinema-video/poster.jpg",
+      "full": "examples/cinema-video/full.mp4",
+      "inputs": [],
+      "values": {
+        "prompt": "A detective in a trench coat lights a cigarette under a streetlamp on a rainy night, then looks up as headlights sweep across his face",
+        "moves": [
+          "slowly dollies in toward the subject"
+        ],
+        "tempo": " One continuous shot, no cuts.",
+        "genre": "",
+        "era": "",
+        "camera": "the rich detail and fine grain of large-format 70mm film",
+        "lens": "the warm, slightly soft rendering of 1970s cinema glass",
+        "focal": "a natural 35mm perspective",
+        "aperture": "aperture f/1.4, shallow depth of field, creamy bokeh",
+        "lighting": "cinematic lighting",
+        "palette": "natural color science",
+        "aspect": "16:9 (Widescreen)",
+        "duration": 5,
+        "enhance": true
+      },
+      "seed": 42,
+      "seconds": 100.2,
+      "peak_vram_gb": 44.3,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261026-015446-l40s"
+    },
+    "ai-influencer-photo": {
+      "case": "tpl-ai-influencer-photo",
+      "type": "image",
+      "card": "examples/ai-influencer-photo/card.jpg",
+      "poster": null,
+      "full": "examples/ai-influencer-photo/full.jpg",
+      "inputs": [
+        {
+          "id": "image",
+          "label": "Your photo",
+          "type": "image",
+          "src": "examples/ai-influencer-photo/input-image.jpg",
+          "full": "examples/ai-influencer-photo/input-image-full.jpg",
+          "from_case": "ref-fx-woman-a"
+        }
+      ],
+      "values": {
+        "hair": "",
+        "haircolor": "Platinum hair.",
+        "build": "",
+        "facialhair": "",
+        "feature": [],
+        "trait": [],
+        "style": "",
+        "accessory": [
+          "Glasses."
+        ],
+        "scene": "Tasting a dish at a busy street food stall at night.",
+        "details": "",
+        "steps": 16
+      },
+      "seed": 42,
+      "seconds": 18.2,
+      "peak_vram_gb": 12.21,
+      "gpu": "NVIDIA L40S, 46068 MiB",
+      "run": "20261026-021906-l40s"
     }
   },
-  "updated_from": "20261026-003753-l40s"
+  "updated_from": "20261026-021906-l40s"
 }

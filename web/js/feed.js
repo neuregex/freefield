@@ -165,6 +165,8 @@ function doneCard(e, list) {
     el("div", { class: "ov" },
       el("div", { class: "row" }, el("span", { class: "tag dark" }, app?.name ?? e.app),
         el("div", { class: "acts" }, dl,
+          item.type !== "audio" && hooks.useIn ? el("button", { class: "mini", type: "button", title: t("act.usein"), "aria-label": t("act.usein"),
+            onclick: (ev) => { ev.stopPropagation(); hooks.useIn(ev.currentTarget, item); } }, icon("send")) : null,
           el("button", { class: "mini", type: "button", title: t("act.compare"), "aria-label": t("act.compare"), onclick: stop(() => hooks.compare?.(item)) }, icon("compare")),
           deleteButton(() => feed.remove(e.id)))),
       el("div", { class: "row" }, el("span", { class: "meta" }, prompt || `${ago(e.created)}${e.seconds ? ` · ${fmtSeconds(e.seconds)}` : ""}`),

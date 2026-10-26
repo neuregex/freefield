@@ -50,6 +50,7 @@ export type AppManifest = {
   higgsfield_feature?: string;
   /** sibling apps shown as a switch at the top of the form (Cinema Studio: image, video) */
   modes?: string[];
+  mode_label?: string;
   pack: string;
   status: "draft" | "ready";
   workflow?: string;

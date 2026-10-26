@@ -7,7 +7,7 @@ import { t } from "./i18n.js";
 import { loadCatalog, byId, lastAppFor, studioOf, FEATURED, hosted } from "./catalog.js";
 import { topbar, gpuState, pollGpu } from "./nav.js";
 import { exploreView, appsView, libraryView, vramView } from "./views.js";
-import { workspaceView, recreate } from "./workspace.js";
+import { workspaceView, recreate, useIn } from "./workspace.js";
 import { hooks, feed } from "./feed.js";
 import { openViewer } from "./viewer.js";
 import { openCompare } from "./compare.js";
@@ -60,6 +60,7 @@ hooks.open = (items, key) => openViewer(items, key);
 hooks.recreate = (item) => recreate(item);
 hooks.retry = (item) => recreate(item, { run: true });
 hooks.compare = (item) => openCompare(item);
+hooks.useIn = (anchor, item, done) => useIn(anchor, item, done);
 hooks.rerender = () => render({ keepScroll: true });
 
 // a run starting or ending changes what the GPU pill should say

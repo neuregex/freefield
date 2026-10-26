@@ -25,6 +25,7 @@
   "image-flux3": {
     "apps": [
       "ai-influencer",
+      "ai-influencer-photo",
       "billboard",
       "breakdown",
       "brick-toy",

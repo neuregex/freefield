@@ -1,0 +1,670 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "ai-influencer-photo",
+  "name": "AI Influencer · Your Photo",
+  "section": "image",
+  "summary": "Your own face as the influencer: change hair, style, extras and scene, the face stays (FLUX 3 Klein, one reference).",
+  "higgsfield_feature": "AI Influencer (your photo)",
+  "modes": [
+    "ai-influencer",
+    "ai-influencer-photo"
+  ],
+  "mode_label": "Your photo",
+  "pack": "image-flux3",
+  "status": "ready",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_flux3_klein_distilled_image_edit.json",
+    "comfyui": "0.42.0",
+    "notes": "Template app written by tools/template_apps.py: the workflow is apps/edit's (built by tools/build_apps.py); the prompt below is fixed and \"Extra direction\" is appended to it."
+  },
+  "inputs": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": "Your photo",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "11",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "hair",
+      "type": "select",
+      "label": "Hairstyle",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Any"
+        },
+        {
+          "value": "Long curly hair.",
+          "label": "Long curly"
+        },
+        {
+          "value": "Long straight hair.",
+          "label": "Long straight"
+        },
+        {
+          "value": "Short hair.",
+          "label": "Short"
+        },
+        {
+          "value": "A bob haircut.",
+          "label": "Bob"
+        },
+        {
+          "value": "A bald head.",
+          "label": "Bald"
+        },
+        {
+          "value": "A buzz cut.",
+          "label": "Buzz cut"
+        },
+        {
+          "value": "A bowl cut.",
+          "label": "Bowl cut"
+        },
+        {
+          "value": "A mullet.",
+          "label": "Mullet"
+        },
+        {
+          "value": "Long braids.",
+          "label": "Braids"
+        },
+        {
+          "value": "Two pigtails.",
+          "label": "Pigtails"
+        },
+        {
+          "value": "A big afro.",
+          "label": "Afro"
+        },
+        {
+          "value": "A mohawk.",
+          "label": "Mohawk"
+        },
+        {
+          "value": "Big voluminous waves.",
+          "label": "Voluminous waves"
+        },
+        {
+          "value": "A tall beehive hairdo.",
+          "label": "Beehive"
+        },
+        {
+          "value": "A tight perm.",
+          "label": "Perm"
+        },
+        {
+          "value": "A layered cut.",
+          "label": "Layered"
+        },
+        {
+          "value": "Long ringlets.",
+          "label": "Ringlets"
+        },
+        {
+          "value": "A mushroom cut.",
+          "label": "Mushroom cut"
+        },
+        {
+          "value": "Hair styled into two horns.",
+          "label": "Hair horns"
+        },
+        {
+          "value": "Hair piled up in a soft-serve swirl.",
+          "label": "Soft-serve swirl"
+        },
+        {
+          "value": "A round ball of curls.",
+          "label": "Ball of curls"
+        },
+        {
+          "value": "Two round buns on top of the head.",
+          "label": "Two buns"
+        },
+        {
+          "value": "Hair swept out to the sides like wings.",
+          "label": "Hair wings"
+        },
+        {
+          "value": "Spiky hair.",
+          "label": "Spikes"
+        },
+        {
+          "value": "One big spiral curl on the side.",
+          "label": "Side spiral"
+        }
+      ]
+    },
+    {
+      "id": "haircolor",
+      "type": "select",
+      "label": "Hair color",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Any"
+        },
+        {
+          "value": "Jet-black hair.",
+          "label": "Jet black"
+        },
+        {
+          "value": "Dark brown hair.",
+          "label": "Dark brown"
+        },
+        {
+          "value": "Brown hair.",
+          "label": "Brown"
+        },
+        {
+          "value": "Auburn hair.",
+          "label": "Auburn"
+        },
+        {
+          "value": "Bright red hair.",
+          "label": "Red"
+        },
+        {
+          "value": "Blonde hair.",
+          "label": "Blonde"
+        },
+        {
+          "value": "Platinum hair.",
+          "label": "Platinum"
+        },
+        {
+          "value": "Gray hair.",
+          "label": "Gray"
+        },
+        {
+          "value": "White hair.",
+          "label": "White"
+        },
+        {
+          "value": "Pastel pink hair.",
+          "label": "Pastel pink"
+        },
+        {
+          "value": "Lilac hair.",
+          "label": "Lilac"
+        },
+        {
+          "value": "Blue hair.",
+          "label": "Blue"
+        },
+        {
+          "value": "Green hair.",
+          "label": "Green"
+        }
+      ]
+    },
+    {
+      "id": "build",
+      "type": "select",
+      "label": "Build",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Any"
+        },
+        {
+          "value": "Slim build.",
+          "label": "Slim"
+        },
+        {
+          "value": "Athletic build.",
+          "label": "Athletic"
+        },
+        {
+          "value": "Muscular build.",
+          "label": "Muscular"
+        },
+        {
+          "value": "Curvy build.",
+          "label": "Curvy"
+        },
+        {
+          "value": "Heavyset build.",
+          "label": "Heavyset"
+        },
+        {
+          "value": "A huge bodybuilder build.",
+          "label": "Bodybuilder"
+        }
+      ]
+    },
+    {
+      "id": "facialhair",
+      "type": "select",
+      "label": "Facial hair",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Any"
+        },
+        {
+          "value": "Clean-shaven.",
+          "label": "Clean-shaven"
+        },
+        {
+          "value": "Stubble.",
+          "label": "Stubble"
+        },
+        {
+          "value": "A full beard.",
+          "label": "Full beard"
+        },
+        {
+          "value": "A goatee.",
+          "label": "Goatee"
+        },
+        {
+          "value": "A mustache.",
+          "label": "Mustache"
+        },
+        {
+          "value": "A thin pencil mustache.",
+          "label": "Pencil mustache"
+        },
+        {
+          "value": "A thick push-broom mustache.",
+          "label": "Push-broom"
+        },
+        {
+          "value": "A braided beard.",
+          "label": "Braided beard"
+        }
+      ]
+    },
+    {
+      "id": "feature",
+      "type": "select",
+      "label": "Facial features",
+      "default": [],
+      "options": [
+        {
+          "value": "Freckles.",
+          "label": "Freckles"
+        },
+        {
+          "value": "Dimples.",
+          "label": "Dimples"
+        },
+        {
+          "value": "Dark circles under the eyes.",
+          "label": "Dark circles"
+        },
+        {
+          "value": "Rosy cheeks.",
+          "label": "Rosy cheeks"
+        },
+        {
+          "value": "High cheekbones.",
+          "label": "High cheekbones"
+        },
+        {
+          "value": "Full lips.",
+          "label": "Full lips"
+        },
+        {
+          "value": "Thick eyebrows.",
+          "label": "Thick eyebrows"
+        },
+        {
+          "value": "A beauty mark.",
+          "label": "Beauty mark"
+        },
+        {
+          "value": "A round nose.",
+          "label": "Round nose"
+        },
+        {
+          "value": "A button nose.",
+          "label": "Button nose"
+        },
+        {
+          "value": "A pointed nose.",
+          "label": "Pointed nose"
+        },
+        {
+          "value": "A tiny nose.",
+          "label": "Tiny nose"
+        },
+        {
+          "value": "Pouty lips.",
+          "label": "Pouty lips"
+        },
+        {
+          "value": "A small pursed mouth.",
+          "label": "Small mouth"
+        },
+        {
+          "value": "A wide mouth.",
+          "label": "Wide mouth"
+        },
+        {
+          "value": "A unibrow.",
+          "label": "Unibrow"
+        },
+        {
+          "value": "Thin, high arched eyebrows.",
+          "label": "Thin arched brows"
+        },
+        {
+          "value": "Bushy eyebrows.",
+          "label": "Bushy brows"
+        },
+        {
+          "value": "Ears that stick out.",
+          "label": "Protruding ears"
+        },
+        {
+          "value": "A gap between the front teeth.",
+          "label": "Gap teeth"
+        },
+        {
+          "value": "Slight buck teeth.",
+          "label": "Buck teeth"
+        },
+        {
+          "value": "A pointed chin.",
+          "label": "Pointed chin"
+        },
+        {
+          "value": "A receding chin.",
+          "label": "Receding chin"
+        },
+        {
+          "value": "A big forehead.",
+          "label": "Big forehead"
+        }
+      ],
+      "help": "Up to 3.",
+      "multiple": {
+        "max": 3,
+        "join": " "
+      }
+    },
+    {
+      "id": "trait",
+      "type": "select",
+      "label": "Distinctive traits",
+      "default": [],
+      "options": [
+        {
+          "value": "Each eye a different color.",
+          "label": "Different eye colors"
+        },
+        {
+          "value": "A small face tattoo.",
+          "label": "Small face tattoo"
+        },
+        {
+          "value": "A nose piercing.",
+          "label": "Nose piercing"
+        },
+        {
+          "value": "Several ear piercings.",
+          "label": "Ear piercings"
+        },
+        {
+          "value": "Shaved slits in one eyebrow.",
+          "label": "Eyebrow slits"
+        },
+        {
+          "value": "Bleached eyebrows.",
+          "label": "Bleached brows"
+        },
+        {
+          "value": "No eyebrows.",
+          "label": "No eyebrows"
+        },
+        {
+          "value": "A gold grill on the teeth.",
+          "label": "Gold grill"
+        },
+        {
+          "value": "Braces on the teeth.",
+          "label": "Braces"
+        },
+        {
+          "value": "A small scar through one eyebrow.",
+          "label": "Eyebrow scar"
+        },
+        {
+          "value": "Small gems stuck on the cheekbones.",
+          "label": "Face gems"
+        },
+        {
+          "value": "Pointed elf ears.",
+          "label": "Elf ears"
+        },
+        {
+          "value": "Very long eyelashes.",
+          "label": "Long lashes"
+        },
+        {
+          "value": "A strip across the nose.",
+          "label": "Nose strip"
+        }
+      ],
+      "help": "Up to 3.",
+      "multiple": {
+        "max": 3,
+        "join": " "
+      }
+    },
+    {
+      "id": "style",
+      "type": "select",
+      "label": "Style",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Any"
+        },
+        {
+          "value": "Wearing casual everyday clothes.",
+          "label": "Casual"
+        },
+        {
+          "value": "Wearing streetwear.",
+          "label": "Streetwear"
+        },
+        {
+          "value": "Wearing 1970s retro clothes.",
+          "label": "Retro"
+        },
+        {
+          "value": "Wearing sporty athletic clothes.",
+          "label": "Sporty"
+        },
+        {
+          "value": "Wearing early-2000s Y2K fashion.",
+          "label": "Y2K"
+        },
+        {
+          "value": "Wearing a bold theatrical costume.",
+          "label": "Theatrical"
+        },
+        {
+          "value": "Wearing gothic black clothes.",
+          "label": "Gothic"
+        },
+        {
+          "value": "Wearing a tailored suit.",
+          "label": "Suit"
+        }
+      ]
+    },
+    {
+      "id": "accessory",
+      "type": "select",
+      "label": "Accessories",
+      "default": [],
+      "options": [
+        {
+          "value": "Glasses.",
+          "label": "Glasses"
+        },
+        {
+          "value": "Headphones around the neck.",
+          "label": "Headphones"
+        },
+        {
+          "value": "Jewelry.",
+          "label": "Jewelry"
+        },
+        {
+          "value": "A hat.",
+          "label": "Hat"
+        },
+        {
+          "value": "A bag over one shoulder.",
+          "label": "Bag"
+        }
+      ],
+      "help": "Up to 3.",
+      "multiple": {
+        "max": 3,
+        "join": " "
+      }
+    },
+    {
+      "id": "scene",
+      "type": "select",
+      "label": "Scene",
+      "default": "Standing in a plain light-gray photo studio, full body, soft even light.",
+      "options": [
+        {
+          "value": "Standing in a plain light-gray photo studio, full body, soft even light.",
+          "label": "Studio"
+        },
+        {
+          "value": "Stretching on a rooftop at sunrise, full body.",
+          "label": "Fitness"
+        },
+        {
+          "value": "With a backpack at a viewpoint above a coastal town.",
+          "label": "Travel"
+        },
+        {
+          "value": "Posing on a city street, full body.",
+          "label": "Fashion"
+        },
+        {
+          "value": "Tasting a dish at a busy street food stall at night.",
+          "label": "Food"
+        },
+        {
+          "value": "At a desk with a laptop and a camera on a tripod, warm desk lamp.",
+          "label": "Tech"
+        }
+      ]
+    },
+    {
+      "id": "details",
+      "type": "text",
+      "label": "Extra direction",
+      "default": "",
+      "help": "Added at the end of the app's prompt.",
+      "bind": [
+        {
+          "node": "4",
+          "field": "text",
+          "template": "A vertical photo for social media of the same person as in <ref_image_0>, as an influencer. {hair} {haircolor} {build} {facialhair} {feature} {trait} {style} {accessory} {scene} Everything the lines above do not change stays as in the photo: the same face (its shape, eyes, nose, mouth and marks), skin tone and age, and the same hairstyle and hair length unless a new hairstyle is given. Natural skin texture with visible pores, a believable photo. The clothes and shoes are plain, with no letters, prints, labels or logos anywhere. {details}"
+        }
+      ]
+    },
+    {
+      "id": "steps",
+      "type": "slider",
+      "label": "Steps",
+      "min": 8,
+      "max": 32,
+      "step": 1,
+      "default": 16,
+      "bind": [
+        {
+          "node": "7",
+          "field": "steps"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "7",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "9",
+      "type": "image",
+      "label": "Result"
+    }
+  ],
+  "models": [
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "phase": "denoise",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "phase": "encode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "decode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    }
+  ],
+  "credits": [
+    "FLUX 3 Image Klein by Black Forest Labs (FLUX Kommunity License)"
+  ],
+  "test": {
+    "image": "test/portrait.png",
+    "haircolor": "Platinum hair.",
+    "accessory": [
+      "Glasses."
+    ],
+    "scene": "Tasting a dish at a busy street food stall at night."
+  }
+}

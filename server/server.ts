@@ -90,6 +90,7 @@ function publicApp(a: App) {
     runnable: runnable(a),
     higgsfield_feature: a.higgsfield_feature ?? null,
     modes: a.modes ?? null,
+    mode_label: a.mode_label ?? null,
     inputs: a.inputs.map(({ bind: _bind, options, ...rest }) => ({
       ...rest, ...(options ? { options: options.map(({ sets: _sets, ...o }) => o) } : {}),
     })),

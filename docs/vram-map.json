@@ -185,6 +185,32 @@
       "measured_on": "L40S · 20261026-002124-l40s"
     },
     {
+      "id": "ai-influencer-photo",
+      "name": "AI Influencer · Your Photo",
+      "section": "image",
+      "pack": "image-flux3",
+      "status": "ready",
+      "whole_gb": 11.03,
+      "phases_gb": {
+        "encode": 4.86,
+        "denoise": 5.83,
+        "denoise2": 0.0,
+        "decode": 0.34,
+        "aux": 0.0
+      },
+      "largest_phase": "denoise",
+      "largest_phase_gb": 5.83,
+      "optional_gb": 0,
+      "biggest_file": {
+        "name": "flux3-image-klein-int8-convrot.safetensors",
+        "gb": 5.83
+      },
+      "verdict_24gb": "fits whole",
+      "modal_gpu": "L4 / A10G (24 GB)",
+      "measured_peak_gb": 12.21,
+      "measured_on": "L40S · 20261026-021906-l40s"
+    },
+    {
       "id": "billboard",
       "name": "Billboard",
       "section": "image",
@@ -3041,8 +3067,8 @@
       },
       "verdict_24gb": "needs Modal",
       "modal_gpu": "L40S (48 GB), by phases",
-      "measured_peak_gb": null,
-      "measured_on": null
+      "measured_peak_gb": 44.3,
+      "measured_on": "L40S · 20261026-015446-l40s"
     },
     {
       "id": "smoke",

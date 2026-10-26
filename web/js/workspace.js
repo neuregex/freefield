@@ -14,6 +14,11 @@ import { openPainter, maskPreview } from "./paint.js";
 // ------------------------------------------------------------------ form state (per app, kept while the page is open)
 const forms = new Map();
 
+/** A multiple select's value from older saves or examples, where it was one string. */
+function asPicks(inp, v) {
+  return inp.multiple && !Array.isArray(v) && v !== undefined && v !== null ? (v === "" ? [] : [v]) : v;
+}
+
 function validValue(inp, v) {
   if (v === undefined || v === null) return false;
   if (inp.multiple) return Array.isArray(v) && v.length <= (inp.multiple.max ?? Infinity) && v.every((x) => (inp.options || []).some((o) => String(o.value) === String(x)));
@@ -30,7 +35,7 @@ export function formFor(app) {
   for (const inp of app.inputs) {
     if (isMedia(inp.type)) continue;
     const fallback = inp.type === "textarea" || inp.type === "text" ? "" : inp.type === "seed" ? -1 : inp.multiple ? [...(inp.default ?? [])] : inp.default ?? "";
-    values[inp.id] = validValue(inp, saved[inp.id]) ? saved[inp.id] : fallback;
+    values[inp.id] = validValue(inp, asPicks(inp, saved[inp.id])) ? asPicks(inp, saved[inp.id]) : fallback;
   }
   f = { values, files: {}, preset: (app.presets || []).some((p) => p.id === saved.__preset) ? saved.__preset : "", count: 1 };
   forms.set(app.id, f);
@@ -161,7 +166,7 @@ export async function recreate(item, { run = false } = {}) {
   const f = formFor(app);
   for (const inp of app.inputs) {
     if (isMedia(inp.type)) continue;
-    if (item.values?.[inp.id] !== undefined) f.values[inp.id] = item.values[inp.id];
+    if (item.values?.[inp.id] !== undefined && validValue(inp, asPicks(inp, item.values[inp.id]))) f.values[inp.id] = asPicks(inp, item.values[inp.id]);
     if (inp.type === "seed" && item.seed !== null && item.seed !== undefined) f.values[inp.id] = item.seed;
   }
   f.preset = item.preset || "";
@@ -181,6 +186,37 @@ export async function recreate(item, { run = false } = {}) {
   else hooks.rerender?.();
   if (run) await submit(app, {});
   else toast(t("toast.loaded", { app: app.name }));
+}
+
+/** Where a result usually goes next, by the kind of file it is (the rest of the apps that take it follow). */
+const NEXT = {
+  image: ["video", "motion-transfer", "h3-photo", "relight", "upscale", "inpaint", "edit", "expand-image", "character", "remove-bg"],
+  video: ["upscale-video", "extend-video", "reframe", "mixed-media", "video-remove-bg", "smooth", "sdr-hdr"],
+};
+
+/** "Use in…": put a result (an image or a video) into the first slot of that kind in another app, and open that app. */
+export function useIn(anchor, item, done) {
+  const type = item.type;
+  const slotOf = (a) => a.inputs.find((i) => i.type === type && !i.paint);
+  const first = (NEXT[type] || []).map((id) => byId.get(id)).filter((a) => a && slotOf(a));
+  const rest = apps.filter((a) => slotOf(a) && !first.includes(a)).sort((x, y) => x.name.localeCompare(y.name));
+  const go = async (a) => {
+    closePopover();
+    done?.();
+    try {
+      const ext = extOf(item.full) || (type === "video" ? "mp4" : "png");
+      if (!setFile(a, slotOf(a), await fileFromUrl(item.full, `${item.app || "result"}.${ext}`))) return;
+      if (location.hash !== `#/app/${a.id}`) location.hash = `#/app/${a.id}`;
+      else hooks.rerender?.();
+      toast(t("toast.sent", { app: a.name }));
+    } catch (err) {
+      toast(err.message, { error: true });
+    }
+  };
+  const row = (a) => el("button", { class: "opt", type: "button", onclick: () => go(a) },
+    el("span", { class: "thumb" }, appThumb(a)), el("span", { class: "two" }, el("b", {}, a.name), el("small", {}, tagline(a))));
+  popover(anchor, el("div", { class: "usein" }, el("h4", {}, t("act.usein")), ...first.map(row),
+    rest.length ? el("details", {}, el("summary", {}, t("usein.more", { n: rest.length })), ...rest.map(row)) : null), { width: 340 });
 }
 
 // ------------------------------------------------------------------ small parts
@@ -238,7 +274,8 @@ function modeSwitch(app) {
   if (!app.modes) return null;
   return el("div", { class: "seg modes", role: "group", "aria-label": app.name }, ...app.modes.map((id) => byId.get(id)).filter(Boolean).map((a) =>
     el("button", { type: "button", "aria-pressed": String(a.id === app.id), onclick: () => { if (a.id !== app.id) location.hash = `#/app/${a.id}`; } },
-      icon(a.section === "video" ? "video" : "image"), t(`nav.${a.section}`))));
+      icon(a.mode_label ? (a.inputs.some((i) => i.type === "image") ? "user" : "spark") : a.section === "video" ? "video" : "image"),
+      a.mode_label || t(`nav.${a.section}`))));
 }
 
 /** A select marked "gallery" (the effects picker): cards with each option's lab example, and the chosen one playing. */

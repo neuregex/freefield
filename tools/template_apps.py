@@ -118,13 +118,15 @@ T = []
 
 
 def A(id_, name, feature, cat, base, image_label, summary, prompt, inputs=(), ref=None, values=None, note="", image2_label=None, ref2=None, lora=None, help_=None,
-      defaults=None, klein=None, face_mask=False, effect_lora=None, outpaint=False, sidebar=False):
+      defaults=None, klein=None, face_mask=False, effect_lora=None, outpaint=False, sidebar=False, modes=None, mode_label=None):
     """defaults: new defaults for settings kept from the base app (say, the LTX enhancer off); klein: the morph and effect-klein bases' Klein
     instruction; face_mask (edit2): redraw only the face oval MediaPipe finds in the first image, so the rest of it stays as it is;
-    effect_lora: the effect bases' LoRA file; outpaint (edit): draw only a border added around the photo (a select's sets pad it)."""
+    effect_lora: the effect bases' LoRA file; outpaint (edit): draw only a border added around the photo (a select's sets pad it);
+    modes, mode_label: sibling apps shown as a switch at the top of the form, and this app's name in it."""
     T.append(dict(id=id_, name=name, feature=feature, cat=cat, base=base, image_label=image_label, summary=summary, prompt=prompt,
                   inputs=list(inputs), ref=ref, values=values or {}, note=note, image2_label=image2_label, ref2=ref2, lora=lora, help=help_,
-                  defaults=defaults or {}, klein=klein, face_mask=face_mask, effect_lora=effect_lora, outpaint=outpaint, sidebar=sidebar))
+                  defaults=defaults or {}, klein=klein, face_mask=face_mask, effect_lora=effect_lora, outpaint=outpaint, sidebar=sidebar,
+                  modes=modes, mode_label=mode_label))
 
 
 def pad(left, top, right, bottom):
@@ -521,6 +523,15 @@ def any_(label, pairs, default="", help_=None):
     return sel(label[0], label[1], [("Any", "")] + pairs, default, help_)
 
 
+def many(label, pairs, default=(), help_=None, max_=3):
+    """A builder group that takes several picks at once, as Higgsfield's distinctive traits and accessories do: the sentences of
+    the picks, one after the other. None picked writes nothing."""
+    d = sel(label[0], label[1], pairs, "", help_)
+    d["default"] = list(default)
+    d["multiple"] = {"max": max_, "join": " "}
+    return d
+
+
 KIND = sel("kind", "Character type", [
     ("Human", "an ordinary, believable person"),
     ("Bold", "a person with bold, striking, slightly exaggerated features"),
@@ -569,29 +580,30 @@ INFLUENCER = [
                                  ("Hooded", "Hooded eyes."), ("Upturned", "Upturned eyes."), ("Downturned", "Downturned eyes.")]),
     any_(("eyecolor", "Eye color"), [("Black", "Black eyes."), ("Brown", "Brown eyes."), ("Hazel", "Hazel eyes."), ("Green", "Green eyes."),
                                      ("Blue", "Blue eyes."), ("Ice blue", "Ice-blue eyes."), ("Amber", "Amber eyes."), ("Gray", "Gray eyes.")]),
-    any_(("feature", "Facial feature"), [
+    many(("feature", "Facial features"), [
         ("Freckles", "Freckles."), ("Dimples", "Dimples."), ("Dark circles", "Dark circles under the eyes."), ("Rosy cheeks", "Rosy cheeks."),
         ("High cheekbones", "High cheekbones."), ("Full lips", "Full lips."), ("Thick eyebrows", "Thick eyebrows."), ("Beauty mark", "A beauty mark."),
         ("Round nose", "A round nose."), ("Button nose", "A button nose."), ("Pointed nose", "A pointed nose."), ("Tiny nose", "A tiny nose."),
         ("Pouty lips", "Pouty lips."), ("Small mouth", "A small pursed mouth."), ("Wide mouth", "A wide mouth."), ("Unibrow", "A unibrow."),
         ("Thin arched brows", "Thin, high arched eyebrows."), ("Bushy brows", "Bushy eyebrows."), ("Protruding ears", "Ears that stick out."),
         ("Gap teeth", "A gap between the front teeth."), ("Buck teeth", "Slight buck teeth."), ("Pointed chin", "A pointed chin."),
-        ("Receding chin", "A receding chin."), ("Big forehead", "A big forehead.")], "Freckles."),
+        ("Receding chin", "A receding chin."), ("Big forehead", "A big forehead.")], ["Freckles."], "Up to 3."),
     any_(("facialhair", "Facial hair"), [("Clean-shaven", "Clean-shaven."), ("Stubble", "Stubble."), ("Full beard", "A full beard."),
                                          ("Goatee", "A goatee."), ("Mustache", "A mustache."), ("Pencil mustache", "A thin pencil mustache."),
                                          ("Push-broom", "A thick push-broom mustache."), ("Braided beard", "A braided beard.")]),
-    any_(("trait", "Distinctive trait"), [("Different eye colors", "Each eye a different color."), ("Small face tattoo", "A small face tattoo."),
+    many(("trait", "Distinctive traits"), [("Different eye colors", "Each eye a different color."), ("Small face tattoo", "A small face tattoo."),
                                           ("Nose piercing", "A nose piercing."), ("Ear piercings", "Several ear piercings."),
                                           ("Eyebrow slits", "Shaved slits in one eyebrow."), ("Bleached brows", "Bleached eyebrows."),
                                           ("No eyebrows", "No eyebrows."), ("Gold grill", "A gold grill on the teeth."), ("Braces", "Braces on the teeth."),
                                           ("Eyebrow scar", "A small scar through one eyebrow."), ("Face gems", "Small gems stuck on the cheekbones."),
-                                          ("Elf ears", "Pointed elf ears."), ("Long lashes", "Very long eyelashes."), ("Nose strip", "A strip across the nose.")]),
+                                          ("Elf ears", "Pointed elf ears."), ("Long lashes", "Very long eyelashes."), ("Nose strip", "A strip across the nose.")],
+         help_="Up to 3."),
     any_(("style", "Style"), [("Casual", "Wearing casual everyday clothes."), ("Streetwear", "Wearing streetwear."), ("Retro", "Wearing 1970s retro clothes."),
                               ("Sporty", "Wearing sporty athletic clothes."), ("Y2K", "Wearing early-2000s Y2K fashion."),
                               ("Theatrical", "Wearing a bold theatrical costume."), ("Gothic", "Wearing gothic black clothes."),
                               ("Suit", "Wearing a tailored suit.")], "Wearing casual everyday clothes."),
-    any_(("accessory", "Accessory"), [("Glasses", "Glasses."), ("Headphones", "Headphones around the neck."), ("Jewelry", "Jewelry."),
-                                      ("Hat", "A hat."), ("Bag", "A bag over one shoulder.")]),
+    many(("accessory", "Accessories"), [("Glasses", "Glasses."), ("Headphones", "Headphones around the neck."), ("Jewelry", "Jewelry."),
+                                        ("Hat", "A hat."), ("Bag", "A bag over one shoulder.")], help_="Up to 3."),
     sel("scene", "Scene", [("Studio", "Standing in a plain light-gray photo studio, full body, soft even light."),
                            ("Fitness", "Stretching on a rooftop at sunrise, full body."),
                            ("Travel", "With a backpack at a viewpoint above a coastal town."),
@@ -601,13 +613,33 @@ INFLUENCER = [
         "Standing in a plain light-gray photo studio, full body, soft even light."),
 ]
 
+def from_photo(group: dict) -> dict:
+    """The same group for the photo mode, starting at "Any" (or none), so the person keeps what the photo shows until a pick changes it."""
+    g = json.loads(json.dumps(group))
+    g["default"] = [] if g.get("multiple") else ""
+    return g
+
+
+BY_ID = {g["id"]: g for g in INFLUENCER}
+INFLUENCER_PHOTO = [from_photo(BY_ID[i]) for i in ("hair", "haircolor", "build", "facialhair", "feature", "trait", "style", "accessory")] + [BY_ID["scene"]]
+
 A("ai-influencer", "AI Influencer", "AI Influencer", "portraits", "klein", None,
   "Build a made-up influencer trait by trait: type, body, hair, face, style and scene (FLUX 3 Klein).",
   "A vertical photo for social media of a made-up character: {kind}. {gender}{age}{origin}. {skin} {build} {stature} {proportions} {hair} {haircolor} "
   "{head} {neck} {eyes} {eyecolor} {feature} {facialhair} {trait} {style} {accessory} {scene} Natural skin texture with visible pores, "
-  "a believable photo, no text, no logos.",
+  "a believable photo. The clothes and shoes are plain, with no letters, prints, labels or logos anywhere.",
   INFLUENCER, None, {}, "A believable person, not a glossy render? The traits picked show?",
-  defaults={"aspect": "2:3"}, sidebar=True)
+  defaults={"aspect": "2:3"}, sidebar=True, modes=["ai-influencer", "ai-influencer-photo"], mode_label="New character")
+A("ai-influencer-photo", "AI Influencer · Your Photo", "AI Influencer (your photo)", "portraits", "edit", "Your photo",
+  "Your own face as the influencer: change hair, style, extras and scene, the face stays (FLUX 3 Klein, one reference).",
+  "A vertical photo for social media of the same person as in <ref_image_0>, as an influencer. {hair} {haircolor} {build} {facialhair} {feature} "
+  "{trait} {style} {accessory} {scene} Everything the lines above do not change stays as in the photo: the same face (its shape, eyes, nose, "
+  "mouth and marks), skin tone and age, and the same hairstyle and hair length unless a new hairstyle is given. Natural skin texture with visible "
+  "pores, a believable photo. The clothes and shoes are plain, with no letters, prints, labels or logos anywhere.",
+  INFLUENCER_PHOTO, WOMAN, {"haircolor": "Platinum hair.", "accessory": ["Glasses."], "scene": "Tasting a dish at a busy street food stall at night."},
+  "Same face, new platinum hair and glasses at a night food stall? (Runs 21-22 on a city street in streetwear drew sneakers with brand-like marks, "
+  "so the example is waist-up.)", sidebar=True,
+  modes=["ai-influencer", "ai-influencer-photo"], mode_label="Your photo")
 A("bullet-time-scene", "Bullet Time Scene", "Bullet Time Scene", "camera", "effect", "Your photo",
   "Freezes the moment and circles the camera around the subject, in their own scene (Wan 2.1 + Bullet Time LoRA).",
   BULLET_TRIGGER + "The video shows {subject}, frozen in mid-air while the camera circles around them in one direction; the whole scene is frozen too.",
@@ -769,6 +801,8 @@ def manifest(t: dict) -> dict:
         "id": t["id"], "name": t["name"], "section": base["section"],
         "summary": t["summary"],
         "higgsfield_feature": t["feature"],
+        **({"modes": t["modes"]} if t["modes"] else {}),
+        **({"mode_label": t["mode_label"]} if t["mode_label"] else {}),
         "pack": base["pack"], "status": "ready", "workflow": "workflow.api.json",
         "source": {**src.get("source", {}), "notes": notes},
         "inputs": inputs,

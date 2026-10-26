@@ -28,7 +28,8 @@ test("numbers are coerced and range-checked", () => {
 test("an empty select option is a choice, not a request for the default", () => {
   const app = byId("ai-influencer");
   const values = resolveValues(app, { feature: "", hair: "" , seed: 1 });
-  assert.equal(values.feature, "", "Any stays Any even though the default is Freckles");
+  assert.equal(values.hair, "", "Any stays Any even though the default is long curly hair");
+  assert.deepEqual(values.feature, [], "and a multiple select left empty stays empty instead of taking its default, Freckles");
   const wf = recorder();
   applyInputs(app, values, wf, () => null);
   const text = wf.sets["18:17.value"] as string;
@@ -77,6 +78,24 @@ test("a multiple select keeps the picks in order and templates get them joined",
   assert.deepEqual(resolveValues(app, { prompt: "x", seed: 1 }).moves, ["slowly dollies in toward the subject"], "no value at all takes the default list");
   assert.throws(() => resolveValues(app, { prompt: "x", moves: JSON.stringify(["flies to the moon"]) }), /not one of the options/);
   assert.throws(() => resolveValues(app, { prompt: "x", moves: JSON.stringify(["pans left", "pans right", "tilts up", "tilts down"]) }), /at most 3/);
+});
+
+test("the influencer takes several traits per group, and its photo mode keeps the face unless a pick changes something", () => {
+  const app = byId("ai-influencer");
+  const values = resolveValues(app, { trait: JSON.stringify(["A nose piercing.", "Braces on the teeth."]), accessory: "[]", seed: 1 });
+  const wf = recorder();
+  applyInputs(app, values, wf, () => null);
+  const text = wf.sets["18:17.value"] as string;
+  assert.ok(text.includes("Freckles. Dark brown") || text.includes("Freckles."), "the default facial feature is still a list of one");
+  assert.ok(text.includes("A nose piercing. Braces on the teeth."), text);
+  assert.ok(!/Glasses|Headphones/.test(text));
+  const photo = byId("ai-influencer-photo");
+  assert.deepEqual(photo.modes, ["ai-influencer", "ai-influencer-photo"]);
+  const wf2 = recorder();
+  applyInputs(photo, resolveValues(photo, { image: { bytes: new Uint8Array([1]), name: "a.png" }, seed: 1 }), wf2, () => null);
+  const p = wf2.sets["4.text"] as string;
+  assert.match(p, /^A vertical photo for social media of the same person as in <ref_image_0>, as an influencer\. Standing in a plain light-gray photo studio/);
+  assert.ok(!/hair\.|Freckles/.test(p), "nothing about hair or face is written until picked");
 });
 
 test("the aspect select sizes the first frame and the video together", () => {

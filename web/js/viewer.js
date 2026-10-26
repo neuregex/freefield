@@ -8,6 +8,7 @@ import { hooks, feed, deleteButton } from "./feed.js";
 import { flags, flagButton } from "./flags.js";
 
 function optionLabel(inp, v) {
+  if (Array.isArray(v)) return v.map((x) => optionLabel(inp, x)).join(inp.multiple?.ordered ? " → " : ", ");
   const o = (inp.options || []).find((x) => String(x.value) === String(v));
   return o ? o.label : String(v ?? "");
 }
@@ -50,7 +51,7 @@ export function openViewer(items, startKey) {
     const pi = app ? promptInput(app) : null;
     const prompt = pi ? String(item.values?.[pi.id] ?? "") : "";
     const labels = Object.fromEntries((app?.inputs || []).map((x) => [x.id, x]));
-    const settings = Object.entries(item.values || {}).filter(([k, v]) => labels[k] && labels[k] !== pi && labels[k].type !== "seed" && v !== "" && v !== null && v !== undefined);
+    const settings = Object.entries(item.values || {}).filter(([k, v]) => labels[k] && labels[k] !== pi && labels[k].type !== "seed" && v !== "" && v !== null && v !== undefined && !(Array.isArray(v) && !v.length));
     const stats = [
       item.seconds ? [icon("clock"), t("view.gpu", { s: fmtSeconds(item.seconds) })] : null,
       item.total && (!item.seconds || item.total - item.seconds > 2) ? [item.seconds ? null : icon("clock"), t("view.total", { s: fmtSeconds(item.total) })] : null,
@@ -78,6 +79,7 @@ export function openViewer(items, startKey) {
       el("div", { class: "acts" },
         app ? el("button", { class: "btn lime", type: "button", onclick: () => { close(); hooks.recreate?.(item); } }, icon("redo"), t("act.recreate")) : null,
         url ? el("a", { class: "btn ghost", href: url, download: downloadName(item, url) }, icon("download"), t("act.download")) : null,
+        url && output.type !== "audio" && hooks.useIn ? el("button", { class: "btn ghost", type: "button", onclick: (ev) => hooks.useIn(ev.currentTarget, { ...item, full: url, type: output.type }, close) }, icon("send"), t("act.usein")) : null,
         el("button", { class: "btn ghost", type: "button", onclick: () => { close(); hooks.compare?.({ ...item, full: url, type: output.type }); } }, icon("compare"), t("act.compare")),
         item.kind === "example" && app ? flagButton(flags.key(app.id)) : null,
         item.kind === "history" ? deleteButton(async () => {

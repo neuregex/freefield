@@ -19,6 +19,7 @@ is not the least the app needs.
 | `upscale` | ready | 4.0 GB | denoise 3.5 GB | seedvr2_3b_int8_convrot.safetensors (3.5) | fits whole | L4 / A10G (24 GB) | 6.5 GB (H100) |
 | `upscale-video` | ready | 4.0 GB | denoise 3.5 GB | seedvr2_3b_int8_convrot.safetensors (3.5) | fits whole | L4 / A10G (24 GB) | 26.1 GB (L40S) |
 | `ai-influencer` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 9.9 GB (L40S) |
+| `ai-influencer-photo` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 12.2 GB (L40S) |
 | `billboard` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.3 GB (H100) |
 | `breakdown` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.2 GB (H100) |
 | `brick-toy` | ready | 11.0 GB | denoise 5.8 GB | flux3-image-klein-int8-convrot.safetensors (5.8) | fits whole | L4 / A10G (24 GB) | 11.2 GB (H100) |
@@ -128,6 +129,6 @@ is not the least the app needs.
 | `h3-photo` | ready | 51.5 GB | encode 27.1 GB | qwen3vl_32b_minimax_h3_int8_convrot.safetensors (27.1) | needs Modal | L40S (48 GB), by phases | 49.5 GB (H100) |
 | `h3-video` | ready | 51.5 GB | encode 27.1 GB | qwen3vl_32b_minimax_h3_int8_convrot.safetensors (27.1) | needs Modal | L40S (48 GB), by phases | 48.3 GB (H100) |
 | `reshoot` | ready | 54.8 GB | encode 27.1 GB | qwen3vl_32b_minimax_h3_int8_convrot.safetensors (27.1) | needs Modal | L40S (48 GB), by phases | 44.1 GB (L40S) |
-| `cinema-video` | ready | 50.7 GB (+5.2 optional) | denoise 27.3 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | needs Modal | L40S (48 GB), by phases | not measured |
+| `cinema-video` | ready | 50.7 GB (+5.2 optional) | denoise 27.3 GB | ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors (21.5) | needs Modal | L40S (48 GB), by phases | 44.3 GB (L40S) |
 | `smoke` | ready | 0.0 GB | encode 0.0 GB | — | no models | any | not measured |
 | `smoke-invert` | ready | 0.0 GB | encode 0.0 GB | — | no models | any | not measured |

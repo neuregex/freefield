@@ -29,7 +29,7 @@ export const CATEGORIES = [
   { id: "vfx", apps: ["effects", "morph", "edit", "inpaint", "vfx-clean-plate", "vfx-day-to-night", "vfx-water"] },
   { id: "ads", apps: ["product-shot", "poster", "packshot", "macro-scene", "macro-product", "giant-product", "billboard", "graffiti-ad", "fridge-ad", "ugc-shot",
     "asmr-product", "chameleon", "magic-button", "truck-ad", "kick-ad", "volcano-ad"] },
-  { id: "portraits", apps: ["ai-influencer", "photodump", "headshot", "commercial-faces", "style-snap", "skin-enhancer", "outfit-vending", "glitter-sticker", "fashion-factory", "try-on", "outfit-swap", "outfit-shot"] },
+  { id: "portraits", apps: ["ai-influencer", "ai-influencer-photo", "photodump", "headshot", "commercial-faces", "style-snap", "skin-enhancer", "outfit-vending", "glitter-sticker", "fashion-factory", "try-on", "outfit-swap", "outfit-shot"] },
   { id: "clips", apps: ["behind-the-scenes", "asmr-whisper", "asmr-host", "roller-coaster", "storm-creature", "cloud-surf", "mukbang", "melting-doodle", "rap-video", "idol"] },
   { id: "play", apps: ["game-styles", "plushie", "render-3d", "figure-3d", "pixel-game", "brick-toy", "sketch-to-real", "paint-app", "mural", "micro-beasts", "meme"] },
   { id: "templates", apps: ["j-magazine", "cafe-60s", "victory-card", "j-poster", "mascot", "burning-sunset", "comic-book", "giallo", "renaissance", "japanese-show", "breakdown", "edit-text", "image-effects", "color-grade"] },
@@ -171,6 +171,7 @@ const TAGLINES = {
   sfx: ["Sound for every scene", "Sonido para cada escena"],
 
   "ai-influencer": ["A made-up influencer for your feed", "Un influencer inventado para tu feed"],
+  "ai-influencer-photo": ["Your face, a new look", "Tu cara, un look nuevo"],
   angles: ["The same scene from another angle", "La misma escena desde otro ángulo"],
   "asmr-host": ["You hosting an ASMR studio", "Tú conduciendo un estudio de ASMR"],
   "asmr-product": ["Your product in an ASMR clip", "Tu producto en un clip de ASMR"],

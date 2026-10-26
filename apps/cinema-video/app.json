@@ -685,8 +685,8 @@
       "id": "enhance",
       "type": "toggle",
       "label": "Enhance prompt",
-      "default": false,
-      "help": "Rewrites the motion prompt with a small Gemma 4 model first; off, the shot follows the camera moves and tempo word for word",
+      "default": true,
+      "help": "Rewrites the motion prompt with a small Gemma 4 model first (on by default: in the lab the face held better with it); off, the prompt goes in word for word",
       "bind": [
         {
           "node": "398:383",
