@@ -604,7 +604,7 @@ def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None)
         return w
 
     out["character-3"] = three_refs(e, 1.0)
-    out["moodboard"] = three_refs(e, 0.5)   # the look is in the references, not their detail: half a megapixel each
+    out["moodboard"] = three_refs(e, 1.0)   # at half a megapixel each the look barely carried over (run 20261026-002124-l40s)
 
     pd = json.loads(json.dumps(e))
     # Photodump: four photos of the person in one run. Four prompts (an aesthetic's select writes all four), each with its

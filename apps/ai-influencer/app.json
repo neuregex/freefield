@@ -33,11 +33,11 @@
           "label": "Extreme"
         },
         {
-          "value": "an anthropomorphic insect character: an insect head with large compound eyes and antennae on a human body",
+          "value": "a character whose whole head is a grasshopper's head, with large compound eyes and long antennae, on a human body: no human face",
           "label": "Insect"
         },
         {
-          "value": "an anthropomorphic frog character: a green frog head on a human body",
+          "value": "a character whose whole head is a green frog's head, with a wide mouth and big round eyes, on a human body: no human face",
           "label": "Frog"
         },
         {
@@ -53,7 +53,7 @@
           "label": "Rodent"
         },
         {
-          "value": "an anthropomorphic bird character: a puffin head with a bright beak on a human body",
+          "value": "a character whose whole head is a puffin's head, black and white feathers and a bright orange beak, on a human body: no human face",
           "label": "Bird"
         }
       ],

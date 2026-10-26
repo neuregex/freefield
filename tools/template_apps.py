@@ -525,12 +525,12 @@ KIND = sel("kind", "Character type", [
     ("Human", "an ordinary, believable person"),
     ("Bold", "a person with bold, striking, slightly exaggerated features"),
     ("Extreme", "a person with extremely exaggerated, cartoonish features and proportions, still photographed for real"),
-    ("Insect", "an anthropomorphic insect character: an insect head with large compound eyes and antennae on a human body"),
-    ("Frog", "an anthropomorphic frog character: a green frog head on a human body"),
+    ("Insect", "a character whose whole head is a grasshopper's head, with large compound eyes and long antennae, on a human body: no human face"),
+    ("Frog", "a character whose whole head is a green frog's head, with a wide mouth and big round eyes, on a human body: no human face"),
     ("Cat", "an anthropomorphic cat character: a furry cat head on a human body"),
     ("Dog", "an anthropomorphic dog character: a dog head with floppy ears on a human body"),
     ("Rodent", "an anthropomorphic capybara character: a capybara head on a human body"),
-    ("Bird", "an anthropomorphic bird character: a puffin head with a bright beak on a human body")],
+    ("Bird", "a character whose whole head is a puffin's head, black and white feathers and a bright orange beak, on a human body: no human face")],
     "an ordinary, believable person", "Shown with an example of each type.")
 KIND["gallery"] = True
 INFLUENCER = [

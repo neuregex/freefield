@@ -130,7 +130,7 @@
         0
       ],
       "resolution": "resize",
-      "resolution.megapixels": 0.5,
+      "resolution.megapixels": 1.0,
       "images.image1": [
         "12",
         0

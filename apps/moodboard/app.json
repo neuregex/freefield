@@ -11,7 +11,7 @@
   "source": {
     "template": "image_flux3_klein_distilled_image_edit.json",
     "comfyui": "0.42.0",
-    "notes": "apps/edit's pipeline with three LoadImage nodes on ReferenceMultiLatent (images.image0-2, half a megapixel each: the look matters, not their detail) and an empty latent of its own. Higgsfield's preset moodboards are covered by create-image's Look select."
+    "notes": "apps/edit's pipeline with three LoadImage nodes on ReferenceMultiLatent (images.image0-2, 1 MP each) and an empty latent of its own. Higgsfield's preset moodboards are covered by create-image's Look select. First run (20261026-002124-l40s, half a megapixel per reference, the subject first): a rainy bus stop came out cool and gray, not in the references' warm faded film look."
   },
   "inputs": [
     {
@@ -65,12 +65,12 @@
       "type": "textarea",
       "label": "Prompt",
       "required": true,
-      "default": "a man waiting at a bus stop in the rain",
+      "default": "a young man reading a newspaper on a park bench",
       "bind": [
         {
           "node": "4",
           "field": "text",
-          "template": "{prompt}. Make it in the visual style that <ref_image_0>, <ref_image_1> and <ref_image_2> share: the same color palette, light, contrast, texture, kind of camera and mood. Do not copy their subjects or their composition."
+          "template": "A new photo with exactly the look of <ref_image_0>, <ref_image_1> and <ref_image_2>: their color palette, color cast, grain, softness, contrast and light. It shows {prompt}. Use only their look: do not copy their subjects, objects or composition."
         }
       ]
     },
