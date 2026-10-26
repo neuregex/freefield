@@ -25,6 +25,18 @@ test("numbers are coerced and range-checked", () => {
   assert.throws(() => resolveValues(app, { prompt: "x", steps: 99 }), InputError);
 });
 
+test("an empty select option is a choice, not a request for the default", () => {
+  const app = byId("ai-influencer");
+  const values = resolveValues(app, { feature: "", hair: "" , seed: 1 });
+  assert.equal(values.feature, "", "Any stays Any even though the default is Freckles");
+  const wf = recorder();
+  applyInputs(app, values, wf, () => null);
+  const text = wf.sets["18:17.value"] as string;
+  assert.ok(!/Freckles|curly/.test(text), text);
+  assert.match(text, /^A vertical photo for social media of a made-up character: an ordinary, believable person\. A woman aged around 28 of Latin American descent\. Dark brown hair\./);
+  assert.equal(resolveValues(byId("upscale"), { image: { bytes: new Uint8Array([1]), name: "a.png" }, scale: "" }).scale, 2, "a select without an empty option falls back to its default");
+});
+
 test("select values must be one of the options", () => {
   const app = byId("upscale");
   const file = { bytes: new Uint8Array([1, 2, 3]), name: "a.png" };

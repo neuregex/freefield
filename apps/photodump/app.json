@@ -1,0 +1,301 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "photodump",
+  "name": "Photodump",
+  "section": "image",
+  "summary": "Four photos of you from one photo, in four scenes of an aesthetic, like a feed photo dump, in one run (FLUX 3 Image Klein).",
+  "higgsfield_feature": "Photodump",
+  "pack": "image-flux3",
+  "status": "ready",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_flux3_klein_distilled_image_edit.json",
+    "comfyui": "0.42.0",
+    "notes": "apps/edit's pipeline four times over the same photo: four prompts (the aesthetic select writes all four, nodes 4 and pd_t2-4), four ReferenceMultiLatent and four samplers with the same seed, joined with ImageBatch into one SaveImage."
+  },
+  "inputs": [
+    {
+      "id": "photo",
+      "type": "image",
+      "label": "Your photo",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "11",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "aesthetic",
+      "type": "select",
+      "label": "Aesthetic",
+      "default": "City nights",
+      "help": "Four photos, one per scene of the aesthetic, all with the person from your photo.",
+      "options": [
+        {
+          "value": "City nights",
+          "label": "City nights",
+          "sets": [
+            {
+              "node": "4",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> on a neon-lit street at night, rain on the pavement. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t2",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> at a rooftop bar at dusk with the city lights behind. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t3",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> on an empty subway platform at night, a train arriving with motion blur. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t4",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> in a diner booth late at night, a milkshake on the table, direct flash. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            }
+          ]
+        },
+        {
+          "value": "Beach trip",
+          "label": "Beach trip",
+          "sets": [
+            {
+              "node": "4",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> walking barefoot along the shoreline at golden hour, holding sandals. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t2",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> at a beach bar table with a fresh coconut drink, laughing. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t3",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> on a small boat with the sea behind, wind in the hair. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t4",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> in a sunny old-town street with whitewashed walls, eating an ice cream. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            }
+          ]
+        },
+        {
+          "value": "Cozy home",
+          "label": "Cozy home",
+          "sets": [
+            {
+              "node": "4",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> curled up on a couch under a knitted blanket, reading a book. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t2",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> cooking pasta in a small kitchen, steam rising. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t3",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> holding a coffee mug by a rainy window in the morning. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t4",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> sitting on the floor among house plants, sorting vinyl records. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            }
+          ]
+        },
+        {
+          "value": "Weekend outdoors",
+          "label": "Weekend outdoors",
+          "sets": [
+            {
+              "node": "4",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> on a forest hiking trail with a backpack. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t2",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> at a picnic on the grass in a park, friends out of focus. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t3",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> riding a bicycle along a lakeside path. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t4",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> by a campfire at dusk, wrapped in a flannel shirt. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            }
+          ]
+        },
+        {
+          "value": "Mexico City",
+          "label": "Mexico City",
+          "sets": [
+            {
+              "node": "4",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> on a colorful street in Coyoacán with papel picado overhead. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t2",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> on a trajinera boat in Xochimilco, flowers on its arch. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t3",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> at a market stall full of fruit, holding a mango on a stick. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t4",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> on a terrace at sunset with the city behind. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            }
+          ]
+        },
+        {
+          "value": "Flash editorial",
+          "label": "Flash editorial",
+          "sets": [
+            {
+              "node": "4",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> against a white wall, full body, direct flash. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t2",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> in a close-up with direct flash and a hard shadow behind. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t3",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> sitting on a stool, legs crossed, direct flash. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            },
+            {
+              "node": "pd_t4",
+              "field": "text",
+              "value": "A candid phone photo of the same person as in <ref_image_0> looking over the shoulder against a red wall, direct flash. Keep the face, hairstyle and build identical. Natural skin, a real snapshot, no text, no logos. {details}"
+            }
+          ]
+        }
+      ],
+      "bind": []
+    },
+    {
+      "id": "details",
+      "type": "text",
+      "label": "Extra direction",
+      "default": "",
+      "help": "Added at the end of each of the four prompts.",
+      "bind": []
+    },
+    {
+      "id": "steps",
+      "type": "slider",
+      "label": "Steps",
+      "min": 8,
+      "max": 30,
+      "step": 1,
+      "default": 16,
+      "bind": [
+        {
+          "node": "7",
+          "field": "steps"
+        },
+        {
+          "node": "pd_k2",
+          "field": "steps"
+        },
+        {
+          "node": "pd_k3",
+          "field": "steps"
+        },
+        {
+          "node": "pd_k4",
+          "field": "steps"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "7",
+          "field": "seed"
+        },
+        {
+          "node": "pd_k2",
+          "field": "seed"
+        },
+        {
+          "node": "pd_k3",
+          "field": "seed"
+        },
+        {
+          "node": "pd_k4",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "9",
+      "type": "image",
+      "label": "Photos"
+    }
+  ],
+  "models": [
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "phase": "denoise",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "phase": "encode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "decode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    }
+  ],
+  "credits": [
+    "FLUX 3 Image Klein by Black Forest Labs (FLUX Kommunity License)"
+  ],
+  "test": {
+    "photo": "test/portrait.png"
+  }
+}

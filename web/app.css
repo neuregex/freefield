@@ -619,3 +619,22 @@ dl.vals dd { margin: 0; overflow-wrap: anywhere; }
   .mm-models { border-left: 0; border-top: 1px solid var(--line); padding: 14px 0 0; position: static; }
 }
 @media (max-width: 760px) { .mm { display: none; } }
+
+/* the brush for painted inputs (paint.js, inpaint): the mask is drawn at the photo's own size, shown as a tint */
+.drop.paint { overflow: hidden; }
+.drop.paint > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .28; pointer-events: none; }
+.drop.paint > :not(img) { position: relative; }
+.drop.paint.off { opacity: .6; cursor: not-allowed; }
+.drop.has canvas.mask-preview { display: block; width: 100%; max-height: 240px; object-fit: contain; background: #0b0b0c; }
+.painter { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 20px; background: rgba(0, 0, 0, .78); animation: rise .14s var(--ease); }
+.pt-box { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 12px; width: min(1100px, 100%); height: min(860px, 100%); padding: 16px;
+  background: #151517; border: 1px solid #2a2a2f; border-radius: 18px; box-shadow: 0 30px 80px rgba(0, 0, 0, .6); }
+.pt-box header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.pt-box h3 { margin: 0 0 2px; font-size: 16px; }
+.pt-box .help { margin: 0; color: var(--dim); font-size: 12.5px; }
+.pt-stage { position: relative; display: grid; place-items: center; min-height: 0; overflow: hidden; border-radius: 12px; background: #0b0b0c; }
+.pt-canvas { display: block; touch-action: none; cursor: none; }
+.pt-cursor { position: absolute; border: 2px solid var(--accent); border-radius: 50%; pointer-events: none; box-shadow: 0 0 0 1px rgba(0, 0, 0, .6); }
+.pt-box footer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.pt-size { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--dim); }
+.pt-size input { width: 140px; }

@@ -556,6 +556,12 @@ def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None)
     put(k, "18:6", "height", 1024)
     put(k, "18:16", "switch", True)
     put(k, "18:17", "value", "A rainy neon street in Mexico City at night, cinematic, 35mm")
+    # resolution: the aspect select writes the latent's width and height at about 1 MP, and this node scales that empty
+    # latent by 1, 1.5 or 2 (zeros stay zeros; the sampler adds the noise at the new size), so the two selects never
+    # write the same field
+    k["ff_res"] = {"class_type": "LatentUpscaleBy", "inputs": {"samples": ["18:6", 0], "upscale_method": "nearest-exact", "scale_by": 1.0},
+                   "_meta": {"title": "Resolution (1K, 1.5K, 2K)"}}
+    put(k, "18:7", "latent_image", ["ff_res", 0])
     out["create-image"] = k
     cs = json.loads(json.dumps(k))
     # Cinema Studio (and the text-to-image templates) write the whole prompt themselves: no upsampler
@@ -580,6 +586,67 @@ def recipes(templates: Path, ltx: Path, info: dict, reshoot: Path | None = None)
     put(e, "4", "text", "Change the jacket to deep red leather, keep everything else the same.")
     out["edit"] = e
     out["character"] = json.loads(json.dumps(e))   # same pipeline; the manifest wraps the prompt in a template
+
+    def three_refs(src: Api, megapixels: float) -> Api:
+        # three images into the one ReferenceMultiLatent (it takes up to 100): three photos of one person (character-3) or
+        # three images whose shared look the result takes (moodboard). The sampler starts from an empty latent with its own
+        # aspect ratio and resolution, as in create-image, instead of the first reference's shape.
+        w = json.loads(json.dumps(src))
+        w["12"] = {"class_type": "LoadImage", "inputs": {"image": "second.png"}, "_meta": {"title": "Second reference"}}
+        w["13"] = {"class_type": "LoadImage", "inputs": {"image": "third.png"}, "_meta": {"title": "Third reference"}}
+        put(w, "17", "images.image1", ["12", 0])
+        put(w, "17", "images.image2", ["13", 0])
+        put(w, "17", "resolution.megapixels", megapixels)
+        w["ff_size"] = {"class_type": "EmptyFlux2LatentImage", "inputs": {"width": 1024, "height": 1024, "batch_size": 1}, "_meta": {"title": "Aspect ratio"}}
+        w["ff_res"] = {"class_type": "LatentUpscaleBy", "inputs": {"samples": ["ff_size", 0], "upscale_method": "nearest-exact", "scale_by": 1.0},
+                       "_meta": {"title": "Resolution (1K, 1.5K, 2K)"}}
+        put(w, "7", "latent_image", ["ff_res", 0])
+        return w
+
+    out["character-3"] = three_refs(e, 1.0)
+    out["moodboard"] = three_refs(e, 0.5)   # the look is in the references, not their detail: half a megapixel each
+
+    pd = json.loads(json.dumps(e))
+    # Photodump: four photos of the person in one run. Four prompts (an aesthetic's select writes all four), each with its
+    # own ReferenceMultiLatent on the same photo and its own sampler; the four images go out as one batch.
+    for k in (2, 3, 4):
+        pd[f"pd_t{k}"] = {"class_type": "CLIPTextEncode", "inputs": {"clip": ["2", 0], "text": ""}, "_meta": {"title": f"Prompt {k}"}}
+        pd[f"pd_z{k}"] = {"class_type": "ConditioningZeroOut", "inputs": {"conditioning": [f"pd_t{k}", 0]}}
+        pd[f"pd_r{k}"] = {"class_type": "ReferenceMultiLatent", "inputs": {**pd["17"]["inputs"], "positive": [f"pd_t{k}", 0], "negative": [f"pd_z{k}", 0]},
+                          "_meta": {"title": f"Reference {k}"}}
+        pd[f"pd_k{k}"] = {"class_type": "KSampler", "inputs": {**pd["7"]["inputs"], "positive": [f"pd_r{k}", 0], "negative": [f"pd_r{k}", 1],
+                                                                "latent_image": [f"pd_r{k}", 2]}, "_meta": {"title": f"Sampler {k}"}}
+        pd[f"pd_d{k}"] = {"class_type": "VAEDecode", "inputs": {"samples": [f"pd_k{k}", 0], "vae": ["3", 0]}}
+    pd["pd_b2"] = {"class_type": "ImageBatch", "inputs": {"image1": ["8", 0], "image2": ["pd_d2", 0]}}
+    pd["pd_b3"] = {"class_type": "ImageBatch", "inputs": {"image1": ["pd_b2", 0], "image2": ["pd_d3", 0]}}
+    pd["pd_b4"] = {"class_type": "ImageBatch", "inputs": {"image1": ["pd_b3", 0], "image2": ["pd_d4", 0]}, "_meta": {"title": "The four photos"}}
+    put(pd, "9", "images", ["pd_b4", 0])
+    out["photodump"] = pd
+
+    ip = json.loads(json.dumps(e))
+    # Inpaint: the person paints the area to change in the web UI, which uploads it as a white-on-black mask. Photo and
+    # mask go to 1 MP at the same size; the sampler starts from the encoded photo with a noise mask on the painted area,
+    # the photo is Klein's reference, and the result is pasted back over the photo through the same mask, so every pixel
+    # outside it is the original one.
+    ip["12"] = {"class_type": "LoadImage", "inputs": {"image": "mask.png"}, "_meta": {"title": "Painted area (white on black)"}}
+    ip["ip_scale"] = {"class_type": "ImageScaleToTotalPixels", "inputs": {"image": ["11", 0], "upscale_method": "lanczos", "megapixels": 1.0,
+                                                                          "resolution_steps": 16}, "_meta": {"title": "Photo at 1 MP"}}
+    ip["ip_size"] = {"class_type": "GetImageSize", "inputs": {"image": ["ip_scale", 0]}}
+    ip["ip_mscale"] = {"class_type": "ImageScale", "inputs": {"image": ["12", 0], "upscale_method": "bilinear", "width": ["ip_size", 0],
+                                                              "height": ["ip_size", 1], "crop": "disabled"}, "_meta": {"title": "Mask at the photo's size"}}
+    ip["ip_mask"] = {"class_type": "ImageToMask", "inputs": {"image": ["ip_mscale", 0], "channel": "red"}}
+    ip["ip_grow"] = {"class_type": "GrowMask", "inputs": {"mask": ["ip_mask", 0], "expand": 8, "tapered_corners": True},
+                     "_meta": {"title": "A little past the brush"}}
+    ip["ip_encode"] = {"class_type": "VAEEncode", "inputs": {"pixels": ["ip_scale", 0], "vae": ["3", 0]}}
+    ip["ip_latent"] = {"class_type": "SetLatentNoiseMask", "inputs": {"samples": ["ip_encode", 0], "mask": ["ip_grow", 0]},
+                       "_meta": {"title": "Only the painted area is redrawn"}}
+    put(ip, "7", "latent_image", ["ip_latent", 0])
+    put(ip, "17", "images.image0", ["ip_scale", 0])
+    ip["ip_paste"] = {"class_type": "ImageCompositeMasked", "inputs": {"destination": ["ip_scale", 0], "source": ["8", 0], "x": 0, "y": 0,
+                                                                       "resize_source": False, "mask": ["ip_grow", 0]},
+                      "_meta": {"title": "Result pasted over the photo"}}
+    put(ip, "9", "images", ["ip_paste", 0])
+    out["inpaint"] = ip
     out["product-shot"] = json.loads(json.dumps(e))  # same again, with product-photography scenes
 
     u = tpl("utility_seedvr2_3b_int8_upscale_image.json")

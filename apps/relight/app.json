@@ -6,7 +6,7 @@
   "pack": "image-qwen-edit",
   "status": "ready",
   "higgsfield_feature": "Relight",
-  "summary": "Relights a photo: golden hour, neon, studio softbox or any light you describe, keeping the scene intact.",
+  "summary": "Relights a photo with a preset light or your own direction, softness, brightness and color, keeping the scene intact.",
   "workflow": "workflow.api.json",
   "source": {
     "template": "image_qwen_image_edit_2509_relight.json",
@@ -35,6 +35,10 @@
       "label": "Light",
       "default": "golden hour sunlight through a low window, warm color temperature, long soft shadows",
       "options": [
+        {
+          "value": "a single light source",
+          "label": "Single light (use the controls)"
+        },
         {
           "value": "golden hour sunlight through a low window, warm color temperature, long soft shadows",
           "label": "Golden hour"
@@ -68,9 +72,146 @@
         {
           "node": "15",
           "field": "value",
-          "template": " relight the image using {light}. {details}"
+          "template": " relight the image using {light}{direction}{quality}{brightness}{color}. {details}"
         }
       ]
+    },
+    {
+      "id": "direction",
+      "type": "select",
+      "label": "Direction",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Any"
+        },
+        {
+          "value": ", the light coming from above",
+          "label": "Above"
+        },
+        {
+          "value": ", the light coming from the front",
+          "label": "Front"
+        },
+        {
+          "value": ", the light coming from the left",
+          "label": "Left"
+        },
+        {
+          "value": ", the light coming from the right",
+          "label": "Right"
+        },
+        {
+          "value": ", the light coming from behind the subject",
+          "label": "Behind"
+        },
+        {
+          "value": ", the light coming from below",
+          "label": "Below"
+        }
+      ],
+      "bind": [],
+      "help": "Where the light comes from, as seen in the photo."
+    },
+    {
+      "id": "quality",
+      "type": "select",
+      "label": "Softness",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Any"
+        },
+        {
+          "value": ", soft light with blurred shadow edges",
+          "label": "Soft"
+        },
+        {
+          "value": ", hard light with crisp shadow edges",
+          "label": "Hard"
+        }
+      ],
+      "bind": []
+    },
+    {
+      "id": "brightness",
+      "type": "select",
+      "label": "Brightness",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Any"
+        },
+        {
+          "value": ", dim and low-key",
+          "label": "Dim"
+        },
+        {
+          "value": ", bright and high-key",
+          "label": "Bright"
+        }
+      ],
+      "bind": []
+    },
+    {
+      "id": "color",
+      "type": "select",
+      "label": "Light color",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Any"
+        },
+        {
+          "value": ", neutral white colored light",
+          "label": "White"
+        },
+        {
+          "value": ", warm tungsten colored light",
+          "label": "Warm"
+        },
+        {
+          "value": ", cool blue-white colored light",
+          "label": "Cool"
+        },
+        {
+          "value": ", red colored light",
+          "label": "Red"
+        },
+        {
+          "value": ", orange colored light",
+          "label": "Orange"
+        },
+        {
+          "value": ", yellow colored light",
+          "label": "Yellow"
+        },
+        {
+          "value": ", green colored light",
+          "label": "Green"
+        },
+        {
+          "value": ", cyan colored light",
+          "label": "Cyan"
+        },
+        {
+          "value": ", blue colored light",
+          "label": "Blue"
+        },
+        {
+          "value": ", purple colored light",
+          "label": "Purple"
+        },
+        {
+          "value": ", pink colored light",
+          "label": "Pink"
+        }
+      ],
+      "bind": []
     },
     {
       "id": "details",

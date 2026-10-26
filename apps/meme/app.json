@@ -50,62 +50,199 @@
       ]
     },
     {
-      "id": "width",
+      "id": "aspect",
       "type": "select",
-      "label": "Width",
-      "default": 1024,
+      "label": "Aspect ratio",
+      "default": "1:1",
+      "help": "At 1K the image has about 1 megapixel in this shape; Resolution scales it.",
       "options": [
         {
-          "value": 768,
-          "label": "768"
+          "value": "1:1",
+          "label": "1:1",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1024
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 1024
+            }
+          ]
         },
         {
-          "value": 1024,
-          "label": "1024"
+          "value": "4:3",
+          "label": "4:3",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1152
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 864
+            }
+          ]
         },
         {
-          "value": 1280,
-          "label": "1280"
+          "value": "3:4",
+          "label": "3:4",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 864
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 1152
+            }
+          ]
         },
         {
-          "value": 1536,
-          "label": "1536"
+          "value": "3:2",
+          "label": "3:2",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1248
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 832
+            }
+          ]
+        },
+        {
+          "value": "2:3",
+          "label": "2:3",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 832
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 1248
+            }
+          ]
+        },
+        {
+          "value": "5:4",
+          "label": "5:4",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1120
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 896
+            }
+          ]
+        },
+        {
+          "value": "4:5",
+          "label": "4:5",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 896
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 1120
+            }
+          ]
+        },
+        {
+          "value": "16:9",
+          "label": "16:9",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1344
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 768
+            }
+          ]
+        },
+        {
+          "value": "9:16",
+          "label": "9:16",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 768
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 1344
+            }
+          ]
+        },
+        {
+          "value": "21:9",
+          "label": "21:9",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1536
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 640
+            }
+          ]
         }
       ],
-      "bind": [
-        {
-          "node": "18:6",
-          "field": "width"
-        }
-      ]
+      "bind": []
     },
     {
-      "id": "height",
+      "id": "resolution",
       "type": "select",
-      "label": "Height",
-      "default": 1024,
+      "label": "Resolution",
+      "default": 1,
+      "help": "1K is about 1 megapixel; 2K is four times the pixels and takes about four times as long.",
       "options": [
         {
-          "value": 768,
-          "label": "768"
+          "value": 1,
+          "label": "1K"
         },
         {
-          "value": 1024,
-          "label": "1024"
+          "value": 1.5,
+          "label": "1.5K"
         },
         {
-          "value": 1280,
-          "label": "1280"
-        },
-        {
-          "value": 1536,
-          "label": "1536"
+          "value": 2,
+          "label": "2K"
         }
       ],
       "bind": [
         {
-          "node": "18:6",
-          "field": "height"
+          "node": "ff_res",
+          "field": "scale_by"
         }
       ]
     },

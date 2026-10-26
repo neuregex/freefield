@@ -20,6 +20,8 @@ export type Input = {
   step?: number;
   options?: Option[];
   gallery?: boolean;
+  /** image inputs: the image input this one is painted over in the web UI (a white-on-black mask) */
+  paint?: string;
   limits?: { max_mb?: number; seconds?: [number, number] };
   bind?: Bind[];
 };
@@ -126,6 +128,12 @@ function checkGraph(app: App, problems: Problem[], severity: Problem["severity"]
     if (!writes && !usedInTemplates.has(input.id)) {
       say(`input "${input.id}" is not bound to any node and no template uses it`);
     }
+  }
+  for (const input of app.inputs) {
+    if (input.paint === undefined) continue;
+    const src = app.inputs.find((i) => i.id === input.paint);
+    if (input.type !== "image") say(`input "${input.id}": only an image input can be painted (paint)`);
+    else if (!src || src.type !== "image" || src === input) say(`input "${input.id}": paint names "${input.paint}", which is not another image input`);
   }
   for (const p of app.presets ?? []) for (const s of p.sets) has(s.node, s.field, `preset "${p.id}"`);
   for (const input of app.inputs) {

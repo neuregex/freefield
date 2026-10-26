@@ -45,7 +45,9 @@ export function resolveValues(app: App, values: Values): Values {
   const out: Values = {};
   for (const input of app.inputs) {
     let v = values[input.id];
-    if (v === undefined || v === "") v = input.default;
+    // "" is a choice when a select offers it ("Any" in a builder writes nothing); elsewhere it means "use the default"
+    const emptyIsOption = input.type === "select" && (input.options ?? []).some((o) => o.value === "");
+    if (v === undefined || (v === "" && !emptyIsOption)) v = input.default;
     if (input.type === "seed" && (v === undefined || v === -1 || v === "-1")) {
       v = Math.floor(Math.random() * 2 ** 48);
     }

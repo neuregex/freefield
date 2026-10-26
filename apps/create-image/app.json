@@ -6,7 +6,7 @@
   "pack": "image-flux3",
   "status": "ready",
   "higgsfield_feature": "Create Image",
-  "summary": "Text to image with FLUX 3 Image Klein, the top open-weights model in Artificial Analysis' arena; a 9B upsampler can expand your prompt.",
+  "summary": "Text to image with FLUX 3 Image Klein: aspect ratio, 1K to 2K, a photographic look, and a 9B upsampler that can expand your prompt.",
   "workflow": "workflow.api.json",
   "source": {
     "template": "image_flux3_klein_distilled_t2i.json",
@@ -23,7 +23,8 @@
       "bind": [
         {
           "node": "18:17",
-          "field": "value"
+          "field": "value",
+          "template": "{prompt} {look}"
         }
       ]
     },
@@ -41,62 +42,281 @@
       ]
     },
     {
-      "id": "width",
+      "id": "look",
       "type": "select",
-      "label": "Width",
-      "default": 1024,
+      "label": "Look",
+      "default": "",
+      "help": "A photographic look added after your prompt (like a moodboard preset).",
       "options": [
         {
-          "value": 768,
-          "label": "768"
+          "value": "",
+          "label": "None"
         },
         {
-          "value": 1024,
-          "label": "1024"
+          "value": "Shot on a cheap disposable film camera with its built-in flash: harsh flash, slight vignette, film grain, a warm color cast.",
+          "label": "Disposable camera"
         },
         {
-          "value": 1280,
-          "label": "1280"
+          "value": "A fashion editorial photo lit by direct flash: crisp hard shadow behind the subject, glossy highlights, high contrast.",
+          "label": "Flash editorial"
         },
         {
-          "value": 1536,
-          "label": "1536"
+          "value": "A black-and-white film photo: rich grain, deep blacks, soft highlights.",
+          "label": "Black and white film"
+        },
+        {
+          "value": "A color film photo with warm, saturated colors and soft grain.",
+          "label": "Warm vivid film"
+        },
+        {
+          "value": "A color film photo with muted, cool tones, low contrast and fine grain.",
+          "label": "Muted cool film"
+        },
+        {
+          "value": "A soft pastel color film photo: lifted shadows, gentle light, low saturation.",
+          "label": "Pastel film"
+        },
+        {
+          "value": "A photo from an early-2000s compact digital camera: flat built-in flash, slightly blown highlights, small-sensor noise.",
+          "label": "2000s digital camera"
+        },
+        {
+          "value": "A photo from an old phone camera: soft focus, smeared fine detail, noisy shadows, washed-out colors.",
+          "label": "Old phone camera"
+        },
+        {
+          "value": "Candid street photography: natural light, slight motion blur, a documentary feel.",
+          "label": "Street photography"
+        },
+        {
+          "value": "Theatrical stage lighting: one hard spotlight, a black background, dramatic shadows.",
+          "label": "Theatrical light"
+        },
+        {
+          "value": "Soft natural daylight outdoors, green foliage around, gentle shadows.",
+          "label": "Nature light"
+        },
+        {
+          "value": "An underwater photo: blue-green water, light rays from the surface, floating particles.",
+          "label": "Underwater"
+        },
+        {
+          "value": "A double-exposure photo: a second scene blended inside the subject's silhouette.",
+          "label": "Double exposure"
+        },
+        {
+          "value": "A surreal solarized photo: partly inverted tones and metallic highlights.",
+          "label": "Solarized"
+        },
+        {
+          "value": "A bright candy-colored photo: saturated pinks, blues and yellows, glossy and playful.",
+          "label": "Candy pop"
+        },
+        {
+          "value": "A 1980s horror film still: red and blue gel lights, fog, grainy film, no gore.",
+          "label": "80s horror"
+        },
+        {
+          "value": "A Y2K studio portrait: glossy chrome and pastel backdrop, soft flash, early-2000s styling.",
+          "label": "Y2K studio"
         }
       ],
-      "bind": [
-        {
-          "node": "18:6",
-          "field": "width"
-        }
-      ]
+      "bind": []
     },
     {
-      "id": "height",
+      "id": "aspect",
       "type": "select",
-      "label": "Height",
-      "default": 1024,
+      "label": "Aspect ratio",
+      "default": "1:1",
+      "help": "At 1K the image has about 1 megapixel in this shape; Resolution scales it.",
       "options": [
         {
-          "value": 768,
-          "label": "768"
+          "value": "1:1",
+          "label": "1:1",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1024
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 1024
+            }
+          ]
         },
         {
-          "value": 1024,
-          "label": "1024"
+          "value": "4:3",
+          "label": "4:3",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1152
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 864
+            }
+          ]
         },
         {
-          "value": 1280,
-          "label": "1280"
+          "value": "3:4",
+          "label": "3:4",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 864
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 1152
+            }
+          ]
         },
         {
-          "value": 1536,
-          "label": "1536"
+          "value": "3:2",
+          "label": "3:2",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1248
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 832
+            }
+          ]
+        },
+        {
+          "value": "2:3",
+          "label": "2:3",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 832
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 1248
+            }
+          ]
+        },
+        {
+          "value": "5:4",
+          "label": "5:4",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1120
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 896
+            }
+          ]
+        },
+        {
+          "value": "4:5",
+          "label": "4:5",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 896
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 1120
+            }
+          ]
+        },
+        {
+          "value": "16:9",
+          "label": "16:9",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1344
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 768
+            }
+          ]
+        },
+        {
+          "value": "9:16",
+          "label": "9:16",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 768
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 1344
+            }
+          ]
+        },
+        {
+          "value": "21:9",
+          "label": "21:9",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1536
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 640
+            }
+          ]
+        }
+      ],
+      "bind": []
+    },
+    {
+      "id": "resolution",
+      "type": "select",
+      "label": "Resolution",
+      "default": 1,
+      "help": "1K is about 1 megapixel; 2K is four times the pixels and takes about four times as long.",
+      "options": [
+        {
+          "value": 1,
+          "label": "1K"
+        },
+        {
+          "value": 1.5,
+          "label": "1.5K"
+        },
+        {
+          "value": 2,
+          "label": "2K"
         }
       ],
       "bind": [
         {
-          "node": "18:6",
-          "field": "height"
+          "node": "ff_res",
+          "field": "scale_by"
         }
       ]
     },

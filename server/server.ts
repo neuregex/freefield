@@ -1,5 +1,6 @@
 // Minimal HTTP API for the web UI. Node's built-in http plus the Fetch API types; no framework.
 //   GET    /api/apps                         catalog (what the UI needs to draw cards and forms)
+//   GET    /api/apps/:id/workflow            the app's ComfyUI workflow in API format, as a download (open it in ComfyUI)
 //   POST   /api/apps/:id/run                 multipart form: one field per input id, optional "preset"
 //                                            → 202 with the history entry; the run continues in the background
 //   GET    /api/history[?app=id]             every run started here, newest first (out/history/)
@@ -266,6 +267,15 @@ const server = createServer(async (req, res) => {
         const examples = loadExamples();
         return send(res, 200, { apps: sorted.map((a) => ({ ...publicApp(a), example: examples[a.id] ?? null })), drafts: draftsAllowed,
           hosted: guard.hosted });
+      }
+      if (req.method === "GET" && area === "apps" && sub === "workflow") {
+        // the app's ComfyUI workflow (API format) as a file: drag it onto ComfyUI's canvas to open the app as nodes
+        const app = byId.get(id);
+        if (!app?.workflowPath) return send(res, 404, { error: "no workflow" });
+        const body = readFileSync(app.workflowPath);
+        res.writeHead(200, { "content-type": "application/json; charset=utf-8", "content-length": body.byteLength, "cache-control": "no-cache",
+          "content-disposition": `attachment; filename="freefield-${app.id}.json"` });
+        return res.end(body);
       }
       if (req.method === "POST" && area === "apps" && sub === "run") {
         const app = byId.get(id);

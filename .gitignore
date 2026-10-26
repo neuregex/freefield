@@ -5,6 +5,7 @@ out/
 lab/results/
 lab/assets/*.mp4
 lab/assets/*.png
+!lab/assets/mask-*.png
 __pycache__/
 *.pyc
 .venv/

@@ -121,6 +121,10 @@
           "type": "boolean",
           "description": "Select only. lab/publish.py keeps one example per option and the UI shows the options as cards with those examples (the effects picker)."
         },
+        "paint": {
+          "type": "string",
+          "description": "Image inputs only: the id of the image input this one is painted over in the web UI (inpaint). The upload is a white-on-black mask of that image."
+        },
         "limits": {
           "type": "object",
           "additionalProperties": false,

@@ -1,0 +1,348 @@
+{
+  "$schema": "../../schema/app.schema.json",
+  "id": "moodboard",
+  "name": "Moodboard",
+  "section": "image",
+  "summary": "Anything you describe, in the look three reference images share: palette, light, texture and mood, like a moodboard (FLUX 3 Image Klein).",
+  "higgsfield_feature": "Soul Moodboard",
+  "pack": "image-flux3",
+  "status": "ready",
+  "workflow": "workflow.api.json",
+  "source": {
+    "template": "image_flux3_klein_distilled_image_edit.json",
+    "comfyui": "0.42.0",
+    "notes": "apps/edit's pipeline with three LoadImage nodes on ReferenceMultiLatent (images.image0-2, half a megapixel each: the look matters, not their detail) and an empty latent of its own. Higgsfield's preset moodboards are covered by create-image's Look select."
+  },
+  "inputs": [
+    {
+      "id": "style1",
+      "type": "image",
+      "label": "Reference 1",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "help": "Three images with the look you want; their subjects are not copied.",
+      "bind": [
+        {
+          "node": "11",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "style2",
+      "type": "image",
+      "label": "Reference 2",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "12",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "style3",
+      "type": "image",
+      "label": "Reference 3",
+      "required": true,
+      "limits": {
+        "max_mb": 20
+      },
+      "bind": [
+        {
+          "node": "13",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "Prompt",
+      "required": true,
+      "default": "a man waiting at a bus stop in the rain",
+      "bind": [
+        {
+          "node": "4",
+          "field": "text",
+          "template": "{prompt}. Make it in the visual style that <ref_image_0>, <ref_image_1> and <ref_image_2> share: the same color palette, light, contrast, texture, kind of camera and mood. Do not copy their subjects or their composition."
+        }
+      ]
+    },
+    {
+      "id": "aspect",
+      "type": "select",
+      "label": "Aspect ratio",
+      "default": "3:2",
+      "help": "At 1K the image has about 1 megapixel in this shape; Resolution scales it.",
+      "options": [
+        {
+          "value": "1:1",
+          "label": "1:1",
+          "sets": [
+            {
+              "node": "ff_size",
+              "field": "width",
+              "value": 1024
+            },
+            {
+              "node": "ff_size",
+              "field": "height",
+              "value": 1024
+            }
+          ]
+        },
+        {
+          "value": "4:3",
+          "label": "4:3",
+          "sets": [
+            {
+              "node": "ff_size",
+              "field": "width",
+              "value": 1152
+            },
+            {
+              "node": "ff_size",
+              "field": "height",
+              "value": 864
+            }
+          ]
+        },
+        {
+          "value": "3:4",
+          "label": "3:4",
+          "sets": [
+            {
+              "node": "ff_size",
+              "field": "width",
+              "value": 864
+            },
+            {
+              "node": "ff_size",
+              "field": "height",
+              "value": 1152
+            }
+          ]
+        },
+        {
+          "value": "3:2",
+          "label": "3:2",
+          "sets": [
+            {
+              "node": "ff_size",
+              "field": "width",
+              "value": 1248
+            },
+            {
+              "node": "ff_size",
+              "field": "height",
+              "value": 832
+            }
+          ]
+        },
+        {
+          "value": "2:3",
+          "label": "2:3",
+          "sets": [
+            {
+              "node": "ff_size",
+              "field": "width",
+              "value": 832
+            },
+            {
+              "node": "ff_size",
+              "field": "height",
+              "value": 1248
+            }
+          ]
+        },
+        {
+          "value": "5:4",
+          "label": "5:4",
+          "sets": [
+            {
+              "node": "ff_size",
+              "field": "width",
+              "value": 1120
+            },
+            {
+              "node": "ff_size",
+              "field": "height",
+              "value": 896
+            }
+          ]
+        },
+        {
+          "value": "4:5",
+          "label": "4:5",
+          "sets": [
+            {
+              "node": "ff_size",
+              "field": "width",
+              "value": 896
+            },
+            {
+              "node": "ff_size",
+              "field": "height",
+              "value": 1120
+            }
+          ]
+        },
+        {
+          "value": "16:9",
+          "label": "16:9",
+          "sets": [
+            {
+              "node": "ff_size",
+              "field": "width",
+              "value": 1344
+            },
+            {
+              "node": "ff_size",
+              "field": "height",
+              "value": 768
+            }
+          ]
+        },
+        {
+          "value": "9:16",
+          "label": "9:16",
+          "sets": [
+            {
+              "node": "ff_size",
+              "field": "width",
+              "value": 768
+            },
+            {
+              "node": "ff_size",
+              "field": "height",
+              "value": 1344
+            }
+          ]
+        },
+        {
+          "value": "21:9",
+          "label": "21:9",
+          "sets": [
+            {
+              "node": "ff_size",
+              "field": "width",
+              "value": 1536
+            },
+            {
+              "node": "ff_size",
+              "field": "height",
+              "value": 640
+            }
+          ]
+        }
+      ],
+      "bind": []
+    },
+    {
+      "id": "resolution",
+      "type": "select",
+      "label": "Resolution",
+      "default": 1,
+      "help": "1K is about 1 megapixel; 2K is four times the pixels and takes about four times as long.",
+      "options": [
+        {
+          "value": 1,
+          "label": "1K"
+        },
+        {
+          "value": 1.5,
+          "label": "1.5K"
+        },
+        {
+          "value": 2,
+          "label": "2K"
+        }
+      ],
+      "bind": [
+        {
+          "node": "ff_res",
+          "field": "scale_by"
+        }
+      ]
+    },
+    {
+      "id": "steps",
+      "type": "slider",
+      "label": "Steps",
+      "min": 8,
+      "max": 30,
+      "step": 1,
+      "default": 16,
+      "bind": [
+        {
+          "node": "7",
+          "field": "steps"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "seed",
+      "label": "Seed",
+      "default": -1,
+      "help": "-1 picks a random seed",
+      "bind": [
+        {
+          "node": "7",
+          "field": "seed"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "node": "9",
+      "type": "image",
+      "label": "Result"
+    }
+  ],
+  "models": [
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-int8-convrot.safetensors",
+      "dir": "diffusion_models",
+      "gb": 5.83,
+      "phase": "denoise",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "text_encoders/qwen3vl_4b_int8_convrot.safetensors",
+      "dir": "text_encoders",
+      "gb": 4.86,
+      "phase": "encode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    },
+    {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "vae/flux2-vae.safetensors",
+      "dir": "vae",
+      "gb": 0.34,
+      "phase": "decode",
+      "gated": true,
+      "license": "FLUX Kommunity License"
+    }
+  ],
+  "credits": [
+    "FLUX 3 Image Klein by Black Forest Labs (FLUX Kommunity License)"
+  ],
+  "test": {
+    "style1": "test/portrait.png",
+    "style2": "test/second.png",
+    "style3": "test/third.png",
+    "prompt": "a lighthouse"
+  }
+}

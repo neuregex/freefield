@@ -6,12 +6,12 @@
   "pack": "image-flux3",
   "status": "ready",
   "higgsfield_feature": "Cinematic Cameras",
-  "summary": "Pick a camera body, lens, focal length and aperture; they become part of the prompt.",
+  "summary": "Pick genre, era, camera body, lens, focal length, aperture, lighting and color palette; they become part of the prompt.",
   "workflow": "workflow.api.json",
   "source": {
     "template": "image_flux3_klein_distilled_t2i.json",
     "comfyui": "0.42.0",
-    "notes": "Camera and lens vocabulary from open-higgsfield-ai (MIT), src/lib/promptUtils.js. Camera, lens and focal options write the look they give, not the gear: with \"shot on a <camera>\" Z-Image drew the camera into the picture (run 20261020-133620-l40s), and \"no camera in the frame\" did not stop it (run 20261024-172353-h100). Since 25 Oct the still is drawn by FLUX 3 Image Klein (16:9, 1344x768) instead of Z-Image Turbo, without the prompt upsampler: the app writes the whole prompt."
+    "notes": "Camera and lens vocabulary from open-higgsfield-ai (MIT), src/lib/promptUtils.js. Camera, lens and focal options write the look they give, not the gear: with \"shot on a <camera>\" Z-Image drew the camera into the picture (run 20261020-133620-l40s), and \"no camera in the frame\" did not stop it (run 20261024-172353-h100). Since 25 Oct the still is drawn by FLUX 3 Image Klein (16:9, 1344x768) instead of Z-Image Turbo, without the prompt upsampler: the app writes the whole prompt. Since 26 Oct genre, era, lighting and color palette are selects too (Higgsfield's Cinema Studio 4.0 has film settings, lighting setups and palettes), and aspect ratio and resolution come from create-image's latent and its LatentUpscaleBy node."
   },
   "inputs": [
     {
@@ -24,9 +24,104 @@
         {
           "node": "18:17",
           "field": "value",
-          "template": "A cinematic film still: {prompt}. The look: {camera}; {lens}; {focal}; {aperture}. Cinematic lighting, natural color science, high dynamic range, ultra-detailed"
+          "template": "A cinematic film still{genre}{era}: {prompt}. The look: {camera}; {lens}; {focal}; {aperture}. Lighting: {lighting}. Color: {palette}. High dynamic range, ultra-detailed"
         }
       ]
+    },
+    {
+      "id": "genre",
+      "type": "select",
+      "label": "Genre",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "General"
+        },
+        {
+          "value": " from a drama",
+          "label": "Drama"
+        },
+        {
+          "value": " from a film noir",
+          "label": "Noir"
+        },
+        {
+          "value": " from a comedy",
+          "label": "Comedy"
+        },
+        {
+          "value": " from a horror film",
+          "label": "Horror"
+        },
+        {
+          "value": " from an action film",
+          "label": "Action"
+        },
+        {
+          "value": " from an epic",
+          "label": "Epic"
+        },
+        {
+          "value": " from a science-fiction film",
+          "label": "Sci-fi"
+        },
+        {
+          "value": " from a western",
+          "label": "Western"
+        }
+      ],
+      "bind": [],
+      "help": "The kind of film the still comes from."
+    },
+    {
+      "id": "era",
+      "type": "select",
+      "label": "Era",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Any"
+        },
+        {
+          "value": " set in the 1920s",
+          "label": "1920s"
+        },
+        {
+          "value": " set in the 1950s",
+          "label": "1950s"
+        },
+        {
+          "value": " set in the 1960s",
+          "label": "1960s"
+        },
+        {
+          "value": " set in the 1970s",
+          "label": "1970s"
+        },
+        {
+          "value": " set in the 1980s",
+          "label": "1980s"
+        },
+        {
+          "value": " set in the 1990s",
+          "label": "1990s"
+        },
+        {
+          "value": " set in the 2000s",
+          "label": "2000s"
+        },
+        {
+          "value": " set in the present day",
+          "label": "Present day"
+        },
+        {
+          "value": " set in the near future",
+          "label": "Future"
+        }
+      ],
+      "bind": []
     },
     {
       "id": "camera",
@@ -161,6 +256,243 @@
         {
           "value": "aperture f/11, deep focus clarity, sharp foreground to background",
           "label": "f/11"
+        }
+      ]
+    },
+    {
+      "id": "lighting",
+      "type": "select",
+      "label": "Lighting",
+      "default": "cinematic lighting",
+      "options": [
+        {
+          "value": "cinematic lighting",
+          "label": "Auto"
+        },
+        {
+          "value": "the subject in silhouette against a bright background",
+          "label": "Silhouette"
+        },
+        {
+          "value": "lit only by practical lamps visible in the scene",
+          "label": "Practicals"
+        },
+        {
+          "value": "soft daylight from a single window at the side",
+          "label": "Window"
+        },
+        {
+          "value": "a hard light falling from straight above, deep shadows under the brow",
+          "label": "Overhead"
+        },
+        {
+          "value": "a strong light behind the subject, a glowing rim and flare",
+          "label": "Backlight"
+        },
+        {
+          "value": "two soft lights crossing from opposite sides",
+          "label": "Soft cross"
+        },
+        {
+          "value": "low-key lighting, mostly shadow, one small key light",
+          "label": "Low key"
+        },
+        {
+          "value": "colored light from neon signs, magenta and cyan",
+          "label": "Neon"
+        }
+      ],
+      "bind": []
+    },
+    {
+      "id": "palette",
+      "type": "select",
+      "label": "Color palette",
+      "default": "natural color science",
+      "options": [
+        {
+          "value": "natural color science",
+          "label": "Auto"
+        },
+        {
+          "value": "teal shadows and warm orange skin tones",
+          "label": "Teal and orange"
+        },
+        {
+          "value": "desaturated, high-contrast bleach-bypass color",
+          "label": "Bleach bypass"
+        },
+        {
+          "value": "warm amber and brown tones",
+          "label": "Warm amber"
+        },
+        {
+          "value": "cold blue and steel-gray tones",
+          "label": "Cold blue"
+        },
+        {
+          "value": "deep emerald greens with gold highlights",
+          "label": "Emerald and gold"
+        },
+        {
+          "value": "soft pastel colors, low contrast",
+          "label": "Pastel"
+        },
+        {
+          "value": "saturated magenta, cyan and violet",
+          "label": "Neon night"
+        },
+        {
+          "value": "faded film colors with lifted blacks",
+          "label": "Faded film"
+        },
+        {
+          "value": "black and white",
+          "label": "Monochrome"
+        },
+        {
+          "value": "sepia-toned",
+          "label": "Sepia"
+        },
+        {
+          "value": "deep crimson reds against black",
+          "label": "Crimson"
+        },
+        {
+          "value": "earthy ochre, olive and rust tones",
+          "label": "Earth tones"
+        }
+      ],
+      "bind": []
+    },
+    {
+      "id": "aspect",
+      "type": "select",
+      "label": "Aspect ratio",
+      "default": "16:9",
+      "options": [
+        {
+          "value": "16:9",
+          "label": "16:9",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1344
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 768
+            }
+          ]
+        },
+        {
+          "value": "21:9",
+          "label": "21:9",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1536
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 640
+            }
+          ]
+        },
+        {
+          "value": "4:3",
+          "label": "4:3",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1152
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 864
+            }
+          ]
+        },
+        {
+          "value": "1:1",
+          "label": "1:1",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 1024
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 1024
+            }
+          ]
+        },
+        {
+          "value": "4:5",
+          "label": "4:5",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 896
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 1120
+            }
+          ]
+        },
+        {
+          "value": "9:16",
+          "label": "9:16",
+          "sets": [
+            {
+              "node": "18:6",
+              "field": "width",
+              "value": 768
+            },
+            {
+              "node": "18:6",
+              "field": "height",
+              "value": 1344
+            }
+          ]
+        }
+      ],
+      "bind": []
+    },
+    {
+      "id": "resolution",
+      "type": "select",
+      "label": "Resolution",
+      "default": 1,
+      "options": [
+        {
+          "value": 1,
+          "label": "1K"
+        },
+        {
+          "value": 1.5,
+          "label": "1.5K"
+        },
+        {
+          "value": 2,
+          "label": "2K"
+        }
+      ],
+      "bind": [
+        {
+          "node": "ff_res",
+          "field": "scale_by"
         }
       ]
     },

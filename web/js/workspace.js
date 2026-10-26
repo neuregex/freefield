@@ -9,6 +9,7 @@ import {
 import { exampleItem, thumb, hoverPlay, fullMedia, playWhenVisible, optionTile, optionThumb } from "./media.js";
 import { flags, flagButton } from "./flags.js";
 import { feed, feedView, hooks } from "./feed.js";
+import { openPainter, maskPreview } from "./paint.js";
 
 // ------------------------------------------------------------------ form state (per app, kept while the page is open)
 const forms = new Map();
@@ -59,17 +60,23 @@ function setFile(app, inp, file) {
   const f = formFor(app);
   if (f.files[inp.id]) URL.revokeObjectURL(f.files[inp.id].url);
   f.files[inp.id] = { file, url: URL.createObjectURL(file) };
+  dropMasksOf(app, inp.id);
   return true;
 }
 function clearFile(app, id) {
   const f = formFor(app);
   if (f.files[id]) URL.revokeObjectURL(f.files[id].url);
   delete f.files[id];
+  dropMasksOf(app, id);
+}
+/** A mask painted over a photo means nothing once the photo changes. */
+function dropMasksOf(app, id) {
+  for (const m of app.inputs.filter((i) => i.paint === id)) clearFile(app, m.id);
 }
 
 /** Put dropped or pasted files into the first matching slots. */
 function assignFiles(app, files) {
-  const slots = app.inputs.filter((i) => isMedia(i.type));
+  const slots = app.inputs.filter((i) => isMedia(i.type) && !i.paint);   // a painted mask is made with the brush, not dropped
   const f = formFor(app);
   let used = 0;
   for (const file of files) {
@@ -105,6 +112,8 @@ function buildForm(app, { randomSeed = false } = {}) {
     const v = f.values[inp.id];
     if (inp.type === "toggle") { fd.append(inp.id, v ? "true" : "false"); continue; }
     if (inp.type === "seed" && (randomSeed || v === -1 || v === "-1" || v === "" || v === null)) continue;
+    // "Any" in a builder select is the empty value: send it, or the server would fill in the default
+    if (v === "" && inp.type === "select" && (inp.options || []).some((o) => o.value === "")) { fd.append(inp.id, ""); continue; }
     if (v === "" || v === null || v === undefined) continue;
     fd.append(inp.id, String(v));
   }
@@ -397,7 +406,38 @@ function chipFor(app, inp, f) {
 }
 
 // ------------------------------------------------------------------ sidebar layout
+/** An input painted over another image (inpaint's mask): opens the brush over that image. */
+function paintZone(app, inp, rerender) {
+  const f = formFor(app);
+  const src = f.files[inp.paint];
+  const srcInp = app.inputs.find((i) => i.id === inp.paint);
+  const x = f.files[inp.id];
+  const paint = async () => {
+    if (!src) { toast(t("paint.first", { label: srcInp?.label || inp.paint }), { error: true }); return; }
+    const file = await openPainter(src.file, { mask: x?.file || null, title: inp.label });
+    if (file && setFile(app, inp, file)) rerender();
+  };
+  if (!x) {
+    return el("div", { class: `drop paint${src ? "" : " off"}`, role: "button", tabindex: "0", dataset: { slot: inp.id }, "aria-label": t("paint.cta"),
+      onclick: paint, onkeydown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); paint(); } } },
+      src ? el("img", { src: src.url, alt: "" }) : null,
+      el("span", { class: "ic" }, icon("wand")),
+      el("b", {}, inp.label),
+      el("small", {}, src ? t("paint.cta") : t("paint.first", { label: srcInp?.label || inp.paint })),
+      inp.help ? el("small", { class: "faint" }, inp.help) : null);
+  }
+  const zone = el("div", { class: "drop has", dataset: { slot: inp.id } },
+    el("span", { class: "fname" }, inp.label),
+    el("div", { class: "bar2" },
+      el("button", { class: "mini", type: "button", title: t("paint.edit"), "aria-label": t("paint.edit"), onclick: paint }, icon("wand")),
+      el("button", { class: "mini", type: "button", title: t("ws.remove"), "aria-label": t("ws.remove"), onclick: () => { clearFile(app, inp.id); rerender(); } }, icon("x"))));
+  if (src) maskPreview(src.url, x.file).then((c) => zone.prepend(c)).catch(() => zone.prepend(el("img", { src: x.url, alt: "" })));
+  else zone.prepend(el("img", { src: x.url, alt: "" }));
+  return zone;
+}
+
 function dropzone(app, inp, rerender) {
+  if (inp.paint) return paintZone(app, inp, rerender);
   const f = formFor(app);
   const x = f.files[inp.id];
   const input = el("input", { type: "file", accept: ACCEPT[inp.type], hidden: true });
@@ -678,6 +718,8 @@ function howTab(app) {
     el("div", { class: "card" }, el("h3", {}, icon("layers"), t("how.pipeline")), el("p", {}, t("how.pipeline.d", { id: app.id })),
       el("div", { class: "statline" }, el("span", {}, `${t("how.pack")}: ${app.pack}`), el("span", {}, app.status === "ready" ? "ready" : t("tag.draft")),
         app.higgsfield_feature ? el("span", {}, `${t("how.equiv")}: ${app.higgsfield_feature}`) : null),
+      app.runnable || app.status === "draft" ? el("p", { class: "row" }, el("a", { class: "btn small", href: `/api/apps/${app.id}/workflow`, download: `freefield-${app.id}.json` },
+        icon("download"), t("how.workflow")), el("span", { class: "dim", style: { fontSize: "12.5px" } }, t("how.workflow.d"))) : null,
       el("p", {}, t("how.download")), el("pre", { class: "code" }, `modal run infra/modal_app.py::download --pack ${app.pack}`),
       el("p", {}, t("how.cli")), el("pre", { class: "code" }, cliLine(app))),
     app.models.length ? el("div", { class: "card" }, el("h3", {}, icon("box"), t("how.models"), el("span", { class: "dim", style: { marginLeft: "auto", fontWeight: 500 } }, t("how.total", { gb: total.toFixed(1) }))),

@@ -48,7 +48,7 @@ BASES = {
     "edit2": {"app": "edit", "section": "image", "pack": "image-flux3", "image": ("11", "image"), "image2": ("12", "image"), "prompt": ("4", "text"),
               "keep": ("steps", "seed"), "output": {"node": "9", "type": "image"}},
     "klein": {"app": "create-image", "section": "image", "pack": "image-flux3", "image": None, "prompt": ("18:17", "value"),
-              "keep": ("width", "height", "steps", "seed"), "output": {"node": "9", "type": "image"}},
+              "keep": ("aspect", "resolution", "steps", "seed"), "output": {"node": "9", "type": "image"}},
     "z-image": {"app": "z-image", "section": "image", "pack": "image", "image": None, "prompt": ("57:27", "text"), "keep": ("width", "height", "steps", "seed"),
                 "output": {"node": "9", "type": "image"}},
     "video": {"app": "video", "section": "video", "pack": "video-ltx25", "image": ("395", "image"), "prompt": ("398:376", "value"),
@@ -118,13 +118,13 @@ T = []
 
 
 def A(id_, name, feature, cat, base, image_label, summary, prompt, inputs=(), ref=None, values=None, note="", image2_label=None, ref2=None, lora=None, help_=None,
-      defaults=None, klein=None, face_mask=False, effect_lora=None, outpaint=False):
+      defaults=None, klein=None, face_mask=False, effect_lora=None, outpaint=False, sidebar=False):
     """defaults: new defaults for settings kept from the base app (say, the LTX enhancer off); klein: the morph and effect-klein bases' Klein
     instruction; face_mask (edit2): redraw only the face oval MediaPipe finds in the first image, so the rest of it stays as it is;
     effect_lora: the effect bases' LoRA file; outpaint (edit): draw only a border added around the photo (a select's sets pad it)."""
     T.append(dict(id=id_, name=name, feature=feature, cat=cat, base=base, image_label=image_label, summary=summary, prompt=prompt,
                   inputs=list(inputs), ref=ref, values=values or {}, note=note, image2_label=image2_label, ref2=ref2, lora=lora, help=help_,
-                  defaults=defaults or {}, klein=klein, face_mask=face_mask, effect_lora=effect_lora, outpaint=outpaint))
+                  defaults=defaults or {}, klein=klein, face_mask=face_mask, effect_lora=effect_lora, outpaint=outpaint, sidebar=sidebar))
 
 
 def pad(left, top, right, bottom):
@@ -516,19 +516,98 @@ A("expand-image", "Expand Image", "Expand Image", "style", "edit", "Your photo",
       {"value": "wide", "label": "Wider", "sets": pad(320, 0, 320, 0)},
       {"value": "tall", "label": "Taller", "sets": pad(0, 320, 0, 320)}]}],
   LAKE, {"direction": "out"}, "Does the border continue the lake, rock and sky, with no seam or gray left?", outpaint=True)
+def any_(label, pairs, default="", help_=None):
+    """A builder select: "Any" (nothing written) plus label → sentence pairs."""
+    return sel(label[0], label[1], [("Any", "")] + pairs, default, help_)
+
+
+KIND = sel("kind", "Character type", [
+    ("Human", "an ordinary, believable person"),
+    ("Bold", "a person with bold, striking, slightly exaggerated features"),
+    ("Extreme", "a person with extremely exaggerated, cartoonish features and proportions, still photographed for real"),
+    ("Insect", "an anthropomorphic insect character: an insect head with large compound eyes and antennae on a human body"),
+    ("Frog", "an anthropomorphic frog character: a green frog head on a human body"),
+    ("Cat", "an anthropomorphic cat character: a furry cat head on a human body"),
+    ("Dog", "an anthropomorphic dog character: a dog head with floppy ears on a human body"),
+    ("Rodent", "an anthropomorphic capybara character: a capybara head on a human body"),
+    ("Bird", "an anthropomorphic bird character: a puffin head with a bright beak on a human body")],
+    "an ordinary, believable person", "Shown with an example of each type.")
+KIND["gallery"] = True
+INFLUENCER = [
+    KIND,
+    sel("gender", "Gender", [("Woman", "A woman"), ("Man", "A man"), ("Trans man", "A trans man"), ("Trans woman", "A trans woman"),
+                             ("Non-binary", "A non-binary person")], "A woman"),
+    any_(("age", "Age"), [("Adult", " aged around 28"), ("Mature", " aged around 45"), ("Older", " aged around 70")], " aged around 28"),
+    any_(("origin", "Origin"), [("African", " of African descent"), ("East Asian", " of East Asian descent"), ("European", " of European descent"),
+                                ("South Asian", " of South Asian descent"), ("Middle Eastern", " of Middle Eastern descent"),
+                                ("Latin American", " of Latin American descent"), ("Mixed", " of mixed heritage")], " of Latin American descent"),
+    any_(("skin", "Skin tone"), [("Porcelain", "Porcelain skin."), ("Fair", "Fair skin."), ("Olive", "Olive skin."), ("Tan", "Tan skin."),
+                                 ("Brown", "Brown skin."), ("Deep brown", "Deep brown skin."), ("Ebony", "Very dark skin.")]),
+    any_(("build", "Build"), [("Slim", "Slim build."), ("Athletic", "Athletic build."), ("Muscular", "Muscular build."), ("Curvy", "Curvy build."),
+                              ("Heavyset", "Heavyset build."), ("Bodybuilder", "A huge bodybuilder build.")]),
+    any_(("stature", "Height"), [("Average", "Average height."), ("Tall", "Tall."), ("Very tall", "Very tall.")]),
+    any_(("proportions", "Proportions"), [("Long limbs", "Long arms and legs."), ("Short legs", "Short legs."), ("Broad shoulders", "Broad shoulders."),
+                                          ("Narrow waist", "A narrow waist."), ("Egg-shaped", "A round, egg-shaped body.")]),
+    any_(("hair", "Hairstyle"), [
+        ("Long curly", "Long curly hair."), ("Long straight", "Long straight hair."), ("Short", "Short hair."), ("Bob", "A bob haircut."),
+        ("Bald", "A bald head."), ("Buzz cut", "A buzz cut."), ("Bowl cut", "A bowl cut."), ("Mullet", "A mullet."), ("Braids", "Long braids."),
+        ("Pigtails", "Two pigtails."), ("Afro", "A big afro."), ("Mohawk", "A mohawk."), ("Voluminous waves", "Big voluminous waves."),
+        ("Beehive", "A tall beehive hairdo."), ("Perm", "A tight perm."), ("Layered", "A layered cut."), ("Ringlets", "Long ringlets."),
+        ("Mushroom cut", "A mushroom cut."), ("Hair horns", "Hair styled into two horns."), ("Soft-serve swirl", "Hair piled up in a soft-serve swirl."),
+        ("Ball of curls", "A round ball of curls."), ("Two buns", "Two round buns on top of the head."), ("Hair wings", "Hair swept out to the sides like wings."),
+        ("Spikes", "Spiky hair."), ("Side spiral", "One big spiral curl on the side.")], "Long curly hair."),
+    any_(("haircolor", "Hair color"), [("Jet black", "Jet-black hair."), ("Dark brown", "Dark brown hair."), ("Brown", "Brown hair."),
+                                       ("Auburn", "Auburn hair."), ("Red", "Bright red hair."), ("Blonde", "Blonde hair."), ("Platinum", "Platinum hair."),
+                                       ("Gray", "Gray hair."), ("White", "White hair."), ("Pastel pink", "Pastel pink hair."), ("Lilac", "Lilac hair."),
+                                       ("Blue", "Blue hair."), ("Green", "Green hair.")], "Dark brown hair."),
+    any_(("head", "Head shape"), [("Long", "A long face."), ("Small", "A very small head."), ("High forehead", "A high forehead."),
+                                  ("Heavy brow", "A heavy brow ridge."), ("Chiseled jaw", "A sharply chiseled jawline."), ("Huge jaw", "A huge jaw."),
+                                  ("Round", "A round face."), ("Square", "A square face."), ("Heart", "A heart-shaped face.")]),
+    any_(("neck", "Neck"), [("Thick", "A thick neck."), ("Long", "A long neck."), ("Short", "A short neck.")]),
+    any_(("eyes", "Eye shape"), [("Almond", "Almond-shaped eyes."), ("Round", "Round eyes."), ("Monolid", "Monolid eyes."), ("Close-set", "Close-set eyes."),
+                                 ("Wide-set", "Wide-set eyes."), ("Uneven", "Slightly uneven eyes."), ("Big", "Big eyes."), ("Huge", "Huge eyes."),
+                                 ("Hooded", "Hooded eyes."), ("Upturned", "Upturned eyes."), ("Downturned", "Downturned eyes.")]),
+    any_(("eyecolor", "Eye color"), [("Black", "Black eyes."), ("Brown", "Brown eyes."), ("Hazel", "Hazel eyes."), ("Green", "Green eyes."),
+                                     ("Blue", "Blue eyes."), ("Ice blue", "Ice-blue eyes."), ("Amber", "Amber eyes."), ("Gray", "Gray eyes.")]),
+    any_(("feature", "Facial feature"), [
+        ("Freckles", "Freckles."), ("Dimples", "Dimples."), ("Dark circles", "Dark circles under the eyes."), ("Rosy cheeks", "Rosy cheeks."),
+        ("High cheekbones", "High cheekbones."), ("Full lips", "Full lips."), ("Thick eyebrows", "Thick eyebrows."), ("Beauty mark", "A beauty mark."),
+        ("Round nose", "A round nose."), ("Button nose", "A button nose."), ("Pointed nose", "A pointed nose."), ("Tiny nose", "A tiny nose."),
+        ("Pouty lips", "Pouty lips."), ("Small mouth", "A small pursed mouth."), ("Wide mouth", "A wide mouth."), ("Unibrow", "A unibrow."),
+        ("Thin arched brows", "Thin, high arched eyebrows."), ("Bushy brows", "Bushy eyebrows."), ("Protruding ears", "Ears that stick out."),
+        ("Gap teeth", "A gap between the front teeth."), ("Buck teeth", "Slight buck teeth."), ("Pointed chin", "A pointed chin."),
+        ("Receding chin", "A receding chin."), ("Big forehead", "A big forehead.")], "Freckles."),
+    any_(("facialhair", "Facial hair"), [("Clean-shaven", "Clean-shaven."), ("Stubble", "Stubble."), ("Full beard", "A full beard."),
+                                         ("Goatee", "A goatee."), ("Mustache", "A mustache."), ("Pencil mustache", "A thin pencil mustache."),
+                                         ("Push-broom", "A thick push-broom mustache."), ("Braided beard", "A braided beard.")]),
+    any_(("trait", "Distinctive trait"), [("Different eye colors", "Each eye a different color."), ("Small face tattoo", "A small face tattoo."),
+                                          ("Nose piercing", "A nose piercing."), ("Ear piercings", "Several ear piercings."),
+                                          ("Eyebrow slits", "Shaved slits in one eyebrow."), ("Bleached brows", "Bleached eyebrows."),
+                                          ("No eyebrows", "No eyebrows."), ("Gold grill", "A gold grill on the teeth."), ("Braces", "Braces on the teeth."),
+                                          ("Eyebrow scar", "A small scar through one eyebrow."), ("Face gems", "Small gems stuck on the cheekbones."),
+                                          ("Elf ears", "Pointed elf ears."), ("Long lashes", "Very long eyelashes."), ("Nose strip", "A strip across the nose.")]),
+    any_(("style", "Style"), [("Casual", "Wearing casual everyday clothes."), ("Streetwear", "Wearing streetwear."), ("Retro", "Wearing 1970s retro clothes."),
+                              ("Sporty", "Wearing sporty athletic clothes."), ("Y2K", "Wearing early-2000s Y2K fashion."),
+                              ("Theatrical", "Wearing a bold theatrical costume."), ("Gothic", "Wearing gothic black clothes."),
+                              ("Suit", "Wearing a tailored suit.")], "Wearing casual everyday clothes."),
+    any_(("accessory", "Accessory"), [("Glasses", "Glasses."), ("Headphones", "Headphones around the neck."), ("Jewelry", "Jewelry."),
+                                      ("Hat", "A hat."), ("Bag", "A bag over one shoulder.")]),
+    sel("scene", "Scene", [("Studio", "Standing in a plain light-gray photo studio, full body, soft even light."),
+                           ("Fitness", "Stretching on a rooftop at sunrise, full body."),
+                           ("Travel", "With a backpack at a viewpoint above a coastal town."),
+                           ("Fashion", "Posing on a city street, full body."),
+                           ("Food", "Tasting a dish at a busy street food stall at night."),
+                           ("Tech", "At a desk with a laptop and a camera on a tripod, warm desk lamp.")],
+        "Standing in a plain light-gray photo studio, full body, soft even light."),
+]
+
 A("ai-influencer", "AI Influencer", "AI Influencer", "portraits", "klein", None,
-  "Makes a feed-ready photo of a made-up influencer in their niche, with natural skin (FLUX 3 Klein).",
-  "A vertical phone photo for a social media feed of {who}, a {niche}. Natural skin texture with visible pores, candid moment, "
-  "realistic photo, no text, no logos.",
-  [txt("who", "Who", "a woman in her late twenties from Mexico City with curly dark hair", required=True,
-       help_="Describe a person who does not exist: age, origin, hair, style."),
-   sel("niche", "Niche", [("Fitness", "fitness influencer stretching on a rooftop at sunrise in workout clothes"),
-                          ("Travel", "travel influencer with a backpack at a viewpoint above a coastal town"),
-                          ("Fashion", "fashion influencer posing on a city street in a tailored camel coat"),
-                          ("Food", "food influencer tasting a dish at a busy street food stall at night"),
-                          ("Tech", "tech influencer at a desk with a laptop and a camera on a tripod, warm desk lamp")])],
-  None, {"niche": "fitness influencer stretching on a rooftop at sunrise in workout clothes"}, "A believable person, not a glossy render?",
-  defaults={"width": 768, "height": 1280})
+  "Build a made-up influencer trait by trait: type, body, hair, face, style and scene (FLUX 3 Klein).",
+  "A vertical photo for social media of a made-up character: {kind}. {gender}{age}{origin}. {skin} {build} {stature} {proportions} {hair} {haircolor} "
+  "{head} {neck} {eyes} {eyecolor} {feature} {facialhair} {trait} {style} {accessory} {scene} Natural skin texture with visible pores, "
+  "a believable photo, no text, no logos.",
+  INFLUENCER, None, {}, "A believable person, not a glossy render? The traits picked show?",
+  defaults={"aspect": "2:3"}, sidebar=True)
 A("bullet-time-scene", "Bullet Time Scene", "Bullet Time Scene", "camera", "effect", "Your photo",
   "Freezes the moment and circles the camera around the subject, in their own scene (Wan 2.1 + Bullet Time LoRA).",
   BULLET_TRIGGER + "The video shows {subject}, frozen in mid-air while the camera circles around them in one direction; the whole scene is frozen too.",
@@ -608,7 +687,7 @@ def check() -> None:
         assert used <= have, (t["id"], used - have)
         assert have - setters <= used, (t["id"], have - setters - used)
         for i in t["inputs"]:
-            assert i["id"] not in ("image", "image2", "details", "steps", "seed", "width", "height", "duration", "enhance", "aspect"), (t["id"], i["id"])
+            assert i["id"] not in ("image", "image2", "details", "steps", "seed", "width", "height", "duration", "enhance", "aspect", "resolution"), (t["id"], i["id"])
         if t["base"] in ("z-image", "klein"):
             assert t["ref"] is None and t["image_label"] is None
         else:
@@ -641,8 +720,9 @@ def manifest(t: dict) -> dict:
     binds = [{"node": base["prompt"][0], "field": base["prompt"][1], "template": t["prompt"] + " {details}"}]
     if t["klein"] and re.search(r"\{[a-z]", t["klein"]):   # the Klein instruction takes the template's own inputs too
         binds.append({"node": base["klein"][0], "field": base["klein"][1], "template": t["klein"]})
-    inputs.append({"id": "details", "type": "textarea", "label": "Extra direction", "default": "", "help": "Added at the end of the app's prompt.",
-                   "bind": binds})
+    # sidebar: a one-line field, so a text-to-image template with many selects opens with its controls in a side column
+    inputs.append({"id": "details", "type": "text" if t["sidebar"] else "textarea", "label": "Extra direction", "default": "",
+                   "help": "Added at the end of the app's prompt.", "bind": binds})
     inputs += [{**keep[k], "default": t["defaults"][k]} if k in t["defaults"] else keep[k] for k in base["keep"]]
     test = {"image": "test/portrait.png"} if base["image"] else {}
     if base.get("image2"):

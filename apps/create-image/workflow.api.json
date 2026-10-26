@@ -98,7 +98,7 @@
         0
       ],
       "latent_image": [
-        "18:6",
+        "ff_res",
         0
       ],
       "seed": 3,
@@ -216,6 +216,20 @@
     },
     "_meta": {
       "title": "Text (Multiline)"
+    }
+  },
+  "ff_res": {
+    "class_type": "LatentUpscaleBy",
+    "inputs": {
+      "samples": [
+        "18:6",
+        0
+      ],
+      "upscale_method": "nearest-exact",
+      "scale_by": 1.0
+    },
+    "_meta": {
+      "title": "Resolution (1K, 1.5K, 2K)"
     }
   }
 }
