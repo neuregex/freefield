@@ -52,7 +52,7 @@
         "suffix": ". ",
         "ordered": true
       },
-      "help": "Up to 3, in order: the shot does them one after the other.",
+      "help": "Up to 3, in the order picked. One move holds best: with two, the lab found the model does not always keep the order.",
       "options": [
         {
           "value": "stays locked off on a tripod, perfectly still",

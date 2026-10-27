@@ -15,6 +15,8 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
                                                   when the app changes
 ```
 
+[Run it](#run-it) on Modal or on your own ComfyUI · [every app](#apps) with its model and VRAM · [add an app](#add-an-app) from any ComfyUI workflow · [every GPU run](docs/lab-runs.md) of the lab
+
 ## Status
 
 | | |
@@ -24,7 +26,7 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 | Workflows | Built from official sources by `tools/build_apps.py` (ComfyUI's templates, Lightricks' ComfyUI-LTXVideo examples, Comfy's `comfy-reshoot`); the template apps reuse those bases and the two smoke apps are hand-written. `tools/import_workflow.py` drafts a new app from any other ComfyUI workflow. All accepted by ComfyUI's validator: ComfyUI `e3bee7f` (0.42.0), ComfyUI-LTXVideo `44c8a36`, ComfyUI-CrossViewWarp `fbb1e93` |
 | GPU runs | 48 lab runs on Modal from 20 to 26 Oct (L40S and H100), 710 of 733 cases ok. Every example in the web UI comes from one of them, with its time and peak VRAM. Run by run, and what each one changed: [`docs/lab-runs.md`](docs/lab-runs.md) |
 | End to end | Run from the browser on 23 Oct, web UI → server → gateway on Modal → ComfyUI on an H100: `morph` 160.8 s from the button to the video (128.7 s of it on the GPU), `mixed-media` 149 s, `dub` 72 s. On 24 Oct through the hosted demo (`infra/web_app.py`, the same web app on Modal behind a passcode): `face-swap` 25.2 s on the GPU. The model-free smoke apps cover the same path in CI |
-| LoRA lab | 334 cases: one showcase per app (117), one per effect (24), one per look of `mixed-media` (16), one per transformation of `morph` (15) and one per character type of `ai-influencer` (8 more), 42 references the others start from, 6 candidate portraits for those references (`refx-*`), 12 style-drift experiments (`mmx-*`), 36 template experiments (`tplx-*`), 2 runs of `reshoot` without its Turbo LoRA, 30 image-model comparisons (`cmp-*`, below), 8 soundtrack candidates for the demo video and 4 checks of new controls (Create Image's looks and 2K, Cinema Studio's genre and palette, Relight's direction), 3 Cinema Studio video tests (two camera moves in order, a cut on Dynamic tempo, the enhancer off) 1 check of several picks per group in AI Influencer, 1 clip for the demo video and 1 more anime clip for Mixed Media; each experiment has its verdict in the note |
+| LoRA lab | 334 cases with fixed seeds: one showcase per app (117), 42 references the other cases start from, and experiments, each with its verdict in its note: every effect, look of `mixed-media` and transformation of `morph` on its own, the character types of `ai-influencer`, the image-model comparison (`cmp-*`, below), template and style-drift tests (`tplx-*`, `mmx-*`), `reshoot` without its Turbo LoRA, the soundtrack candidates for the demo video and checks of new controls. How the lab works: [below](#the-lora-lab-and-the-gallery) |
 | CI | `.github/workflows/validate.yml` on every push: the manifest validator, the tests, the type check, the generated packs and VRAM map, and a CPU-only ComfyUI that accepts every workflow and the prompt of every lab case (about 3 minutes) |
 
 ## Apps
@@ -37,7 +39,7 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 | `styles` | Image styles | Krea 2 Turbo (int8) + Krea's nine official style LoRAs, picked from a list | fits whole, 19.4 GB | ready |
 | `style-reference` | Style transfer | Krea 2 Turbo (int8) + style-reference LoRA | fits whole, 19.4 GB | ready |
 | `cinema-studio` | Cinematic Cameras | FLUX 3 Image Klein + genre, era, camera body, lens, focal length, aperture, lighting and color palette, written as the look they give; 6 aspect ratios, 1K to 2K | fits whole, 11.0 GB | ready |
-| `cinema-video` | Cinema Studio (video) | Cinema Studio's still (FLUX 3 Image Klein) as the first frame of LTX-2.5 image-to-video in one graph: the same look selects plus up to 3 camera moves in order (33, Higgsfield's list), tempo and duration; sound included | needs Modal, peak 44.3 GB on L40S | ready |
+| `cinema-video` | Cinema Studio (video) | Cinema Studio's still (FLUX 3 Image Klein) as the first frame of LTX-2.5 image-to-video in one graph: the same look selects plus up to 3 camera moves from Higgsfield's list of 33, written in the order picked (one move holds; the lab found the order of two is not reliable), tempo and duration; sound included | needs Modal, peak 44.3 GB on L40S | ready |
 | `edit` | Edit | FLUX 3 Image Klein (int8): a change described in words, no mask | fits whole, 11.0 GB | ready |
 | `inpaint` | Inpaint | FLUX 3 Image Klein with a noise mask: paint the area in the web UI's brush and only that area is redrawn, then pasted back over the photo | fits whole, 11.0 GB | ready |
 | `relight` | Relight | Qwen Image Edit 2509 (fp8) + Relight and Lightning LoRAs: light presets, or direction, softness, brightness and color | tight: 21.5 GB largest phase | ready |
@@ -388,7 +390,7 @@ Code: MIT. Model weights are not in this repository and keep their own licenses,
 (Apache-2.0, MIT, OpenRAIL, LTX-2.x Community License, FLUX Kommunity License, Krea 2 Community License, SAM License,
 Stable Audio Community License, MiniMax H3 Community License). Some community LoRAs are research-only or non-commercial
 (Cameraman v2 in `camera-copy`), and one states no license on its model card (lightx2v's MiniMax-H3 Turbo in `reshoot`;
-its code repository is Apache-2.0); their `app.json` says so and the web UI shows it next to the model. Workflows are adapted from ComfyUI's official templates and Lightricks' ComfyUI-LTXVideo examples;
+its code repository is Apache-2.0); their `app.json` says so and the web UI shows it next to the model. Workflows are adapted from ComfyUI's official templates, Lightricks' ComfyUI-LTXVideo examples and Comfy-Org's comfy-reshoot (MIT);
 the cloud text-encoder branch in Lightricks' examples is removed so every app runs on open weights only. Camera and
 lens vocabulary in `cinema-studio` comes from [open-higgsfield-ai](https://github.com/sunnychase/open-higgsfield-ai) (MIT).
 LoRAs outside `effects`: Lightricks' IC-LoRAs (LTX-2.x Community License); joyfox's LTX-2.3 transition LoRA (`transitions`,
