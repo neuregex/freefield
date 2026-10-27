@@ -7,7 +7,7 @@ Open-source Higgsfield on ComfyUI: every app is one folder, every model is open 
 Image, video, VFX and audio apps in a studio laid out like Higgsfield's, each one a ComfyUI workflow on open weights,
 run on Modal or on your own ComfyUI. Every example in the app is a real GPU run made by the lab, with its time and peak VRAM.
 
-[Run it](#run-it) · [every app](#apps) with its model and VRAM · [add an app](#add-an-app) from any ComfyUI workflow ·
+[Run it](#run-it) on Modal or [on your own GPU](#on-your-own-gpu-without-modal) · [every app](#apps) with its model and VRAM · [add an app](#add-an-app) from any ComfyUI workflow ·
 [every GPU run](docs/lab-runs.md) of the lab
 
 <table>
@@ -216,7 +216,7 @@ models the gateway calls ComfyUI's `POST /free`, so nothing from the previous ap
 
 ## Run it
 
-You need Node 22.6+, Python 3.10+ and a [Modal](https://modal.com) account.
+You need Node 22.6+, Python 3.10+ and a [Modal](https://modal.com) account, or a GPU of your own ([below](#on-your-own-gpu-without-modal)).
 
 ```sh
 # 0. what is missing: Node, Modal login and secrets, Hugging Face license access per model, .env
@@ -241,6 +241,34 @@ npm run app -- create-image --set prompt="a red bicycle against a white wall"   
 ```
 
 On Windows PowerShell, environment variables go before the command as `$env:FREEFIELD_GPU = "A10G"; modal deploy ...`.
+
+### On your own GPU, without Modal
+
+`tools/local_backend.py` runs the same backend as `infra/modal_app.py`, on your machine: ComfyUI at the pinned commit
+with the pinned custom nodes, `comfy-api-proxy` next to it and the token gateway in front. Run it in a Python
+virtualenv that already has the PyTorch build for your GPU ([pytorch.org](https://pytorch.org)).
+
+```sh
+# 1. ComfyUI, the custom nodes and comfy-api-proxy (once)
+python tools/local_backend.py setup ~/freefield-comfy
+
+# 2. the models of the apps you want, by pack (packs/index.json says which apps each pack serves)
+python tools/local_backend.py download ~/freefield-comfy image-flux3 --dry-run   # what is missing, and how big
+python tools/local_backend.py download ~/freefield-comfy image-flux3             # gated repos: HF_TOKEN or `hf auth login`
+
+# 3. a gateway token in .env, then the backend: ComfyUI :8188, comfy-api-proxy :8189, gateway :8000
+python tools/setup_token.py --env-only
+python tools/local_backend.py serve ~/freefield-comfy      # ComfyUI flags after --, e.g. -- --lowvram
+
+# 4. in another terminal, with COMFY_BASE_URL=http://127.0.0.1:8000 in .env
+npm install
+npm run serve                                               # http://127.0.0.1:3000
+```
+
+Models go to `<dir>/models`; `--models` points at a model folder you already have instead. Which apps fit your card:
+the *On a 24 GB card* column of [the app table](#apps) and the [VRAM map](docs/vram-map.md). Checked on 27 Oct on a
+CPU-only machine, setup to a finished run of the model-free `smoke` app through the gateway; the GPU apps send the
+same workflows as on Modal.
 
 ### The web app
 
