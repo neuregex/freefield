@@ -2,6 +2,8 @@
 
 Open-source Higgsfield on ComfyUI: every app is one folder, every model is open weights.
 
+**[Watch the 2-minute demo video](https://youtu.be/N7mv2v3Txeo)**
+
 ![The web app: the Video menu, Cinema Studio Video with the lab's example loaded and its camera moves, then the result playing in the Library tab](docs/media/ui-demo.webp)
 
 Image, video, VFX and audio apps in a studio laid out like Higgsfield's, each one a ComfyUI workflow on open weights,
