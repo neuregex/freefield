@@ -2,7 +2,24 @@
 
 Open-source Higgsfield on ComfyUI: every app is one folder, every model is open weights.
 
-![Twelve of the apps' examples, each made on a GPU by the lab: Transformations, Mixed Media, Effects, Recast, Relight, Day to Night, Cinema Studio, Depth Map, Volcano Ad, H3 Video, Styles and Storm Creature](docs/media/examples.jpg)
+![The web app: the Video menu, Cinema Studio Video with the lab's example loaded and its camera moves, then the result playing in the Library tab](docs/media/ui-demo.webp)
+
+Image, video, VFX and audio apps in a studio laid out like Higgsfield's, each one a ComfyUI workflow on open weights,
+run on Modal or on your own ComfyUI. Every example in the app is a real GPU run made by the lab, with its time and peak VRAM.
+
+[Run it](#run-it) · [every app](#apps) with its model and VRAM · [add an app](#add-an-app) from any ComfyUI workflow ·
+[every GPU run](docs/lab-runs.md) of the lab
+
+<table>
+<tr>
+<td width="50%"><img src="docs/media/ui-explore.jpg" alt="Explore: featured apps as video cards, the image, video and audio studios, and the AI Influencer character types"><br><b>Explore.</b> Featured apps, the studios, and one lab example per app.</td>
+<td width="50%"><img src="docs/media/ui-app.jpg" alt="Cinema Studio Video: the form on the left with the scene, camera move and tempo; the lab's example on the right"><br><b>An app.</b> The form is drawn from the app's <code>app.json</code>; "Load this example" fills it with a lab run.</td>
+</tr>
+<tr>
+<td width="50%"><img src="docs/media/ui-menu.jpg" alt="The Video menu: 46 apps in Create, Edit, Motion control and Templates, and a column with the open models behind them"><br><b>The Video menu.</b> 46 apps grouped as in Higgsfield, and the open models behind them.</td>
+<td width="50%"><img src="docs/media/ui-how.jpg" alt="Dub's How it works tab: the pipeline, every model with its size and license, and the VRAM per phase"><br><b>How it works.</b> Every model with its size and license, the VRAM per phase, and the commands to run the app.</td>
+</tr>
+</table>
 
 Freefield rebuilds Higgsfield's creative apps (image, video, VFX, audio) on top of ComfyUI and the Comfy SDK.
 There is no per-app code. Each app is a folder in `apps/` with an `app.json` manifest and a ComfyUI workflow in API
@@ -15,7 +32,7 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
                                                   when the app changes
 ```
 
-[Run it](#run-it) on Modal or on your own ComfyUI · [every app](#apps) with its model and VRAM · [add an app](#add-an-app) from any ComfyUI workflow · [every GPU run](docs/lab-runs.md) of the lab
+![Twelve of the apps' examples, each made on a GPU by the lab: Transformations, Mixed Media, Effects, Recast, Relight, Day to Night, Cinema Studio, Depth Map, Volcano Ad, H3 Video, Styles and Storm Creature](docs/media/examples.jpg)
 
 ## Status
 
