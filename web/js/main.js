@@ -76,7 +76,7 @@ async function boot() {
     await loadCatalog();
     await flags.load();
   } catch (err) {
-    main.replaceChildren(el("div", { class: "page" }, el("div", { class: "empty" }, `${err.message}. Is \`npm run serve\` running?`)));
+    main.replaceChildren(el("div", { class: "page" }, el("div", { class: "empty" }, `${err.message}. ${t("boot.error")}`)));
     return;
   }
   buildBar();

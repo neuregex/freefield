@@ -360,7 +360,7 @@ function composerBar(app, rerenderBar) {
 
   const prompt = pi ? el("textarea", { class: "cmp-prompt", rows: "2", "aria-label": pi.label,
     // an optional prompt (a template app's "Extra direction") says so instead of asking for a scene
-    placeholder: pi.default ? t("ws.eg", { x: pi.default }) : pi.required ? t("ws.prompt.ph") : t("ws.prompt.opt", { label: pi.label }), value: f.values[pi.id] ?? "" }) : null;
+    placeholder: pi.default ? t("ws.eg", { x: pi.displayDefault ?? pi.default }) : pi.required ? t("ws.prompt.ph") : t("ws.prompt.opt", { label: pi.label }), value: f.values[pi.id] ?? "" }) : null;
   const grow = () => { if (!prompt) return; prompt.style.height = "auto"; prompt.style.height = `${Math.min(220, prompt.scrollHeight)}px`; };
   if (prompt) {
     prompt.addEventListener("input", () => { f.values[pi.id] = prompt.value; grow(); prompt.classList.remove("missing"); persistSoon(); });
@@ -467,12 +467,12 @@ function chipFor(app, inp, f) {
     } else if (inp.type === "seed") {
       content = seedEditor(app, inp, f, () => { persistSoon(); draw(); });
     } else if (inp.type === "textarea") {
-      const ta = el("textarea", { placeholder: inp.default ? t("ws.eg", { x: inp.default }) : inp.label, value: f.values[inp.id] ?? "" });
+      const ta = el("textarea", { placeholder: inp.default ? t("ws.eg", { x: inp.displayDefault ?? inp.default }) : inp.label, value: f.values[inp.id] ?? "" });
       ta.addEventListener("input", () => { set(ta.value); draw(); });
       content = el("div", { class: "pad" }, el("b", {}, inp.label), ta, inp.help ? el("p", { class: "help" }, inp.help) : null);
     } else {
       const box = el("input", { type: inp.type === "number" ? "number" : "text", min: inp.min, max: inp.max, step: inp.step, value: f.values[inp.id] ?? "",
-        placeholder: inp.default !== undefined ? String(inp.default) : "" });
+        placeholder: inp.default !== undefined ? String(inp.displayDefault ?? inp.default) : "" });
       box.addEventListener("input", () => { set(inp.type === "number" ? (box.value === "" ? "" : Number(box.value)) : box.value); draw(); });
       content = el("div", { class: "pad" }, el("b", {}, inp.label), box, inp.help ? el("p", { class: "help" }, inp.help) : null);
     }
@@ -537,7 +537,7 @@ function dropzone(app, inp, rerender) {
     if (inp.type === "video" && inp.limits?.seconds) {
       media.addEventListener("loadedmetadata", () => {
         const [a, b] = inp.limits.seconds;
-        if (media.duration < a || media.duration > b) { warn.textContent = `${x.file.name} · ${media.duration.toFixed(1)} s (${a}–${b} s)`; warn.style.color = "var(--warn)"; }
+        if (media.duration < a || media.duration > b) { warn.textContent = `${x.file.name} · ${media.duration.toFixed(1)} ${t("unit.s")} (${a}–${b} ${t("unit.s")})`; warn.style.color = "var(--warn)"; }
       });
     }
     zone = el("div", { class: "drop has", dataset: { slot: inp.id } }, media, warn,
@@ -562,7 +562,7 @@ function sideField(app, inp, f, ui) {
   const set = (v) => { f.values[inp.id] = v; persistSoon(); };
   const help = inp.help ? el("p", { class: "help" }, inp.help) : null;
   if (inp.type === "textarea") {
-    const ta = el("textarea", { class: inp.required ? "" : "short", placeholder: inp.default ? t("ws.eg", { x: inp.default }) : inp.label, value: f.values[inp.id] ?? "", "aria-label": inp.label });
+    const ta = el("textarea", { class: inp.required ? "" : "short", placeholder: inp.default ? t("ws.eg", { x: inp.displayDefault ?? inp.default }) : inp.label, value: f.values[inp.id] ?? "", "aria-label": inp.label });
     ta.addEventListener("input", () => { set(ta.value); ta.classList.remove("missing"); });
     ui.refs[inp.id] = ta;
     return el("label", { class: "field" }, el("span", { class: "lbl" }, inp.label, inp.required ? null : el("small", {}, t("ws.optional"))), ta, help);
@@ -606,7 +606,7 @@ function sideField(app, inp, f, ui) {
       box, el("p", { class: "help" }, t("ws.seed.help")));
   }
   const box = el("input", { type: inp.type === "number" ? "number" : "text", min: inp.min, max: inp.max, step: inp.step, value: f.values[inp.id] ?? "",
-    placeholder: inp.default !== undefined ? String(inp.default) : "", "aria-label": inp.label });
+    placeholder: inp.default !== undefined ? String(inp.displayDefault ?? inp.default) : "", "aria-label": inp.label });
   box.addEventListener("input", () => set(inp.type === "number" ? (box.value === "" ? "" : Number(box.value)) : box.value));
   return el("label", { class: "field" }, el("span", { class: "lbl" }, inp.label, inp.required ? null : el("small", {}, t("ws.optional"))), box, help);
 }
@@ -774,15 +774,15 @@ function vramBars(app) {
   const peak = app.example?.peak_vram_gb ?? null;
   const max = Math.max(48, v.whole_gb, peak || 0) * 1.05;
   const pct = (gb) => `${Math.min(100, (gb / max) * 100)}%`;
-  const ticks = [24, 48].map((g) => el("u", { style: { left: pct(g) }, title: `${g} GB` }));
+  const ticks = [24, 48].map((g) => el("u", { style: { left: pct(g) }, title: `${g} ${t("unit.gb")}` }));
   const row = (label, gb, cls) => el("div", { style: { display: "grid", gap: "6px" } },
-    el("div", { style: { display: "flex", justifyContent: "space-between", fontSize: "12.5px" } }, el("span", { class: "dim" }, label), el("b", {}, `${gb} GB`)),
+    el("div", { style: { display: "flex", justifyContent: "space-between", fontSize: "12.5px" } }, el("span", { class: "dim" }, label), el("b", {}, `${gb} ${t("unit.gb")}`)),
     el("div", { class: "vbar" }, el("i", { class: cls, style: { width: pct(gb) } }), ...ticks));
   const fit = fitOf(app);
   return el("div", { class: "card" }, el("h3", {}, icon("chip"), t("how.vram"), fit ? el("span", { class: `fit ${fit[1]}`, style: { marginLeft: "auto" } }, t(fit[0])) : null),
     row(t("how.whole"), v.whole_gb, "whole"), row(t("how.phase"), v.largest_phase_gb, ""),
     peak ? row(`${t("how.measured")} (${(app.example.gpu || "").split(",")[0]})`, peak, "whole") : null,
-    el("div", { class: "vscale" }, el("span", { style: { left: pct(24) } }, "24 GB"), el("span", { style: { left: pct(48) } }, "48 GB")));
+    el("div", { class: "vscale" }, el("span", { style: { left: pct(24) } }, `24 ${t("unit.gb")}`), el("span", { style: { left: pct(48) } }, `48 ${t("unit.gb")}`)));
 }
 
 function cliLine(app) {
@@ -798,7 +798,7 @@ function howTab(app) {
   const total = app.models.filter((m) => !m.optional).reduce((s, m) => s + m.gb, 0);
   return el("div", { class: "how-grid" },
     el("div", { class: "card" }, el("h3", {}, icon("layers"), t("how.pipeline")), el("p", {}, t("how.pipeline.d", { id: app.id })),
-      el("div", { class: "statline" }, el("span", {}, `${t("how.pack")}: ${app.pack}`), el("span", {}, app.status === "ready" ? "ready" : t("tag.draft")),
+      el("div", { class: "statline" }, el("span", {}, `${t("how.pack")}: ${app.pack}`), el("span", {}, app.status === "ready" ? t("status.ready") : t("tag.draft")),
         app.higgsfield_feature ? el("span", {}, `${t("how.equiv")}: ${app.higgsfield_feature}`) : null),
       app.runnable || app.status === "draft" ? el("p", { class: "row" }, el("a", { class: "btn small", href: `/api/apps/${app.id}/workflow`, download: `freefield-${app.id}.json` },
         icon("download"), t("how.workflow")), el("span", { class: "dim", style: { fontSize: "12.5px" } }, t("how.workflow.d"))) : null,
@@ -807,7 +807,7 @@ function howTab(app) {
     app.models.length ? el("div", { class: "card" }, el("h3", {}, icon("box"), t("how.models"), el("span", { class: "dim", style: { marginLeft: "auto", fontWeight: 500 } }, t("how.total", { gb: total.toFixed(1) }))),
       el("table", { class: "models" }, el("tbody", {}, ...app.models.map((m) => el("tr", {},
         el("td", {}, el("div", {}, m.name), el("small", { class: "dim" }, [m.repo, m.license, m.gated ? t("how.gated") : "", m.optional ? t("how.optional") : ""].filter(Boolean).join(" · "))),
-        el("td", { class: "r" }, `${m.gb} GB`)))))) : null,
+        el("td", { class: "r" }, `${m.gb} ${t("unit.gb")}`)))))) : null,
     vramBars(app),
     app.notes || app.credits?.length ? el("div", { class: "card" },
       app.notes ? el("h3", {}, icon("info"), t("how.notes")) : null, app.notes ? el("p", {}, app.notes) : null,
