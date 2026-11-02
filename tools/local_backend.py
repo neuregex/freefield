@@ -22,6 +22,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import socket
 import subprocess
 import sys
@@ -145,9 +146,20 @@ def env_token() -> str:
     return tok
 
 
+def find_proxy() -> str | None:
+    """comfy-api-proxy next to this Python (a venv's Scripts/ or bin/, activated or not), else on PATH."""
+    exe = "comfy-api-proxy.exe" if os.name == "nt" else "comfy-api-proxy"
+    here = Path(sys.executable).parent / exe
+    return str(here) if here.exists() else shutil.which("comfy-api-proxy")
+
+
 def serve(comfy: Path, comfy_args: list[str], port: int) -> None:
     token = env_token()
-    proxy = shutil.which("comfy-api-proxy")
+    proxy = find_proxy()
+
+    def stop(*_):   # a plain kill, a closed terminal tab, a service manager: stop all three, as Ctrl+C does
+        raise KeyboardInterrupt
+    signal.signal(signal.SIGTERM, stop)
     if not proxy:
         sys.exit("comfy-api-proxy is not installed here: run setup first, in this same environment")
     procs = []
@@ -182,6 +194,8 @@ def serve(comfy: Path, comfy_args: list[str], port: int) -> None:
 
 
 def main() -> None:
+    if hasattr(sys.stdout, "reconfigure"):   # a Windows console or pipe in cp1252 must not stop on ✗ or ↓
+        sys.stdout.reconfigure(errors="replace")
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     for name in ("setup", "download", "serve"):
