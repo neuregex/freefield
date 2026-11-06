@@ -27,7 +27,7 @@
       "gb": 4.91,
       "name": "minimax_music3_dit_fp16.safetensors",
       "gated": false,
-      "license": "Apache-2.0",
+      "license": "MiniMax-Music3 Community License",
       "used_by": [
         "music"
       ]
@@ -39,7 +39,7 @@
       "gb": 9.2,
       "name": "minimax_music3_text_encoder_pruned_int8_convrot.safetensors",
       "gated": false,
-      "license": "Apache-2.0",
+      "license": "MiniMax-Music3 Community License",
       "used_by": [
         "music"
       ]
@@ -75,7 +75,7 @@
       "gb": 0.22,
       "name": "minimax_music3_dav.safetensors",
       "gated": false,
-      "license": "Apache-2.0",
+      "license": "MiniMax-Music3 Community License",
       "used_by": [
         "music"
       ]

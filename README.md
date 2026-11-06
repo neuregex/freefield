@@ -435,7 +435,7 @@ using the node definitions in `tools/object_info.json`.
 
 Code: MIT. Model weights are not in this repository and keep their own licenses, listed in each `app.json`
 (Apache-2.0, MIT, OpenRAIL, LTX-2.x Community License, FLUX Kommunity License, Krea 2 Community License, SAM License,
-Stable Audio Community License, MiniMax H3 Community License). Some community LoRAs are research-only or non-commercial
+Stable Audio Community License, MiniMax H3 Community License, MiniMax-Music3 Community License). Some community LoRAs are research-only or non-commercial
 (Cameraman v2 in `camera-copy`), and one states no license on its model card (lightx2v's MiniMax-H3 Turbo in `reshoot`;
 its code repository is Apache-2.0); their `app.json` says so and the web UI shows it next to the model. Workflows are adapted from ComfyUI's official templates, Lightricks' ComfyUI-LTXVideo examples and Comfy-Org's comfy-reshoot (MIT);
 the cloud text-encoder branch in Lightricks' examples is removed so every app runs on open weights only. Camera and

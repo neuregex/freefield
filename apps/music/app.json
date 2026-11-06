@@ -81,7 +81,7 @@
       "dir": "diffusion_models",
       "gb": 4.91,
       "phase": "denoise",
-      "license": "Apache-2.0"
+      "license": "MiniMax-Music3 Community License"
     },
     {
       "repo": "Comfy-Org/MiniMax-Music-3",
@@ -89,7 +89,7 @@
       "dir": "text_encoders",
       "gb": 9.2,
       "phase": "encode",
-      "license": "Apache-2.0"
+      "license": "MiniMax-Music3 Community License"
     },
     {
       "repo": "Comfy-Org/MiniMax-Music-3",
@@ -97,11 +97,11 @@
       "dir": "vae",
       "gb": 0.22,
       "phase": "decode",
-      "license": "Apache-2.0"
+      "license": "MiniMax-Music3 Community License"
     }
   ],
   "credits": [
-    "MiniMax Music 3 (Apache-2.0)"
+    "MiniMax Music 3 (MiniMax-Music3 Community License)"
   ],
   "test": {
     "style": "lofi piano",
