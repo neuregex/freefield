@@ -30,7 +30,7 @@ async function sizeOf(url) {
     return n > 0 ? n : null;
   } catch { return null; }
 }
-const mb = (n) => (n ? `${(n / 1e6).toFixed(n > 1e7 ? 0 : 1)} MB` : "");
+const mb = (n) => (n ? `${(n / 1e6).toFixed(n > 1e7 ? 0 : 1)} ${t("unit.mb")}` : "");
 
 export function openCompare(item) {
   const app = byId.get(item.app);
@@ -83,7 +83,7 @@ export function openCompare(item) {
     }
     const m = mediaEl(side);
     const info = el("div", { class: "info" });
-    const label = el("input", { value: side.label, "aria-label": "label" });
+    const label = el("input", { value: side.label, "aria-label": t("cmp.label") });
     label.addEventListener("input", () => { side.label = label.value; if (which === "right") store.lastLabel = label.value; });
     const fill = async () => {
       const bits = [];
@@ -120,8 +120,8 @@ export function openCompare(item) {
   function transport(videos) {
     const [va, vb] = videos;
     const play = el("button", { class: "btn small lime", type: "button" }, icon("play"), t("cmp.both"));
-    const seek = el("input", { type: "range", min: 0, max: 1000, value: 0, "aria-label": "seek" });
-    const time = el("span", { class: "t" }, "0.0 s");
+    const seek = el("input", { type: "range", min: 0, max: 1000, value: 0, "aria-label": t("cmp.seek") });
+    const time = el("span", { class: "t" }, `0.0 ${t("unit.s")}`);
     const dur = () => Math.max(va.duration || 0, vb.duration || 0);
     const setPlaying = (on) => play.replaceChildren(icon(on ? "pause" : "play"), t("cmp.both"));
     play.onclick = () => {
@@ -138,7 +138,7 @@ export function openCompare(item) {
     va.addEventListener("timeupdate", () => {
       const d = dur();
       if (d) seek.value = String(Math.round((va.currentTime / d) * 1000));
-      time.textContent = `${va.currentTime.toFixed(1)} / ${d.toFixed(1)} s`;
+      time.textContent = `${va.currentTime.toFixed(1)} / ${d.toFixed(1)} ${t("unit.s")}`;
     });
     const mute = (v, which) => {
       const b = el("button", { class: "btn small ghost", type: "button", title: which }, icon("mute"), which);

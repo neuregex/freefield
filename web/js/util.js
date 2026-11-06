@@ -128,20 +128,26 @@ export const store = {
   },
 };
 
+// Read the document locale at call time: importing i18n here would create a
+// circular initialization dependency (i18n uses store from this module).
+const durationUnits = () => globalThis.document?.documentElement?.lang === "ru" ? ["с", "мин"] : ["s", "min"];
+
 export function fmtSeconds(s) {
   if (s === null || s === undefined || !Number.isFinite(Number(s))) return "";
+  const [sec, min] = durationUnits();
   s = Number(s);
-  if (s < 10) return `${s.toFixed(1).replace(/\.0$/, "")} s`;
-  if (s < 90) return `${Math.round(s)} s`;
+  if (s < 10) return `${s.toFixed(1).replace(/\.0$/, "")} ${sec}`;
+  if (s < 90) return `${Math.round(s)} ${sec}`;
   const m = Math.floor(s / 60), r = Math.round(s % 60);
-  return `${m} min${r ? ` ${String(r).padStart(2, "0")} s` : ""}`;
+  return `${m} ${min}${r ? ` ${String(r).padStart(2, "0")} ${sec}` : ""}`;
 }
 
 /** Rough duration for buttons: "18 s", "~6 min". */
 export function fmtShort(s) {
   if (!Number.isFinite(Number(s))) return "";
+  const [sec, min] = durationUnits();
   s = Number(s);
-  return s < 90 ? `${Math.round(s)} s` : `~${Math.round(s / 60)} min`;
+  return s < 90 ? `${Math.round(s)} ${sec}` : `~${Math.round(s / 60)} ${min}`;
 }
 
 export const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));

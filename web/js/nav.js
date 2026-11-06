@@ -57,7 +57,7 @@ function gpuPill() {
         if (g.device?.vram_total_gb) {
           lines.push(el("div", { style: { display: "grid", gap: "6px" } },
             el("div", { style: { display: "flex", justifyContent: "space-between", fontSize: "12.5px" } }, el("span", { class: "dim" }, `${t("gpu.pop.vram")} · ${g.device.name || "GPU"}`),
-              el("b", {}, `${g.device.vram_used_gb} / ${g.device.vram_total_gb} GB`)),
+              el("b", {}, `${g.device.vram_used_gb} / ${g.device.vram_total_gb} ${t("unit.gb")}`)),
             el("div", { class: "vbar" }, el("i", { style: { width: `${(g.device.vram_used_gb / g.device.vram_total_gb) * 100}%` } }))));
         }
         if (g.device?.app) lines.push(el("p", { class: "help" }, `${t("gpu.pop.loaded")}: ${byId.get(g.device.app)?.name ?? g.device.app}`));
@@ -98,7 +98,7 @@ export function topbar({ onLang }) {
   langBtn.onclick = () => popover(langBtn, el("div", {}, ...LANGS.map(([code, name]) => el("button", { class: "opt", type: "button", "aria-selected": String(code === lang),
     onclick: () => { closePopover(); setLang(code); onLang(); } }, name, el("span", { class: "chk" }, icon("check"))))), { align: "end" });
   // phones: the same links in a menu
-  const menuBtn = el("button", { class: "icon-btn menu-btn", type: "button", "aria-label": "Menu" }, icon("menu"));
+  const menuBtn = el("button", { class: "icon-btn menu-btn", type: "button", "aria-label": t("nav.menu") }, icon("menu"));
   menuBtn.onclick = () => popover(menuBtn, el("div", {}, ...[...items.map(([key, hash, ic]) => [t(`nav.${key}`), hash, ic]),
     ...FEATURED.filter((f) => byId.has(f.id)).map((f) => [byId.get(f.id).name, `#/app/${f.id}`, "spark"]), [t("nav.vram"), "#/vram", "chip"]]
     .map(([label, hash, ic]) => el("a", { class: "opt", href: hash, onclick: closePopover }, icon(ic), label))));
