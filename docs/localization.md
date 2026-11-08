@@ -36,9 +36,9 @@ Changing a locale must never change what is submitted to ComfyUI.
 
 ## Maintaining a translation
 
-Add a UI key to every dictionary and keep its interpolation placeholders equal
-to the English key. For catalog display strings, use the exact manifest string
-as the key; do not edit generated manifests merely to translate them. Keep
+When adding a UI key, add its translations where available and keep interpolation
+placeholders equal to the English key. For catalog display strings, use the exact
+manifest string as the key; do not edit generated manifests merely to translate them. Keep
 proper names and numeric camera/format values recognizable. Where an English
 label has different meanings, use a narrowly scoped presentation override.
 
@@ -50,9 +50,17 @@ npm run validate
 npm run typecheck
 ```
 
-`test/i18n.test.ts` checks key/placeholder coverage, Russian count forms, browser
-and saved-locale resolution, catalog/attribution coverage, live switching, safe
-fallback and preservation of submission values. These tests need no backend,
+`npm test` lists missing Russian UI keys, catalog display strings, attribution
+and sample-prompt hints as non-failing diagnostics, including the source text
+and its key or manifest location. Missing translations fall back to English at
+runtime, so adding an app or changing English text does not require a Russian
+translation to pass CI. Existing translations must still preserve interpolation
+placeholders such as `{n}` and `{label}`; mismatches fail the tests.
+
+`test/i18n.test.ts` also checks Russian count forms, browser and saved-locale
+resolution, live switching and safe fallback. `test/app-locale.test.ts` keeps
+submission-data preservation, frozen-source checks and translated-or-English
+prompt hints strict across all apps. These tests need no backend,
 GPU or model downloads. Browser checks should additionally cover the globe menu,
 reload persistence, app search, workspace options, How it works, the library,
 VRAM map and a mobile viewport. Do not generate media just to test a translation.

@@ -15,10 +15,14 @@ const { fmtSeconds, fmtShort } = await import(new URL("../web/js/util.js", impor
 
 const placeholders = (text: string) => [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
 
-test("Russian covers every UI key and preserves every interpolation placeholder", () => {
-  assert.deepEqual(Object.keys(DICT.ru).sort(), Object.keys(DICT.en).sort());
+test("Russian UI reports missing translations and preserves every translated interpolation placeholder", (context) => {
+  const missing: string[] = [];
   assert.ok(LANGS.some(([code, label]: string[]) => code === "ru" && label === "Русский"));
   for (const [key, original] of Object.entries(DICT.en)) {
+    if (!Object.hasOwn(DICT.ru, key)) {
+      missing.push(`${key}: ${original}`);
+      continue;
+    }
     const translation = DICT.ru[key];
     const forms: string[] = typeof translation === "string" ? [translation] : Object.values(translation);
     for (const form of forms) {
@@ -26,6 +30,7 @@ test("Russian covers every UI key and preserves every interpolation placeholder"
       assert.deepEqual(placeholders(form), placeholders(original as string), key);
     }
   }
+  if (missing.length) context.diagnostic(`Missing Russian UI translations (English fallback):\n${missing.join("\n")}`);
 });
 
 test("supported stored language wins; regional browser locales and invalid storage are safe", () => {
@@ -58,7 +63,14 @@ test("Russian plurals, interpolation and persisted switching do not regress Engl
   assert.equal(document.documentElement.lang, "es");
 });
 
-test("all catalog display strings and attribution have an explicit Russian translation", () => {
+test("catalog translations preserve placeholders and report missing display strings and attribution", (context) => {
+  // Validate existing translations even when their English source is no longer
+  // in a manifest; missing translations alone must not block new apps or text.
+  for (const [original, translation] of Object.entries(RU_APP_TEXT)) {
+    assert.equal(typeof translation, "string", original);
+    assert.deepEqual(placeholders(translation as string), placeholders(original), original);
+  }
+  const missing = new Set<string>();
   const root = new URL("../apps/", import.meta.url);
   const fields = new Set(["name", "summary", "higgsfield_feature", "mode_label", "label", "help", "placeholder", "notes"]);
   const skipped = new Set(["source", "models", "bind", "sets", "default", "workflow"]);
@@ -69,17 +81,18 @@ test("all catalog display strings and attribution have an explicit Russian trans
     for (const [key, child] of Object.entries(value)) {
       if (skipped.has(key)) continue;
       if (fields.has(key) && typeof child === "string") {
-        assert.ok(Object.hasOwn(RU_APP_TEXT, child), `${context}.${key}: ${child}`);
-        assert.equal(typeof RU_APP_TEXT[child], "string");
-        assert.deepEqual(placeholders(RU_APP_TEXT[child]), placeholders(child), child);
+        if (!Object.hasOwn(RU_APP_TEXT, child)) missing.add(`${context}.${key}: ${child}`);
         count++;
       } else if (key === "credits" && Array.isArray(child)) {
-        for (const credit of child) assert.ok(Object.hasOwn(RU_APP_TEXT, credit), `${context}.credits: ${credit}`);
+        for (const credit of child) {
+          if (!Object.hasOwn(RU_APP_TEXT, credit)) missing.add(`${context}.credits: ${credit}`);
+        }
       } else visit(child, `${context}.${key}`);
     }
   }
   for (const name of readdirSync(root)) visit(JSON.parse(readFileSync(new URL(`${name}/app.json`, root), "utf8")), name);
   assert.ok(count > 1000, `checked ${count} catalog strings`);
+  if (missing.size) context.diagnostic(`Missing Russian catalog translations (English fallback):\n${[...missing].join("\n")}`);
 });
 
 test("catalog localization follows language live without changing submission data or the API object", () => {

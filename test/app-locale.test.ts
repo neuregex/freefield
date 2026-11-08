@@ -25,8 +25,9 @@ function executionData(app: any) {
   return copy;
 }
 
-test("every app preserves all execution data and its frozen source through locale changes", () => {
+test("every app preserves all execution data and its frozen source through locale changes", (context) => {
   const root = new URL("../apps/", import.meta.url);
+  const missing: string[] = [];
   let count = 0;
   for (const folder of readdirSync(root)) {
     const original = freeze(JSON.parse(readFileSync(new URL(`${folder}/app.json`, root), "utf8")));
@@ -42,8 +43,9 @@ test("every app preserves all execution data and its frozen source through local
     for (let i = 0; i < original.inputs.length; i++) {
       const input = original.inputs[i];
       if (["text", "textarea"].includes(input.type) && typeof input.default === "string" && input.default) {
-        assert.ok(Object.hasOwn(RU_APP_TEXT, input.default), `${folder}: prompt placeholder`);
-        assert.equal(localized.inputs[i].displayDefault, RU_APP_TEXT[input.default]);
+        const translated = Object.hasOwn(RU_APP_TEXT, input.default);
+        if (!translated) missing.push(`${folder}.${input.id}: ${input.default}`);
+        assert.equal(localized.inputs[i].displayDefault, translated ? RU_APP_TEXT[input.default] : input.default);
         assert.equal(localized.inputs[i].default, input.default);
         assert.equal(Object.keys(localized.inputs[i]).includes("displayDefault"), false);
       }
@@ -52,4 +54,5 @@ test("every app preserves all execution data and its frozen source through local
     count++;
   }
   assert.ok(count >= 120);
+  if (missing.length) context.diagnostic(`Missing Russian prompt hints (English fallback):\n${missing.join("\n")}`);
 });
