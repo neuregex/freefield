@@ -1,11 +1,12 @@
-// UI strings in English and Spanish. App names and summaries come from each app.json (English);
+// UI strings in English, Spanish and Russian. App metadata is localized by app-locale.js;
 // taglines for the bigger headings live in catalog.js. The language follows the browser until
 // the viewer picks one with the globe button.
 import { store } from "./util.js";
 
 const en = {
+  "boot.error": "Is `npm run serve` running?", "status.ready": "Ready", "unit.gb": "GB", "unit.mb": "MB", "unit.s": "s",
   "nav.explore": "Explore", "nav.image": "Image", "nav.video": "Video", "nav.audio": "Audio", "nav.apps": "Apps", "nav.library": "Library",
-  "nav.vram": "VRAM map", "nav.create": "Create", "nav.lang": "Language",
+  "nav.vram": "VRAM map", "nav.create": "Create", "nav.lang": "Language", "nav.menu": "Menu",
   "menu.features": "Features", "menu.models": "Models", "menu.used": "{n} apps", "menu.used1": "1 app",
   "tag.featured": "Featured", "tag.new": "New", "tag.draft": "Draft", "tag.top": "Top",
   "gpu.none": "No backend", "gpu.asleep": "GPU asleep", "gpu.waking": "Waking GPU · {s}s", "gpu.ready": "GPU ready", "gpu.failed": "Wake failed",
@@ -86,15 +87,16 @@ const en = {
   "vram.whole": "all models", "vram.phase": "largest phase", "vram.measured": "measured peak (lab)", "vram.live": "Live: {name} · {used} of {total} GB in use",
   "view.inputs": "Inputs", "view.settings": "Settings", "view.prompt": "Prompt", "view.gpu": "{s} on the GPU", "view.total": "{s} total", "view.example": "Lab example",
   "view.seed": "Seed {n}", "view.peak": "peak {gb} GB",
-  "cmp.title": "Compare", "cmp.side": "Side by side", "cmp.wipe": "Wipe", "cmp.drop": "Drop the result to compare (from Higgsfield or anywhere else)",
+  "cmp.label": "Label", "cmp.seek": "Seek", "cmp.title": "Compare", "cmp.side": "Side by side", "cmp.wipe": "Wipe", "cmp.drop": "Drop the result to compare (from Higgsfield or anywhere else)",
   "cmp.pick": "or pick one of your generations", "cmp.other": "Other", "cmp.local": "It stays on this computer; nothing is uploaded.", "cmp.both": "Play both",
   "cmp.swap": "Swap sides", "cmp.clear": "Clear",
   "ago.now": "just now", "ago.min": "{n} min ago", "ago.h": "{n} h ago",
 };
 
 const es = {
+  "boot.error": "¿Está ejecutándose `npm run serve`?", "status.ready": "Listo", "unit.gb": "GB", "unit.mb": "MB", "unit.s": "s",
   "nav.explore": "Explorar", "nav.image": "Imagen", "nav.video": "Video", "nav.audio": "Audio", "nav.apps": "Apps", "nav.library": "Biblioteca",
-  "nav.vram": "Mapa de VRAM", "nav.create": "Crear", "nav.lang": "Idioma",
+  "nav.vram": "Mapa de VRAM", "nav.create": "Crear", "nav.lang": "Idioma", "nav.menu": "Menú",
   "menu.features": "Funciones", "menu.models": "Modelos", "menu.used": "{n} apps", "menu.used1": "1 app",
   "tag.featured": "Destacado", "tag.new": "Nuevo", "tag.draft": "Borrador", "tag.top": "Top",
   "gpu.none": "Sin backend", "gpu.asleep": "GPU dormida", "gpu.waking": "Despertando GPU · {s}s", "gpu.ready": "GPU lista", "gpu.failed": "No despertó",
@@ -175,25 +177,127 @@ const es = {
   "vram.whole": "todos los modelos", "vram.phase": "fase más grande", "vram.measured": "pico medido (lab)", "vram.live": "En vivo: {name} · {used} de {total} GB en uso",
   "view.inputs": "Entradas", "view.settings": "Ajustes", "view.prompt": "Prompt", "view.gpu": "{s} en la GPU", "view.total": "{s} en total", "view.example": "Ejemplo del lab",
   "view.seed": "Semilla {n}", "view.peak": "pico {gb} GB",
-  "cmp.title": "Comparar", "cmp.side": "Lado a lado", "cmp.wipe": "Cortina", "cmp.drop": "Suelta el resultado a comparar (de Higgsfield o de donde sea)",
+  "cmp.label": "Etiqueta", "cmp.seek": "Posición de reproducción", "cmp.title": "Comparar", "cmp.side": "Lado a lado", "cmp.wipe": "Cortina", "cmp.drop": "Suelta el resultado a comparar (de Higgsfield o de donde sea)",
   "cmp.pick": "o elige una de tus generaciones", "cmp.other": "Otro", "cmp.local": "Se queda en esta computadora; no se sube nada.", "cmp.both": "Reproducir ambos",
   "cmp.swap": "Intercambiar lados", "cmp.clear": "Quitar",
   "ago.now": "justo ahora", "ago.min": "hace {n} min", "ago.h": "hace {n} h",
 };
 
-const DICT = { en, es };
-export const LANGS = [["en", "English"], ["es", "Español"]];
-export let lang = store.get("lang") || ((navigator.language || "en").toLowerCase().startsWith("es") ? "es" : "en");
+const ru = {
+  "boot.error": "Запущен ли `npm run serve`?", "status.ready": "Готово", "unit.gb": "ГБ", "unit.mb": "МБ", "unit.s": "с",
+  "nav.explore": "Обзор", "nav.image": "Изображения", "nav.video": "Видео", "nav.audio": "Аудио", "nav.apps": "Приложения", "nav.library": "Библиотека",
+  "nav.vram": "Карта видеопамяти", "nav.create": "Создать", "nav.lang": "Язык", "nav.menu": "Меню",
+  "menu.features": "Возможности", "menu.models": "Модели", "menu.used": { one: "{n} приложение", few: "{n} приложения", many: "{n} приложений", other: "{n} приложения" }, "menu.used1": "1 приложение",
+  "tag.featured": "Рекомендуем", "tag.new": "Новинка", "tag.draft": "Черновик", "tag.top": "Лучшее",
+  "gpu.none": "Нет бэкенда", "gpu.asleep": "GPU спит", "gpu.waking": "Запуск GPU · {s} с", "gpu.ready": "GPU готов", "gpu.failed": "Не удалось запустить GPU",
+  "gpu.pop.none": "Укажите в .env параметр COMFY_BASE_URL с URL, который вывела команда `modal deploy infra/modal_app.py`, затем перезапустите `npm run serve`.",
+  "gpu.pop.asleep": "В простое бэкенд отключается. Запустите его сейчас, и он будет готов к нажатию «Сгенерировать» (холодный запуск занимает одну-две минуты).",
+  "gpu.pop.wake": "Запустить GPU", "gpu.pop.waking": "Контейнер запускается. Отправленные сейчас задания будут ждать его готовности.",
+  "gpu.pop.ready": "Бэкенд прогрет: задания запускаются сразу. Он снова уснёт через 10 минут после последнего запроса.",
+  "gpu.pop.vram": "Занято видеопамяти", "gpu.pop.loaded": "Загруженное приложение", "gpu.pop.running": { one: "В работе: {n} задание", few: "В работе: {n} задания", many: "В работе: {n} заданий", other: "В работе: {n} задания" }, "gpu.pop.backend": "Бэкенд",
+  "gpu.pop.demo": "Онлайн-демо: на сегодня осталось {n} из {max} запусков (UTC).",
+  "gpu.autowake": "Запускаем GPU, чтобы он был готов к нажатию «Сгенерировать».",
+  "start.title": "Начните здесь", "start.sub": "Пять приложений с уже загруженными примерами из лаборатории: откройте любое и нажмите «Сгенерировать», чтобы запустить его на GPU.",
+  "start.secs": "В лаборатории: {s} с на {gpu}",
+  "explore.lead.a": "Открытая студия для", "explore.lead.b": "изображений, видео и звука",
+  "explore.lead.text": "Каждое приложение — рабочий процесс ComfyUI с открытыми весами, работающий на вашем GPU. Данные не покидают ваш бэкенд.",
+  "explore.start": "Начать творить", "explore.browse": "Открыть каталог", "explore.apps": { one: "{n} приложение", few: "{n} приложения", many: "{n} приложений", other: "{n} приложения" },
+  "tile.image.t": "Студия изображений", "tile.image.d": "Изображения по тексту, стили, референсы и редактирование.",
+  "tile.video.t": "Видеостудия", "tile.video.d": "Оживляйте фото, меняйте актёров, управляйте камерой.",
+  "tile.audio.t": "Аудио", "tile.audio.d": "Песни с текстом и звуковые эффекты для любой сцены.",
+  "tile.apps.t": "Приложения", "tile.apps.d": "Каждый рабочий процесс — приложение в один клик.",
+  "tile.library.t": "Библиотека", "tile.library.d": "Ваши генерации и примеры лаборатории рядом.",
+  "tile.vram.t": "Карта видеопамяти", "tile.vram.d": "Что поместится на видеокарте с 24 ГБ, этап за этапом.",
+  "explore.made": "Создано в Freefield", "explore.made.sub": "По одному примеру на приложение — прямо из лаборатории.", "explore.seeall": "Все приложения",
+  "explore.gallery.sub": "Выберите пример и попробуйте со своим фото.",
+  "explore.how": "Как это работает",
+  "how.1.t": "Рабочий процесс — это приложение", "how.1.d": "В каждой папке apps/ находятся рабочий процесс ComfyUI API и app.json, который превращает его входы в поля формы.",
+  "how.2.t": "Только открытые веса", "how.2.d": "Модели скачиваются с Hugging Face в ваш том хранения. В каждом приложении перечислены модели и их лицензии.",
+  "how.3.t": "Ваш GPU — по запросу", "how.3.d": "ComfyUI работает на Modal и отключается в простое. При смене приложения видеопамять очищается: от предыдущего ничего не остаётся.",
+  "explore.noex": "Примеров пока нет. Запустите лабораторию один раз, затем обновите страницу:",
+  "apps.title.a": "Добро пожаловать в", "apps.title.b": "приложения Freefield",
+  "apps.sub": "Эффекты в один клик на открытых рабочих процессах ComfyUI: замените актёра в ролике, измените свет на фото, оживите портрет.",
+  "apps.search": "Поиск", "apps.all": "Все", "apps.try": "Попробовать", "apps.seeall": "Смотреть все", "apps.none": "По запросу «{q}» ничего не найдено.",
+  "cat.create.t": "Создание", "cat.create.d": "По описанию или одному изображению.",
+  "cat.style.t": "Улучшение и стиль", "cat.style.d": "Свет, разрешение, движение и образы.",
+  "cat.identity.t": "Лица и персонажи", "cat.identity.d": "Сохраните персонажа, замените его или заставьте говорить.",
+  "cat.camera.t": "Камера и движение", "cat.camera.d": "Задайте движение, скопируйте его или переснимите с другого ракурса.",
+  "cat.vfx.t": "Визуальные эффекты и монтаж", "cat.vfx.d": "Меняйте содержимое кадра.",
+  "cat.ads.t": "Реклама и товары", "cat.ads.d": "Предметная съёмка без студии: пакшоты, постеры и билборды.",
+  "cat.portraits.t": "Портреты и образы", "cat.portraits.d": "Деловые портреты, рекламные съёмки и наряды из одного селфи.",
+  "cat.play.t": "Игрушки и игры", "cat.play.d": "Ваше фото как плюшевая игрушка, фигурка, пиксель-арт или мем.",
+  "cat.templates.t": "Шаблоны", "cat.templates.d": "Образы в один клик: обложки журналов, картины, комиксы, цветокоррекция.",
+  "cat.clips.t": "Видеошаблоны", "cat.clips.d": "Ваше фото в готовом ролике: ASMR, американские горки, K-pop-сцена, сёрфинг на облаках.",
+  "cat.more.t": "Ещё", "cat.more.d": "",
+  "vtab.create": "Создание видео", "vtab.edit": "Редактирование видео", "vtab.motion": "Управление движением", "vtab.templates": "Шаблоны",
+  "ws.history": "История", "ws.library": "Библиотека", "ws.how": "Как это работает",
+  "ws.create.title": "Начните создавать с", "ws.prompt.ph": "Опишите сцену, которую представляете", "ws.prompt.opt": "{label} (необязательно): промпт приложения уже задан", "ws.add": "Добавить: {what}",
+  "ws.generate": "Сгенерировать", "ws.est": "Время GPU для примера из лаборатории ({gpu})", "ws.count": "Количество генераций",
+  "ws.seed": "Сид", "ws.seed.random": "Случайный", "ws.seed.reuse": "Последний", "ws.seed.help": "Одинаковые сид и настройки дают одинаковый результат.",
+  "ws.preset": "Пресет", "ws.preset.none": "Без пресета", "ws.advanced": "Дополнительно", "ws.change": "Изменить",
+  "ws.drop.image": "Добавьте изображение", "ws.drop.video": "Добавьте видео", "ws.drop.audio": "Добавьте аудио",
+  "ws.drop.hint": "Нажмите, перетащите или вставьте", "ws.drop.mb": "до {mb} МБ", "ws.drop.seconds": "{a}–{b} с",
+  "ws.replace": "Заменить", "ws.remove": "Убрать", "ws.need": "Сначала добавьте: {label}", "ws.needtext": "Сначала заполните: {label}",
+  "ws.draft": "Черновик: добавьте FREEFIELD_DRAFTS=1 в .env и перезапустите сервер, чтобы запустить приложение.", "ws.noworkflow": "У этого приложения пока нет рабочего процесса.",
+  "ws.example": "Пример из лаборатории", "ws.useex": "Загрузить этот пример", "ws.related": "Похожие приложения",
+  "ws.empty.hist": "В этом приложении пока ничего не создано.", "ws.dense": "Мелкие плитки", "ws.optional": "необязательно", "ws.eg": "например, {x}", "ws.none": "Нет", "ws.multi.max": "Не более {n}: сначала уберите один элемент", "ws.multi.clear": "Очистить", "ws.multi.upto": "до {n}", "ws.multi.upto.ordered": "до {n}, по порядку",
+  "paint.title": "Закрасьте область для изменения", "paint.help": "Перерисовывается только закрашенная область; остальные пиксели фото остаются прежними.",
+  "paint.brush": "Кисть", "paint.erase": "Ластик", "paint.size": "Размер", "paint.undo": "Отменить", "paint.clear": "Очистить", "paint.done": "Готово",
+  "paint.cta": "Закрасить область для изменения", "paint.first": "Сначала добавьте: {label}", "paint.empty": "Сначала закрасьте область для изменения",
+  "paint.edit": "Перерисовать маску", "paint.bad": "Не удалось открыть изображение",
+  "status.starting": "Запуск GPU…", "status.submitting": "Отправка…", "status.queued": "В очереди", "status.queued.n": "В очереди · №{n}", "status.running": "Генерация",
+  "status.step": "шаг {a}/{b}", "status.failed": "Ошибка", "status.canceled": "Отменено", "status.lost": "Потеряно", "status.expired": "Срок истёк",
+  "status.elapsed": "Прошло: {s}",
+  "act.open": "Открыть", "act.download": "Скачать", "act.compare": "Сравнить", "act.recreate": "Повторить", "act.delete": "Удалить", "act.cancel": "Отменить",
+  "act.retry": "Попробовать снова", "act.copy": "Копировать промпт", "act.reuse": "Использовать промпт", "act.usein": "Использовать в…", "usein.more": "Все подходящие приложения ({n})", "toast.sent": "Отправлено в {app}", "act.sure": "Точно?", "act.close": "Закрыть", "act.prev": "Назад", "act.next": "Далее",
+  "toast.started": "Запущено: {app}", "toast.copied": "Скопировано", "toast.loaded": "Загружено в {app}", "toast.deleted": "Удалено",
+  "how.pipeline": "Рабочий процесс", "how.pipeline.d": "apps/{id}/workflow.api.json выполняется на вашем бэкенде ComfyUI; app.json связывает каждое поле формы со входом узла.",
+  "how.models": "Модели с открытыми весами", "how.total": "Для скачивания: {gb} ГБ", "how.gated": "примите лицензию на Hugging Face", "how.optional": "необязательно",
+  "how.vram": "Видеопамять", "how.whole": "Все модели одновременно", "how.phase": "Самый объёмный этап", "how.measured": "Пиковое потребление в лаборатории",
+  "fit.whole": "Хватит 24 ГБ", "fit.phases": "Хватит 24 ГБ поэтапно", "fit.tight": "24 ГБ — впритык", "fit.big": "Нужно 48 ГБ", "fit.none": "Без моделей",
+  "how.cli": "Из терминала", "how.credits": "Авторы и источники", "how.notes": "Примечания", "how.equiv": "Аналог в Higgsfield", "how.pack": "Набор моделей",
+  "how.download": "Скачайте один раз:",
+  "how.workflow": "Скачать рабочий процесс", "how.workflow.d": "Перетащите файл на холст ComfyUI, чтобы открыть приложение как узлы и связать его с другими.",
+  "lib.title": "Библиотека", "lib.sub": "Всё созданное здесь сохраняется в out/history/ на этом компьютере.", "lib.mine": "Мои генерации", "lib.lab": "Примеры лаборатории",
+  "lib.empty": "Здесь пока пусто. Выберите приложение и нажмите «Сгенерировать».", "lib.allapps": "Все приложения", "lib.allex": "Все примеры",
+  "lib.flagged": "Неудачные · {n}", "lib.noflag": "Неудачных примеров пока нет. Нажмите значок «палец вниз» на примере, чтобы отметить его.",
+  "flag.mediocre": "Неудачный", "flag.marked": "Отмечен как неудачный", "flag.mark": "Отметить пример как неудачный: лаборатория поищет более подходящую модель, LoRA или промпт того же типа",
+  "flag.unmark": "Отмечен как неудачный. Нажмите, чтобы снять отметку", "flag.saved": "Сохранено в lab/flags.json", "flag.cleared": "Отметка снята",
+  "vram.title": "Карта видеопамяти", "vram.sub": "Сколько видеопамяти нужно каждому приложению. Модели загружаются поэтапно (кодирование → удаление шума → декодирование), поэтому необходимый объём определяется самым требовательным этапом.",
+  "vram.whole": "все модели", "vram.phase": "самый объёмный этап", "vram.measured": "измеренный пик (лаборатория)", "vram.live": "Сейчас: {name} · занято {used} из {total} ГБ",
+  "view.inputs": "Исходные данные", "view.settings": "Настройки", "view.prompt": "Промпт", "view.gpu": "{s} на GPU", "view.total": "{s} всего", "view.example": "Пример лаборатории",
+  "view.seed": "Сид {n}", "view.peak": "пик {gb} ГБ",
+  "cmp.label": "Подпись", "cmp.seek": "Позиция воспроизведения", "cmp.title": "Сравнение", "cmp.side": "Рядом", "cmp.wipe": "Шторка", "cmp.drop": "Перетащите результат для сравнения (из Higgsfield или любого другого источника)",
+  "cmp.pick": "или выберите одну из своих генераций", "cmp.other": "Другой результат", "cmp.local": "Всё остаётся на этом компьютере; ничего не загружается на сервер.", "cmp.both": "Воспроизвести оба",
+  "cmp.swap": "Поменять местами", "cmp.clear": "Очистить",
+  "ago.now": "только что", "ago.min": { one: "{n} минуту назад", few: "{n} минуты назад", many: "{n} минут назад", other: "{n} минуты назад" },
+  "ago.h": { one: "{n} час назад", few: "{n} часа назад", many: "{n} часов назад", other: "{n} часа назад" },
+};
+
+export const DICT = { en, es, ru };
+export const LANGS = [["en", "English"], ["es", "Español"], ["ru", "Русский"]];
+const supported = (locale) => {
+  const code = typeof locale === "string" ? locale.toLowerCase().split(/[-_]/)[0] : "";
+  return Object.hasOwn(DICT, code) ? code : null;
+};
+/** A supported saved preference wins; otherwise use the browser's preferred supported locale. */
+export function resolveLanguage(saved, browserLanguages) {
+  const locales = Array.isArray(browserLanguages) ? browserLanguages : [browserLanguages];
+  return supported(saved) || locales.map(supported).find(Boolean) || "en";
+}
+export let lang = resolveLanguage(store.get("lang"), navigator.languages?.length ? navigator.languages : navigator.language);
+const plurals = new Intl.PluralRules("ru");
 document.documentElement.lang = lang;
 
 /** t("ws.need", { label: "Image" }) */
 export function t(key, vars) {
-  const s = DICT[lang]?.[key] ?? en[key] ?? key;
+  const entry = DICT[lang]?.[key] ?? en[key] ?? key;
+  const s = typeof entry === "object" ? entry[plurals.select(Number(vars?.n ?? 0))] ?? entry.other : entry;
   return vars ? s.replace(/\{(\w+)\}/g, (_, k) => (vars[k] ?? "")) : s;
 }
 
 export function setLang(next) {
-  if (!DICT[next] || next === lang) return;
+  if (!Object.hasOwn(DICT, next) || next === lang) return;
   lang = next;
   store.set("lang", next);
   document.documentElement.lang = next;

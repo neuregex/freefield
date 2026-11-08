@@ -119,7 +119,7 @@ function appCard(a) {
   const fit = fitOf(a);
   media.append(el("div", { class: "badges" },
     a.status === "draft" ? el("span", { class: "tag dark" }, t("tag.draft")) : null,
-    fit && fit[1] === "big" ? el("span", { class: "tag violet" }, "48 GB") : null));
+    fit && fit[1] === "big" ? el("span", { class: "tag violet" }, `48 ${t("unit.gb")}`) : null));
   const card = el("a", { class: "app-card", href: `#/app/${a.id}` }, media,
     el("h3", {}, a.name), el("p", {}, a.summary),
     el("span", { class: "btn white small" }, icon("play"), t("apps.try")));
@@ -224,8 +224,8 @@ export function vramView(gpu) {
     const fit = fitOf(a);
     const peak = a.example?.peak_vram_gb;
     return el("a", { class: "vrow", href: `#/app/${a.id}` },
-      el("div", { class: "nm" }, el("b", {}, a.name), el("small", {}, `${a.pack} · ${a.vram.whole_gb} GB`)),
-      el("div", { class: "vbar", title: `${t("vram.whole")} ${a.vram.whole_gb} GB · ${t("vram.phase")} ${a.vram.largest_phase_gb} GB${peak ? ` · ${t("vram.measured")} ${peak} GB` : ""}` },
+      el("div", { class: "nm" }, el("b", {}, a.name), el("small", {}, `${a.pack} · ${a.vram.whole_gb} ${t("unit.gb")}`)),
+      el("div", { class: "vbar", title: `${t("vram.whole")} ${a.vram.whole_gb} ${t("unit.gb")} · ${t("vram.phase")} ${a.vram.largest_phase_gb} ${t("unit.gb")}${peak ? ` · ${t("vram.measured")} ${peak} ${t("unit.gb")}` : ""}` },
         el("i", { class: "whole", style: { width: pct(a.vram.whole_gb) } }),
         el("i", { style: { width: pct(a.vram.largest_phase_gb) } }),
         peak ? el("b", { style: { left: pct(peak) } }) : null,
@@ -243,7 +243,7 @@ export function vramView(gpu) {
       el("span", {}, el("i", { style: { background: "var(--accent)" } }), t("vram.phase")),
       el("span", {}, el("i", { style: { background: "var(--pink)", width: "3px" } }), t("vram.measured"))),
     el("div", { class: "vrow", style: { background: "transparent", border: 0, cursor: "default", padding: "0 12px" } }, el("span"),
-      el("div", { class: "vscale" }, el("span", { style: { left: pct(24) } }, "24 GB"), el("span", { style: { left: pct(48) } }, "48 GB")), el("span")),
+      el("div", { class: "vscale" }, el("span", { style: { left: pct(24) } }, `24 ${t("unit.gb")}`), el("span", { style: { left: pct(48) } }, `48 ${t("unit.gb")}`)), el("span")),
     el("div", { class: "vtable" }, ...rows));
   return { node, active: "vram" };
 }

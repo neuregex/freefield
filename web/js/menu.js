@@ -42,7 +42,7 @@ function modelItem(m, menuApps, studio) {
     el("span", { class: "mm-thumb glyph" }, icon(studio === "video" ? "video" : studio === "audio" ? "audio" : "layers")),
     el("span", { class: "mm-txt" }, el("b", {}, el("span", { class: "nm" }, m.name),
       target.status === "draft" ? el("span", { class: "tag ghost" }, t("tag.draft")) : el("span", { class: "n" }, usedBy(users.length))),
-      el("small", {}, m.note[lang === "es" ? 1 : 0])));
+      el("small", {}, m.note[lang === "ru" ? 2 : lang === "es" ? 1 : 0])));
 }
 
 function panelFor(studio) {
