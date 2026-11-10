@@ -196,20 +196,27 @@ function startRun(app: App, values: Values, preset?: string) {
 }
 
 const DONE = ["succeeded", "failed", "canceled", "expired", "lost"];
-const activeRuns = () => history.list(undefined, 50).filter((e) => !DONE.includes(e.status)).length;
+const unfinished = () => history.list(undefined, 50).filter((e) => !DONE.includes(e.status));
+const activeRuns = () => unfinished().length;
+// A backend that never sleeps (your own GPU) can be asked for its queue on every poll: the pill then also shows
+// runs sent from another web app, the CLI or ComfyUI itself. Off by default: on Modal each look would keep the GPU awake.
+const LIVE_QUEUE = process.env.FREEFIELD_LIVE_QUEUE === "1";
 
 let gpuCache: { at: number; body: unknown } | null = null;
 async function gpuStatus(withDevice = false) {
   const configured = Boolean(process.env.COMFY_BASE_URL);
   const host = configured ? (guard.hosted ? "Modal" : new URL(process.env.COMFY_BASE_URL!).host) : null;
   const warm = Date.now() - lastContact < WARM_MS;
-  const running = activeRuns();
+  const active = unfinished();
+  const running = active.length;
+  // oldest first: the order they run in
+  const runs = active.map((e) => ({ app: e.app, status: e.status, queue: e.queue, progress: e.progress })).reverse();
   const base = { configured, host, warm, last_contact: lastContact ? new Date(lastContact).toISOString() : null,
     waking: waking ? { seconds: Math.round((Date.now() - waking.since) / 1000), error: waking.error ?? null } : null,
-    running, demo: guard.hosted ? guard.status(running) : null };
+    running, runs, demo: guard.hosted ? guard.status(running) : null };
   // only on request and only while warm: looking never starts a GPU, and the background poll never touches it
-  if (!withDevice || !warm || !configured) return { ...base, device: null };
-  if (gpuCache && Date.now() - gpuCache.at < 5000) return { ...base, device: gpuCache.body };
+  if (!configured || (!LIVE_QUEUE && (!withDevice || !warm))) return { ...base, device: null };
+  if (gpuCache && Date.now() - gpuCache.at < (LIVE_QUEUE ? 2000 : 5000)) return { ...base, warm: warm || (LIVE_QUEUE && gpuCache.body !== null), device: gpuCache.body };
   let device: unknown = null;
   try {
     const r = getRunner();
@@ -226,7 +233,7 @@ async function gpuStatus(withDevice = false) {
     }
   } catch { /* status is best effort */ }
   gpuCache = { at: Date.now(), body: device };
-  return { ...base, device };
+  return { ...base, warm: warm || (LIVE_QUEUE && device !== null), device };
 }
 
 function wake() {

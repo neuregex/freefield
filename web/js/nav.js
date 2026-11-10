@@ -4,6 +4,13 @@ import { el, icon, logoMark, api, popover, closePopover, toast, live } from "./u
 import { t, lang, LANGS, setLang } from "./i18n.js";
 import { byId, FEATURED } from "./catalog.js";
 import { attachMenus } from "./menu.js";
+import { statusText } from "./feed.js";
+
+/** "3/8" or "40%" for a run that is generating, "" before its first step. */
+function shortProgress(p) {
+  if (p?.step && p?.steps) return `${p.step}/${p.steps}`;
+  return p?.value > 0 ? `${Math.round(p.value * 100)}%` : "";
+}
 
 export const gpuState = { data: null, listeners: new Set() };
 let pollTimer = null;
@@ -17,7 +24,7 @@ async function pollGpu() {
   }
   live.gpuWarm = Boolean(gpuState.data?.warm);
   for (const fn of gpuState.listeners) fn(gpuState.data);
-  const busy = gpuState.data?.waking || gpuState.data?.running;
+  const busy = gpuState.data?.waking || gpuState.data?.running || gpuState.data?.device?.queue_running;
   pollTimer = setTimeout(pollGpu, busy ? 3000 : 15000);
 }
 
@@ -31,7 +38,16 @@ function gpuPill() {
     if (!g.configured) { pill.classList.add("off"); label.textContent = t("gpu.none"); }
     else if (g.waking?.error) { pill.classList.add("error"); label.textContent = t("gpu.failed"); }
     else if (g.waking) { pill.classList.add("waking"); label.textContent = t("gpu.waking", { s: g.waking.seconds }); }
-    else if (g.warm) { pill.classList.add("warm"); label.textContent = g.running ? t("gpu.busy", { n: g.running }) : t("gpu.ready"); }
+    else if (g.warm) { pill.classList.add("warm"); 
+      // what is generating right now, then how many more are in line (ComfyUI's own queue when the server reads it)
+      const inLine = Math.max(g.running, (g.device?.queue_running ?? 0) + (g.device?.queue_pending ?? 0));
+      const now = g.runs?.find((r) => r.status === "running");
+      if (now) label.textContent = [byId.get(now.app)?.name ?? now.app, shortProgress(now.progress), inLine > 1 ? `+${inLine - 1}` : ""].filter(Boolean).join(" · ");
+      else if (inLine) {   // runs of another client: the gateway knows the app it last loaded for
+        const other = g.device?.app && (byId.get(g.device.app)?.name ?? g.device.app);
+        label.textContent = [t("gpu.busy", { n: inLine }), other].filter(Boolean).join(" · ");
+      } else label.textContent = t("gpu.ready");
+    }
     else label.textContent = t("gpu.asleep");
   };
   gpuState.listeners.add(draw);
@@ -64,7 +80,7 @@ function gpuPill() {
         if (g.device?.queue_running || g.device?.queue_pending)
           lines.push(el("p", { class: "help" }, t("gpu.pop.queue", { r: g.device.queue_running ?? 0, p: g.device.queue_pending ?? 0 })));
       } else lines.push(el("p", { class: "help" }, t("gpu.pop.asleep")), wake);
-      if (g.running) lines.push(el("p", { class: "help" }, t("gpu.pop.running", { n: g.running })));
+      for (const r of g.runs ?? []) lines.push(el("p", { class: "help" }, el("b", {}, byId.get(r.app)?.name ?? r.app), ` · ${statusText(r)}`));
       if (g.demo?.max_runs_per_day) lines.push(el("p", { class: "help" }, t("gpu.pop.demo", { n: g.demo.runs_left, max: g.demo.max_runs_per_day })));
     }
     popover(pill, el("div", { class: "pad", style: { width: "300px" } }, ...lines), { align: "end" });
