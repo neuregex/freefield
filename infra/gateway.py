@@ -107,7 +107,8 @@ def external_base(request: web.Request) -> str:
     forwarded = request.headers.get("X-Forwarded-Proto", "").split(",")[0].strip()
     host = request.host
     name = host.rsplit(":", 1)[0] if not host.startswith("[") else host.split("]")[0] + "]"
-    private = name in LOCAL_HOSTS or name.startswith(("10.", "192.168.", "172.16.", "172.17.", "172.18.", "172.19.", "172.2", "172.30.", "172.31."))
+    # a name without a dot (a Docker Compose service, a LAN machine) is never a public https endpoint
+    private = name in LOCAL_HOSTS or "." not in name or name.startswith(("10.", "192.168.", "172.16.", "172.17.", "172.18.", "172.19.", "172.2", "172.30.", "172.31."))
     scheme = forwarded or (request.scheme if private else "https")
     return f"{scheme}://{host}"
 

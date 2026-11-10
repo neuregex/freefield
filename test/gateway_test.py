@@ -43,6 +43,10 @@ async def main():
         async with s.get("http://127.0.0.1:18000/api/v2/jobs/j1", headers={**h, "Host": "192.168.1.20:8000"}) as r:
             body = await r.json()
         assert body["urls"]["self"] == "http://192.168.1.20:8000/api/v2/jobs/j1", body["urls"]
+        # so does a single-label name: the gateway as a Docker Compose service (http://backend:8000)
+        async with s.get("http://127.0.0.1:18000/api/v2/jobs/j1", headers={**h, "Host": "backend:8000"}) as r:
+            body = await r.json()
+        assert body["urls"]["self"] == "http://backend:8000/api/v2/jobs/j1", body["urls"]
         async with s.get("http://127.0.0.1:18000/api/v2/jobs/j1/events", headers=h) as r:
             text = await r.text(); assert r.headers["Content-Type"].startswith("text/event-stream")
         assert "http://127.0.0.1:18189/x" in text, "streams are passed through untouched"
