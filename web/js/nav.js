@@ -31,7 +31,7 @@ function gpuPill() {
     if (!g.configured) { pill.classList.add("off"); label.textContent = t("gpu.none"); }
     else if (g.waking?.error) { pill.classList.add("error"); label.textContent = t("gpu.failed"); }
     else if (g.waking) { pill.classList.add("waking"); label.textContent = t("gpu.waking", { s: g.waking.seconds }); }
-    else if (g.warm) { pill.classList.add("warm"); label.textContent = t("gpu.ready"); }
+    else if (g.warm) { pill.classList.add("warm"); label.textContent = g.running ? t("gpu.busy", { n: g.running }) : t("gpu.ready"); }
     else label.textContent = t("gpu.asleep");
   };
   gpuState.listeners.add(draw);
@@ -61,6 +61,8 @@ function gpuPill() {
             el("div", { class: "vbar" }, el("i", { style: { width: `${(g.device.vram_used_gb / g.device.vram_total_gb) * 100}%` } }))));
         }
         if (g.device?.app) lines.push(el("p", { class: "help" }, `${t("gpu.pop.loaded")}: ${byId.get(g.device.app)?.name ?? g.device.app}`));
+        if (g.device?.queue_running || g.device?.queue_pending)
+          lines.push(el("p", { class: "help" }, t("gpu.pop.queue", { r: g.device.queue_running ?? 0, p: g.device.queue_pending ?? 0 })));
       } else lines.push(el("p", { class: "help" }, t("gpu.pop.asleep")), wake);
       if (g.running) lines.push(el("p", { class: "help" }, t("gpu.pop.running", { n: g.running })));
       if (g.demo?.max_runs_per_day) lines.push(el("p", { class: "help" }, t("gpu.pop.demo", { n: g.demo.runs_left, max: g.demo.max_runs_per_day })));

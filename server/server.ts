@@ -217,9 +217,10 @@ async function gpuStatus(withDevice = false) {
       headers: r.token ? { authorization: `Bearer ${r.token}` } : {}, signal: AbortSignal.timeout(4000),
     });
     if (res.ok) {
-      const s = (await res.json()) as { app?: string; comfyui?: { devices?: { name?: string; vram_total?: number; vram_free?: number }[] } };
+      const s = (await res.json()) as { app?: string; queue?: { running?: number; pending?: number } | null; comfyui?: { devices?: { name?: string; vram_total?: number; vram_free?: number }[] } };
       const d = s.comfyui?.devices?.[0];
       device = { app: s.app ?? null, name: d?.name ?? null,
+        queue_running: s.queue?.running ?? null, queue_pending: s.queue?.pending ?? null,
         vram_total_gb: d?.vram_total ? +(d.vram_total / 2 ** 30).toFixed(1) : null,
         vram_used_gb: d?.vram_total && d.vram_free !== undefined ? +((d.vram_total - d.vram_free) / 2 ** 30).toFixed(1) : null };
     }

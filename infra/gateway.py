@@ -93,7 +93,14 @@ async def status(request: web.Request) -> web.Response:
             stats = await r.json()
     except Exception as e:  # ComfyUI may still be starting
         stats = {"error": str(e)}
-    return web.json_response({"app": pantry.app, "models": pantry.models, "frees": pantry.frees, "comfyui": stats})
+    queue = None
+    try:
+        async with pantry.session.get(f"{COMFYUI_URL}/queue") as r:
+            q = await r.json()
+            queue = {"running": len(q.get("queue_running", [])), "pending": len(q.get("queue_pending", []))}
+    except Exception:  # still starting: the status stays useful without it
+        pass
+    return web.json_response({"app": pantry.app, "models": pantry.models, "frees": pantry.frees, "comfyui": stats, "queue": queue})
 
 
 LOCAL_HOSTS = ("127.0.0.1", "localhost", "0.0.0.0", "[::1]")

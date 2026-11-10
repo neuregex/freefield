@@ -7,6 +7,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "infra"))
 os.environ["FREEFIELD_TOKEN"] = "t0k"
 os.environ["PROXY_URL"] = "http://127.0.0.1:18189"
+os.environ["COMFYUI_URL"] = "http://127.0.0.1:18189"   # the fake below also answers ComfyUI's /system_stats and /queue
 from aiohttp import web, ClientSession
 import gateway  # infra/gateway.py
 
@@ -21,7 +22,11 @@ async def fake_proxy_app():
         await resp.prepare(request)
         await resp.write(b"data: {\"url\": \"http://127.0.0.1:18189/x\"}\n\n")
         await resp.write_eof(); return resp
-    app = web.Application(); app.router.add_get("/api/v2/jobs/j1", job); app.router.add_get("/api/v2/jobs/j1/events", events)
+    async def stats(request):
+        return web.json_response({"devices": []})
+    async def queue(request):
+        return web.json_response({"queue_running": [[0, "a"]], "queue_pending": [[1, "b"], [2, "c"]]})
+    app = web.Application(); app.router.add_get("/system_stats", stats); app.router.add_get("/queue", queue); app.router.add_get("/api/v2/jobs/j1", job); app.router.add_get("/api/v2/jobs/j1/events", events)
     return app
 
 async def main():
@@ -48,6 +53,9 @@ async def main():
         assert "http://127.0.0.1:18189/x" in text, "streams are passed through untouched"
         async with s.get("http://127.0.0.1:18000/api/v2/jobs/j1") as r:
             assert r.status == 401, r.status
+        # the status counts ComfyUI's own queue: runs of every client of this backend
+        async with s.get("http://127.0.0.1:18000/freefield/status", headers=h) as r:
+            assert (await r.json())["queue"] == {"running": 1, "pending": 2}
     print("gateway relink ok")
     await gw.cleanup(); await proxy.cleanup()
 
