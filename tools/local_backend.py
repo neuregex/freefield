@@ -8,12 +8,14 @@ GPU when the app changes).
     python tools/local_backend.py setup  D:/freefield-comfy               # once: ComfyUI, custom nodes, comfy-api-proxy
     python tools/local_backend.py download D:/freefield-comfy image-flux3  # the model files of one or more packs
     python tools/local_backend.py serve  D:/freefield-comfy               # ComfyUI :8188, proxy :8189, gateway :8000
+    python tools/local_backend.py serve  D:/freefield-comfy --studio      # the same, plus the web studio on :3000
 
 Run it in a virtualenv that already has the PyTorch build for your GPU (https://pytorch.org); setup installs ComfyUI's
 other requirements but leaves torch alone. Models go to <dir>/models unless --models says otherwise. Gated repos
 (LTX-2.5, FLUX 3 Klein) need their license accepted on Hugging Face and HF_TOKEN set, or `hf auth login`.
 serve reads FREEFIELD_TOKEN from the environment or from .env (python tools/setup_token.py --env-only writes one);
-then COMFY_BASE_URL=http://127.0.0.1:8000 in .env and `npm run serve`.
+then COMFY_BASE_URL=http://127.0.0.1:8000 in .env and `npm run serve`, or add --studio and serve starts it too
+(Node 22.6+ and `npm ci` in the repo first). infra/pod.py runs serve --studio inside the Docker image for RunPod/Vast.
 """
 from __future__ import annotations
 
@@ -153,9 +155,21 @@ def find_proxy() -> str | None:
     return str(here) if here.exists() else shutil.which("comfy-api-proxy")
 
 
-def serve(comfy: Path, comfy_args: list[str], port: int) -> None:
+def studio_command() -> list[str]:
+    """node running server/server.ts as `npm run serve` does, or exit saying what is missing."""
+    node = shutil.which("node")
+    if not node:
+        sys.exit("--studio needs Node 22.6+ on PATH (https://nodejs.org)")
+    if not (ROOT / "node_modules" / "@comfyorg" / "sdk").exists():
+        sys.exit(f"--studio needs the studio's packages: run npm ci in {ROOT}")
+    return [node, "--env-file-if-exists=.env", "--experimental-strip-types", "--disable-warning=ExperimentalWarning",
+            "server/server.ts"]
+
+
+def serve(comfy: Path, comfy_args: list[str], port: int, studio: tuple[str, int] | None = None) -> None:
     token = env_token()
     proxy = find_proxy()
+    studio_cmd = studio_command() if studio else None
 
     def stop(*_):   # a plain kill, a closed terminal tab, a service manager: stop all three, as Ctrl+C does
         raise KeyboardInterrupt
@@ -175,8 +189,18 @@ def serve(comfy: Path, comfy_args: list[str], port: int) -> None:
                "PROXY_URL": "http://127.0.0.1:8189", "GATEWAY_PORT": str(port)}
         procs.append(subprocess.Popen([sys.executable, str(ROOT / "infra" / "gateway.py")], env=env))
         wait_http(f"http://127.0.0.1:{port}/health", procs[-1], 120)
-        print(f"\nbackend ready: COMFY_BASE_URL=http://127.0.0.1:{port} in .env, then npm run serve (Ctrl+C stops all)",
-              flush=True)
+        if studio_cmd and studio:
+            host, sport = studio
+            # values set here win over .env (Node's --env-file never overrides the environment); .env still adds the rest
+            senv = {**env, "COMFY_BASE_URL": f"http://127.0.0.1:{port}", "FREEFIELD_HOST": host, "PORT": str(sport)}
+            senv.setdefault("FREEFIELD_BACKEND_NAME", "this computer")   # never sleeps: the GPU pill says so
+            procs.append(subprocess.Popen(studio_cmd, cwd=ROOT, env=senv))
+            wait_port(sport, procs[-1], 60)
+            shown = "127.0.0.1" if host in ("0.0.0.0", "::") else host
+            print(f"\nready: open http://{shown}:{sport} (Ctrl+C stops all)", flush=True)
+        else:
+            print(f"\nbackend ready: COMFY_BASE_URL=http://127.0.0.1:{port} in .env, then npm run serve (Ctrl+C stops all)",
+                  flush=True)
         while all(p.poll() is None for p in procs):
             time.sleep(1)
         sys.exit("a backend process exited; the others are stopped")
@@ -196,7 +220,8 @@ def serve(comfy: Path, comfy_args: list[str], port: int) -> None:
 def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):   # a Windows console or pipe in cp1252 must not stop on ✗ or ↓
         sys.stdout.reconfigure(errors="replace")
-    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0],
+                                 epilog="serve passes anything after -- to ComfyUI, e.g. serve DIR -- --lowvram")
     sub = ap.add_subparsers(dest="cmd", required=True)
     for name in ("setup", "download", "serve"):
         p = sub.add_parser(name)
@@ -207,8 +232,19 @@ def main() -> None:
             p.add_argument("--dry-run", action="store_true", help="list the missing files and stop")
         if name == "serve":
             p.add_argument("--port", type=int, default=8000, help="gateway port (default 8000)")
-            p.add_argument("comfy_args", nargs=argparse.REMAINDER, help="extra ComfyUI flags after --, e.g. -- --lowvram")
-    a = ap.parse_args()
+            p.add_argument("--studio", action="store_true", help="also start the web studio, pointed at this backend")
+            p.add_argument("--studio-port", type=int, default=3000, help="studio port (default 3000)")
+            p.add_argument("--studio-host", default="127.0.0.1",
+                           help="studio address (default 127.0.0.1; 0.0.0.0 to reach it from other machines: "
+                                "set FREEFIELD_PASSCODE then)")
+    # ComfyUI's own flags go after --; split them off first: an argparse REMAINDER positional also swallowed
+    # serve's options written after the folder (`serve DIR --studio` sent --studio to ComfyUI)
+    argv = sys.argv[1:]
+    comfy_args: list[str] = []
+    if "--" in argv:
+        cut = argv.index("--")
+        argv, comfy_args = argv[:cut], argv[cut + 1:]
+    a = ap.parse_args(argv)
     comfy = a.dir.expanduser().resolve()
     models = (a.models.expanduser().resolve() if a.models else comfy / "models")
     if a.cmd == "setup":
@@ -216,7 +252,8 @@ def main() -> None:
     elif a.cmd == "download":
         download(models, a.packs, a.dry_run)
     else:
-        serve(comfy, [x for x in a.comfy_args if x != "--"], a.port)
+        serve(comfy, comfy_args, a.port,
+              (a.studio_host, a.studio_port) if a.studio else None)
 
 
 if __name__ == "__main__":
