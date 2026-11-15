@@ -7,9 +7,9 @@ Open-source Higgsfield on ComfyUI: every app is one folder, every model is open 
 ![The web app: the Video menu, Cinema Studio Video with the lab's example loaded and its camera moves, then the result playing in the Library tab](docs/media/ui-demo.webp)
 
 Image, video, VFX and audio apps in a studio laid out like Higgsfield's, each one a ComfyUI workflow on open weights,
-run on Modal or on your own ComfyUI. Every example in the app is a real GPU run made by the lab, with its time and peak VRAM.
+run on Modal, on a GPU rented by the hour (RunPod, Vast.ai) or on your own ComfyUI. Every example in the app is a real GPU run made by the lab, with its time and peak VRAM.
 
-[Run it](#run-it) on Modal or [on your own GPU](#on-your-own-gpu-without-modal) · [every app](#apps) with its model and VRAM · [add an app](#add-an-app) from any ComfyUI workflow ·
+[Run it](#run-it) on [RunPod or Vast.ai](docs/cloud-gpus.md), on Modal or [on your own GPU](#on-your-own-gpu-without-modal) · [every app](#apps) with its model and VRAM · [add an app](#add-an-app) from any ComfyUI workflow ·
 [every GPU run](docs/lab-runs.md) of the lab
 
 <table>
@@ -218,7 +218,17 @@ models the gateway calls ComfyUI's `POST /free`, so nothing from the previous ap
 
 ## Run it
 
-You need Node 22.6+, Python 3.10+ and a [Modal](https://modal.com) account, or a GPU of your own ([below](#on-your-own-gpu-without-modal)).
+Three ways, the same 120 apps:
+
+| Where | You need | Good for |
+|---|---|---|
+| **A rented GPU**: [RunPod](https://www.runpod.io), [Vast.ai](https://vast.ai) or any Docker host | an account there; nothing to install. One image, `ghcr.io/neuregex/freefield`: [guide](docs/cloud-gpus.md) | trying it, or a 48 GB GPU by the hour |
+| **[Modal](https://modal.com)** | Node, Python and a Modal account ([below](#on-modal)) | a GPU that scales to zero between runs, so you pay per second of work |
+| **Your own GPU** | an NVIDIA card with 24 GB for most apps ([below](#on-your-own-gpu-without-modal)), or Docker ([guide](docs/cloud-gpus.md#any-docker-host-with-an-nvidia-gpu)) | no hourly bill |
+
+### On Modal
+
+You need Node 22.6+, Python 3.10+ and a [Modal](https://modal.com) account.
 
 ```sh
 # 0. what is missing: Node, Modal login and secrets, Hugging Face license access per model, .env
@@ -258,14 +268,15 @@ python tools/local_backend.py setup ~/freefield-comfy
 python tools/local_backend.py download ~/freefield-comfy image-flux3 --dry-run   # what is missing, and how big
 python tools/local_backend.py download ~/freefield-comfy image-flux3             # gated repos: HF_TOKEN or `hf auth login`
 
-# 3. a gateway token in .env, then the backend: ComfyUI :8188, comfy-api-proxy :8189, gateway :8000
+# 3. a gateway token in .env, the studio's packages, then everything: ComfyUI :8188, comfy-api-proxy :8189,
+#    gateway :8000 and the studio on http://127.0.0.1:3000
 python tools/setup_token.py --env-only
-python tools/local_backend.py serve ~/freefield-comfy      # ComfyUI flags after --, e.g. -- --lowvram
-
-# 4. in another terminal, with COMFY_BASE_URL=http://127.0.0.1:8000 in .env
 npm install
-npm run serve                                               # http://127.0.0.1:3000
+python tools/local_backend.py serve ~/freefield-comfy --studio   # ComfyUI flags after --, e.g. -- --lowvram
 ```
+
+Without `--studio`, `serve` runs only the backend: then `COMFY_BASE_URL=http://127.0.0.1:8000` in `.env` and
+`npm run serve` in another terminal, as before.
 
 Models go to `<dir>/models`; `--models` points at a model folder you already have instead. Which apps fit your card:
 the *On a 24 GB card* column of [the app table](#apps) and the [VRAM map](docs/vram-map.md). Checked on 27 Oct on a
