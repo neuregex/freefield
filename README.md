@@ -305,7 +305,11 @@ same workflows as on Modal.
   sync. Drop the result of the same prompt from Higgsfield, or anything else; dropped files never leave the browser.
 - The **GPU** pill says whether the backend is warm (asking never wakes it) and wakes it on request, so a cold start
   happens while you prepare the inputs. When warm it shows the VRAM in use and which app is loaded.
-- English or Spanish (the globe button); it follows the browser until you pick one.
+- English, Spanish or Russian (the globe button); it follows the browser until you pick one.
+  Russian includes app names, descriptions, form labels, options and help, plus proper count plurals.
+  The language changes display text only: workflow IDs, option values, default generation prompts,
+  examples, model names and license identifiers stay unchanged. Translation coverage and placeholders
+  are checked by `npm test`; see [`docs/localization.md`](docs/localization.md) to maintain or add a locale.
 
 Runs are recorded before they are submitted and kept in `out/history/<id>/` (inputs, outputs and a `meta.json` with
 the values, the seed that was used, and timings), so they survive a closed tab, the backend's retention and a server

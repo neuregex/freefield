@@ -409,7 +409,9 @@ details.adv > .in { padding: 0 12px 12px; display: grid; grid-template-columns: 
 details.adv > .in > .field { background: #111113; }
 .side-foot { flex: none; padding: 12px 14px 14px; border-top: 1px solid #18181b; display: grid; gap: 8px; background: #0c0c0d; }
 .side-foot .row { display: flex; gap: 8px; align-items: center; }
-.side-foot .row .generate { flex: 1; min-width: 0; justify-content: center; padding: 0 14px; }
+.side-foot .row .generate { flex: 1; min-width: 0; justify-content: center; padding: 4px 8px; flex-wrap: wrap; gap: 0 6px; line-height: 1.1; }
+/* The Cyrillic action label needs room beside the batch counter and estimate. */
+:lang(ru) .side-foot .row .generate { font-size: 13px; }
 .side-note { margin: 0; font-size: 12px; color: var(--dim); text-align: center; }
 .side-note.err { color: var(--bad); text-align: left; white-space: pre-wrap; }
 
