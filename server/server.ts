@@ -71,6 +71,7 @@ const history = new History(join(outDir, "history"), {
     return { outputs: app.outputs.map((o) => o.node), nodes: Object.keys(graph).length, classOf: (n) => graph[n]?.class_type ?? null };
   },
   frames: (jobId, signal) => getRunner().frames(jobId, signal),
+  recheck: (jobId) => getRunner().jobs().get(jobId),
 });
 const flags = new Flags(join(root, "lab", "flags.json"), apps);
 

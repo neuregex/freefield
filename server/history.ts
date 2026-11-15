@@ -64,6 +64,8 @@ export type HistoryOptions = {
   appInfo?: (appId: string) => AppInfo | undefined;
   /** The raw event stream of a job, read without the SDK (see Meter). Absent: job.events() is used. */
   frames?: (jobId: string, signal: AbortSignal) => AsyncIterable<Frame>;
+  /** A fresh handle on a job, for a second look when the backend says "expired" the moment it ends (see follow). */
+  recheck?: (jobId: string) => Promise<JobLike>;
 };
 
 type Live = {
@@ -212,12 +214,14 @@ export class History {
   private onContact: () => void;
   private appInfo: (appId: string) => AppInfo | undefined;
   private frames?: (jobId: string, signal: AbortSignal) => AsyncIterable<Frame>;
+  private recheck?: (jobId: string) => Promise<JobLike>;
 
   constructor(dir: string, opts: HistoryOptions = {}) {
     this.dir = dir;
     this.onContact = opts.onContact ?? (() => {});
     this.appInfo = opts.appInfo ?? (() => undefined);
     this.frames = opts.frames;
+    this.recheck = opts.recheck;
     mkdirSync(dir, { recursive: true });
   }
 
@@ -261,6 +265,23 @@ export class History {
   }
 
   /** Follow a submitted job to the end, then copy its outputs next to the record. */
+  /**
+   * comfy-api-proxy 0.1.6 reads ComfyUI's /history and then /queue: a job that ends between the two reads is in
+   * neither, and the proxy calls it "expired" (seen on a 0.02 s smoke run in the Docker image, 15 nov). A job this
+   * server just watched cannot have aged out, so before believing "expired" ask again a few times.
+   */
+  private async secondLook(job: JobLike, tries = 3, pauseMs = 1500): Promise<JobLike> {
+    if (normStatus(job.status) !== "expired" || !this.recheck) return job;
+    for (let i = 0; i < tries; i++) {
+      await new Promise((r) => setTimeout(r, pauseMs));
+      try {
+        const again = await this.recheck(job.id);
+        if (normStatus(again.status) !== "expired") return again;
+      } catch { /* keep the first answer */ }
+    }
+    return job;
+  }
+
   async follow(entry: Entry, job: JobLike): Promise<Entry> {
     if (this.removed.has(entry.id)) {   // deleted while it was being submitted
       await job.cancel().catch(() => {});
@@ -342,6 +363,7 @@ export class History {
       await stream;
     }
 
+    if (!waitError) job = await this.secondLook(job);
     entry.started = job.startedAt?.toISOString() ?? entry.started;
     entry.finished = (job.completedAt ?? new Date()).toISOString();
     // backends that do not report timings: fall back to when this server saw it start running
