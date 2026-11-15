@@ -73,7 +73,7 @@ def keep_committing(every: float = 20.0) -> None:
              modal.Secret.from_dict({**LIMITS, "BACKEND_URL": BACKEND_URL})],
     volumes={"/data": web_volume},
     cpu=1.0,
-    memory=1024,
+    memory=2048,               # uploads of up to 100 MB are buffered in memory more than once (#8)
     max_containers=1,          # one history and one run count
     scaledown_window=900,
     timeout=24 * 3600,
