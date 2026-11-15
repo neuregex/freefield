@@ -1,12 +1,13 @@
 # The Docker image for RunPod, Vast.ai and any Docker host with an NVIDIA GPU (Dockerfile, infra/pod.py).
 # Every change that reaches the image is first built for CPU and run end to end (tools/pod_smoke.sh: the smoke app
 # through studio → gateway → ComfyUI); on main and on version tags the GPU image is then published to
-# ghcr.io/neuregex/freefield (:latest, :sha-<commit>, :<version>).
+# ghcr.io/neuregex/freefield (:latest, :sha-<commit>, :<version>). A branch named in `push.branches` besides main
+# publishes :<branch> instead of :latest, to try the image on a real GPU (RunPod, Vast) before it is merged.
 name: image
 
 on:
   push:
-    branches: [main]
+    branches: [main, pods]
     tags: ["v*"]
     paths-ignore: ["docs/**", "**/*.md", "lab/**", "test/**", ".github/workflows/validate.yml"]
   pull_request:
@@ -69,6 +70,7 @@ jobs:
           images: ghcr.io/${{ github.repository_owner }}/freefield
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch,enable=${{ github.ref_name != 'main' }}
             type=sha,prefix=sha-,format=short
             type=semver,pattern={{version}}
       - uses: docker/build-push-action@v6
