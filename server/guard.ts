@@ -8,8 +8,11 @@
 // your GPU through your browser (cross-site POST to 127.0.0.1:3000), nor read the API by rebinding its DNS name to it.
 //   FREEFIELD_ALLOWED_HOSTS     extra Host names to accept, comma-separated (a LAN name, a tunnel); local default is
 //                               localhost, 127.0.0.1 and [::1]; listening on a non-loopback address accepts any Host
+//   FREEFIELD_SHARED_HISTORY=1  one owner behind the passcode (your own pod on RunPod or Vast): every browser that has
+//                               the passcode sees the same history, as locally, instead of one history per visitor
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { isIP } from "node:net";
 import { dirname } from "node:path";
 
 export type GuardOptions = {
@@ -18,6 +21,8 @@ export type GuardOptions = {
   maxActive?: number;
   stateFile?: string;
   now?: () => Date;
+  /** every visitor with the passcode sees one shared history (a pod of your own), instead of one each (a public demo) */
+  sharedHistory?: boolean;
 };
 
 const COOKIE = "ff_key";
@@ -30,6 +35,7 @@ export class Guard {
   readonly passcode?: string;
   readonly maxRunsPerDay?: number;
   readonly maxActive?: number;
+  readonly sharedHistory: boolean;
   private readonly stateFile?: string;
   private readonly now: () => Date;
   private readonly cookieValue?: string;
@@ -39,6 +45,7 @@ export class Guard {
     this.passcode = opts.passcode || undefined;
     this.maxRunsPerDay = opts.maxRunsPerDay && opts.maxRunsPerDay > 0 ? opts.maxRunsPerDay : undefined;
     this.maxActive = opts.maxActive && opts.maxActive > 0 ? opts.maxActive : undefined;
+    this.sharedHistory = Boolean(opts.sharedHistory);
     this.stateFile = opts.stateFile;
     this.now = opts.now ?? (() => new Date());
     // the cookie holds a keyed hash of the passcode, never the passcode itself
@@ -49,7 +56,7 @@ export class Guard {
   static fromEnv(stateFile: string, env: NodeJS.ProcessEnv = process.env): Guard {
     const num = (v?: string) => (v && /^\d+$/.test(v) ? Number(v) : undefined);
     return new Guard({ passcode: env.FREEFIELD_PASSCODE, maxRunsPerDay: num(env.FREEFIELD_MAX_RUNS_PER_DAY),
-      maxActive: num(env.FREEFIELD_MAX_ACTIVE), stateFile });
+      maxActive: num(env.FREEFIELD_MAX_ACTIVE), stateFile, sharedHistory: env.FREEFIELD_SHARED_HISTORY === "1" });
   }
 
   get hosted(): boolean {
@@ -63,10 +70,13 @@ export class Guard {
     return Boolean(got) && same(got, this.cookieValue);
   }
 
-  /** A correct ?key= becomes the cookie; the caller redirects to the same URL without it. */
-  login(key: string | null): string | null {
+  /**
+   * A correct ?key= becomes the cookie; the caller redirects to the same URL without it. `secure` false only for plain
+   * http to a bare IP address (a Vast.ai port): browsers drop a Secure cookie there and the door would never open.
+   */
+  login(key: string | null, secure = true): string | null {
     if (!this.passcode || !key || !same(key, this.passcode)) return null;
-    return `${COOKIE}=${this.cookieValue}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${MONTH}`;
+    return `${COOKIE}=${this.cookieValue}; Path=/; HttpOnly; ${secure ? "Secure; " : ""}SameSite=Lax; Max-Age=${MONTH}`;
   }
 
   /**
@@ -74,12 +84,12 @@ export class Guard {
    * keeps it (`setCookie`, for the caller to send). Without a passcode there is one user and no id (undefined).
    * The id is 128 random bits that only the visitor's browser holds: the server never shows one visitor another's.
    */
-  visitor(cookieHeader: string | undefined): { id?: string; setCookie?: string } {
-    if (!this.passcode) return {};
+  visitor(cookieHeader: string | undefined, secure = true): { id?: string; setCookie?: string } {
+    if (!this.passcode || this.sharedHistory) return {};
     const got = parseCookies(cookieHeader)[VISITOR];
     if (got && VISITOR_ID.test(got)) return { id: got };
     const id = randomBytes(16).toString("hex");
-    return { id, setCookie: `${VISITOR}=${id}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${MONTH}` };
+    return { id, setCookie: `${VISITOR}=${id}; Path=/; HttpOnly; ${secure ? "Secure; " : ""}SameSite=Lax; Max-Age=${MONTH}` };
   }
 
   /** Why a new run may not start now, or null when it may. `active` = runs still going. */
@@ -163,6 +173,19 @@ export function foreign(req: { method?: string; headers: Record<string, string |
     if (originHost !== host) return "requests from other sites are refused";
   }
   return null;
+}
+
+/**
+ * Did this request come over plain http to a bare IP address, as a Vast.ai port does (http://203.0.113.7:41234)?
+ * Then cookies cannot be Secure. Names (Modal, RunPod's proxy, a tunnel, localhost) keep Secure: Modal and RunPod end
+ * TLS before the container and do not always say so, and browsers accept Secure cookies on http://localhost.
+ */
+export function plainHttpToIp(req: { headers: Record<string, string | string[] | undefined>; socket?: object }): boolean {
+  const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? "";
+  if ((req.socket as { encrypted?: boolean } | undefined)?.encrypted || /https/i.test(one(req.headers["x-forwarded-proto"]))) return false;
+  const host = one(req.headers.host).toLowerCase();
+  const name = host.startsWith("[") ? host.slice(1, host.indexOf("]")) : host.split(":")[0];
+  return isIP(name) !== 0 && !LOOPBACK.has(name);
 }
 
 export function parseCookies(header: string | undefined): Record<string, string> {

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { foreign, Guard, parseCookies } from "../server/guard.ts";
+import { foreign, Guard, parseCookies, plainHttpToIp } from "../server/guard.ts";
 
 test("without settings the guard lets everything through", () => {
   const g = new Guard();
@@ -84,4 +84,28 @@ test("requests from other sites are refused: rebound DNS names, cross-site write
   const demo = { host: "me--freefield-demo.modal.run" };
   assert.equal(foreign({ method: "POST", headers: { ...demo, "sec-fetch-site": "same-origin" } }, hosted), null);
   assert.match(foreign({ method: "POST", headers: { ...demo, origin: "https://evil.example" } }, hosted)!, /other sites/);
+});
+
+test("a pod of your own: the passcode still guards it, but every browser sees one history", () => {
+  const g = Guard.fromEnv(join(mkdtempSync(join(tmpdir(), "ff-guard-")), "limits.json"),
+    { FREEFIELD_PASSCODE: "pod-key", FREEFIELD_SHARED_HISTORY: "1" });
+  assert.equal(g.admits(undefined), false, "the door stays closed without the passcode");
+  assert.ok(g.login("pod-key"));
+  assert.deepEqual(g.visitor(undefined), {}, "no visitor id: the history is not split per browser");
+  assert.deepEqual(new Guard({ passcode: "demo" }).visitor("ff_vid=" + "a".repeat(32)), { id: "a".repeat(32) }, "a public demo still splits it");
+});
+
+test("plain http to a bare IP (a Vast.ai port) gets cookies without Secure; names keep Secure", () => {
+  const at = (host: string, headers: Record<string, string> = {}) => ({ headers: { host, ...headers } });
+  assert.equal(plainHttpToIp(at("203.0.113.7:41234")), true);
+  assert.equal(plainHttpToIp(at("[2001:db8::7]:41234")), true);
+  assert.equal(plainHttpToIp(at("203.0.113.7:41234", { "x-forwarded-proto": "https" })), false);
+  assert.equal(plainHttpToIp({ ...at("203.0.113.7:443"), socket: { encrypted: true } }), false);
+  for (const host of ["abc123-3000.proxy.runpod.net", "me--freefield-demo.modal.run", "x.trycloudflare.com", "127.0.0.1:3000", "localhost:3000", "[::1]:3000"]) {
+    assert.equal(plainHttpToIp(at(host)), false, host);
+  }
+  const g = new Guard({ passcode: "k" });
+  assert.doesNotMatch(g.login("k", false)!, /Secure/);
+  assert.match(g.login("k")!, /HttpOnly; Secure; SameSite=Lax/);
+  assert.doesNotMatch(g.visitor(undefined, false).setCookie!, /Secure/);
 });

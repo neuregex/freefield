@@ -27,7 +27,7 @@ import { loadRegistry, repoRoot, isFileInput, type App } from "./registry.ts";
 import { explainSubmitError, InputError, resolveValues, Runner, type Values } from "./runner.ts";
 import { History } from "./history.ts";
 import { Flags } from "./flags.ts";
-import { DOOR_HTML, foreign, Guard } from "./guard.ts";
+import { DOOR_HTML, foreign, Guard, plainHttpToIp } from "./guard.ts";
 
 const root = repoRoot();
 const { apps, problems } = loadRegistry(root);
@@ -56,6 +56,9 @@ const origins = {
 // the backend scales to zero 10 minutes after its last request (infra/modal_app.py scaledown_window).
 // lastContact only moves on real work (a run, a wake): status checks must not keep the GPU alive.
 const WARM_MS = 9 * 60 * 1000;
+// FREEFIELD_BACKEND_NAME: a backend that never sleeps (your own GPU, a pod on RunPod or Vast), shown by that name;
+// the GPU pill is always ready and says the pod costs money while it runs. Unset: Modal's scale-to-zero, as before.
+const alwaysOn = process.env.FREEFIELD_BACKEND_NAME?.trim() || "";
 let lastContact = 0;
 let waking: { since: number; error?: string } | null = null;
 const contact = () => { lastContact = Date.now(); };
@@ -210,10 +213,10 @@ const activeRuns = () => history.list(undefined, 50).filter((e) => !DONE.include
 let gpuCache: { at: number; body: unknown } | null = null;
 async function gpuStatus(withDevice = false) {
   const configured = Boolean(process.env.COMFY_BASE_URL);
-  const host = configured ? (guard.hosted ? "Modal" : new URL(process.env.COMFY_BASE_URL!).host) : null;
-  const warm = Date.now() - lastContact < WARM_MS;
+  const host = configured ? (alwaysOn || (guard.hosted ? "Modal" : new URL(process.env.COMFY_BASE_URL!).host)) : null;
+  const warm = Boolean(alwaysOn && configured) || Date.now() - lastContact < WARM_MS;
   const running = activeRuns();
-  const base = { configured, host, warm, last_contact: lastContact ? new Date(lastContact).toISOString() : null,
+  const base = { configured, host, warm, always_on: Boolean(alwaysOn), last_contact: lastContact ? new Date(lastContact).toISOString() : null,
     waking: waking ? { seconds: Math.round((Date.now() - waking.since) / 1000), error: waking.error ?? null } : null,
     running, demo: guard.hosted ? guard.status(running) : null };
   // only on request and only while warm: looking never starts a GPU, and the background poll never touches it
@@ -259,7 +262,7 @@ const server = createServer(async (req, res) => {
     if (refusedOrigin) return send(res, 403, { error: refusedOrigin });
     if (guard.passcode) {
       const key = url.searchParams.get("key");
-      const cookie = key !== null ? guard.login(key) : null;
+      const cookie = key !== null ? guard.login(key, !plainHttpToIp(req)) : null;
       if (cookie) {   // the passcode leaves the address bar and lives on as a cookie
         url.searchParams.delete("key");
         res.writeHead(303, { "set-cookie": cookie, location: url.pathname + url.search, "cache-control": "no-store" });
@@ -271,7 +274,7 @@ const server = createServer(async (req, res) => {
         return res.end(DOOR_HTML);
       }
     }
-    const visitor = guard.visitor(req.headers.cookie);   // hosted: this browser's id; locally undefined (no filter)
+    const visitor = guard.visitor(req.headers.cookie, !plainHttpToIp(req));   // hosted: this browser's id; locally undefined (no filter)
     if (visitor.setCookie) res.setHeader("set-cookie", visitor.setCookie);
     const me = visitor.id;
     if (parts[0] === "api") {
