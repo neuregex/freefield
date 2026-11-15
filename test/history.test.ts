@@ -245,7 +245,7 @@ test("on a hosted demo each visitor sees, opens, cancels and deletes only their 
     assert.equal(history.get(bob.id, A), null);
     assert.equal(history.get(old.id, A), null, "a run without an owner belongs to no visitor");
     assert.ok(history.get(alice.id, A));
-    assert.equal(history.list(undefined, 300, A)[0].owner, undefined, "the owner id is never sent to the browser");
+    assert.ok(!("owner" in history.list(undefined, 300, A)[0]), "the owner id is never sent to the browser");
     assert.equal(history.file(bob.id, "input-image.png", A), null);
     assert.ok(history.file(bob.id, "input-image.png", B));
     assert.equal(history.preview(bob.id, A), null);
