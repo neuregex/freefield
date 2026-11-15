@@ -229,3 +229,29 @@ test("a poll that cannot reach the backend is retried; a backend answer that the
   assert.equal(isTransient(new Error("job x not terminal after 10ms (status=running)")), false);
   assert.equal(isTransient(Object.assign(new Error("bad request"), { httpStatus: 400 })), false);
 });
+
+test("on a hosted demo each visitor sees, opens, cancels and deletes only their own runs", async () => {
+  const { history, done } = tempHistory();
+  try {
+    const app = byId("edit");
+    const run = (owner?: string) => history.start(app, resolveValues(app,
+      { image: { bytes: PNG, name: "me.png", type: "image/png" }, instruction: "x" }), undefined, owner);
+    const alice = run("a".repeat(32));
+    const bob = run("b".repeat(32));
+    const old = run();   // from before owners existed
+    const A = "a".repeat(32), B = "b".repeat(32);
+    assert.deepEqual(history.list(undefined, 300, A).map((e) => e.id), [alice.id]);
+    assert.equal(history.list().length, 3, "no owner asked for (local use, the active-run count): every run");
+    assert.equal(history.get(bob.id, A), null);
+    assert.equal(history.get(old.id, A), null, "a run without an owner belongs to no visitor");
+    assert.ok(history.get(alice.id, A));
+    assert.equal(history.list(undefined, 300, A)[0].owner, undefined, "the owner id is never sent to the browser");
+    assert.equal(history.file(bob.id, "input-image.png", A), null);
+    assert.ok(history.file(bob.id, "input-image.png", B));
+    assert.equal(history.preview(bob.id, A), null);
+    assert.equal(await history.cancel(bob.id, A), false);
+    assert.equal(history.remove(bob.id, A), false);
+    assert.ok(history.get(bob.id, B), "still there for its owner");
+    assert.ok(history.remove(bob.id, B));
+  } finally { done(); }
+});

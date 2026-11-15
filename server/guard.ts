@@ -3,7 +3,12 @@
 //   FREEFIELD_MAX_RUNS_PER_DAY  runs started per UTC day across all visitors (counted in <out>/limits.json)
 //   FREEFIELD_MAX_ACTIVE        runs going at the same time
 // Running locally with none of these set, nothing changes.
-import { createHmac, timingSafeEqual } from "node:crypto";
+// With a passcode, every visitor also gets their own id (cookie ff_vid): the history shows each one only their runs.
+// Always on, hosted or not, `foreign()` turns away requests from other sites: a page you visit cannot start runs on
+// your GPU through your browser (cross-site POST to 127.0.0.1:3000), nor read the API by rebinding its DNS name to it.
+//   FREEFIELD_ALLOWED_HOSTS     extra Host names to accept, comma-separated (a LAN name, a tunnel); local default is
+//                               localhost, 127.0.0.1 and [::1]; listening on a non-loopback address accepts any Host
+import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 
@@ -16,6 +21,10 @@ export type GuardOptions = {
 };
 
 const COOKIE = "ff_key";
+const VISITOR = "ff_vid";
+const VISITOR_ID = /^[0-9a-f]{32}$/;
+const MONTH = 60 * 60 * 24 * 30;
+const LOOPBACK = new Set(["localhost", "127.0.0.1", "[::1]", "::1"]);
 
 export class Guard {
   readonly passcode?: string;
@@ -57,7 +66,20 @@ export class Guard {
   /** A correct ?key= becomes the cookie; the caller redirects to the same URL without it. */
   login(key: string | null): string | null {
     if (!this.passcode || !key || !same(key, this.passcode)) return null;
-    return `${COOKIE}=${this.cookieValue}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${60 * 60 * 24 * 30}`;
+    return `${COOKIE}=${this.cookieValue}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${MONTH}`;
+  }
+
+  /**
+   * Who is asking, on a demo with a passcode: the id in their ff_vid cookie, or a new random one with the cookie that
+   * keeps it (`setCookie`, for the caller to send). Without a passcode there is one user and no id (undefined).
+   * The id is 128 random bits that only the visitor's browser holds: the server never shows one visitor another's.
+   */
+  visitor(cookieHeader: string | undefined): { id?: string; setCookie?: string } {
+    if (!this.passcode) return {};
+    const got = parseCookies(cookieHeader)[VISITOR];
+    if (got && VISITOR_ID.test(got)) return { id: got };
+    const id = randomBytes(16).toString("hex");
+    return { id, setCookie: `${VISITOR}=${id}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${MONTH}` };
   }
 
   /** Why a new run may not start now, or null when it may. `active` = runs still going. */
@@ -112,6 +134,35 @@ export class Guard {
     writeFileSync(tmp, JSON.stringify(this.state) + "\n");
     renameSync(tmp, this.stateFile);
   }
+}
+
+/**
+ * Why a request does not come from this app's own pages, or null when it does.
+ *  - Host: a server listening on loopback answers only to loopback names (and FREEFIELD_ALLOWED_HOSTS), so a site
+ *    whose DNS name is rebound to 127.0.0.1 cannot read or drive it.
+ *  - a request that changes something (anything but GET/HEAD/OPTIONS) must not be cross-site: Sec-Fetch-Site says so
+ *    in current browsers, and an Origin header that is not this host says so in the others. Scripts and the CLI send
+ *    neither header and pass.
+ */
+export function foreign(req: { method?: string; headers: Record<string, string | string[] | undefined> },
+  opts: { loopbackOnly: boolean; allowedHosts?: string[] }): string | null {
+  const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? "";
+  const host = one(req.headers.host).toLowerCase();
+  const hostname = host.startsWith("[") ? host.slice(0, host.indexOf("]") + 1) : host.split(":")[0];
+  if (opts.loopbackOnly && !LOOPBACK.has(hostname) && !(opts.allowedHosts ?? []).includes(hostname)) {
+    return `this server only answers to localhost (Host: ${host || "none"}); add the name to FREEFIELD_ALLOWED_HOSTS to allow it`;
+  }
+  if (["GET", "HEAD", "OPTIONS"].includes((req.method ?? "GET").toUpperCase())) return null;
+  const site = one(req.headers["sec-fetch-site"]).toLowerCase();
+  if (site === "cross-site") return "requests from other sites are refused";
+  if (site === "same-origin") return null;   // the browser vouches for it, even behind a proxy that rewrites Host
+  const origin = one(req.headers.origin);
+  if (origin) {
+    let originHost: string;
+    try { originHost = new URL(origin).host.toLowerCase(); } catch { return "requests from other sites are refused"; }
+    if (originHost !== host) return "requests from other sites are refused";
+  }
+  return null;
 }
 
 export function parseCookies(header: string | undefined): Record<string, string> {

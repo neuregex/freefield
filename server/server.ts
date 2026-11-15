@@ -11,13 +11,14 @@
 //   DELETE /api/history/:id                  forget it (and its files)
 //   GET    /api/gpu[?device=1]               is the backend warm? (never wakes it; device=1 adds VRAM in use, only when warm)
 //   POST   /api/gpu/wake                     start the GPU container now, while you prepare inputs
-//   GET    /api/jobs/:id[/outputs/:oid]      raw SDK job view (kept for scripts)
+//   GET    /api/jobs/:id[/outputs/:oid]      raw SDK job view (kept for scripts; off on a hosted demo)
 //   GET    /api/flags                        lab examples marked "mediocre" from the UI (lab/flags.json)
 //   POST   /api/flags                        JSON { key, mediocre, note? }: mark or unmark one example
 // Everything else is served from web/ when it exists (with byte ranges, so videos seek everywhere).
 // Hosted (server/guard.ts): FREEFIELD_PASSCODE closes every route behind a passcode, FREEFIELD_MAX_RUNS_PER_DAY and
 // FREEFIELD_MAX_ACTIVE cap the runs (429 past them), lab marks become read-only and uploads are capped at
-// FREEFIELD_MAX_UPLOAD_MB. FREEFIELD_OUT moves out/ (history, the run count), FREEFIELD_HOST the listening address.
+// FREEFIELD_MAX_UPLOAD_MB, and each visitor sees only their own runs. Hosted or not, requests from other sites are
+// refused (guard.ts foreign()). FREEFIELD_OUT moves out/ (history, the run count), FREEFIELD_HOST the listening address.
 // web/examples/ holds one example per app, written by lab/publish.py; /api/apps carries it along.
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { createReadStream, existsSync, readFileSync, statSync } from "node:fs";
@@ -26,7 +27,7 @@ import { loadRegistry, repoRoot, isFileInput, type App } from "./registry.ts";
 import { explainSubmitError, InputError, resolveValues, Runner, type Values } from "./runner.ts";
 import { History } from "./history.ts";
 import { Flags } from "./flags.ts";
-import { DOOR_HTML, Guard } from "./guard.ts";
+import { DOOR_HTML, foreign, Guard } from "./guard.ts";
 
 const root = repoRoot();
 const { apps, problems } = loadRegistry(root);
@@ -45,6 +46,12 @@ const draftsAllowed = process.env.FREEFIELD_DRAFTS === "1";
 const outDir = process.env.FREEFIELD_OUT || join(root, "out");
 const guard = Guard.fromEnv(join(outDir, "limits.json"));
 const maxUploadMb = Number(process.env.FREEFIELD_MAX_UPLOAD_MB || (guard.hosted ? 100 : 0));
+const port = Number(process.env.PORT ?? 3000);
+const host = process.env.FREEFIELD_HOST || "127.0.0.1";
+const origins = {
+  loopbackOnly: ["127.0.0.1", "localhost", "::1", "[::1]"].includes(host),
+  allowedHosts: (process.env.FREEFIELD_ALLOWED_HOSTS ?? "").split(",").map((h) => h.trim().toLowerCase()).filter(Boolean),
+};
 
 // the backend scales to zero 10 minutes after its last request (infra/modal_app.py scaledown_window).
 // lastContact only moves on real work (a run, a wake): status checks must not keep the GPU alive.
@@ -178,8 +185,8 @@ async function jobView(id: string) {
 }
 
 /** Submit in the background; the entry tells the UI how it goes. */
-function startRun(app: App, values: Values, preset?: string) {
-  const entry = history.start(app, values, preset);
+function startRun(app: App, values: Values, preset?: string, owner?: string) {
+  const entry = history.start(app, values, preset, owner);
   void (async () => {
     try {
       const job = await getRunner().submit(app, values, preset);
@@ -196,7 +203,9 @@ function startRun(app: App, values: Values, preset?: string) {
 }
 
 const DONE = ["succeeded", "failed", "canceled", "expired", "lost"];
-const activeRuns = () => history.list(undefined, 50).filter((e) => !DONE.includes(e.status)).length;
+// runs accepted whose upload is still being read count too, so two requests at once cannot both pass FREEFIELD_MAX_ACTIVE
+let admitting = 0;
+const activeRuns = () => history.list(undefined, 50).filter((e) => !DONE.includes(e.status)).length + admitting;
 
 let gpuCache: { at: number; body: unknown } | null = null;
 async function gpuStatus(withDevice = false) {
@@ -246,6 +255,8 @@ const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url ?? "/", "http://local");
     const parts = url.pathname.split("/").filter(Boolean).map(decodeURIComponent);
+    const refusedOrigin = foreign(req, origins);
+    if (refusedOrigin) return send(res, 403, { error: refusedOrigin });
     if (guard.passcode) {
       const key = url.searchParams.get("key");
       const cookie = key !== null ? guard.login(key) : null;
@@ -260,6 +271,9 @@ const server = createServer(async (req, res) => {
         return res.end(DOOR_HTML);
       }
     }
+    const visitor = guard.visitor(req.headers.cookie);   // hosted: this browser's id; locally undefined (no filter)
+    if (visitor.setCookie) res.setHeader("set-cookie", visitor.setCookie);
+    const me = visitor.id;
     if (parts[0] === "api") {
       const [, area, id, sub, arg] = parts;
       if (req.method === "GET" && area === "apps" && parts.length === 2) {
@@ -286,29 +300,35 @@ const server = createServer(async (req, res) => {
         if (!runnable(app)) throw new InputError(`${app.id} is a draft; start the server with FREEFIELD_DRAFTS=1 to run it anyway`);
         const refused = guard.refuse(activeRuns());
         if (refused) return send(res, 429, { error: refused });
-        const { values, preset } = await readValues(app, await toRequest(req));
-        const view = startRun(app, resolveValues(app, values), preset);
+        admitting++;
+        let view;
+        try {
+          const { values, preset } = await readValues(app, await toRequest(req));
+          view = startRun(app, resolveValues(app, values), preset, me);
+        } finally {
+          admitting--;
+        }
         guard.record();
         return send(res, 202, view);
       }
       if (area === "history") {
-        if (req.method === "GET" && !id) return send(res, 200, { entries: history.list(url.searchParams.get("app") || undefined) });
+        if (req.method === "GET" && !id) return send(res, 200, { entries: history.list(url.searchParams.get("app") || undefined, 300, me) });
         if (req.method === "GET" && id && !sub) {
-          const e = history.get(id);
+          const e = history.get(id, me);
           return e ? send(res, 200, e) : send(res, 404, { error: "unknown run" });
         }
         if ((req.method === "GET" || req.method === "HEAD") && sub === "files" && arg) {
-          const file = history.file(id, arg);
+          const file = history.file(id, arg, me);
           return file ? sendFile(req, res, file, "private, max-age=31536000, immutable") : send(res, 404, { error: "not found" });
         }
         if (req.method === "GET" && sub === "preview") {
-          const p = history.preview(id);
+          const p = history.preview(id, me);
           if (!p) return send(res, 404, { error: "no preview" });
           res.writeHead(200, { "content-type": p.type, "content-length": p.bytes.byteLength, "cache-control": "no-store" });
           return res.end(p.bytes);
         }
-        if (req.method === "POST" && sub === "cancel") return send(res, 200, { canceled: await history.cancel(id) });
-        if (req.method === "DELETE" && id && !sub) return send(res, history.remove(id) ? 200 : 404, { removed: id });
+        if (req.method === "POST" && sub === "cancel") return send(res, 200, { canceled: await history.cancel(id, me) });
+        if (req.method === "DELETE" && id && !sub) return send(res, history.remove(id, me) ? 200 : 404, { removed: id });
       }
       if (area === "gpu") {
         if (req.method === "GET" && !id) return send(res, 200, await gpuStatus(url.searchParams.get("device") === "1"));
@@ -330,6 +350,8 @@ const server = createServer(async (req, res) => {
           }
         }
       }
+      // the raw job view reaches any backend job by id, past the history's per-visitor view: local scripts only
+      if (area === "jobs" && guard.hosted) return send(res, 404, { error: "not found" });
       if (req.method === "GET" && area === "jobs" && parts.length === 3) {
         return send(res, 200, await jobView(id));
       }
@@ -359,7 +381,5 @@ const server = createServer(async (req, res) => {
 // runs that were still going when the server stopped are followed again
 history.resume(async (jobId) => getRunner().jobs().get(jobId));
 
-const port = Number(process.env.PORT ?? 3000);
-const host = process.env.FREEFIELD_HOST || "127.0.0.1";
 server.listen(port, host, () => console.log(`freefield on http://${host}:${port} (${apps.length} apps)`
   + (guard.passcode ? " · passcode required" : "") + (guard.maxRunsPerDay ? ` · ${guard.maxRunsPerDay} runs a day` : "")));
