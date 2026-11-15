@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import asyncio
 import hmac
+import ipaddress
 import logging
 import os
 import time
@@ -99,6 +100,16 @@ async def status(request: web.Request) -> web.Response:
 LOCAL_HOSTS = ("127.0.0.1", "localhost", "0.0.0.0", "[::1]")
 
 
+def is_private(name: str) -> bool:
+    """A private (RFC 1918) or loopback IP address. 172.16.0.0/12 is 172.16 to 172.31 only: the old prefix
+    test "172.2" also took public addresses such as 172.217.x (Google) for private ones."""
+    try:
+        ip = ipaddress.ip_address(name.strip("[]"))
+    except ValueError:
+        return False
+    return ip.is_private or ip.is_loopback
+
+
 def external_base(request: web.Request) -> str:
     """Where the client reached us. Modal terminates TLS and talks plain http to the container
     without an X-Forwarded-Proto header (first deploy, 23 oct: links came out as http://…modal.run,
@@ -107,7 +118,7 @@ def external_base(request: web.Request) -> str:
     forwarded = request.headers.get("X-Forwarded-Proto", "").split(",")[0].strip()
     host = request.host
     name = host.rsplit(":", 1)[0] if not host.startswith("[") else host.split("]")[0] + "]"
-    private = name in LOCAL_HOSTS or name.startswith(("10.", "192.168.", "172.16.", "172.17.", "172.18.", "172.19.", "172.2", "172.30.", "172.31."))
+    private = name in LOCAL_HOSTS or is_private(name)
     scheme = forwarded or (request.scheme if private else "https")
     return f"{scheme}://{host}"
 

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { Guard, parseCookies } from "../server/guard.ts";
+import { foreign, Guard, parseCookies } from "../server/guard.ts";
 
 test("without settings the guard lets everything through", () => {
   const g = new Guard();
@@ -49,4 +49,39 @@ test("runs are capped per UTC day and at the same time, and the count survives a
 test("cookies parse with spaces and values that hold '='", () => {
   assert.deepEqual(parseCookies(" a=1;b=x=y ; c="), { a: "1", b: "x=y", c: "" });
   assert.deepEqual(parseCookies(undefined), {});
+});
+
+test("with a passcode each browser gets its own visitor id; without one there is none", () => {
+  assert.deepEqual(new Guard().visitor(undefined), {});
+  const g = new Guard({ passcode: "open-sesame" });
+  const fresh = g.visitor(undefined);
+  assert.match(fresh.id!, /^[0-9a-f]{32}$/);
+  assert.match(fresh.setCookie!, new RegExp(`^ff_vid=${fresh.id}; Path=/; HttpOnly; Secure; SameSite=Lax`));
+  assert.deepEqual(g.visitor(`ff_key=x; ff_vid=${fresh.id}`), { id: fresh.id }, "a known id is kept, no new cookie");
+  assert.notEqual(g.visitor(undefined).id, fresh.id, "two browsers, two ids");
+  assert.ok(g.visitor("ff_vid=../../etc").setCookie, "a malformed id is replaced");
+});
+
+test("requests from other sites are refused: rebound DNS names, cross-site writes", () => {
+  const local = { loopbackOnly: true, allowedHosts: ["studio.lan"] };
+  const req = (method: string, headers: Record<string, string>) => ({ method, headers: { host: "127.0.0.1:3000", ...headers } });
+  assert.equal(foreign(req("GET", {}), local), null);
+  assert.equal(foreign(req("GET", { host: "localhost:3000" }), local), null);
+  assert.equal(foreign(req("GET", { host: "[::1]:3000" }), local), null);
+  assert.equal(foreign(req("GET", { host: "studio.lan:3000" }), local), null, "FREEFIELD_ALLOWED_HOSTS");
+  assert.match(foreign(req("GET", { host: "evil.example:3000" }), local)!, /only answers to localhost/);
+  // the web UI's own calls, from a current browser and from one without Sec-Fetch-Site
+  assert.equal(foreign(req("POST", { "sec-fetch-site": "same-origin", origin: "http://127.0.0.1:3000" }), local), null);
+  assert.equal(foreign(req("DELETE", { origin: "http://127.0.0.1:3000" }), local), null);
+  assert.equal(foreign(req("POST", {}), local), null, "the CLI and scripts send no Origin");
+  // another site's form or fetch
+  assert.match(foreign(req("POST", { "sec-fetch-site": "cross-site", origin: "https://evil.example" }), local)!, /other sites/);
+  assert.match(foreign(req("POST", { origin: "https://evil.example" }), local)!, /other sites/);
+  assert.match(foreign(req("POST", { "sec-fetch-site": "same-site", origin: "http://localhost:8080" }), local)!, /other sites/);
+  assert.match(foreign(req("POST", { origin: "null" }), local)!, /other sites/, "a sandboxed frame");
+  // hosted (listening on 0.0.0.0): any Host, writes still same-origin only
+  const hosted = { loopbackOnly: false };
+  const demo = { host: "me--freefield-demo.modal.run" };
+  assert.equal(foreign({ method: "POST", headers: { ...demo, "sec-fetch-site": "same-origin" } }, hosted), null);
+  assert.match(foreign({ method: "POST", headers: { ...demo, origin: "https://evil.example" } }, hosted)!, /other sites/);
 });
