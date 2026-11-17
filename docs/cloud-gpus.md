@@ -96,7 +96,7 @@ in 10 s.
 
 1. **Your Hugging Face token** (once, only for the gated packs): Account → Environment Variables → `HF_TOKEN`. Put it
    there, not in a template: variables in a public template are visible to everyone.
-2. **Template**: the public one is ready, [Freefield on Vast.ai](https://cloud.vast.ai?ref_id=865481&template_id=d3c6cbee4c46179a234d1472484b2798)
+2. **Template**: the public one is ready, [Freefield on Vast.ai](https://cloud.vast.ai/?ref_id=865481&creator_id=865481&name=Freefield)
    (it opens Search with it selected and the filters below already set; go to step 3). To make your own instead: Templates → New.
    - Image Path:Tag: `ghcr.io/neuregex/freefield:latest` (write the tag in the path: the Version Tag list only knows
      Docker Hub images)
