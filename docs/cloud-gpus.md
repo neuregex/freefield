@@ -51,6 +51,9 @@ only the packs in `FREEFIELD_PACKS`. The default is `image-flux3,upscale`: 64 ap
 - **48 GB** (L40S, RTX A6000, RTX 6000 Ada): everything. The lab made every example on an L40S or an H100.
 - **NVIDIA driver 580 or newer** (CUDA 13), because the image has the same PyTorch build as the Modal backend. RunPod
   and Vast both let you filter machines by CUDA version: pick 13.0 or higher.
+- **Turing or newer** (RTX 20 series and up, A-series, L-series, H-series). CUDA 13 dropped Volta and older, so a
+  V100 or a P100 fails with "no kernel image is available", however cheap the offer. The Vast.ai template leaves them
+  out of Search (`compute_cap>=750`); on RunPod, do not pick one.
 
 Gated models: accept the licenses with your Hugging Face account first, then give the pod a read token as `HF_TOKEN`:
 [FLUX 3 Image Klein](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy) (`image-flux3`,
