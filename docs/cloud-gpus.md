@@ -70,8 +70,8 @@ Gated models: accept the licenses with your Hugging Face account first, then giv
    - GPU compatibility: allowed CUDA versions 13.0 and up, minimum 24 GB of VRAM, minimum 32 GB of RAM
 3. **Deploy**: Pods → Deploy, pick the template and a GPU. Under Storage, **Add volume → Volume disk**, 60 GB at
    `/workspace`: the deploy page does not add the template's volume by itself, and without it the models go to the
-   container disk. If Deploy Pod does nothing, that GPU ran out between the list and the click (RunPod shows no
-   error): pick another.
+   container disk. If RunPod answers "There are no longer any instances available with the requested
+   specifications", that GPU ran out between the list and the click: pick another.
 4. **Open it**: the pod's Logs show the link when everything is up. The first start takes about 5 minutes: about 4 to
    pull the image, then the models (the default packs, 22.9 GB, come down at about 400 MB/s). Or Connect → HTTP
    Service on port 3000, and add `/?key=<passcode>` to the address.
