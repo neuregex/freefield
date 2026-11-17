@@ -54,6 +54,7 @@ en = @{
   docker_timeout = 'Docker Desktop did not start. Open it, wait until it says Engine running, and run this again.'
   docker_windows = 'Docker Desktop is set to Windows containers: right-click its icon next to the clock, choose "Switch to Linux containers", and run this again.'
   docker_ok = 'Docker {0}, {1} GB of RAM for its containers'
+  hdd = 'Docker keeps Freefield on {0}, which is a hard disk: models load slowly from it, so the first image can take several minutes. On an SSD it takes seconds: Docker Desktop > Settings > Resources > Advanced > Disk image location.'
   docker_lowram = 'Docker can use only {0} GB of RAM: if Freefield closes while it loads a model, give Docker more: https://github.com/neuregex/freefield#on-your-own-pc-in-one-line'
   token_have = 'Hugging Face token from HF_TOKEN: it works'
   token_intro1 = 'Most image apps use FLUX 3 Klein. It is free, but Hugging Face asks you to accept its license first:'
@@ -115,6 +116,7 @@ es = @{
   docker_timeout = 'Docker Desktop no arrancó. Ábrelo, espera a que diga Engine running y vuelve a correr esto.'
   docker_windows = 'Docker Desktop está en modo Windows containers: dale clic derecho a su ícono junto al reloj, elige "Switch to Linux containers" y vuelve a correr esto.'
   docker_ok = 'Docker {0}, {1} GB de RAM para sus contenedores'
+  hdd = 'Docker guarda Freefield en {0}, que es un disco duro: los modelos cargan lento desde ahí y la primera imagen puede tardar varios minutos. En un SSD tarda segundos: Docker Desktop > Settings > Resources > Advanced > Disk image location.'
   docker_lowram = 'Docker solo puede usar {0} GB de RAM: si Freefield se cierra al cargar un modelo, dale más: https://github.com/neuregex/freefield#on-your-own-pc-in-one-line'
   token_have = 'Token de Hugging Face tomado de HF_TOKEN: funciona'
   token_intro1 = 'La mayoría de las apps de imagen usan FLUX 3 Klein. Es gratis, pero Hugging Face pide aceptar su licencia primero:'
@@ -300,6 +302,26 @@ function Get-Engine {
     if ($line) { return $line }
   }
   return ''
+}
+
+# Docker Desktop keeps its disk (images, the models' volume) where its WSL distro lives; WSL lists that in the
+# registry. On a hard disk every model loads at ~100 MB/s, which makes the first image take minutes: say so.
+function Test-DockerDisk {
+  if (-not $OnWindows) { return }
+  try {
+    $base = ''
+    foreach ($k in @(Get-ChildItem 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss' -ErrorAction SilentlyContinue)) {
+      $p = Get-ItemProperty -Path $k.PSPath -ErrorAction SilentlyContinue
+      if ("$($p.DistributionName)" -eq 'docker-desktop-data') { $base = "$($p.BasePath)"; break }   # older Docker Desktop
+      if ("$($p.DistributionName)" -eq 'docker-desktop') { $base = "$($p.BasePath)" }
+    }
+    $base = $base -replace '^\\\\\?\\', ''
+    if ($base -notmatch '^([A-Za-z]):') { return }
+    $letter = $Matches[1]
+    $num = (Get-Partition -DriveLetter $letter -ErrorAction Stop).DiskNumber
+    $disk = @(Get-PhysicalDisk -ErrorAction Stop | Where-Object { "$($_.DeviceId)" -eq "$num" })[0]
+    if ($disk -and "$($disk.MediaType)" -eq 'HDD') { Say 'warn' (Msg 'hdd' ($letter.ToUpper() + ':')) }
+  } catch {}
 }
 
 # what Freefield's container looks like now, or $null: status, image, the env it was made with, and its port
@@ -610,6 +632,7 @@ try {
   $RamGb = [math]::Round($mem / 1073741824, 1)
   Say 'ok' (Msg 'docker_ok' $ep[1] $RamGb)
   if ($RamGb -gt 0 -and $RamGb -lt 16) { Say 'warn' (Msg 'docker_lowram' $RamGb) }
+  if ($Action -eq 'start') { Test-DockerDisk }
 
   $box = Get-Box
 
