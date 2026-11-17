@@ -171,7 +171,7 @@ def main() -> None:
     download(wanted_packs())
 
     provider, studio_url, gateway_url = where()
-    env = {**os.environ, "FREEFIELD_TOKEN": token, "FREEFIELD_PASSCODE": passcode, "FREEFIELD_OUT": str(DATA / "out"),
+    env = {**os.environ, "FREEFIELD_POD": "1", "FREEFIELD_TOKEN": token, "FREEFIELD_PASSCODE": passcode, "FREEFIELD_OUT": str(DATA / "out"),
            "FREEFIELD_SHARED_HISTORY": "1",   # one owner: every browser with the passcode sees the same history
            "FREEFIELD_BACKEND_NAME": os.environ.get("FREEFIELD_BACKEND_NAME", provider),
            "FREEFIELD_MAX_UPLOAD_MB": os.environ.get("FREEFIELD_MAX_UPLOAD_MB", "1024"),

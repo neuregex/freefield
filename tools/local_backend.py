@@ -184,8 +184,8 @@ def serve(comfy: Path, comfy_args: list[str], port: int, studio: tuple[str, int]
         sys.exit("comfy-api-proxy is not installed here: run setup first, in this same environment")
     procs = []
     try:
-        cmd = [sys.executable, "main.py", "--listen", "127.0.0.1", "--port", "8188", "--disable-auto-launch",
-               "--extra-model-paths-config", str(comfy / "extra_model_paths.yaml"), *comfy_args]
+        # ComfyUI reads extra_model_paths.yaml next to its main.py by itself: passing it again listed every path twice
+        cmd = [sys.executable, "main.py", "--listen", "127.0.0.1", "--port", "8188", "--disable-auto-launch", *comfy_args]
         procs.append(subprocess.Popen(cmd, cwd=comfy))
         wait_http("http://127.0.0.1:8188/system_stats", procs[-1])
         procs.append(subprocess.Popen([proxy, "--comfyui", "http://127.0.0.1:8188", "--port", "8189",
@@ -203,7 +203,8 @@ def serve(comfy: Path, comfy_args: list[str], port: int, studio: tuple[str, int]
             procs.append(subprocess.Popen(studio_cmd, cwd=ROOT, env=senv))
             wait_port(sport, procs[-1], 60)
             shown = "127.0.0.1" if host in ("0.0.0.0", "::") else host
-            print(f"\nready: open http://{shown}:{sport} (Ctrl+C stops all)", flush=True)
+            if not os.environ.get("FREEFIELD_POD"):   # in the image, infra/pod.py prints the link with its passcode
+                print(f"\nready: open http://{shown}:{sport} (Ctrl+C stops all)", flush=True)
         else:
             print(f"\nbackend ready: COMFY_BASE_URL=http://127.0.0.1:{port} in .env, then npm run serve (Ctrl+C stops all)",
                   flush=True)
