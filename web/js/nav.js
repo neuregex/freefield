@@ -53,7 +53,7 @@ function gpuPill() {
       if (g.waking?.error) lines.push(el("p", { class: "help", style: { color: "var(--bad)" } }, g.waking.error), wake);
       else if (g.waking) lines.push(el("p", { class: "help" }, t("gpu.pop.waking")));
       else if (g.warm) {
-        lines.push(el("p", { class: "help" }, t("gpu.pop.ready")));
+        lines.push(el("p", { class: "help" }, t(g.always_on ? "gpu.pop.always" : "gpu.pop.ready")));
         if (g.device?.vram_total_gb) {
           lines.push(el("div", { style: { display: "grid", gap: "6px" } },
             el("div", { style: { display: "flex", justifyContent: "space-between", fontSize: "12.5px" } }, el("span", { class: "dim" }, `${t("gpu.pop.vram")} · ${g.device.name || "GPU"}`),

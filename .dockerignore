@@ -1,0 +1,12 @@
+.git
+.github
+.env
+.env.*
+!.env.example
+node_modules
+out
+lab/results
+lab/assets
+lab/queue
+**/__pycache__
+*.bundle

@@ -255,3 +255,23 @@ test("on a hosted demo each visitor sees, opens, cancels and deletes only their 
     assert.ok(history.remove(bob.id, B));
   } finally { done(); }
 });
+
+test("a job called expired the moment it ends gets a second look before the run is marked expired", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "ff-history-"));
+  try {
+    const finished = fakeJob("succeeded");
+    await finished.wait();
+    let asked = 0;
+    const history = new History(dir, { recheck: async () => { asked++; return finished; } });
+    const app = byId("z-image");
+    const racy = { ...fakeJob("succeeded"), get status() { return "expired"; }, async wait() {} } as JobLike;
+    const entry = await history.follow(history.start(app, resolveValues(app, { prompt: "a fox" })), racy);
+    assert.equal(asked, 1);
+    assert.equal(entry.status, "succeeded", "the proxy's race between /history and /queue is not a lost run");
+    assert.ok(entry.outputs.length, "and its outputs are kept");
+
+    const gone = new History(dir, { recheck: async () => racy });
+    const still = await gone.follow(gone.start(app, resolveValues(app, { prompt: "a fox" })), racy);
+    assert.equal(still.status, "expired", "a job that stays expired is expired");
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});

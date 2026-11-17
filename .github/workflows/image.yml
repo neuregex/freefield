@@ -1,0 +1,83 @@
+# The Docker image for RunPod, Vast.ai and any Docker host with an NVIDIA GPU (Dockerfile, infra/pod.py).
+# Every change that reaches the image is first built for CPU and run end to end (tools/pod_smoke.sh: the smoke app
+# through studio → gateway → ComfyUI); on main and on version tags the GPU image is then published to
+# ghcr.io/neuregex/freefield (:latest, :sha-<commit>, :<version>). To try a branch on a real GPU before merging, add it
+# to `push.branches`: it publishes :<branch> instead of :latest.
+name: image
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+    paths-ignore: ["docs/**", "**/*.md", "lab/**", "test/**", ".github/workflows/validate.yml"]
+  pull_request:
+    paths: ["Dockerfile", ".dockerignore", "infra/pod.py", "infra/common.py", "infra/gateway.py",
+            "tools/local_backend.py", "tools/pod_smoke.sh", "packs/**", "package-lock.json", "server/**",
+            ".github/workflows/image.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: image-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: freefield:cpu
+          build-args: |
+            TORCH_INDEX=https://download.pytorch.org/whl/cpu
+            TUNNEL=0
+          cache-from: type=gha,scope=cpu
+          cache-to: type=gha,scope=cpu,mode=max
+      - run: bash tools/pod_smoke.sh freefield:cpu
+        env:
+          SMOKE_LOG: ${{ runner.temp }}/smoke.log
+      - if: failure()
+        run: tail -150 "${{ runner.temp }}/smoke.log" || true
+
+  publish:
+    needs: smoke
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Room for a CUDA image (the runner starts with ~14 GB free)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          docker system prune -af > /dev/null
+          df -h /
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/freefield
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch,enable=${{ github.ref_name != 'main' }}
+            type=sha,prefix=sha-,format=short
+            type=semver,pattern={{version}}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/freefield:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/freefield:buildcache,mode=max

@@ -86,6 +86,23 @@ async def prepare(request: web.Request) -> web.Response:
     return web.json_response(result)
 
 
+async def models(request: web.Request) -> web.Response:
+    """The model files ComfyUI can see, by folder ({"diffusion_models": ["a.safetensors", ...], ...}): the studio marks
+    the apps whose files are missing (a pod that downloaded only some packs). Read from ComfyUI's own /models lists."""
+    pantry: Pantry = request.app["pantry"]
+    out: dict[str, list[str]] = {}
+    try:
+        async with pantry.session.get(f"{COMFYUI_URL}/models") as r:
+            folders = await r.json()
+        for folder in folders:
+            async with pantry.session.get(f"{COMFYUI_URL}/models/{folder}") as r:
+                if r.status == 200:
+                    out[folder] = await r.json()
+    except Exception as e:  # ComfyUI may still be starting
+        return web.json_response({"error": str(e)}, status=503)
+    return web.json_response({"folders": out})
+
+
 async def status(request: web.Request) -> web.Response:
     pantry: Pantry = request.app["pantry"]
     stats = None
@@ -170,6 +187,7 @@ def make_app() -> web.Application:
     app.router.add_get("/health", health)
     app.router.add_post("/freefield/prepare", prepare)
     app.router.add_get("/freefield/status", status)
+    app.router.add_get("/freefield/models", models)
     app.router.add_route("*", "/{tail:.*}", forward)
     app.on_startup.append(on_startup)
     app.on_cleanup.append(on_cleanup)
