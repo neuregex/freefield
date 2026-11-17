@@ -129,7 +129,7 @@ def where() -> tuple[str, str | None, str | None]:
         ip = os.environ.get("PUBLIC_IPADDR")
         sp, gp = os.environ.get(f"VAST_TCP_PORT_{STUDIO_PORT}"), os.environ.get(f"VAST_TCP_PORT_{GATEWAY_PORT}")
         return ("Vast.ai", f"http://{ip}:{sp}" if ip and sp else None, f"http://{ip}:{gp}" if ip and gp else None)
-    return "this pod", None, None
+    return "this computer", f"http://127.0.0.1:{STUDIO_PORT}", None   # your own machine, or any other Docker host
 
 
 def tunnel() -> tuple[subprocess.Popen | None, str | None]:
@@ -209,10 +209,16 @@ def main() -> None:
         lines.append(f"  Open:      {studio_url}/?key={passcode}")
     else:
         lines.append(f"  Open port {STUDIO_PORT} of this pod in your browser and add /?key={passcode} to the address")
+    if studio_url and studio_url.startswith("http://127.0.0.1"):
+        lines.append("  (from another computer on your network: this machine's IP address instead of 127.0.0.1)")
     lines.append(f"  Passcode:  {passcode}   (kept in {DATA / 'passcode'}; FREEFIELD_PASSCODE sets your own)")
-    lines.append(f"  Your own studio instead, in its .env: COMFY_BASE_URL={gateway_url or f'<port {GATEWAY_PORT} of this pod>'}"
+    here = "this machine" if provider == "this computer" else "this pod"
+    lines.append(f"  Your own studio instead, in its .env: COMFY_BASE_URL={gateway_url or f'<port {GATEWAY_PORT} of {here}>'}"
                  f" and FREEFIELD_TOKEN={token}")
-    lines.append("  The GPU is billed while the pod runs: stop it when you are done (models and history stay on the volume).")
+    if provider == "this computer":
+        lines.append("  `docker stop <container>` stops it; the models and the history stay in the volume.")
+    else:
+        lines.append("  The GPU is billed while the pod runs: stop it when you are done (models and history stay on the volume).")
     lines.append("=" * 72)
     say("\n".join(lines))
     (DATA / "link.txt").write_text("\n".join(lines[3:-1]) + "\n", encoding="utf-8")
