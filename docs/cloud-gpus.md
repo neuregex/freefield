@@ -124,7 +124,10 @@ quick session prefer an offer with a low download price.
 
 ## Any Docker host with an NVIDIA GPU
 
-Your own Linux machine or Windows with Docker Desktop (WSL 2), with the NVIDIA Container Toolkit:
+On Windows, [`start.ps1`](../start.ps1) does all of this in one line of PowerShell: it checks the GPU, the driver and
+Docker Desktop, asks for the Hugging Face token and checks it, shows the download and opens the studio
+([README](../README.md#on-your-own-pc-in-one-line)). By hand, on your own Linux machine or Windows with Docker Desktop
+(WSL 2), with the NVIDIA Container Toolkit:
 
 ```sh
 docker run --gpus all -p 3000:3000 -v freefield:/workspace \

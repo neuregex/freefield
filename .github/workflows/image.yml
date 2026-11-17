@@ -9,7 +9,7 @@ on:
   push:
     branches: [main]
     tags: ["v*"]
-    paths-ignore: ["docs/**", "**/*.md", "lab/**", "test/**", ".github/workflows/validate.yml"]
+    paths-ignore: ["docs/**", "**/*.md", "lab/**", "test/**", ".github/workflows/validate.yml", "start.ps1"]
   pull_request:
     paths: ["Dockerfile", ".dockerignore", "infra/pod.py", "infra/common.py", "infra/gateway.py",
             "tools/local_backend.py", "tools/pod_smoke.sh", "packs/**", "package-lock.json", "server/**",
