@@ -59,18 +59,33 @@ Gated models: accept the licenses with your Hugging Face account first, then giv
 
 ## RunPod
 
-1. **Your Hugging Face token as a secret** (once): Settings → Secrets → create `hf_token` with your read token.
+1. **Your Hugging Face token as a secret** (once, only for the gated packs): Settings → Secrets → create `hf_token`
+   with your read token.
 2. **Template** (once): Templates → New Template.
    - Container image: `ghcr.io/neuregex/freefield:latest`
    - Container disk: 30 GB. Volume disk: the packs you want plus 10 GB (60 GB for the default), mounted at
      `/workspace`
    - Expose HTTP ports: `3000,8000`
    - Environment variables: `HF_TOKEN` = `{{ RUNPOD_SECRET_hf_token }}`, and `FREEFIELD_PACKS` if you want other packs
-3. **Deploy**: Pods → Deploy, choose a GPU (24 or 48 GB, CUDA 13), pick the template, deploy.
-4. **Open it**: the pod's Logs show the link when everything is up (the first start takes the download time: a few
-   minutes for the default packs). Or Connect → HTTP Service on port 3000, and add `/?key=<passcode>` to the address.
-5. **Stop it** when you are done. A stopped pod keeps its volume (models and history) and bills only the storage;
-   Terminate deletes the volume too.
+   - GPU compatibility: allowed CUDA versions 13.0 and up, minimum 24 GB of VRAM, minimum 32 GB of RAM
+3. **Deploy**: Pods → Deploy, pick the template and a GPU. Under Storage, **Add volume → Volume disk**, 60 GB at
+   `/workspace`: the deploy page does not add the template's volume by itself, and without it the models go to the
+   container disk. If Deploy Pod does nothing, that GPU ran out between the list and the click (RunPod shows no
+   error): pick another.
+4. **Open it**: the pod's Logs show the link when everything is up. The first start takes about 5 minutes: about 4 to
+   pull the image, then the models (the default packs, 22.9 GB, come down at about 400 MB/s). Or Connect → HTTP
+   Service on port 3000, and add `/?key=<passcode>` to the address.
+5. **When you are done, Terminate the pod**: that deletes it and its volume, and the bill stops. Next time, deploy
+   again: the models come back in about a minute. Stop keeps the volume, but on that one machine, and RunPod may
+   have rented its GPU to someone else when you come back ("not enough free GPUs on the host machine"): the pod
+   cannot start until it is free again.
+
+To keep the models and the history between pods, use a **Network volume** instead of the volume disk (Storage →
+Create volume, about USD 0.07 per GB a month): it lives in one data center and any new pod there can mount it. Pick a
+data center that has the GPU you want.
+
+Measured on an L40S (16 Nov 2026): Z-Image 11 s for the first image, model load included; upscale ×2 to 2048×2048
+in 10 s.
 
 ## Vast.ai
 
@@ -130,8 +145,9 @@ fail there. The studio inside the pod does not have that problem: its uploads go
 
 - **The pod restarts in a loop, or ComfyUI says the CUDA driver is too old**: the machine has a driver older than
   580. Pick one with CUDA 13.0 or higher.
-- **An app fails with a missing model file**: its pack is not in `FREEFIELD_PACKS`, or a gated download failed
-  (401/403 in the log): accept the license, check `HF_TOKEN`, restart the pod. It downloads only what is missing.
+- **An app says "Not on this GPU"**: its pack is not in `FREEFIELD_PACKS`, or a gated download failed (401/403 in
+  the log): add the pack or accept the license and check `HF_TOKEN`, then restart the pod. It downloads only what is
+  missing.
 - **"not enough disk"** in the log: make the volume bigger, or ask for fewer packs.
 - **Forgot the passcode**: it is in the log of every start, and in `/workspace/freefield/passcode`.
 
