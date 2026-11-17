@@ -469,17 +469,19 @@ function Save-Log {
   } catch {}
 }
 
-# follows the log from $Since: download progress, errors, then the banner's passcode; '' if Freefield stopped
-function Wait-Ready([string]$Since) {
+# follows the log from $Since: download progress, errors, then the banner's passcode; '' if Freefield stopped.
+# With $Attach (Freefield was already running) what the log said before is not told again, only what comes next.
+function Wait-Ready([string]$Since, [bool]$Attach) {
   $down = [string][char]0x2193
   $cross = [string][char]0x2717
   $seen = 0
   $need = 0.0
-  $base = -1.0
+  $done = 0.0
   $got = 0.0
   $key = ''
   $ready = $false
   $hint = $false
+  $quiet = $Attach
   $t0 = Get-Date
   $lastDu = $t0.AddMinutes(-1)
   while ($true) {
@@ -488,10 +490,14 @@ function Wait-Ready([string]$Since) {
     for ($i = $seen; $i -lt $lines.Count; $i++) {
       $l = $lines[$i]
       if ($l -match '^packs .*?(\d+) to download \(([\d.]+) GB\)') {
-        if ([int]$Matches[1] -gt 0) { $need = [double]$Matches[2]; Say 'step' (Msg 'first_run' $need) }
+        if ([int]$Matches[1] -gt 0) {
+          $need = [double]$Matches[2]
+          if (-not $quiet) { Say 'step' (Msg 'first_run' $need) }
+        }
         $hint = $false
       } elseif ($l -match ('^\s+' + $down + '\s+(\S+)\s+([\d.]+) GB')) {
-        Say 'ok' ($Matches[1] + '  ' + $Matches[2] + ' GB')
+        $done += [double]$Matches[2]
+        if (-not $quiet) { Say 'ok' ($Matches[1] + '  ' + $Matches[2] + ' GB') }
         $hint = $false
       } elseif ($l -match ('^\s+' + $cross + '\s+(.+)$')) {
         Say 'bad' $Matches[1]
@@ -500,7 +506,7 @@ function Wait-Ready([string]$Since) {
         Say 'plain' $l.Trim()
       } elseif ($l -match '^models ready in (\d+) s') {
         $need = 0.0
-        Say 'ok' (Msg 'models_ok' (Format-Dur ([int]$Matches[1])))
+        if (-not $quiet) { Say 'ok' (Msg 'models_ok' (Format-Dur ([int]$Matches[1]))) }
         $hint = $false
       } elseif ($l -match '^! (.+)$') {
         $msg = $Matches[1]
@@ -516,6 +522,7 @@ function Wait-Ready([string]$Since) {
       }
     }
     $seen = $lines.Count
+    $quiet = $false
     if ($ready -and $key) { break }
 
     $st = First-Line (Dk inspect $Name --format '{{.State.Status}}|{{.State.ExitCode}}|{{.State.OOMKilled}}').Out '^\w+\|'
@@ -532,12 +539,10 @@ function Wait-Ready([string]$Since) {
     if ($need -gt 0) {
       if (((Get-Date) - $lastDu).TotalSeconds -ge 5) {
         $lastDu = Get-Date
-        $du = First-Line (Dk exec $Name du -sb /workspace/freefield/models).Out '^\d+'
-        if ($du -match '^(\d+)') {
-          $b = [double]$Matches[1]
-          if ($base -lt 0) { $base = $b }
-          $got = [math]::Max(0.0, ($b - $base) / 1e9)
-        }
+        $part = 0.0
+        $du = First-Line (Dk exec $Name du -sb /workspace/freefield/models/.incoming).Out '^\d+'
+        if ($du -match '^(\d+)') { $part = [double]$Matches[1] / 1e9 }
+        $got = [math]::Min($need, $done + $part)
       }
       $pct = [int][math]::Min(99, [math]::Floor(100 * $got / $need))
       Write-Progress -Activity 'Freefield' -Status ((Msg 'dl' $got $need) + '  -  ' + $elapsed) -PercentComplete $pct
@@ -627,7 +632,8 @@ try {
     return
   }
 
-  if ($box -and $box.Status -eq 'running') {
+  $attach = [bool]($box -and $box.Status -eq 'running')
+  if ($attach) {
     Say 'ok' (Msg 'already')
   } else {
     # the questions come before the long download, so whoever runs this can walk away after answering them
@@ -684,7 +690,7 @@ try {
   $started = First-Line (Dk inspect $Name --format '{{.State.StartedAt}}').Out '^\d{4}-'
   $since = $started
   if ($started.Length -ge 19) { $since = $started.Substring(0, 19) + 'Z' }
-  $key = Wait-Ready $since
+  $key = Wait-Ready $since $attach
   if (-not $key) { Wait-Close; return }
 
   $url = 'http://127.0.0.1:' + $box.Port
