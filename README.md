@@ -57,7 +57,7 @@ downloads the models of the default packs (64 apps, 22.9 GB) and prints a link t
 | | **[Deploy on RunPod](https://console.runpod.io/deploy?template=p7g587ry3j&ref=4nye3bcy)** | **[Rent on Vast.ai](https://cloud.vast.ai/?ref_id=865481&creator_id=865481&name=Freefield)** |
 |---|---|---|
 | 1. Hugging Face token (once: accept the [FLUX 3 license](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy) first) | Settings → Secrets → `hf_token`, with your read token | Account → Environment Variables → `HF_TOKEN` |
-| 2. GPU | 24 GB or more, CUDA 13.0 or newer. An L40S (48 GB) runs every app | 24 GB or more, CUDA 13: the link opens Search with these filters set. Sort by price |
+| 2. GPU | 24 GB or more, CUDA 13.0 or newer, and not a V100 (CUDA 13 dropped it). An L40S (48 GB) runs every app | 24 GB or more, CUDA 13: the link opens Search with these filters set. Sort by price |
 | 3. Storage | **Add volume → Volume disk**, 60 GB at `/workspace`: the deploy page does not add it by itself | 60 GB, already in the template |
 | 4. Open it | Logs: *Freefield is ready on RunPod*, with the link and its passcode | View instance logs → Refresh: a `trycloudflare.com` link with its passcode |
 | 5. When you are done | **Terminate** the pod | **Destroy** the instance |
