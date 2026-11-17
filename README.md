@@ -54,7 +54,7 @@ Freefield users: get CNY 5 free through this link.</td>
 No install and no Modal account. Rent a GPU with Freefield's public template: it starts the backend and the studio,
 downloads the models of the default packs (64 apps, 22.9 GB) and prints a link to open.
 
-| | **[Deploy on RunPod](https://console.runpod.io/deploy?template=p7g587ry3j&ref=4nye3bcy)** | **[Rent on Vast.ai](https://cloud.vast.ai?ref_id=865481&template_id=d3c6cbee4c46179a234d1472484b2798)** |
+| | **[Deploy on RunPod](https://console.runpod.io/deploy?template=p7g587ry3j&ref=4nye3bcy)** | **[Rent on Vast.ai](https://cloud.vast.ai/?ref_id=865481&creator_id=865481&name=Freefield)** |
 |---|---|---|
 | 1. Hugging Face token (once: accept the [FLUX 3 license](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy) first) | Settings → Secrets → `hf_token`, with your read token | Account → Environment Variables → `HF_TOKEN` |
 | 2. GPU | 24 GB or more, CUDA 13.0 or newer. An L40S (48 GB) runs every app | 24 GB or more, CUDA 13: the link opens Search with these filters set. Sort by price |
