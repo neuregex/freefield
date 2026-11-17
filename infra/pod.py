@@ -92,7 +92,13 @@ def download(names: list[str]) -> None:
     if need > free - 2:
         say(f"! not enough disk for all of it: give the pod a volume of at least {need + 10:.0f} GB "
             f"(RunPod: Volume Disk; Vast: Disk Space), or fewer packs in FREEFIELD_PACKS")
-    if any(m.get("gated") for m in todo) and not os.environ.get("HF_TOKEN"):
+    hf = os.environ.get("HF_TOKEN", "").strip()   # a pasted token often brings a space or a newline along
+    if hf:
+        os.environ["HF_TOKEN"] = hf
+    if hf and any(m.get("gated") for m in todo) and not (hf.startswith("hf_") and len(hf) >= 30):
+        say(f"! HF_TOKEN does not look like a Hugging Face token ({len(hf)} characters; a read token is hf_ and about "
+            "34 more): the gated models will fail. Copy it again from https://huggingface.co/settings/tokens")
+    if any(m.get("gated") for m in todo) and not hf:
         gated = sorted({m["repo"] for m in todo if m.get("gated")})
         say("! some of these models are gated and HF_TOKEN is not set: accept the licenses with your Hugging Face "
             "account, then set HF_TOKEN (a read token) on the pod:")

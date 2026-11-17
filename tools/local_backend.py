@@ -101,7 +101,13 @@ def download(models: Path, names: list[str], dry_run: bool) -> None:
         except Exception as e:  # gated, renamed upstream, network
             failed.append(m)
             print(f"  ✗ {m['name']}  {type(e).__name__}: {(str(e).strip().splitlines() or [''])[0][:160]}")
-            if m.get("gated"):
+            status = getattr(getattr(e, "response", None), "status_code", None)
+            if status == 401:
+                print("    Hugging Face did not take the token: HF_TOKEN is missing or is not a valid token "
+                      "(a read token from https://huggingface.co/settings/tokens)")
+            elif status == 403 and m.get("gated"):
+                print(f"    this Hugging Face account has not accepted the license yet: https://huggingface.co/{m['repo']}")
+            elif m.get("gated"):
                 print(f"    accept the license at https://huggingface.co/{m['repo']} and set HF_TOKEN")
             continue
         shutil.move(path, dest)
