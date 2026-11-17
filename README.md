@@ -222,7 +222,7 @@ Three ways, the same 120 apps:
 
 | Where | You need | Good for |
 |---|---|---|
-| **A rented GPU**: [RunPod](https://runpod.io?ref=4nye3bcy), [Vast.ai](https://cloud.vast.ai/?ref_id=865481) or any Docker host | an account there; nothing to install. One image, `ghcr.io/neuregex/freefield`: [guide](docs/cloud-gpus.md) | trying it, or a 48 GB GPU by the hour |
+| **A rented GPU**: [RunPod](https://runpod.io?ref=4nye3bcy), [Vast.ai](https://cloud.vast.ai/?ref_id=865481) or any Docker host | an account there; nothing to install. A public template [in one click](#one-click-on-runpod-or-vastai), or the image `ghcr.io/neuregex/freefield`: [guide](docs/cloud-gpus.md) | trying it, or a 48 GB GPU by the hour |
 | **[Modal](https://modal.com)** | Node, Python and a Modal account ([below](#on-modal)) | a GPU that scales to zero between runs, so you pay per second of work |
 | **Your own GPU** | an NVIDIA card with 24 GB for most apps ([below](#on-your-own-gpu-without-modal)), or Docker ([guide](docs/cloud-gpus.md#any-docker-host-with-an-nvidia-gpu)) | no hourly bill |
 

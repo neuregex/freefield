@@ -63,7 +63,8 @@ Gated models: accept the licenses with your Hugging Face account first, then giv
 
 1. **Your Hugging Face token as a secret** (once, only for the gated packs): Settings → Secrets → create `hf_token`
    with your read token.
-2. **Template** (once): Templates → New Template.
+2. **Template**: the public one is ready, [Freefield on RunPod](https://console.runpod.io/deploy?template=p7g587ry3j&ref=4nye3bcy)
+   (it opens the deploy page with it; go to step 3). To make your own instead: Templates → New Template.
    - Container image: `ghcr.io/neuregex/freefield:latest`
    - Container disk: 30 GB. Volume disk: the packs you want plus 10 GB (60 GB for the default), mounted at
      `/workspace`
@@ -95,7 +96,8 @@ in 10 s.
 
 1. **Your Hugging Face token** (once, only for the gated packs): Account → Environment Variables → `HF_TOKEN`. Put it
    there, not in a template: variables in a public template are visible to everyone.
-2. **Template** (once): Templates → New.
+2. **Template**: the public one is ready, [Freefield on Vast.ai](https://cloud.vast.ai?ref_id=865481&template_id=d3c6cbee4c46179a234d1472484b2798)
+   (it opens Search with it selected; go to step 3). To make your own instead: Templates → New.
    - Image Path:Tag: `ghcr.io/neuregex/freefield:latest` (write the tag in the path: the Version Tag list only knows
      Docker Hub images)
    - Docker Options: `-p 3000:3000 -p 8000:8000 -e OPEN_BUTTON_PORT=3000 -e FREEFIELD_TUNNEL=1`, plus
