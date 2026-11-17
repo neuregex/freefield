@@ -59,6 +59,8 @@ Gated models: accept the licenses with your Hugging Face account first, then giv
 
 ## RunPod
 
+[Sign up](https://runpod.io?ref=4nye3bcy) (a referral link: it costs you nothing and helps Freefield).
+
 1. **Your Hugging Face token as a secret** (once, only for the gated packs): Settings → Secrets → create `hf_token`
    with your read token.
 2. **Template** (once): Templates → New Template.
@@ -88,6 +90,8 @@ Measured on an L40S (16 Nov 2026): Z-Image 11 s for the first image, model load 
 in 10 s.
 
 ## Vast.ai
+
+[Sign up](https://cloud.vast.ai/?ref_id=865481) (a referral link: it costs you nothing and helps Freefield).
 
 1. **Your Hugging Face token** (once, only for the gated packs): Account → Environment Variables → `HF_TOKEN`. Put it
    there, not in a template: variables in a public template are visible to everyone.
