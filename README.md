@@ -216,6 +216,19 @@ The sizes above are weights only. Full table, with the peak VRAM measured on eac
 on: [`docs/vram-map.md`](docs/vram-map.md) (`python tools/catalog.py vram`). Between two apps with different base
 models the gateway calls ComfyUI's `POST /free`, so nothing from the previous app stays in VRAM.
 
+## Sponsors
+
+Freefield runs open-weights models on your own GPU and stays free. Sponsors help keep it going; their text is their own.
+
+<table>
+<tr>
+<td width="76" align="center"><a href="https://www.infistar.cc/register?aff=VG7JCDCN&amp;ref_source=link"><img src="docs/media/sponsors/infistar.png" width="56" height="56" alt="Infistar"></a></td>
+<td><b><a href="https://www.infistar.cc/register?aff=VG7JCDCN&amp;ref_source=link">Infistar.cc</a></b> · <sub>Sponsored</sub><br>
+Stop overpaying for AI: up to 99% off official API prices. 100% genuine models for text, image and video, one API key.
+Freefield users: get CNY 5 free through this link.</td>
+</tr>
+</table>
+
 ## Run it
 
 You need Node 22.6+, Python 3.10+ and a [Modal](https://modal.com) account, or a GPU of your own ([below](#on-your-own-gpu-without-modal)).
