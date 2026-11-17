@@ -36,6 +36,39 @@ browser ──▶ web/ + server/ (Node, Comfy SDK) ──▶ gateway :8000 ─�
 
 ![Twelve of the apps' examples, each made on a GPU by the lab: Transformations, Mixed Media, Effects, Recast, Relight, Day to Night, Cinema Studio, Depth Map, Volcano Ad, H3 Video, Styles and Storm Creature](docs/media/examples.jpg)
 
+## Sponsors
+
+Freefield runs open-weights models on your own GPU and stays free. Sponsors help keep it going; their text is their own.
+
+<table>
+<tr>
+<td width="76" align="center"><a href="https://www.infistar.cc/register?aff=VG7JCDCN&amp;ref_source=link"><img src="docs/media/sponsors/infistar.png" width="56" height="56" alt="Infistar"></a></td>
+<td><b><a href="https://www.infistar.cc/register?aff=VG7JCDCN&amp;ref_source=link">Infistar.cc</a></b> · <sub>Sponsored</sub><br>
+Stop overpaying for AI: up to 99% off official API prices. 100% genuine models for text, image and video, one API key.
+Freefield users: get CNY 5 free through this link.</td>
+</tr>
+</table>
+
+## One click on RunPod or Vast.ai
+
+No install and no Modal account. Rent a GPU with Freefield's public template: it starts the backend and the studio,
+downloads the models of the default packs (64 apps, 22.9 GB) and prints a link to open.
+
+| | **[Deploy on RunPod](https://console.runpod.io/deploy?template=p7g587ry3j&ref=4nye3bcy)** | **[Rent on Vast.ai](https://cloud.vast.ai/?ref_id=865481&creator_id=865481&name=Freefield)** |
+|---|---|---|
+| 1. Hugging Face token (once: accept the [FLUX 3 license](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy) first) | Settings → Secrets → `hf_token`, with your read token | Account → Environment Variables → `HF_TOKEN` |
+| 2. GPU | 24 GB or more, CUDA 13.0 or newer, and not a V100 (CUDA 13 dropped it). An L40S (48 GB) runs every app | 24 GB or more, CUDA 13: the link opens Search with these filters set. Sort by price |
+| 3. Storage | **Add volume → Volume disk**, 60 GB at `/workspace`: the deploy page does not add it by itself | 60 GB, already in the template |
+| 4. Open it | Logs: *Freefield is ready on RunPod*, with the link and its passcode | View instance logs → Refresh: a `trycloudflare.com` link with its passcode |
+| 5. When you are done | **Terminate** the pod | **Destroy** the instance |
+
+The first start takes 5 to 10 minutes: the image, then the models. Anyone with the link can use your GPU, so share it
+only with people you trust. Other packs, a volume that outlives the pod, and what to do when something fails are in
+[the guide](docs/cloud-gpus.md).
+
+Both are referral links. They cost you nothing: RunPod and Vast.ai give Freefield a share of the credits, which pays for
+the lab's GPU runs.
+
 ## Status
 
 | | |
