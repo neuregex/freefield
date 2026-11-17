@@ -95,10 +95,41 @@ function loadExamples(): Record<string, unknown> {
 
 const runnable = (a: App) => Boolean(a.workflowPath) && (a.status === "ready" || draftsAllowed);
 
-function publicApp(a: App) {
+/**
+ * The pack an app needs whose files the backend does not have, or null. Only known for a backend that is always on
+ * (a pod, your own GPU), which downloaded the packs it was asked for: a pod with FREEFIELD_PACKS=image,upscale cannot
+ * run Face Swap. Modal is never asked, since asking would wake a GPU, and it has every pack.
+ */
+function missingPack(a: App, files: Set<string> | null): string | null {
+  if (!files) return null;
+  const lacks = a.models.some((m) => !m.optional && !files.has(`${m.dir}/${m.file.split("/").pop()}`));
+  return lacks ? a.pack ?? "?" : null;
+}
+
+let installed: { at: number; files: Set<string> | null } = { at: 0, files: null };
+async function installedFiles(): Promise<Set<string> | null> {
+  if (!alwaysOn || !process.env.COMFY_BASE_URL) return null;
+  if (Date.now() - installed.at < 30_000) return installed.files;
+  let files: Set<string> | null = null;
+  try {
+    const base = process.env.COMFY_BASE_URL.replace(/\/$/, "");
+    const r = await fetch(`${base}/freefield/models`, { signal: AbortSignal.timeout(5000),
+      headers: process.env.FREEFIELD_TOKEN ? { authorization: `Bearer ${process.env.FREEFIELD_TOKEN}` } : {} });
+    if (r.ok) {
+      const body = await r.json() as { folders?: Record<string, string[]> };
+      files = new Set(Object.entries(body.folders ?? {}).flatMap(([dir, names]) =>
+        names.map((n) => `${dir}/${n.split(/[\\/]/).pop()}`)));
+    }
+  } catch { /* an older gateway or ComfyUI still starting: nothing is marked */ }
+  installed = { at: Date.now(), files };
+  return files;
+}
+
+function publicApp(a: App, files: Set<string> | null = null) {
   return {
     id: a.id, name: a.name, section: a.section, summary: a.summary ?? "", status: a.status, pack: a.pack,
     runnable: runnable(a),
+    missing_pack: missingPack(a, files),
     higgsfield_feature: a.higgsfield_feature ?? null,
     modes: a.modes ?? null,
     mode_label: a.mode_label ?? null,
@@ -285,7 +316,8 @@ const server = createServer(async (req, res) => {
         const sorted = [...apps].sort((a, b) => order[a.section] - order[b.section]
           || Number(b.status === "ready") - Number(a.status === "ready") || a.name.localeCompare(b.name));
         const examples = loadExamples();
-        return send(res, 200, { apps: sorted.map((a) => ({ ...publicApp(a), example: examples[a.id] ?? null })), drafts: draftsAllowed,
+        const files = await installedFiles();
+        return send(res, 200, { apps: sorted.map((a) => ({ ...publicApp(a, files), example: examples[a.id] ?? null })), drafts: draftsAllowed,
           hosted: guard.hosted });
       }
       if (req.method === "GET" && area === "apps" && sub === "workflow") {
@@ -302,6 +334,8 @@ const server = createServer(async (req, res) => {
         if (!app) return send(res, 404, { error: "unknown app" });
         if (!app.workflowPath) throw new InputError(`${app.id} has no workflow yet`);
         if (!runnable(app)) throw new InputError(`${app.id} is a draft; start the server with FREEFIELD_DRAFTS=1 to run it anyway`);
+        const lacking = missingPack(app, await installedFiles());
+        if (lacking) throw new InputError(`${app.id} needs the ${lacking} pack, which this backend has not downloaded: add it to FREEFIELD_PACKS and restart the pod`);
         const refused = guard.refuse(activeRuns());
         if (refused) return send(res, 429, { error: refused });
         admitting++;

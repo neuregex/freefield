@@ -37,6 +37,17 @@ echo "$gpu" | grep -q '"always_on":true' || fail "GPU status is not always on: $
 echo "$gpu" | grep -q '"warm":true' || fail "GPU status is not warm: $gpu"
 echo "✓ passcode cookie works; the pill says always on: $(echo "$gpu" | sed -n 's/.*"host":"\([^"]*\)".*/\1/p')"
 
+# FREEFIELD_PACKS=none: apps that need model files are marked with their pack and refuse to run; the smoke app is not
+curl -sf --noproxy '*' -b "$JAR" "$STUDIO/api/apps" | python3 -c '
+import json, sys
+a = {x["id"]: x for x in json.load(sys.stdin)["apps"]}
+assert a["smoke"]["missing_pack"] is None, a["smoke"]["missing_pack"]
+assert a["z-image"]["missing_pack"] == "image", a["z-image"]["missing_pack"]
+' || fail "apps without their pack are not marked"
+code=$(curl -s -o /dev/null -w '%{http_code}' --noproxy '*' -b "$JAR" -X POST -F prompt=x "$STUDIO/api/apps/z-image/run")
+[ "$code" = 400 ] || fail "an app without its pack was accepted ($code)"
+echo "✓ apps whose pack is not downloaded are marked and refused"
+
 [ "$(curl -s -o /dev/null -w '%{http_code}' --noproxy '*' http://127.0.0.1:8000/freefield/status)" = 401 ] || fail "the gateway answered without its token"
 curl -sf --noproxy '*' -H "Authorization: Bearer smoke-token" http://127.0.0.1:8000/freefield/status > /dev/null || fail "the gateway refused its own token"
 echo "✓ gateway on :8000 needs the token"

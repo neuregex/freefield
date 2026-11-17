@@ -74,7 +74,8 @@ export function exploreView() {
   })).flat();
 
   // hosted demo: five apps one click away from a live run (their lab example goes into the form)
-  const starters = hosted ? START_HERE.map((id) => byId.get(id)).filter((a) => a?.example?.full) : [];
+  // (on a pod, only those whose pack it downloaded)
+  const starters = hosted ? START_HERE.map((id) => byId.get(id)).filter((a) => a?.example?.full && !a.missing_pack) : [];
   const start = starters.length ? [
     el("div", { class: "sec-head", style: { marginTop: "6px" } },
       el("div", {}, el("h2", { class: "display" }, t("start.title")), el("p", {}, t("start.sub")))),
@@ -119,6 +120,7 @@ function appCard(a) {
   const fit = fitOf(a);
   media.append(el("div", { class: "badges" },
     a.status === "draft" ? el("span", { class: "tag dark" }, t("tag.draft")) : null,
+    a.missing_pack ? el("span", { class: "tag dark", title: t("ws.nopack", { pack: a.missing_pack }) }, t("tag.nopack")) : null,
     fit && fit[1] === "big" ? el("span", { class: "tag violet" }, `48 ${t("unit.gb")}`) : null));
   const card = el("a", { class: "app-card", href: `#/app/${a.id}` }, media,
     el("h3", {}, a.name), el("p", {}, a.summary),

@@ -319,8 +319,9 @@ function seedEditor(app, inp, f, onChange) {
 
 function genButton(app, onClick, { wide = false } = {}) {
   const est = estimate(app);
-  const b = el("button", { class: `generate${wide ? " wide" : ""}`, type: "button", disabled: !app.runnable,
-    title: !app.runnable ? (app.status === "draft" ? t("ws.draft") : t("ws.noworkflow")) : est ? t("ws.est", { gpu: est.gpu }) : null },
+  const b = el("button", { class: `generate${wide ? " wide" : ""}`, type: "button", disabled: !app.runnable || Boolean(app.missing_pack),
+    title: !app.runnable ? (app.status === "draft" ? t("ws.draft") : t("ws.noworkflow"))
+      : app.missing_pack ? t("ws.nopack", { pack: app.missing_pack }) : est ? t("ws.est", { gpu: est.gpu }) : null },
     t("ws.generate"), est ? el("span", { class: "cost" }, icon("spark"), fmtShort(est.seconds)) : el("span", { class: "cost" }, icon("spark")));
   b.addEventListener("click", async () => {
     if (b.dataset.busy) return;
@@ -420,6 +421,7 @@ function composerBar(app, rerenderBar) {
   const go = async () => { if (await submit(app, ui) && wsTab !== "history") { wsTab = "history"; hooks.rerender?.(); } };
   const gen = genButton(app, go);
   if (!app.runnable) { hint.hidden = false; hint.textContent = app.status === "draft" ? t("ws.draft") : t("ws.noworkflow"); }
+  else if (app.missing_pack) { hint.hidden = false; hint.textContent = t("ws.nopack", { pack: app.missing_pack }); }
 
   const bar = el("div", { class: "composer" },
     hint,
@@ -655,7 +657,8 @@ function sidebarPanel(app, rerenderSide) {
   const advanced = adv.length ? el("details", { class: "adv" }, el("summary", {}, t("ws.advanced"), icon("chevD", "i-chev")), el("div", { class: "in" }, ...adv)) : null;
 
   const scroll = el("div", { class: "side-scroll" }, card, modeSwitch(app), ...main, advanced);
-  const note = el("p", { class: "side-note" }, !app.runnable ? (app.status === "draft" ? t("ws.draft") : t("ws.noworkflow")) : "");
+  const note = el("p", { class: "side-note" }, !app.runnable ? (app.status === "draft" ? t("ws.draft") : t("ws.noworkflow"))
+    : app.missing_pack ? t("ws.nopack", { pack: app.missing_pack }) : "");
   ui.clearMissing = () => { scroll.querySelectorAll(".missing").forEach((n) => n.classList.remove("missing")); };
   ui.markMissing = (id) => {
     const n = ui.refs[id] || scroll.querySelector(`[data-slot="${id}"]`);
