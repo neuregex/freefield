@@ -89,19 +89,29 @@ in 10 s.
 
 ## Vast.ai
 
-1. **Your Hugging Face token** (once): Account → Environment Variables → `HF_TOKEN`. Put it there, not in a template:
-   variables in a public template are visible to everyone.
+1. **Your Hugging Face token** (once, only for the gated packs): Account → Environment Variables → `HF_TOKEN`. Put it
+   there, not in a template: variables in a public template are visible to everyone.
 2. **Template** (once): Templates → New.
-   - Image: `ghcr.io/neuregex/freefield`, tag `latest`
-   - Launch mode: **Docker ENTRYPOINT** (the image starts itself; the SSH and Jupyter modes replace its command)
-   - Docker options: `-p 3000:3000 -p 8000:8000 -e OPEN_BUTTON_PORT=3000 -e FREEFIELD_TUNNEL=1`, plus
-     `-e FREEFIELD_PACKS=…` for other packs
-   - Disk space: the packs you want plus 10 GB (60 GB for the default)
-3. **Rent**: in Search, filter by GPU memory (24 or 48 GB) and CUDA 13.0 or higher, then rent with the template.
-4. **Open it**: the instance log shows the link. With `FREEFIELD_TUNNEL=1` it is an https address on
-   `trycloudflare.com` (a free Cloudflare quick tunnel; it changes on every start). Without it, Vast gives a plain
-   `http://IP:port` address, which also works.
-5. **Stop it** when you are done: a stopped instance keeps its disk and bills only the storage.
+   - Image Path:Tag: `ghcr.io/neuregex/freefield:latest` (write the tag in the path: the Version Tag list only knows
+     Docker Hub images)
+   - Docker Options: `-p 3000:3000 -p 8000:8000 -e OPEN_BUTTON_PORT=3000 -e FREEFIELD_TUNNEL=1`, plus
+     `-e FREEFIELD_PACKS=…` for other packs. Vast copies them into the Ports and Environment Variables lists.
+   - Launch Mode: **Docker ENTRYPOINT** (the image starts itself; the Jupyter and SSH modes replace its command), and
+     untick "Jupyter direct HTTPS", which is on by default and only matters for Jupyter
+   - Disk Space: the packs you want plus 10 GB (60 GB for the default)
+3. **Rent**: select the template, then in Search set **Min Cuda Version 13** and the GPU memory you need (24 or 48
+   GB). Each offer shows its Max CUDA, price and internet speed: the speed decides how long the first start takes.
+4. **Open it**: the instance's **View instance logs** (Refresh until it fills) shows the link. With
+   `FREEFIELD_TUNNEL=1` it is an https address on `trycloudflare.com` (a free Cloudflare quick tunnel; it changes on
+   every start). The plain `http://IP:port` address Vast gives for port 3000 (the IP button lists the ports) works
+   too, with the same `?key=`.
+5. **Destroy it when you are done**: Stop keeps the disk and bills only the storage, but the GPU may be rented to
+   someone else by the time you come back, as on RunPod.
+
+Measured on an RTX 3090 at USD 0.20/hour with 690 Mbps (Czechia, 17 Nov 2026): about 4.5 minutes to pull the image
+and about 3.5 more for the default models, Z-Image 15.6 s for the first image, upscale ×2 9.3 s. Vast also bills
+the host's traffic ("plus bandwidth"): for that short test it cost more than the GPU (USD 0.38 in all), so for a
+quick session prefer an offer with a low download price.
 
 ## Any Docker host with an NVIDIA GPU
 
