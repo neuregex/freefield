@@ -88,6 +88,11 @@ irm https://raw.githubusercontent.com/neuregex/freefield/main/start.ps1 | iex
 
 Press Enter in its window to stop Freefield and free the GPU.
 
+Keep Docker Desktop's disk on an SSD: it holds the models, and they load from it. On a 3090 Ti the first Create Image
+(with *Expand my prompt*) took 32 s with the disk on an NVMe SSD and 9 min 25 s on a hard disk, almost all of it loading
+models; the sampling itself was 5 s. The launcher warns when the disk is on a hard disk; Docker Desktop moves it in
+Settings → Resources → Advanced → Disk image location.
+
 Under the hood it is the same `docker run` as on a rented GPU ([guide](docs/cloud-gpus.md#any-docker-host-with-an-nvidia-gpu)),
 with the studio on `127.0.0.1` only and the models in the `freefield` volume. `$env:FREEFIELD_PACKS` picks other packs
 before you run it. `powershell -ExecutionPolicy Bypass -File "$env:LOCALAPPDATA\Freefield\start.ps1" uninstall` removes it
