@@ -7,6 +7,26 @@ import { apps, byId, FEATURED, MODELS, menuGroups, modelOf, usesModel, tagline }
 
 const canHover = window.matchMedia?.("(hover: hover) and (pointer: fine)");
 const OPEN_MS = 90, CLOSE_MS = 180;
+const AIM_MS = 450;   // how long the pointer may rest on its way from a studio link to the open panel
+
+/** Whether (px, py) is inside the triangle a-b-c (either winding). */
+export function inTriangle(px, py, ax, ay, bx, by, cx, cy) {
+  const d1 = (px - bx) * (ay - by) - (ax - bx) * (py - by);
+  const d2 = (px - cx) * (by - cy) - (bx - cx) * (py - cy);
+  const d3 = (px - ax) * (cy - ay) - (cx - ax) * (py - ay);
+  return !((d1 < 0 || d2 < 0 || d3 < 0) && (d1 > 0 || d2 > 0 || d3 > 0));
+}
+
+/** Whether a pointer at (x, y) that left a studio link at aim is heading for the panel rect r: inside the triangle
+ *  from aim to the two corners of r that face it. The panel is centred, so the link is usually off to one side and
+ *  the way there is a diagonal across the page, which used to close the menu half way. */
+export function towardPanel(aim, x, y, r) {
+  if (!aim || !r) return false;
+  if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return true;
+  if (aim.x < r.left) return inTriangle(x, y, aim.x, aim.y, r.right, r.top, r.left, r.bottom);
+  if (aim.x > r.right) return inTriangle(x, y, aim.x, aim.y, r.left, r.top, r.right, r.bottom);
+  return inTriangle(x, y, aim.x, aim.y, r.left, r.top, r.right, r.top);
+}
 
 function thumbOf(app) {
   const ex = app.example;
@@ -65,9 +85,11 @@ export function attachMenus(bar, links) {
   bar.append(panel);
   const built = new Map();
   let openKey = null, openTimer = null, closeTimer = null;
+  let aim = null;   // where the pointer left a studio link while a panel is open
 
   const close = () => {
     clearTimeout(openTimer); clearTimeout(closeTimer);
+    aim = null;
     if (!openKey) return;
     links.get(openKey)?.setAttribute("aria-expanded", "false");
     openKey = null;
@@ -89,26 +111,35 @@ export function attachMenus(bar, links) {
     links.get(key).setAttribute("aria-expanded", "true");
   };
   const later = () => { clearTimeout(openTimer); clearTimeout(closeTimer); closeTimer = setTimeout(close, CLOSE_MS); };
+  const heading = (e) => openKey && !panel.hidden && towardPanel(aim, e.clientX, e.clientY, panel.getBoundingClientRect());
+  // while the pointer keeps heading for the open panel, the close waits; it closes once the pointer turns away or rests
+  document.addEventListener("pointermove", (e) => {
+    if (aim && heading(e)) { clearTimeout(closeTimer); closeTimer = setTimeout(close, AIM_MS); }
+  }, { passive: true });
 
   for (const key of ["image", "video", "audio"]) {
     const a = links.get(key);
     if (!a || !apps.length) continue;
     a.setAttribute("aria-haspopup", "true");
     a.setAttribute("aria-expanded", "false");
-    a.addEventListener("pointerenter", () => {
+    a.addEventListener("pointerenter", (e) => {
       clearTimeout(closeTimer);
       clearTimeout(openTimer);
-      // moving from one open menu to the next swaps at once; the first one waits a beat so passing over the bar does not flash it
-      if (openKey) open(key); else openTimer = setTimeout(() => open(key), OPEN_MS);
+      // moving from one open menu to the next swaps at once; the first one waits a beat so passing over the bar does not flash it.
+      // Crossing another studio's link on the way down to the open panel does not swap, unless the pointer stays on it;
+      // sliding along the bar from one studio to the next still swaps at once.
+      if (openKey && openKey !== key && aim && e.clientY > aim.y + 4 && heading(e)) openTimer = setTimeout(() => open(key), AIM_MS);
+      else if (openKey) open(key);
+      else openTimer = setTimeout(() => open(key), OPEN_MS);
     });
-    a.addEventListener("pointerleave", later);
+    a.addEventListener("pointerleave", (e) => { aim = openKey ? { x: e.clientX, y: e.clientY } : null; later(); });
     a.addEventListener("click", close);
     a.addEventListener("keydown", (e) => {
       if (e.key === "ArrowDown") { e.preventDefault(); open(key); panel.querySelector(".mm-item")?.focus(); }
     });
   }
-  panel.addEventListener("pointerenter", () => clearTimeout(closeTimer));
-  panel.addEventListener("pointerleave", later);
+  panel.addEventListener("pointerenter", () => { clearTimeout(closeTimer); clearTimeout(openTimer); aim = null; });
+  panel.addEventListener("pointerleave", () => { aim = null; later(); });
   panel.addEventListener("click", (e) => { if (e.target.closest("a")) close(); });
   panel.addEventListener("keydown", (e) => {
     if (e.key === "Escape") { const k = openKey; close(); links.get(k)?.focus(); }
