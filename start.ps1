@@ -611,6 +611,8 @@ function New-Icon {
 
 $prevEnc = $null
 try { $prevEnc = [Console]::OutputEncoding; [Console]::OutputEncoding = New-Object Text.UTF8Encoding -ArgumentList $false } catch {}
+$prevHints = $env:DOCKER_CLI_HINTS
+$env:DOCKER_CLI_HINTS = 'false'   # no "What's next: docker scout ..." after the pull
 try { $Host.UI.RawUI.WindowTitle = 'Freefield' } catch {}
 
 try {
@@ -691,9 +693,9 @@ try {
     if (-not $imageId) { Say 'bad' (Msg 'pull_none'); Wait-Close; return }
     if (-not $pulled) { Say 'warn' (Msg 'pull_failed') }
 
-    Say 'step' (Msg 'starting')
+    if ($box -and $box.ImageId -ne $imageId) { Say 'step' (Msg 'updating') } else { Say 'step' (Msg 'starting') }
     if ($box) {
-      if ($box.ImageId -ne $imageId) { Say 'step' (Msg 'updating'); $recreate = $true }
+      if ($box.ImageId -ne $imageId) { $recreate = $true }
       if ($recreate) {
         [void](Dk rm -f $Name)
         $r = New-Box $envs $box.Port $box.Bind
@@ -741,5 +743,6 @@ try {
 finally {
   Write-Progress -Activity 'Freefield' -Completed
   if ($prevEnc) { try { [Console]::OutputEncoding = $prevEnc } catch {} }
+  $env:DOCKER_CLI_HINTS = $prevHints
 }
 } $PSCommandPath @($args)
