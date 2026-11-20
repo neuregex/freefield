@@ -167,7 +167,8 @@ export function openModels(focus = {}) {
     busy = true;
     try {
       const r = await api("/api/models/download", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ packs }) });
-      toast(r.queued ? t("models.queued.toast") : t("models.started", { packs: packs.join(", ") }));
+      toast(r.queued ? t("models.queued.toast") : r.nothing ? t("models.nothing") : r.running ? t("models.running")
+        : t("models.started", { packs: packs.join(", ") }));
     } catch (err) { toast(err.message, { error: true }); }
     finally { busy = false; await pollModels({ fresh: true }); }
   }

@@ -117,6 +117,19 @@ async def main():
         async with s.post(f"{base}/freefield/downloads", headers=h, json={"packs": ["image"]}) as r:
             out = await r.json()
         assert r.status == 202 and out == {"queued": ["image"]}, out
+        # the same files again while they are on their way: nothing more to queue
+        image_files = [f"{m['dir']}/{m['name']}" for m in json.loads((ROOT / "packs" / "image.json").read_text())["models"]]
+        (models / ".downloads.json").write_text(json.dumps({"failed": {}, "job": {**job, "packs": ["image"], "files": image_files}}))
+        async with s.post(f"{base}/freefield/downloads", headers=h, json={"packs": ["image"]}) as r:
+            out = await r.json()
+        assert r.status == 202 and out == {"running": ["image"]}, out
+        # a pack whose files are all here downloads nothing
+        upscale = json.loads((ROOT / "packs" / "upscale.json").read_text())["models"]
+        for m in upscale:
+            (models / m["dir"]).mkdir(parents=True, exist_ok=True); (models / m["dir"] / m["name"]).write_bytes(b"x")
+        async with s.post(f"{base}/freefield/downloads", headers=h, json={"packs": ["upscale"]}) as r:
+            out = await r.json()
+        assert r.status == 200 and out == {"nothing": True}, out
         async with s.get(f"{base}/freefield/downloads", headers=h) as r:
             v = await r.json()
         assert v["job"]["state"] == "running" and v["queued"] == ["image"], v["job"]

@@ -151,6 +151,7 @@ class Downloads:
                     self.probe.setdefault(m["repo"], m["file"])
                     self.licenses.setdefault(m["repo"], m.get("license"))
         self.proc: asyncio.subprocess.Process | None = None
+        self.proc_packs: list[str] = []   # what the download this gateway started is fetching
         self.queued: list[str] = []
         self.waiter: asyncio.Task | None = None
 
@@ -213,12 +214,20 @@ class Downloads:
         if not names or unknown:
             return 400, {"error": f"unknown pack {', '.join(unknown) or '(none)'}; packs: {', '.join(self.packs)}"}
         todo = {(m["repo"], m["file"]): m for n in names for m in self.packs[n]["models"] if not self.has(m)}
+        if not todo:
+            return 200, {"nothing": True}   # every file is here already
         need = sum(m["gb"] for m in todo.values())
         free = shutil.disk_usage(self.models).free / 1e9
         if need > free - 2:
             return 400, {"error": f"not enough disk: {need:.1f} GB to download, {free:.1f} GB free here, and 2 GB must stay "
                                   "free (a bigger volume, or another pack)"}
         if self.busy():
+            # a second press of the same button: what it asks for is already on its way, nothing to queue
+            job = self._status().get("job") or {}
+            coming = set(job.get("files") or []) if job.get("state") == "running" else set()
+            mine = self.proc and self.proc.returncode is None and set(names) <= set(self.proc_packs)
+            if mine or {f"{m['dir']}/{m['name']}" for m in todo.values()} <= coming:
+                return 202, {"running": job.get("packs") or self.proc_packs}
             self.queued = list(dict.fromkeys(self.queued + names))
             if not self.waiter or self.waiter.done():
                 self.waiter = asyncio.get_running_loop().create_task(self._after_current())
@@ -228,6 +237,7 @@ class Downloads:
 
     async def _spawn(self, names: list[str]) -> None:
         # its lines go to the same log as everything else (RunPod's and Vast's Logs, docker logs)
+        self.proc_packs = list(names)
         self.proc = await asyncio.create_subprocess_exec(
             sys.executable, str(ROOT / "tools" / "local_backend.py"), "download", COMFY_DIR, "--models", str(self.models),
             *names, cwd=str(ROOT))
