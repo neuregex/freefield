@@ -6,6 +6,7 @@ import { exampleItem, thumb, hoverPlay, optionTile } from "./media.js";
 import { feed, feedView, hooks } from "./feed.js";
 import { pickOption, recreate } from "./workspace.js";
 import { flags, flagButton } from "./flags.js";
+import { needTag } from "./models.js";
 
 const go = (hash) => () => { location.hash = hash; };
 const appTag = (a) => (a.status === "draft" ? el("span", { class: "tag dark" }, t("tag.draft")) : null);
@@ -120,7 +121,7 @@ function appCard(a) {
   const fit = fitOf(a);
   media.append(el("div", { class: "badges" },
     a.status === "draft" ? el("span", { class: "tag dark" }, t("tag.draft")) : null,
-    a.missing_pack ? el("span", { class: "tag dark", title: t("ws.nopack", { pack: a.missing_pack }) }, t("tag.nopack")) : null,
+    needTag(a),
     fit && fit[1] === "big" ? el("span", { class: "tag violet" }, `48 ${t("unit.gb")}`) : null));
   const card = el("a", { class: "app-card", href: `#/app/${a.id}` }, media,
     el("h3", {}, a.name), el("p", {}, a.summary),

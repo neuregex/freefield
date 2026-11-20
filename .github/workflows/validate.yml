@@ -25,6 +25,11 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m compileall -q infra lab tools
+      - name: gateway tests (links, the Models panel against a fake Hugging Face)
+        run: |
+          pip install -q aiohttp huggingface_hub
+          python test/gateway_test.py
+          python test/downloads_test.py
       - name: packs and VRAM map match the manifests
         run: |
           python tools/catalog.py all

@@ -4,7 +4,7 @@
 //   #/library          history and lab examples                       #/vram      the VRAM map
 import { el, closePopover, toast, api } from "./util.js";
 import { t } from "./i18n.js";
-import { loadCatalog, byId, lastAppFor, studioOf, FEATURED, hosted } from "./catalog.js";
+import { loadCatalog, byId, lastAppFor, studioOf, FEATURED, hosted, modelsPanel } from "./catalog.js";
 import { topbar, gpuState, pollGpu } from "./nav.js";
 import { exploreView, appsView, libraryView, vramView } from "./views.js";
 import { workspaceView, recreate, useIn } from "./workspace.js";
@@ -12,6 +12,7 @@ import { hooks, feed } from "./feed.js";
 import { openViewer } from "./viewer.js";
 import { openCompare } from "./compare.js";
 import { flags } from "./flags.js";
+import { modelsStrip, startModels, redrawModels } from "./models.js";
 
 const main = el("main", { id: "main", class: "view" });
 let bar = null;
@@ -50,10 +51,12 @@ function render({ keepScroll = false } = {}) {
   document.title = app ? `${app.name} · Freefield` : "Freefield";
 }
 
+const strip = modelsStrip();   // under the top bar: a download on its way, apps waiting for a license
 function buildBar() {
-  const next = topbar({ onLang: () => { buildBar(); render({ keepScroll: true }); } });
+  const next = topbar({ onLang: () => { buildBar(); redrawModels(); render({ keepScroll: true }); } });
   if (bar) bar.node.replaceWith(next.node); else document.body.prepend(next.node);
   bar = next;
+  bar.node.after(strip);
 }
 
 hooks.open = (items, key) => openViewer(items, key);
@@ -82,6 +85,7 @@ async function boot() {
   buildBar();
   window.addEventListener("hashchange", () => render());
   render();
+  if (modelsPanel) startModels();
   if (hosted) wakeOnce();
 }
 

@@ -8,6 +8,7 @@ export let apps = [];
 export const byId = new Map();
 export let draftsAllowed = false;
 export let hosted = false;   // the server runs as a hosted demo (passcode, run cap): lab marks are read-only
+export let modelsPanel = false;   // the backend downloads its own models (a pod, your own GPU): models.js shows them
 
 const DEV = new URLSearchParams(location.search).has("dev");   // ?dev shows the smoke-test apps
 
@@ -15,6 +16,7 @@ export async function loadCatalog() {
   const d = await api("/api/apps");
   draftsAllowed = Boolean(d.drafts);
   hosted = Boolean(d.hosted);
+  modelsPanel = Boolean(d.models_panel);
   apps = d.apps.filter((a) => DEV || !a.id.startsWith("smoke")).map((a) => localizeApp(a, () => lang));
   byId.clear();
   for (const a of apps) byId.set(a.id, a);

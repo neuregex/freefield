@@ -10,6 +10,7 @@ import { exampleItem, thumb, hoverPlay, fullMedia, playWhenVisible, optionTile, 
 import { flags, flagButton } from "./flags.js";
 import { feed, feedView, hooks } from "./feed.js";
 import { openPainter, maskPreview } from "./paint.js";
+import { needNode, needText } from "./models.js";
 
 // ------------------------------------------------------------------ form state (per app, kept while the page is open)
 const forms = new Map();
@@ -321,7 +322,7 @@ function genButton(app, onClick, { wide = false } = {}) {
   const est = estimate(app);
   const b = el("button", { class: `generate${wide ? " wide" : ""}`, type: "button", disabled: !app.runnable || Boolean(app.missing_pack),
     title: !app.runnable ? (app.status === "draft" ? t("ws.draft") : t("ws.noworkflow"))
-      : app.missing_pack ? t("ws.nopack", { pack: app.missing_pack }) : est ? t("ws.est", { gpu: est.gpu }) : null },
+      : app.missing_pack ? needText(app) : est ? t("ws.est", { gpu: est.gpu }) : null },
     t("ws.generate"), est ? el("span", { class: "cost" }, icon("spark"), fmtShort(est.seconds)) : el("span", { class: "cost" }, icon("spark")));
   b.addEventListener("click", async () => {
     if (b.dataset.busy) return;
@@ -421,7 +422,7 @@ function composerBar(app, rerenderBar) {
   const go = async () => { if (await submit(app, ui) && wsTab !== "history") { wsTab = "history"; hooks.rerender?.(); } };
   const gen = genButton(app, go);
   if (!app.runnable) { hint.hidden = false; hint.textContent = app.status === "draft" ? t("ws.draft") : t("ws.noworkflow"); }
-  else if (app.missing_pack) { hint.hidden = false; hint.textContent = t("ws.nopack", { pack: app.missing_pack }); }
+  else if (app.missing_pack) { hint.hidden = false; hint.replaceChildren(needNode(app)); }
 
   const bar = el("div", { class: "composer" },
     hint,
@@ -658,7 +659,7 @@ function sidebarPanel(app, rerenderSide) {
 
   const scroll = el("div", { class: "side-scroll" }, card, modeSwitch(app), ...main, advanced);
   const note = el("p", { class: "side-note" }, !app.runnable ? (app.status === "draft" ? t("ws.draft") : t("ws.noworkflow"))
-    : app.missing_pack ? t("ws.nopack", { pack: app.missing_pack }) : "");
+    : app.missing_pack ? needNode(app) : "");
   ui.clearMissing = () => { scroll.querySelectorAll(".missing").forEach((n) => n.classList.remove("missing")); };
   ui.markMissing = (id) => {
     const n = ui.refs[id] || scroll.querySelector(`[data-slot="${id}"]`);

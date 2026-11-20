@@ -214,3 +214,23 @@ input,button{font:inherit;padding:10px 12px;border-radius:8px;border:1px solid #
 button{background:#e8ff5a;color:#11140a;border:0;font-weight:600;cursor:pointer}</style></head>
 <body><form method="get" action="/"><h1>Freefield</h1><p>This demo is private. Enter the passcode you were given.</p>
 <input name="key" type="password" autocomplete="current-password" aria-label="Passcode" required autofocus><button>Open</button></form></body></html>`;
+
+// Where the owner of a pod or of their own GPU finds the passcode (FREEFIELD_BACKEND_NAME, set by infra/pod.py)
+const WHERE: Record<string, { en: string; es: string }> = {
+  "RunPod": { en: "It is in the pod's log on RunPod (Logs), on the line that starts with Passcode, and in the link above it.",
+    es: "Está en el log del pod en RunPod (Logs), en la línea que empieza con Passcode, y en el link de arriba de esa línea." },
+  "Vast.ai": { en: "It is in the instance's log on Vast.ai, on the line that starts with Passcode, and in the link above it.",
+    es: "Está en el log de la instancia en Vast.ai, en la línea que empieza con Passcode, y en el link de arriba de esa línea." },
+  "this computer": { en: "It is in the window of the Freefield launcher, and in the container's log (docker logs freefield).",
+    es: "Está en la ventana del lanzador de Freefield, y en el log del contenedor (docker logs freefield)." },
+};
+
+/** The door of a pod or of your own GPU: the same form, and where its owner finds the passcode. */
+export function ownerDoor(backend: string, acceptLanguage = ""): string {
+  const where = WHERE[backend];
+  if (!where) return DOOR_HTML;
+  const es = /^es\b/i.test(acceptLanguage.trim());
+  const text = es ? `Este Freefield es privado. Escribe su passcode. ${where.es}` : `This Freefield is private. Enter its passcode. ${where.en}`;
+  return DOOR_HTML.replace("This demo is private. Enter the passcode you were given.", text)
+    .replace('<html lang="en">', `<html lang="${es ? "es" : "en"}">`).replace(">Open</button>", es ? ">Abrir</button>" : ">Open</button>");
+}

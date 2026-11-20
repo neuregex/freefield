@@ -8,14 +8,17 @@ your computer, and no Modal account.
 ghcr.io/neuregex/freefield:latest
 ```
 
-When the container starts it downloads the model files of the packs you ask for into its volume (a restart downloads
-only what is missing), starts the backend and the studio, and prints the link to open, with a passcode in it:
+When the container starts it begins downloading the model files of the packs you ask for into its volume (a restart
+downloads only what is missing), starts the backend and the studio meanwhile, and prints the link to open, with a
+passcode in it. The studio shows how the download goes, and each app works as soon as its files are in:
 
 ```
 ========================================================================
 Freefield is ready on RunPod.
   Open:      https://abc123xyz-3000.proxy.runpod.net/?key=Zq0v…
   Passcode:  Zq0v…   (kept in /workspace/freefield/passcode; FREEFIELD_PASSCODE sets your own)
+  The models are still downloading (22.9 GB): the studio shows how it goes, and each app
+  works as soon as its files are in.
   …
 ========================================================================
 ```
@@ -58,7 +61,11 @@ only the packs in `FREEFIELD_PACKS`. The default is `image-flux3,upscale`: 64 ap
 Gated models: accept the licenses with your Hugging Face account first, then give the pod a read token as `HF_TOKEN`:
 [FLUX 3 Image Klein](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy) (`image-flux3`,
 `video-wan-effects`, `video-ltx25`) and [LTX-2.5](https://huggingface.co/Lightricks/LTX-2.5) with its IC-LoRAs
-(`video-ltx25`). The log lists the license page of each gated file it could not get.
+(`video-ltx25`). Without a token those files wait, and the rest downloads. The studio's **Models** panel (the notice
+under the top bar, or the GPU button) lists the licenses still to accept, takes a read token and downloads what was
+waiting, with no restart. It keeps the token in the volume (`/workspace/freefield/hf_token`, mode 600) and uses it
+instead of `HF_TOKEN` from then on; *Forget* removes it. The same panel downloads the packs you did not ask for at
+the start, when the disk has room. The log lists the license page of each gated file it could not get, too.
 
 ## RunPod
 
@@ -125,7 +132,8 @@ quick session prefer an offer with a low download price.
 ## Any Docker host with an NVIDIA GPU
 
 On Windows, [`start.ps1`](../start.ps1) does all of this in one line of PowerShell: it checks the GPU, the driver and
-Docker Desktop, asks for the Hugging Face token and checks it, shows the download and opens the studio
+Docker Desktop, asks for the Hugging Face token and checks it against every license its packs ask for, and opens the
+studio while the models download
 ([README](../README.md#on-your-own-pc-in-one-line)). By hand, on your own Linux machine or Windows with Docker Desktop
 (WSL 2), with the NVIDIA Container Toolkit:
 
@@ -143,7 +151,7 @@ The volume `freefield` keeps the models and the history between runs. Open the l
 | Variable | Default | |
 |---|---|---|
 | `FREEFIELD_PACKS` | `image-flux3,upscale` | packs to download, comma-separated, or `all` or `none` |
-| `HF_TOKEN` | — | Hugging Face read token, for the gated packs |
+| `HF_TOKEN` | — | Hugging Face read token, for the gated packs (or paste it in the studio's Models panel) |
 | `FREEFIELD_PASSCODE` | random, kept in the volume | the studio's passcode |
 | `FREEFIELD_TOKEN` | random, kept in the volume | the gateway's token on port 8000 (see below) |
 | `FREEFIELD_COMFY_ARGS` | — | extra ComfyUI flags, e.g. `--lowvram` |
@@ -165,11 +173,14 @@ fail there. The studio inside the pod does not have that problem: its uploads go
 
 ## When something goes wrong
 
-- **The pod restarts in a loop, or ComfyUI says the CUDA driver is too old**: the machine has a driver older than
-  580. Pick one with CUDA 13.0 or higher.
-- **An app says "Not on this GPU"**: its pack is not in `FREEFIELD_PACKS`, or a gated download failed (401/403 in
-  the log): add the pack or accept the license and check `HF_TOKEN`, then restart the pod. It downloads only what is
-  missing.
+- **A red notice about the GPU or its driver**, in the studio and the log: the card is older than CUDA 13 supports
+  (a V100, a P100), or the machine's driver is older than 580, and ComfyUI would crawl on the CPU. Stop the pod and
+  pick another machine (on RunPod, filter by CUDA 13.0 or higher).
+- **An app says "Needs a license"**: one of its models asks you to accept its license on Hugging Face. Open the
+  Models panel: it links each license, takes the token and downloads the rest.
+- **An app says "Not on this GPU"**: its pack is not in `FREEFIELD_PACKS`. Download it from the Models panel, or add it
+  to `FREEFIELD_PACKS` and restart the pod (it downloads only what is missing).
+- **An app says "Download failed"**: the Models panel shows the error and tries again.
 - **"not enough disk"** in the log: make the volume bigger, or ask for fewer packs.
 - **Forgot the passcode**: it is in the log of every start, and in `/workspace/freefield/passcode`.
 

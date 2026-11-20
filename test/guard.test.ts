@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { foreign, Guard, parseCookies, plainHttpToIp } from "../server/guard.ts";
+import { DOOR_HTML, foreign, Guard, ownerDoor, parseCookies, plainHttpToIp } from "../server/guard.ts";
 
 test("without settings the guard lets everything through", () => {
   const g = new Guard();
@@ -108,4 +108,11 @@ test("plain http to a bare IP (a Vast.ai port) gets cookies without Secure; name
   assert.doesNotMatch(g.login("k", false)!, /Secure/);
   assert.match(g.login("k")!, /HttpOnly; Secure; SameSite=Lax/);
   assert.doesNotMatch(g.visitor(undefined, false).setCookie!, /Secure/);
+});
+
+test("the door of a pod or your own GPU says where its owner finds the passcode; the demo's stays as it was", () => {
+  assert.match(ownerDoor("RunPod"), /pod's log on RunPod/);
+  assert.match(ownerDoor("Vast.ai", "es-MX,es;q=0.9,en;q=0.8"), /lang="es".*log de la instancia en Vast\.ai.*>Abrir</s);
+  assert.match(ownerDoor("this computer", "en-US"), /launcher/);
+  assert.equal(ownerDoor("Modal"), DOOR_HTML);
 });

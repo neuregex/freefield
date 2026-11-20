@@ -14,6 +14,12 @@
 //   GET    /api/jobs/:id[/outputs/:oid]      raw SDK job view (kept for scripts; off on a hosted demo)
 //   GET    /api/flags                        lab examples marked "mediocre" from the UI (lab/flags.json)
 //   POST   /api/flags                        JSON { key, mediocre, note? }: mark or unmark one example
+// On a backend that downloads its own models (a pod, your own GPU), the Models panel (server/models.ts):
+//   GET    /api/models                       what each pack lacks and why, the download running now, the token's source
+//   POST   /api/models/download              JSON { packs }: download them (after the one running, if any)
+//   PUT    /api/models/token                 JSON { token }: keep a Hugging Face token on the backend (https only)
+//   DELETE /api/models/token                 forget it
+//   GET    /api/models/licenses[?repos=a,b]  which licenses that token can already read
 // Everything else is served from web/ when it exists (with byte ranges, so videos seek everywhere).
 // Hosted (server/guard.ts): FREEFIELD_PASSCODE closes every route behind a passcode, FREEFIELD_MAX_RUNS_PER_DAY and
 // FREEFIELD_MAX_ACTIVE cap the runs (429 past them), lab marks become read-only and uploads are capped at
@@ -27,7 +33,8 @@ import { loadRegistry, repoRoot, isFileInput, type App } from "./registry.ts";
 import { explainSubmitError, InputError, resolveValues, Runner, type Values } from "./runner.ts";
 import { History } from "./history.ts";
 import { Flags } from "./flags.ts";
-import { DOOR_HTML, foreign, Guard, plainHttpToIp } from "./guard.ts";
+import { DOOR_HTML, foreign, Guard, ownerDoor, plainHttpToIp } from "./guard.ts";
+import { needOf, refusal, type Downloads } from "./models.ts";
 
 const root = repoRoot();
 const { apps, problems } = loadRegistry(root);
@@ -95,41 +102,68 @@ function loadExamples(): Record<string, unknown> {
 
 const runnable = (a: App) => Boolean(a.workflowPath) && (a.status === "ready" || draftsAllowed);
 
-/**
- * The pack an app needs whose files the backend does not have, or null. Only known for a backend that is always on
- * (a pod, your own GPU), which downloaded the packs it was asked for: a pod with FREEFIELD_PACKS=image,upscale cannot
- * run Face Swap. Modal is never asked, since asking would wake a GPU, and it has every pack.
- */
+/** The pack an app needs whose files the backend does not have, or null (see needOf for why they are missing). */
 function missingPack(a: App, files: Set<string> | null): string | null {
   if (!files) return null;
   const lacks = a.models.some((m) => !m.optional && !files.has(`${m.dir}/${m.file.split("/").pop()}`));
   return lacks ? a.pack ?? "?" : null;
 }
 
-let installed: { at: number; files: Set<string> | null } = { at: 0, files: null };
-async function installedFiles(): Promise<Set<string> | null> {
-  if (!alwaysOn || !process.env.COMFY_BASE_URL) return null;
-  if (Date.now() - installed.at < 30_000) return installed.files;
-  let files: Set<string> | null = null;
-  try {
-    const base = process.env.COMFY_BASE_URL.replace(/\/$/, "");
-    const r = await fetch(`${base}/freefield/models`, { signal: AbortSignal.timeout(5000),
-      headers: process.env.FREEFIELD_TOKEN ? { authorization: `Bearer ${process.env.FREEFIELD_TOKEN}` } : {} });
-    if (r.ok) {
-      const body = await r.json() as { folders?: Record<string, string[]> };
-      files = new Set(Object.entries(body.folders ?? {}).flatMap(([dir, names]) =>
-        names.map((n) => `${dir}/${n.split(/[\\/]/).pop()}`)));
-    }
-  } catch { /* an older gateway or ComfyUI still starting: nothing is marked */ }
-  installed = { at: Date.now(), files };
-  return files;
+// infra/pod.py found a GPU this image cannot use: a card too old for CUDA 13, a driver older than it needs
+const gpuProblem = (() => {
+  try { return process.env.FREEFIELD_GPU_PROBLEM ? JSON.parse(process.env.FREEFIELD_GPU_PROBLEM) as Record<string, string> : null; }
+  catch { return null; }
+})();
+
+/** A call to the gateway with its token. */
+function gateway(path: string, init: RequestInit = {}): Promise<Response> {
+  const base = process.env.COMFY_BASE_URL!.replace(/\/$/, "");
+  const auth: Record<string, string> = process.env.FREEFIELD_TOKEN ? { authorization: `Bearer ${process.env.FREEFIELD_TOKEN}` } : {};
+  return fetch(`${base}${path}`, { ...init, headers: { ...(init.headers as Record<string, string> ?? {}), ...auth },
+    signal: AbortSignal.timeout(init.method && init.method !== "GET" ? 45_000 : 8000) });
 }
 
-function publicApp(a: App, files: Set<string> | null = null) {
+// Only known for a backend that is always on (a pod, your own GPU), which downloads its own models: a pod with
+// FREEFIELD_PACKS=image,upscale cannot run Face Swap. Modal is never asked, since asking would wake a GPU, and it has
+// every pack. Kept 30 s, 3 s while a download runs (the bar in the studio moves).
+type Backend = { at: number; files: Set<string> | null; downloads: Downloads | null };
+let backend: Backend = { at: 0, files: null, downloads: null };
+async function backendState(fresh = false): Promise<Backend> {
+  if (!alwaysOn || !process.env.COMFY_BASE_URL) return backend;
+  const moving = backend.downloads?.job?.state === "running" || Boolean(backend.downloads?.queued?.length);
+  if (!fresh && Date.now() - backend.at < (moving ? 3000 : 30_000)) return backend;
+  const [files, downloads] = await Promise.all([
+    gateway("/freefield/models").then(async (r) => {
+      if (!r.ok) return null;
+      const body = await r.json() as { folders?: Record<string, string[]> };
+      return new Set(Object.entries(body.folders ?? {}).flatMap(([dir, names]) => names.map((n) => `${dir}/${n.split(/[\\/]/).pop()}`)));
+    }).catch(() => null),   // an older gateway or ComfyUI still starting: nothing is marked
+    gateway("/freefield/downloads").then(async (r) => (r.ok ? await r.json() as Downloads : null)).catch(() => null),
+  ]);
+  backend = { at: Date.now(), files, downloads };
+  return backend;
+}
+
+/** What the Models panel shows: the gateway's view plus the apps of each pack and why each app waits. */
+async function modelsView(fresh = false) {
+  const { files, downloads } = await backendState(fresh);
+  const needs: Record<string, unknown> = {};
+  for (const a of apps) {
+    const n = needOf(a, files, downloads);
+    if (n) needs[a.id] = n;
+  }
+  const packApps: Record<string, string[]> = {};
+  for (const a of apps) (packApps[a.pack] ??= []).push(a.id);
+  return { available: Boolean(downloads?.enabled), ...(downloads ?? {}), needs, pack_apps: packApps,
+    gpu_problem: gpuProblem };
+}
+
+function publicApp(a: App, files: Set<string> | null = null, downloads: Downloads | null = null) {
   return {
     id: a.id, name: a.name, section: a.section, summary: a.summary ?? "", status: a.status, pack: a.pack,
     runnable: runnable(a),
     missing_pack: missingPack(a, files),
+    needs: needOf(a, files, downloads),
     higgsfield_feature: a.higgsfield_feature ?? null,
     modes: a.modes ?? null,
     mode_label: a.mode_label ?? null,
@@ -248,7 +282,7 @@ async function gpuStatus(withDevice = false) {
   const host = configured ? (alwaysOn || (guard.hosted ? "Modal" : new URL(process.env.COMFY_BASE_URL!).host)) : null;
   const warm = Boolean(alwaysOn && configured) || Date.now() - lastContact < WARM_MS;
   const running = activeRuns();
-  const base = { configured, host, warm, always_on: Boolean(alwaysOn), last_contact: lastContact ? new Date(lastContact).toISOString() : null,
+  const base = { configured, host, warm, always_on: Boolean(alwaysOn), problem: gpuProblem, last_contact: lastContact ? new Date(lastContact).toISOString() : null,
     waking: waking ? { seconds: Math.round((Date.now() - waking.since) / 1000), error: waking.error ?? null } : null,
     running, demo: guard.hosted ? guard.status(running) : null };
   // only on request and only while warm: looking never starts a GPU, and the background poll never touches it
@@ -303,7 +337,7 @@ const server = createServer(async (req, res) => {
       if (!guard.admits(req.headers.cookie)) {
         if (parts[0] === "api") return send(res, 401, { error: "this demo needs its passcode: open the link you were given" });
         res.writeHead(401, { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" });
-        return res.end(DOOR_HTML);
+        return res.end(alwaysOn ? ownerDoor(alwaysOn, String(req.headers["accept-language"] ?? "")) : DOOR_HTML);
       }
     }
     const visitor = guard.visitor(req.headers.cookie, !plainHttpToIp(req));   // hosted: this browser's id; locally undefined (no filter)
@@ -316,9 +350,9 @@ const server = createServer(async (req, res) => {
         const sorted = [...apps].sort((a, b) => order[a.section] - order[b.section]
           || Number(b.status === "ready") - Number(a.status === "ready") || a.name.localeCompare(b.name));
         const examples = loadExamples();
-        const files = await installedFiles();
-        return send(res, 200, { apps: sorted.map((a) => ({ ...publicApp(a, files), example: examples[a.id] ?? null })), drafts: draftsAllowed,
-          hosted: guard.hosted });
+        const { files, downloads } = await backendState();
+        return send(res, 200, { apps: sorted.map((a) => ({ ...publicApp(a, files, downloads), example: examples[a.id] ?? null })), drafts: draftsAllowed,
+          hosted: guard.hosted, models_panel: Boolean(downloads?.enabled) });
       }
       if (req.method === "GET" && area === "apps" && sub === "workflow") {
         // the app's ComfyUI workflow (API format) as a file: drag it onto ComfyUI's canvas to open the app as nodes
@@ -334,8 +368,9 @@ const server = createServer(async (req, res) => {
         if (!app) return send(res, 404, { error: "unknown app" });
         if (!app.workflowPath) throw new InputError(`${app.id} has no workflow yet`);
         if (!runnable(app)) throw new InputError(`${app.id} is a draft; start the server with FREEFIELD_DRAFTS=1 to run it anyway`);
-        const lacking = missingPack(app, await installedFiles());
-        if (lacking) throw new InputError(`${app.id} needs the ${lacking} pack, which this backend has not downloaded: add it to FREEFIELD_PACKS and restart the pod`);
+        const { files, downloads } = await backendState();
+        const need = needOf(app, files, downloads);
+        if (need) throw new InputError(refusal(app.id, need));
         const refused = guard.refuse(activeRuns());
         if (refused) return send(res, 429, { error: refused });
         admitting++;
@@ -374,6 +409,36 @@ const server = createServer(async (req, res) => {
           try { wake(); } catch (e) { throw new InputError((e as Error).message); }
           return send(res, 202, await gpuStatus());
         }
+      }
+      if (area === "models") {
+        // only where the backend downloads its own models: never on Modal (always-on is unset there), so the hosted
+        // demo neither shows nor takes a Hugging Face token
+        if (!alwaysOn || !process.env.COMFY_BASE_URL) return send(res, 404, { error: "this backend does not download its own models" });
+        const relay = async (r: Response) => {
+          const body = await r.json().catch(() => ({ error: `the gateway answered ${r.status}` }));
+          if (r.status === 404) return send(res, 501, { error: "this backend's gateway is older than the Models panel: update it" });
+          await backendState(true);
+          return send(res, r.status, body);
+        };
+        if (req.method === "GET" && !id) return send(res, 200, await modelsView(url.searchParams.get("fresh") === "1"));
+        if (req.method === "GET" && id === "licenses") {
+          return relay(await gateway(`/freefield/licenses?repos=${encodeURIComponent(url.searchParams.get("repos") ?? "")}`));
+        }
+        if (req.method === "POST" && id === "download") {
+          const body = await (await toRequest(req)).json().catch(() => null) as { packs?: unknown } | null;
+          if (!body || !Array.isArray(body.packs) || !body.packs.every((p) => typeof p === "string")) throw new InputError('expected JSON { "packs": [...] }');
+          return relay(await gateway("/freefield/downloads", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ packs: body.packs }) }));
+        }
+        if (id === "token" && req.method === "PUT") {
+          // a token is a password to the owner's Hugging Face account: not over plain http to a bare IP (a Vast.ai port)
+          if (plainHttpToIp(req)) {
+            return send(res, 400, { error: "open Freefield through its https link to paste a token (it is in the log, the line with trycloudflare.com): over plain http, anyone on the way could read it" });
+          }
+          const body = await (await toRequest(req)).json().catch(() => null) as { token?: unknown } | null;
+          if (!body || typeof body.token !== "string") throw new InputError('expected JSON { "token": "hf_..." }');
+          return relay(await gateway("/freefield/hf-token", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ token: body.token }) }));
+        }
+        if (id === "token" && req.method === "DELETE") return relay(await gateway("/freefield/hf-token", { method: "DELETE" }));
       }
       if (area === "flags" && parts.length === 2) {
         if (req.method === "GET") return send(res, 200, { mediocre: flags.list() });
