@@ -131,7 +131,7 @@ def gpu_problem() -> dict | None:
     probe = ("import json, torch; ok = torch.cuda.is_available(); print(json.dumps({'ok': ok, 'cuda': torch.version.cuda,"
              " 'name': torch.cuda.get_device_name(0) if ok else None, 'cap': list(torch.cuda.get_device_capability(0)) if ok else None}))")
     try:
-        r = subprocess.run([sys.executable, "-c", probe], capture_output=True, text=True, timeout=180)
+        r = subprocess.run([sys.executable, "-c", probe], capture_output=True, text=True, timeout=60)
         info = json.loads(r.stdout.strip().splitlines()[-1])
     except Exception:   # no answer is no verdict: ComfyUI will say what it says
         return None

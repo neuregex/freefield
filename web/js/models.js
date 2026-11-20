@@ -103,13 +103,13 @@ export function modelsStrip() {
     const progress = job ? [el("span", { class: "dim" }, t("models.dl", { done: gb(job.done_gb), total: gb(job.gb) })),
       el("span", { class: "mbar" }, el("i", { style: { width: `${Math.min(100, (100 * job.done_gb) / (job.gb || 1))}%` } }))] : [];
     let kids = null, cls = "";
-    if (problem) { cls = "bad"; kids = [icon("info"), el("span", {}, gpuProblemText(problem))]; }
+    if (problem) { cls = "bad"; kids = [icon("info"), el("span", { class: "msg" }, gpuProblemText(problem))]; }
     else if (waiting) {
       cls = "warn";
-      kids = [icon("info"), el("b", {}, t(waiting === 1 ? "models.waiting1" : "models.waiting", { n: waiting })), ...progress, open(t("models.fix"), true)];
+      kids = [icon("info"), el("b", { class: "msg" }, t(waiting === 1 ? "models.waiting1" : "models.waiting", { n: waiting })), ...progress, open(t("models.fix"), true)];
     } else if (job) kids = [icon("download"), ...progress, open(t("models.details"))];
-    else if (failed) { cls = "warn"; kids = [icon("info"), el("span", {}, t(failed === 1 ? "models.failed1" : "models.failed", { n: failed })), open(t("models.details"))]; }
-    else if (d.job?.state === "stopped") { cls = "warn"; kids = [icon("info"), el("span", {}, t("models.stopped")), open(t("models.details"))]; }
+    else if (failed) { cls = "warn"; kids = [icon("info"), el("span", { class: "msg" }, t(failed === 1 ? "models.failed1" : "models.failed", { n: failed })), open(t("models.details"))]; }
+    else if (d.job?.state === "stopped") { cls = "warn"; kids = [icon("info"), el("span", { class: "msg" }, t("models.stopped")), open(t("models.details"))]; }
     node.hidden = !kids;
     node.className = `mstrip ${cls}`.trim();
     if (kids) node.replaceChildren(el("div", { class: "in" }, ...kids));

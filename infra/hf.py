@@ -75,8 +75,8 @@ def env_problem() -> str | None:
     if not env:
         return None
     if unresolved(env):
-        return ("HF_TOKEN is the template's placeholder: this RunPod account has no secret named hf_token. Create it "
-                "(Secrets, in RunPod's menu) or paste your token in the studio's Models panel")
+        return ("HF_TOKEN is the RunPod template's placeholder: this account has no secret named hf_token yet. A token "
+                "pasted in the studio's Models panel works too, and the secret saves pasting it on the next pods")
     if not looks_like_token(env):
         return (f"HF_TOKEN does not look like a Hugging Face token ({len(env)} characters; a read token is hf_ and about "
                 f"34 more): copy it again from {TOKENS_PAGE}, or paste it in the studio's Models panel")

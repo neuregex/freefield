@@ -660,6 +660,8 @@ dl.vals dd { margin: 0; overflow-wrap: anywhere; }
 .mstrip { position: sticky; top: var(--top); z-index: 39; background: rgba(15, 15, 17, .92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
 .mstrip .in { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; min-height: 42px; padding: 6px 18px; font-size: 13px; max-width: 1600px; margin: 0 auto; }
 .mstrip .in > .btn { margin-left: auto; }
+.mstrip .in > .msg { flex: 0 1 auto; min-width: 0; }
+.mstrip.bad .in > .msg { flex: 1 1 280px; }
 .mstrip.warn { background: rgba(40, 32, 10, .92); border-bottom-color: rgba(255, 198, 92, .3); }
 .mstrip.warn svg.i-info { color: var(--warn); }
 .mstrip.bad { background: rgba(48, 14, 12, .94); border-bottom-color: rgba(255, 107, 94, .4); }
