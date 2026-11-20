@@ -4,6 +4,7 @@ import { el, icon, logoMark, api, popover, closePopover, toast, live } from "./u
 import { t, lang, LANGS, setLang } from "./i18n.js";
 import { byId, FEATURED } from "./catalog.js";
 import { attachMenus } from "./menu.js";
+import { models, openModels, gpuProblemText } from "./models.js";
 
 export const gpuState = { data: null, listeners: new Set() };
 let pollTimer = null;
@@ -53,7 +54,7 @@ function gpuPill() {
       if (g.waking?.error) lines.push(el("p", { class: "help", style: { color: "var(--bad)" } }, g.waking.error), wake);
       else if (g.waking) lines.push(el("p", { class: "help" }, t("gpu.pop.waking")));
       else if (g.warm) {
-        lines.push(el("p", { class: "help" }, t(g.always_on ? "gpu.pop.always" : "gpu.pop.ready")));
+        lines.push(el("p", { class: "help" }, t(!g.always_on ? "gpu.pop.ready" : g.host === "this computer" ? "gpu.pop.local" : "gpu.pop.always")));
         if (g.device?.vram_total_gb) {
           lines.push(el("div", { style: { display: "grid", gap: "6px" } },
             el("div", { style: { display: "flex", justifyContent: "space-between", fontSize: "12.5px" } }, el("span", { class: "dim" }, `${t("gpu.pop.vram")} · ${g.device.name || "GPU"}`),
@@ -63,6 +64,10 @@ function gpuPill() {
         if (g.device?.app) lines.push(el("p", { class: "help" }, `${t("gpu.pop.loaded")}: ${byId.get(g.device.app)?.name ?? g.device.app}`));
       } else lines.push(el("p", { class: "help" }, t("gpu.pop.asleep")), wake);
       if (g.running) lines.push(el("p", { class: "help" }, t("gpu.pop.running", { n: g.running })));
+      if (g.problem) lines.push(el("p", { class: "help", style: { color: "var(--bad)" } }, gpuProblemText(g.problem)));
+      if (models.data?.available) {
+        lines.push(el("button", { class: "btn small", type: "button", onclick: () => { closePopover(); openModels(); } }, icon("layers"), t("gpu.pop.models")));
+      }
       if (g.demo?.max_runs_per_day) lines.push(el("p", { class: "help" }, t("gpu.pop.demo", { n: g.demo.runs_left, max: g.demo.max_runs_per_day })));
     }
     popover(pill, el("div", { class: "pad", style: { width: "300px" } }, ...lines), { align: "end" });

@@ -5,7 +5,9 @@
       "sfx"
     ],
     "download_gb": 29.29,
-    "needs_hf_token": false
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false
   },
   "core": {
     "apps": [
@@ -13,14 +15,18 @@
       "smoke-invert"
     ],
     "download_gb": 0,
-    "needs_hf_token": false
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false
   },
   "image": {
     "apps": [
       "z-image"
     ],
     "download_gb": 12.17,
-    "needs_hf_token": false
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false
   },
   "image-flux3": {
     "apps": [
@@ -84,7 +90,11 @@
       "victory-card"
     ],
     "download_gb": 17.76,
-    "needs_hf_token": true
+    "needs_hf_token": true,
+    "gated": {
+      "black-forest-labs/flux-3-image-klein-comfy": "diffusion_models/flux3-image-klein-int8-convrot.safetensors"
+    },
+    "default": true
   },
   "image-krea2": {
     "apps": [
@@ -92,14 +102,18 @@
       "styles"
     ],
     "download_gb": 23.67,
-    "needs_hf_token": false
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false
   },
   "image-moss": {
     "apps": [
       "moss-image"
     ],
     "download_gb": 13.0,
-    "needs_hf_token": false
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false
   },
   "image-qwen-edit": {
     "apps": [
@@ -110,7 +124,9 @@
       "zooms"
     ],
     "download_gb": 31.69,
-    "needs_hf_token": false
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false
   },
   "upscale": {
     "apps": [
@@ -122,7 +138,9 @@
       "video-remove-bg"
     ],
     "download_gb": 5.13,
-    "needs_hf_token": false
+    "needs_hf_token": false,
+    "gated": {},
+    "default": true
   },
   "video-h3": {
     "apps": [
@@ -132,7 +150,9 @@
       "reshoot"
     ],
     "download_gb": 75.72,
-    "needs_hf_token": false
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false
   },
   "video-ltx25": {
     "apps": [
@@ -170,28 +190,46 @@
       "volcano-ad"
     ],
     "download_gb": 66.03,
-    "needs_hf_token": true
+    "needs_hf_token": true,
+    "gated": {
+      "Lightricks/LTX-2.3-22b-IC-LoRA-DubIt": "ltx-2.3-22b-ic-lora-dubit-0.9.safetensors",
+      "Lightricks/LTX-2.3-22b-IC-LoRA-In-Outpainting": "ltx-2.3-22b-ic-lora-in-outpainting-0.9.safetensors",
+      "Lightricks/LTX-2.5": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "Lightricks/LTX-2.5-22b-IC-LoRA-Clean-Plate": "ltx-2.5-22b-ic-lora-clean-plate-1.0.safetensors",
+      "Lightricks/LTX-2.5-22b-IC-LoRA-Day-To-Night": "ltx-2.5-22b-ic-lora-day-to-night-0.9.safetensors",
+      "Lightricks/LTX-2.5-22b-IC-LoRA-Ingredients": "ltx-2.5-22b-ic-lora-ingredients-0.9.safetensors",
+      "Lightricks/LTX-2.5-22b-IC-LoRA-SDR-To-HDR": "ltx-2.5-22b-ic-lora-sdr-to-hdr-scene-emb.safetensors",
+      "Lightricks/LTX-2.5-22b-IC-LoRA-Water-Simulation": "ltx-2.5-22b-ic-lora-water-simulation-0.9.safetensors",
+      "black-forest-labs/flux-3-image-klein-comfy": "diffusion_models/flux3-image-klein-int8-convrot.safetensors"
+    },
+    "default": false
   },
   "video-scail": {
     "apps": [
       "recast"
     ],
     "download_gb": 28.62,
-    "needs_hf_token": false
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false
   },
   "video-wan": {
     "apps": [
       "motion-transfer"
     ],
     "download_gb": 24.9,
-    "needs_hf_token": false
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false
   },
   "video-wan-camera": {
     "apps": [
       "camera-moves"
     ],
     "download_gb": 40.05,
-    "needs_hf_token": false
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false
   },
   "video-wan-effects": {
     "apps": [
@@ -201,6 +239,10 @@
       "effects"
     ],
     "download_gb": 45.06,
-    "needs_hf_token": true
+    "needs_hf_token": true,
+    "gated": {
+      "black-forest-labs/flux-3-image-klein-comfy": "diffusion_models/flux3-image-klein-int8-convrot.safetensors"
+    },
+    "default": false
   }
 }

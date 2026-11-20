@@ -9,7 +9,7 @@ Open-source Higgsfield on ComfyUI: every app is one folder, every model is open 
 Image, video, VFX and audio apps in a studio laid out like Higgsfield's, each one a ComfyUI workflow on open weights,
 run on Modal, on a GPU rented by the hour (RunPod, Vast.ai) or on your own ComfyUI. Every example in the app is a real GPU run made by the lab, with its time and peak VRAM.
 
-[Run it](#run-it) on [RunPod or Vast.ai](docs/cloud-gpus.md), on Modal or [on your own GPU](#on-your-own-gpu-without-modal) · [every app](#apps) with its model and VRAM · [add an app](#add-an-app) from any ComfyUI workflow ·
+[Run it](#run-it) on [RunPod or Vast.ai](docs/cloud-gpus.md), on Modal or [on your own PC in one line](#on-your-own-pc-in-one-line) · [every app](#apps) with its model and VRAM · [add an app](#add-an-app) from any ComfyUI workflow ·
 [every GPU run](docs/lab-runs.md) of the lab
 
 <table>
@@ -52,22 +52,57 @@ Freefield users: get CNY 5 free through this link.</td>
 ## One click on RunPod or Vast.ai
 
 No install and no Modal account. Rent a GPU with Freefield's public template: it starts the backend and the studio,
-downloads the models of the default packs (64 apps, 22.9 GB) and prints a link to open.
+prints a link to open, and downloads the models of the default packs (64 apps, 22.9 GB) while the studio shows how it
+goes.
 
 | | **[Deploy on RunPod](https://console.runpod.io/deploy?template=p7g587ry3j&ref=4nye3bcy)** | **[Rent on Vast.ai](https://cloud.vast.ai/?ref_id=865481&creator_id=865481&name=Freefield)** |
 |---|---|---|
-| 1. Hugging Face token (once: accept the [FLUX 3 license](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy) first) | Settings → Secrets → `hf_token`, with your read token | Account → Environment Variables → `HF_TOKEN` |
+| 1. Hugging Face token (once, optional: accept the [FLUX 3 license](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy) first; without it, the studio asks) | Settings → Secrets → `hf_token`, with your read token | Account → Environment Variables → `HF_TOKEN` |
 | 2. GPU | 24 GB or more, CUDA 13.0 or newer, and not a V100 (CUDA 13 dropped it). An L40S (48 GB) runs every app | 24 GB or more, CUDA 13: the link opens Search with these filters set. Sort by price |
 | 3. Storage | **Add volume → Volume disk**, 60 GB at `/workspace`: the deploy page does not add it by itself | 60 GB, already in the template |
 | 4. Open it | Logs: *Freefield is ready on RunPod*, with the link and its passcode | View instance logs → Refresh: a `trycloudflare.com` link with its passcode |
 | 5. When you are done | **Terminate** the pod | **Destroy** the instance |
 
-The first start takes 5 to 10 minutes: the image, then the models. Anyone with the link can use your GPU, so share it
-only with people you trust. Other packs, a volume that outlives the pod, and what to do when something fails are in
+The link comes in a few minutes (the image, then ComfyUI); the models keep downloading inside the studio, and each app
+works as soon as its files are in. When a model asks you to accept its license on Hugging Face, the studio says which
+one and takes your token in its Models panel, with no restart; the same panel downloads more packs. Anyone with the
+link can use your GPU, so share it only with people you trust. Other packs, a volume that outlives the pod, and what to do when something fails are in
 [the guide](docs/cloud-gpus.md).
 
 Both are referral links. They cost you nothing: RunPod and Vast.ai give Freefield a share of the credits, which pays for
 the lab's GPU runs.
+
+## On your own PC in one line
+
+Windows with an NVIDIA card (24 GB for most apps, RTX 20 series or newer). Open PowerShell and paste:
+
+```powershell
+irm https://raw.githubusercontent.com/neuregex/freefield/main/start.ps1 | iex
+```
+
+[`start.ps1`](start.ps1) does the rest, in English or Spanish:
+
+- It checks the GPU and its driver (CUDA 13), and [Docker Desktop](https://www.docker.com/products/docker-desktop/),
+  which it offers to install with winget when it is missing.
+- It asks for a Hugging Face token the first time and checks that the account accepted every license the models it
+  downloads ask for. You can skip it and paste it later in the studio's Models panel.
+- It opens the studio in your browser while the default packs download (64 apps, 22.9 GB, once): the studio shows how
+  it goes, and its Models panel downloads more packs.
+- It offers a desktop icon for next time. Each start picks up a new version of Freefield.
+
+Press Enter in its window to stop Freefield and free the GPU.
+
+Keep Docker Desktop's disk on an SSD: it holds the models, and they load from it. On a 3090 Ti the first Create Image
+(with *Expand my prompt*) took 32 s with the disk on an NVMe SSD and 9 min 25 s on a hard disk, almost all of it loading
+models; the sampling itself was 5 s. The launcher warns when the disk is on a hard disk; Docker Desktop moves it in
+Settings → Resources → Advanced → Disk image location.
+
+Under the hood it is the same `docker run` as on a rented GPU ([guide](docs/cloud-gpus.md#any-docker-host-with-an-nvidia-gpu)),
+with the studio on `127.0.0.1` only and the models in the `freefield` volume. `$env:FREEFIELD_PACKS` picks other packs
+before you run it. `powershell -ExecutionPolicy Bypass -File "$env:LOCALAPPDATA\Freefield\start.ps1" uninstall` removes it
+all; `stop` and `logs` work the same way. If Freefield closes while it loads a model, Docker ran out of RAM (by default
+it gets half of yours): put `[wsl2]` and `memory=40GB` on two lines in `%UserProfile%\.wslconfig`, run `wsl --shutdown`
+and start it again.
 
 ## Status
 
@@ -257,7 +292,7 @@ Three ways, the same 120 apps:
 |---|---|---|
 | **A rented GPU**: [RunPod](https://runpod.io?ref=4nye3bcy), [Vast.ai](https://cloud.vast.ai/?ref_id=865481) or any Docker host | an account there; nothing to install. A public template [in one click](#one-click-on-runpod-or-vastai), or the image `ghcr.io/neuregex/freefield`: [guide](docs/cloud-gpus.md) | trying it, or a 48 GB GPU by the hour |
 | **[Modal](https://modal.com)** | Node, Python and a Modal account ([below](#on-modal)) | a GPU that scales to zero between runs, so you pay per second of work |
-| **Your own GPU** | an NVIDIA card with 24 GB for most apps ([below](#on-your-own-gpu-without-modal)), or Docker ([guide](docs/cloud-gpus.md#any-docker-host-with-an-nvidia-gpu)) | no hourly bill |
+| **Your own GPU** | an NVIDIA card with 24 GB for most apps: on Windows, [one line](#on-your-own-pc-in-one-line) in PowerShell; Docker anywhere ([guide](docs/cloud-gpus.md#any-docker-host-with-an-nvidia-gpu)); or Python ([below](#on-your-own-gpu-without-modal)) | no hourly bill |
 
 The RunPod and Vast.ai links are referral links: signing up through them costs you nothing and gives Freefield a small
 share of the credits, which pays for the lab's GPU runs.
