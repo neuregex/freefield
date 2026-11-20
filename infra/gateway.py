@@ -161,18 +161,27 @@ class Downloads:
             return {}
 
     @staticmethod
-    def _alive(pid) -> bool:
+    def _alive(job: dict) -> bool:
+        """Is the process of this download still the one that wrote it? A pid can come back after a restart."""
+        pid = job.get("pid")
         try:
             os.kill(int(pid), 0)
-            return True
         except (OSError, TypeError, ValueError):
             return False
+        started = job.get("pid_start")
+        if started:
+            try:
+                stat = Path(f"/proc/{int(pid)}/stat").read_text()
+                return stat[stat.rindex(")") + 2:].split()[19] == started
+            except (OSError, ValueError, IndexError):
+                pass
+        return True
 
     def busy(self) -> bool:
         if self.proc and self.proc.returncode is None:
             return True
         job = self._status().get("job") or {}
-        return job.get("state") == "running" and self._alive(job.get("pid"))   # the pod's own first download
+        return job.get("state") == "running" and self._alive(job)   # the pod's own first download
 
     def has(self, m: dict) -> bool:
         return (self.models / m["dir"] / m["name"]).exists()
@@ -181,7 +190,7 @@ class Downloads:
         st = self._status()
         job = st.get("job")
         if job and job.get("state") == "running":
-            if not self._alive(job.get("pid")):
+            if not self._alive(job):
                 job = {**job, "state": "stopped"}
             elif job.get("current"):   # the file on its way counts as far as it got
                 part = tree_bytes(self.models / ".incoming") / 1e9

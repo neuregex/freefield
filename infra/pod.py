@@ -101,6 +101,18 @@ def plan(names: list[str]) -> tuple[int, float]:
     return len(todo), need
 
 
+def forget_stale_download() -> None:
+    """A download the last start left "running" (the pod stopped in the middle) runs no more: nothing has started yet."""
+    f = MODELS / ".downloads.json"
+    try:
+        st = json.loads(f.read_text(encoding="utf-8"))
+        if (st.get("job") or {}).get("state") == "running":
+            st["job"]["state"] = "stopped"
+            f.write_text(json.dumps(st, indent=1), encoding="utf-8")
+    except (OSError, ValueError, AttributeError, TypeError):
+        pass
+
+
 def start_download(names: list[str]) -> subprocess.Popen:
     """tools/local_backend.py download, in the background; its lines go to this log as they come."""
     t0 = time.time()
@@ -218,6 +230,7 @@ def main() -> None:
     os.environ["FREEFIELD_HF_TOKEN_FILE"] = str(DATA / "hf_token")   # a token pasted in the studio stays in the volume
     os.environ["HF_XET_CHUNK_CACHE_SIZE_BYTES"] = "0"                # no second copy of the weights in a download cache
     model_paths()
+    forget_stale_download()
     names = wanted_packs()
     todo, downloading = plan(names)
     downloader = start_download(names) if todo else None   # the studio opens while the models arrive

@@ -115,12 +115,12 @@ const gpuProblem = (() => {
   catch { return null; }
 })();
 
-/** A call to the gateway with its token. */
-function gateway(path: string, init: RequestInit = {}): Promise<Response> {
+/** A call to the gateway with its token. Calls that ask Hugging Face (a token, the licenses) get longer. */
+function gateway(path: string, init: RequestInit = {}, timeoutMs = init.method && init.method !== "GET" ? 45_000 : 8000): Promise<Response> {
   const base = process.env.COMFY_BASE_URL!.replace(/\/$/, "");
   const auth: Record<string, string> = process.env.FREEFIELD_TOKEN ? { authorization: `Bearer ${process.env.FREEFIELD_TOKEN}` } : {};
   return fetch(`${base}${path}`, { ...init, headers: { ...(init.headers as Record<string, string> ?? {}), ...auth },
-    signal: AbortSignal.timeout(init.method && init.method !== "GET" ? 45_000 : 8000) });
+    signal: AbortSignal.timeout(timeoutMs) });
 }
 
 // Only known for a backend that is always on (a pod, your own GPU), which downloads its own models: a pod with
@@ -422,7 +422,7 @@ const server = createServer(async (req, res) => {
         };
         if (req.method === "GET" && !id) return send(res, 200, await modelsView(url.searchParams.get("fresh") === "1"));
         if (req.method === "GET" && id === "licenses") {
-          return relay(await gateway(`/freefield/licenses?repos=${encodeURIComponent(url.searchParams.get("repos") ?? "")}`));
+          return relay(await gateway(`/freefield/licenses?repos=${encodeURIComponent(url.searchParams.get("repos") ?? "")}`, {}, 45_000));
         }
         if (req.method === "POST" && id === "download") {
           const body = await (await toRequest(req)).json().catch(() => null) as { packs?: unknown } | null;

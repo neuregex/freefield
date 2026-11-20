@@ -88,6 +88,15 @@ def now() -> str:
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
 
+def proc_start(pid: int) -> str | None:
+    """When a process started (Linux, /proc), so a pid reused after a restart is not taken for this download."""
+    try:
+        stat = Path(f"/proc/{pid}/stat").read_text()
+        return stat[stat.rindex(")") + 2:].split()[19]
+    except (OSError, ValueError, IndexError):
+        return None
+
+
 class Status:
     """<models>/.downloads.json: the files the downloads could not fetch and why, and the download running now, written
     as it goes. The gateway reads it for the studio's Models panel (infra/gateway.py); nothing else depends on it."""
@@ -150,7 +159,7 @@ def download(models: Path, names: list[str], dry_run: bool) -> None:
         problem = hf.env_problem()
         if problem and source != "studio":
             print(f"! {problem}", flush=True)
-        job = {"state": "running", "pid": os.getpid(), "packs": wanted, "files": [f"{m['dir']}/{m['name']}" for m in todo],
+        job = {"state": "running", "pid": os.getpid(), "pid_start": proc_start(os.getpid()), "packs": wanted, "files": [f"{m['dir']}/{m['name']}" for m in todo],
                "gb": round(sum(m["gb"] for m in todo), 2), "done_gb": 0.0, "current": None, "started": now(), "ended": None}
         status.data["job"] = job
         status.save()

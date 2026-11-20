@@ -125,6 +125,10 @@ async def main():
         async with s.get(f"{base}/freefield/downloads", headers=h) as r:
             v = await r.json()
         assert v["job"]["state"] == "stopped", "a download whose process is gone says it stopped"
+        (models / ".downloads.json").write_text(json.dumps({"failed": {}, "job": {**job, "pid_start": "1"}}))
+        async with s.get(f"{base}/freefield/downloads", headers=h) as r:
+            v = await r.json()
+        assert v["job"]["state"] == "stopped" or not Path("/proc").exists(), "a pid that came back after a restart is not that download"
         print("✓ unknown packs and a full disk are refused; a second download waits for the first")
     await gw.cleanup(); await hf_runner.cleanup()
     print("downloads ok")
