@@ -80,15 +80,15 @@ Windows with an NVIDIA card (24 GB for most apps, RTX 20 series or newer). Open 
 irm https://raw.githubusercontent.com/neuregex/freefield/main/start.ps1 | iex
 ```
 
-[`start.ps1`](start.ps1) does the rest, in English or Spanish:
+[`start.ps1`](start.ps1) does the rest, and asks nothing in the console:
 
 - It checks the GPU and its driver (CUDA 13), and [Docker Desktop](https://www.docker.com/products/docker-desktop/),
   which it offers to install with winget when it is missing.
-- It asks for a Hugging Face token the first time and checks that the account accepted every license the models it
-  downloads ask for. You can skip it and paste it later in the studio's Models panel.
 - It opens the studio in your browser while the default packs download (64 apps, 22.9 GB, once): the studio shows how
-  it goes, and its Models panel downloads more packs.
-- It offers a desktop icon for next time. Each start picks up a new version of Freefield.
+  it goes.
+- As on RunPod and Vast.ai, the studio asks for your Hugging Face token when a model needs one: its Models panel lists
+  the licenses to accept and takes the token. The same panel downloads more packs.
+- The studio offers a desktop icon for next time. Each start picks up a new version of Freefield.
 
 Press Enter in its window to stop Freefield and free the GPU.
 

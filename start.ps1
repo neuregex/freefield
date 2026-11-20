@@ -2,14 +2,14 @@
 #
 #   irm https://raw.githubusercontent.com/neuregex/freefield/main/start.ps1 | iex
 #
-# It checks the GPU, its driver and Docker Desktop (and offers to install Docker Desktop), asks for a Hugging Face
-# token the first time and checks it against every license the packs it downloads ask for (packs/index.json), runs
-# the ghcr.io/neuregex/freefield image with the models in a Docker volume, opens the studio in the browser while the
-# models download (the studio shows how it goes) and offers a desktop icon. A token skipped here can be pasted later in
-# the studio's Models panel. Next time: the icon, or the same line. A new image is picked up whenever Freefield is not
-# already running.
+# It checks the GPU, its driver and Docker Desktop (and offers to install Docker Desktop), runs the
+# ghcr.io/neuregex/freefield image with the models in a Docker volume and opens the studio in the browser while the
+# models download. It asks nothing else here: as on RunPod and Vast.ai, the studio shows how the download goes, asks
+# for a Hugging Face token when a model needs one (its Models panel) and offers a desktop icon, which this window makes
+# (the studio runs in Linux and cannot reach the desktop). Next time: the icon, or the same line. A new image is
+# picked up whenever Freefield is not already running. Its messages are in English, like the video and the README.
 # From the copy it keeps:  powershell -ExecutionPolicy Bypass -File "$env:LOCALAPPDATA\Freefield\start.ps1" stop|logs|uninstall
-# Optional: $env:FREEFIELD_PACKS picks the model packs (packs/index.json), $env:HF_TOKEN skips the token question,
+# Optional: $env:FREEFIELD_PACKS picks the model packs (packs/index.json), $env:HF_TOKEN goes in at the first start,
 # $env:FREEFIELD_IMAGE runs another image (a branch's, to try it before it is merged).
 # Under the hood these are the same docker commands as in docs/cloud-gpus.md; it runs on Windows PowerShell 5.1 and 7.
 
@@ -35,12 +35,11 @@ $IconFile = Join-Path $AppDir 'freefield.ico'
 $Docker = $null
 $RamGb = 0
 
-$Lang = 'en'
-try { if ((Get-UICulture).TwoLetterISOLanguageName -eq 'es' -or (Get-Culture).TwoLetterISOLanguageName -eq 'es') { $Lang = 'es' } } catch {}
-if ($env:FREEFIELD_LANG) { $Lang = $env:FREEFIELD_LANG }
+$IconState = '/workspace/freefield/desktop-icon'   # the studio writes "wanted" or "declined" there, this window "created"
+$Desk = $null
+if ($OnWindows) { $Desk = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Freefield.lnk' }
 
 $T = @{
-en = @{
   title = 'Freefield on your own GPU'
   gpu_ok = 'GPU: {0}, {1} GB of VRAM, CUDA {2}'
   gpu_none = 'No NVIDIA GPU found. Freefield needs an NVIDIA card (24 GB for most apps). Without one, use RunPod or Vast.ai in one click: https://github.com/neuregex/freefield#one-click-on-runpod-or-vastai'
@@ -58,19 +57,6 @@ en = @{
   docker_ok = 'Docker {0}, {1} GB of RAM for its containers'
   hdd = 'Docker keeps Freefield on {0}, which is a hard disk: models load slowly from it, so the first image can take several minutes. On an SSD it takes seconds: Docker Desktop > Settings > Resources > Advanced > Disk image location.'
   docker_lowram = 'Docker can use only {0} GB of RAM: if Freefield closes while it loads a model, give Docker more: https://github.com/neuregex/freefield#on-your-own-pc-in-one-line'
-  token_have = 'Hugging Face token from HF_TOKEN: it works and the licenses are accepted'
-  token_intro1 = 'Some of the models are free but ask you to accept their license on Hugging Face first, with your account:'
-  token_intro2 = '  1. On each license page, sign in (or sign up) and accept the license.'
-  token_intro3 = '  2. On the tokens page, create a token of type Read and copy it.'
-  token_open = 'Press Enter to open those pages'
-  token_prompt = 'Paste the token (it will not show) and press Enter, or just press Enter to go on without it'
-  token_shape = 'That does not look like a token: it starts with hf_ and is about 37 characters long. Copy it again.'
-  token_invalid = 'Hugging Face did not accept that token. Copy it again from https://huggingface.co/settings/tokens'
-  token_nolicense = 'The token works (account {0}), but that account has not accepted these licenses yet, or the token is not of type Read. I opened them again: accept them and press Enter.'
-  token_ok = 'The token works and the licenses are accepted (account {0})'
-  token_unknown = 'Could not reach Hugging Face to check the token; going on with it.'
-  token_skip = 'Going on without a token: the apps whose models ask for a license wait for it. The studio shows how to add it later (Models).'
-  token_partial = 'Going on with this token: the apps whose license is not accepted yet wait, and the studio can check again later (Models).'
   pulling = 'Getting the latest Freefield (about 4.5 GB the first time, only the changes after that)...'
   pull_failed = 'Could not check for a new version (no internet?); starting the one you have.'
   pull_none = 'Could not download Freefield. Check your internet connection and run this again.'
@@ -90,8 +76,7 @@ en = @{
   exited = 'Freefield stopped (exit code {0}). The end of its log:'
   oom = 'It ran out of memory. Docker has {0} GB of RAM: create %UserProfile%\.wslconfig with the two lines [wsl2] and memory=40GB, run "wsl --shutdown", open Docker Desktop and run this again.'
   log_saved = 'Its whole log (passcode and token removed) is in {0}: attach it to an issue at https://github.com/neuregex/freefield/issues if you need help.'
-  icon_q = 'Put a Freefield icon on the desktop, to start it with a double click?'
-  icon_ok = 'Icon created: next time, double-click Freefield on the desktop.'
+  icon_ok = 'Desktop icon created, as you asked in the studio: next time, double-click Freefield on the desktop.'
   stop_hint = 'Press Enter here to stop Freefield and free the GPU, or close this window to leave it running'
   stopping = 'Stopping Freefield...'
   stopped = 'Stopped. The models and the history stay; next time it starts in about a minute.'
@@ -103,75 +88,9 @@ en = @{
   yes = ' [Y/n]'
   no = ' [y/N]'
 }
-es = @{
-  title = 'Freefield en tu propia GPU'
-  gpu_ok = 'GPU: {0}, {1} GB de VRAM, CUDA {2}'
-  gpu_none = 'No encontré una GPU NVIDIA. Freefield necesita una tarjeta NVIDIA (de 24 GB para la mayoría de las apps). Si no tienes una, usa RunPod o Vast.ai en un clic: https://github.com/neuregex/freefield#one-click-on-runpod-or-vastai'
-  driver_old = 'Tu driver de NVIDIA llega hasta CUDA {0}, y Freefield necesita CUDA 13 (driver 580 o más nuevo). Actualízalo desde la NVIDIA App o https://www.nvidia.com/drivers y vuelve a correr esto.'
-  gpu_old = '{0} es más vieja de lo que soporta CUDA 13: necesitas una RTX serie 20 o más nueva.'
-  vram_low = 'Solo {0} GB de VRAM: la mayoría de las apps necesita 24 GB, así que algunas no van a correr en esta tarjeta.'
-  docker_missing = 'Docker Desktop no está instalado. Freefield corre dentro de él, así no tienes que instalar Python, CUDA ni ComfyUI.'
-  docker_install_q = '¿Lo instalo ahora con winget?'
-  docker_installing = 'Instalando Docker Desktop (Windows te va a pedir permiso)...'
-  docker_after = 'Cuando termine: reinicia la PC si te lo pide, abre Docker Desktop una vez y acepta sus términos, y vuelve a correr esto.'
-  docker_manual = 'Descárgalo de https://www.docker.com/products/docker-desktop/ (deja marcado "Use WSL 2"), ábrelo una vez y vuelve a correr esto.'
-  docker_starting = 'Abriendo Docker Desktop (si te muestra sus términos, acéptalos)...'
-  docker_timeout = 'Docker Desktop no arrancó. Ábrelo, espera a que diga Engine running y vuelve a correr esto.'
-  docker_windows = 'Docker Desktop está en modo Windows containers: dale clic derecho a su ícono junto al reloj, elige "Switch to Linux containers" y vuelve a correr esto.'
-  docker_ok = 'Docker {0}, {1} GB de RAM para sus contenedores'
-  hdd = 'Docker guarda Freefield en {0}, que es un disco duro: los modelos cargan lento desde ahí y la primera imagen puede tardar varios minutos. En un SSD tarda segundos: Docker Desktop > Settings > Resources > Advanced > Disk image location.'
-  docker_lowram = 'Docker solo puede usar {0} GB de RAM: si Freefield se cierra al cargar un modelo, dale más: https://github.com/neuregex/freefield#on-your-own-pc-in-one-line'
-  token_have = 'Token de Hugging Face tomado de HF_TOKEN: funciona y las licencias están aceptadas'
-  token_intro1 = 'Algunos de los modelos son gratis pero piden aceptar su licencia en Hugging Face primero, con tu cuenta:'
-  token_intro2 = '  1. En cada página de licencia, inicia sesión (o regístrate) y acepta la licencia.'
-  token_intro3 = '  2. En la página de tokens, crea un token de tipo Read y cópialo.'
-  token_open = 'Presiona Enter para abrir esas páginas'
-  token_prompt = 'Pega el token (no se va a ver) y presiona Enter, o solo Enter para seguir sin él'
-  token_shape = 'Eso no parece un token: empieza con hf_ y tiene unos 37 caracteres. Cópialo otra vez.'
-  token_invalid = 'Hugging Face no aceptó ese token. Cópialo otra vez de https://huggingface.co/settings/tokens'
-  token_nolicense = 'El token funciona (cuenta {0}), pero esa cuenta todavía no acepta estas licencias, o el token no es de tipo Read. Te las abrí otra vez: acéptalas y presiona Enter.'
-  token_ok = 'El token funciona y las licencias están aceptadas (cuenta {0})'
-  token_unknown = 'No pude conectar con Hugging Face para revisar el token; sigo con él.'
-  token_skip = 'Sigo sin token: las apps cuyos modelos piden licencia lo esperan. El estudio te muestra cómo agregarlo después (Modelos).'
-  token_partial = 'Sigo con este token: las apps cuya licencia falta aceptar esperan, y el estudio puede revisar otra vez después (Modelos).'
-  pulling = 'Bajando la versión más nueva de Freefield (unos 4.5 GB la primera vez, después solo lo que cambió)...'
-  pull_failed = 'No pude buscar una versión nueva (¿sin internet?); arranco la que tienes.'
-  pull_none = 'No pude descargar Freefield. Revisa tu conexión a internet y vuelve a correr esto.'
-  updating = 'Hay una versión nueva de Freefield: actualizándolo (tus modelos y tu historial se quedan)...'
-  first_run = 'Descargando los modelos ({0:N1} GB, solo esta vez). El estudio abre en más o menos un minuto y muestra cómo va.'
-  bg_download = 'Los modelos se siguen descargando atrás: el estudio muestra cómo va, y cada app funciona en cuanto llegan sus archivos.'
-  starting = 'Arrancando Freefield...'
-  dl = 'Descargando modelos: {0:N1} de {1:N1} GB'
-  loading = 'Arrancando ComfyUI y el estudio'
-  models_ok = 'Modelos listos ({0})'
-  ready = 'Freefield está listo: {0}'
-  opening = 'Lo abro en tu navegador.'
-  already = 'Freefield ya está corriendo.'
-  gpu_fail = 'Docker no pudo usar la GPU. En Docker Desktop, Settings > General debe tener activado "Use the WSL 2 based engine"; actualiza Docker Desktop y el driver de NVIDIA, y vuelve a correr esto.'
-  port_busy = 'El puerto {0} está ocupado; uso el {1}.'
-  run_fail = 'Freefield no arrancó:'
-  exited = 'Freefield se detuvo (código {0}). El final de su log:'
-  oom = 'Se quedó sin memoria. Docker tiene {0} GB de RAM: crea %UserProfile%\.wslconfig con las dos líneas [wsl2] y memory=40GB, corre "wsl --shutdown", abre Docker Desktop y vuelve a correr esto.'
-  log_saved = 'El log completo (sin passcode ni token) quedó en {0}: adjúntalo en un issue en https://github.com/neuregex/freefield/issues si necesitas ayuda.'
-  icon_q = '¿Pongo un ícono de Freefield en el escritorio, para abrirlo con doble clic?'
-  icon_ok = 'Ícono creado: la próxima vez, doble clic en Freefield en el escritorio.'
-  stop_hint = 'Presiona Enter aquí para apagar Freefield y liberar la GPU, o cierra esta ventana para dejarlo corriendo'
-  stopping = 'Apagando Freefield...'
-  stopped = 'Apagado. Los modelos y el historial se quedan; la próxima vez arranca en más o menos un minuto.'
-  not_installed = 'Freefield todavía no está instalado en esta computadora.'
-  uninstall_q = '¿Quito el contenedor de Freefield, su imagen, el ícono del escritorio y este lanzador?'
-  uninstall_models_q = '¿También borro los modelos descargados y tu historial (el volumen "freefield")?'
-  uninstalled = 'Freefield quitado.'
-  close = 'Presiona Enter para cerrar'
-  yes = ' [S/n]'
-  no = ' [s/N]'
-}
-}
-if (-not $T.ContainsKey($Lang)) { $Lang = 'en' }
 
 function Msg([string]$Key) {
-  $s = $T[$Lang][$Key]
-  if (-not $s) { $s = $T['en'][$Key] }
+  $s = $T[$Key]
   if ($args.Count -gt 0) { $s = $s -f $args }
   return $s
 }
@@ -195,13 +114,6 @@ function Ask([string]$Question, [bool]$DefaultYes) {
 
 function Wait-Close {
   if ($Self) { [void](Read-Host (Msg 'close')) }   # a window opened from the desktop icon would close at once
-}
-
-function Read-Secret([string]$Prompt) {
-  $sec = Read-Host -Prompt $Prompt -AsSecureString
-  $ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($sec)
-  try { return [Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr) }
-  finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr) }
 }
 
 function Format-Dur([int]$Sec) {
@@ -377,123 +289,6 @@ function Find-Port {
   return 3000
 }
 
-function Get-Http([string]$Url, [string]$Method, [string]$Token) {
-  try {
-    $req = [Net.WebRequest]::Create($Url)
-    $req.Method = $Method
-    $req.AllowAutoRedirect = $false
-    $req.Timeout = 20000
-    $req.UserAgent = 'freefield-launcher'
-    if ($Token) { $req.Headers.Add('Authorization', "Bearer $Token") }
-    $res = $req.GetResponse()
-    $code = [int]$res.StatusCode
-    $body = ''
-    if ($Method -eq 'GET') {
-      $sr = New-Object IO.StreamReader -ArgumentList $res.GetResponseStream()
-      $body = $sr.ReadToEnd()
-      $sr.Close()
-    }
-    $res.Close()
-    return @{ Code = $code; Body = $body }
-  } catch {
-    $ex = $_.Exception
-    while ($ex -and -not ($ex -is [Net.WebException])) { $ex = $ex.InnerException }
-    if ($ex -and $ex.Response) {
-      $code = [int]$ex.Response.StatusCode
-      $ex.Response.Close()
-      return @{ Code = $code; Body = '' }
-    }
-    return @{ Code = 0; Body = '' }
-  }
-}
-
-# the repos whose license the packs Freefield downloads ask for, each with one of its files to ask Hugging Face about,
-# from packs/index.json of this same branch (the image is built from it): the packs in FREEFIELD_PACKS, else the
-# image's default ones. $null when it cannot be read.
-function Get-Gated([string]$Packs) {
-  try {
-    $index = Invoke-RestMethod -Uri "$Raw/packs/index.json" -TimeoutSec 20 -UseBasicParsing
-    if ($index -is [string]) { $index = $index | ConvertFrom-Json }   # raw.githubusercontent.com serves it as text/plain
-  } catch { return $null }
-  $all = @($index.PSObject.Properties | ForEach-Object { $_.Name })
-  $names = @("$Packs" -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
-  if ($names -contains 'all') { $names = $all }
-  if (-not $names.Count) { $names = @($index.PSObject.Properties | Where-Object { $_.Value.default } | ForEach-Object { $_.Name }) }
-  if (-not $names.Count) { return $null }   # an index that names no default pack: ask for the token anyway
-  $out = [ordered]@{}
-  foreach ($n in $names) {
-    if ($all -notcontains $n) { continue }
-    $g = $index.$n.gated
-    if (-not $g) { continue }
-    foreach ($p in @($g.PSObject.Properties)) { if (-not $out.Contains($p.Name)) { $out[$p.Name] = "$($p.Value)" } }
-  }
-  return $out
-}
-
-function Get-Repos($Gated) {
-  if ($Gated) { return @($Gated.Keys) }
-  return @()
-}
-
-# 'ok', 'invalid', 'nolicense' or 'unknown' (no answer from Hugging Face), the account name, and the repos whose
-# license that account has not accepted yet
-function Test-HfToken([string]$Tok, $Gated) {
-  $who = Get-Http 'https://huggingface.co/api/whoami-v2' 'GET' $Tok
-  if ($who.Code -eq 401) { return @{ Kind = 'invalid'; User = ''; Missing = @() } }
-  if ($who.Code -ne 200) { return @{ Kind = 'unknown'; User = ''; Missing = @() } }
-  $user = '?'
-  try { $user = "$(($who.Body | ConvertFrom-Json).name)" } catch {}
-  $missing = @()
-  $unknown = $false
-  foreach ($repo in (Get-Repos $Gated)) {
-    $f = Get-Http "https://huggingface.co/$repo/resolve/main/$($Gated[$repo])" 'HEAD' $Tok
-    if ($f.Code -eq 403) { $missing += $repo }
-    elseif ($f.Code -eq 401) { return @{ Kind = 'invalid'; User = $user; Missing = @() } }
-    elseif (-not ($f.Code -ge 200 -and $f.Code -lt 400)) { $unknown = $true }
-  }
-  if ($missing.Count) { return @{ Kind = 'nolicense'; User = $user; Missing = $missing } }
-  if ($unknown) { return @{ Kind = 'unknown'; User = $user; Missing = @() } }
-  return @{ Kind = 'ok'; User = $user; Missing = @() }
-}
-
-# a Hugging Face token whose account has accepted every license in $Gated, or '' to go on without one (the studio's
-# Models panel takes it later)
-function Get-Token($Gated) {
-  $repos = Get-Repos $Gated
-  $tok = "$env:HF_TOKEN".Trim()
-  if ($tok) {
-    $r = Test-HfToken $tok $Gated
-    if ($r.Kind -eq 'ok') { Say 'ok' (Msg 'token_have'); return $tok }
-  }
-  Write-Host ''
-  Say 'plain' (Msg 'token_intro1')
-  foreach ($repo in $repos) { Say 'plain' "     https://huggingface.co/$repo" }
-  Say 'plain' (Msg 'token_intro2')
-  Say 'plain' (Msg 'token_intro3')
-  [void](Read-Host (Msg 'token_open'))
-  foreach ($repo in $repos) { Open-Url "https://huggingface.co/$repo"; Start-Sleep -Milliseconds 800 }
-  Start-Sleep -Seconds 1
-  Open-Url 'https://huggingface.co/settings/tokens'
-  for ($try = 0; $try -lt 6; $try++) {
-    $tok = "$(Read-Secret (Msg 'token_prompt'))".Trim()
-    if (-not $tok) { Say 'warn' (Msg 'token_skip'); return '' }
-    if (-not ($tok.StartsWith('hf_') -and $tok.Length -ge 30)) { Say 'warn' (Msg 'token_shape'); continue }
-    $r = Test-HfToken $tok $Gated
-    for ($wait = 0; $r.Kind -eq 'nolicense' -and $wait -lt 4; $wait++) {
-      Say 'warn' (Msg 'token_nolicense' $r.User)
-      foreach ($repo in @($r.Missing)) { Say 'plain' "     https://huggingface.co/$repo"; Open-Url "https://huggingface.co/$repo" }
-      [void](Read-Host)
-      $r = Test-HfToken $tok $Gated
-    }
-    if ($r.Kind -eq 'ok') { Say 'ok' (Msg 'token_ok' $r.User); return $tok }
-    if ($r.Kind -eq 'unknown') { Say 'warn' (Msg 'token_unknown'); return $tok }
-    if ($r.Kind -eq 'nolicense') { Say 'warn' (Msg 'token_partial'); return $tok }   # a good token: the studio waits for the rest
-    Say 'warn' (Msg 'token_invalid')
-  }
-  Say 'warn' (Msg 'token_skip')
-  return ''
-}
-
 # docker run, with HF_TOKEN and FREEFIELD_* passed through this process's environment (never on the command line)
 function New-Box($Envs, [int]$Port, [string]$Bind) {
   if ($Bind -and $Bind -ne '0.0.0.0') { $map = "${Bind}:${Port}:3000" } else { $map = "${Port}:3000" }
@@ -571,9 +366,10 @@ function Wait-Ready([string]$Since, [bool]$Attach) {
         $hint = $false
       } elseif ($l -match '^! (.+)$') {
         $msg = $Matches[1]
-        if (-not $quiet) { Say 'warn' $msg }
+        $studio = $msg -like "*Models panel*"   # the studio shows it, with the button that fixes it
+        if (-not $quiet -and -not $studio) { Say 'warn' $msg }
         if ($msg -like '*could not be downloaded*') { $need = 0.0 }
-        $hint = -not $quiet   # the links under it
+        $hint = -not ($quiet -or $studio)   # the links under it
       } elseif ($l -match 'The models are still downloading') {
         $bg = $true
       } elseif ($l -match '^Freefield is ready on') {
@@ -650,6 +446,47 @@ function New-Icon {
   } catch { return $false }
 }
 
+# The desktop icon the studio offered (FREEFIELD_DESKTOP_ICON=1): the studio keeps the answer in the volume, and this
+# window, on Windows, makes the icon and answers "created". 'made' when it made it just now, else the state.
+function Sync-Icon {
+  $state = First-Line (Dk exec $Name cat $IconState).Out '^(wanted|created|declined)$'
+  if (-not $state -and $Desk -and (Test-Path $Desk)) {   # an icon from an earlier start: the studio need not ask
+    [void](Dk exec $Name sh -c "printf created > $IconState")
+    return 'created'
+  }
+  if ($state -ne 'wanted') { return $state }
+  if (-not (Test-Path $LocalCopy)) { Save-Copy }
+  if ((Test-Path $LocalCopy) -and (New-Icon)) {
+    [void](Dk exec $Name sh -c "printf created > $IconState")
+    Write-Host ''
+    Say 'ok' (Msg 'icon_ok')
+    return 'made'
+  }
+  return ''   # try again at the next look
+}
+
+# Enter stops Freefield; meanwhile the icon is made as soon as the studio asks for it
+function Wait-Enter {
+  $prompt = (Msg 'stop_hint') + ': '
+  Write-Host ''
+  Write-Host $prompt -NoNewline
+  try { [void][Console]::KeyAvailable } catch { [void](Read-Host); return }   # no console to watch (ISE): just wait
+  $watch = [bool]$OnWindows
+  $next = Get-Date
+  while ($true) {
+    while ([Console]::KeyAvailable) {
+      if ([Console]::ReadKey($true).Key -eq 'Enter') { Write-Host ''; return }
+    }
+    if ($watch -and (Get-Date) -ge $next) {
+      $s = Sync-Icon
+      if ($s -eq 'made') { Write-Host $prompt -NoNewline }
+      if ($s -eq 'made' -or $s -eq 'created' -or $s -eq 'declined') { $watch = $false }
+      $next = (Get-Date).AddSeconds(3)
+    }
+    Start-Sleep -Milliseconds 200
+  }
+}
+
 $prevEnc = $null
 try { $prevEnc = [Console]::OutputEncoding; [Console]::OutputEncoding = New-Object Text.UTF8Encoding -ArgumentList $false } catch {}
 $prevHints = $env:DOCKER_CLI_HINTS
@@ -702,21 +539,21 @@ try {
   if ($attach) {
     Say 'ok' (Msg 'already')
   } else {
-    # the questions come before the long download, so whoever runs this can walk away after answering them
-    # the image decides the packs unless FREEFIELD_PACKS says otherwise; a token skipped now goes in the studio later
+    # nothing to ask: the image decides the packs unless FREEFIELD_PACKS says otherwise, and the studio asks for a
+    # Hugging Face token when a model needs one (Models panel), as on RunPod and Vast.ai
     $envs = [ordered]@{}
     $recreate = $false
     if ($box) {
       $envs = $box.Env
-    } else {
-      $gated = Get-Gated "$env:FREEFIELD_PACKS"
-      if (($null -eq $gated) -or $gated.Count -gt 0) {
-        $tok = Get-Token $gated
-        if ($tok) { $envs['HF_TOKEN'] = $tok }
-      }
+    } elseif ("$env:HF_TOKEN".Trim()) {
+      $envs['HF_TOKEN'] = "$env:HF_TOKEN".Trim()
     }
     if ($env:FREEFIELD_PACKS -and $env:FREEFIELD_PACKS -ne $envs['FREEFIELD_PACKS']) {
       $envs['FREEFIELD_PACKS'] = $env:FREEFIELD_PACKS
+      $recreate = $true
+    }
+    if ($OnWindows -and -not $envs['FREEFIELD_DESKTOP_ICON']) {   # the studio offers the desktop icon; this window makes it
+      $envs['FREEFIELD_DESKTOP_ICON'] = '1'
       $recreate = $true
     }
 
@@ -764,16 +601,7 @@ try {
   if ($w.Downloading) { Say 'plain' (Msg 'bg_download') }
 
   Save-Copy
-  if ($OnWindows) {
-    $asked = Join-Path $AppDir 'icon-asked'
-    if (-not (Test-Path $asked) -and (Test-Path $LocalCopy)) {
-      if (Ask (Msg 'icon_q') $true) { if (New-Icon) { Say 'ok' (Msg 'icon_ok') } }
-      try { Set-Content -Path $asked -Value 'yes' } catch {}
-    }
-  }
-
-  Write-Host ''
-  [void](Read-Host (Msg 'stop_hint'))
+  Wait-Enter
   Say 'step' (Msg 'stopping')
   [void](Dk stop -t 30 $Name)
   Say 'ok' (Msg 'stopped')

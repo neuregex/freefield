@@ -43,7 +43,7 @@ DATA = Path(os.environ.get("FREEFIELD_DATA", "/workspace/freefield"))
 MODELS = DATA / "models"
 STUDIO_PORT = 3000
 GATEWAY_PORT = 8000
-DEFAULT_PACKS = "image-flux3,upscale"   # tools/catalog.py marks these "default" in packs/index.json (the Windows launcher reads it)
+DEFAULT_PACKS = "image-flux3,upscale"   # tools/catalog.py marks these "default" in packs/index.json
 NO_TOKEN_EXIT = 3                       # tools/local_backend.py download: only files waiting for a token are missing
 
 
