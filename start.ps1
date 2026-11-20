@@ -410,11 +410,15 @@ function Get-Http([string]$Url, [string]$Method, [string]$Token) {
 # from packs/index.json of this same branch (the image is built from it): the packs in FREEFIELD_PACKS, else the
 # image's default ones. $null when it cannot be read.
 function Get-Gated([string]$Packs) {
-  try { $index = Invoke-RestMethod -Uri "$Raw/packs/index.json" -TimeoutSec 20 -UseBasicParsing } catch { return $null }
+  try {
+    $index = Invoke-RestMethod -Uri "$Raw/packs/index.json" -TimeoutSec 20 -UseBasicParsing
+    if ($index -is [string]) { $index = $index | ConvertFrom-Json }   # raw.githubusercontent.com serves it as text/plain
+  } catch { return $null }
   $all = @($index.PSObject.Properties | ForEach-Object { $_.Name })
   $names = @("$Packs" -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
   if ($names -contains 'all') { $names = $all }
   if (-not $names.Count) { $names = @($index.PSObject.Properties | Where-Object { $_.Value.default } | ForEach-Object { $_.Name }) }
+  if (-not $names.Count) { return $null }   # an index that names no default pack: ask for the token anyway
   $out = [ordered]@{}
   foreach ($n in $names) {
     if ($all -notcontains $n) { continue }
