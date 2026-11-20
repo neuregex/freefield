@@ -328,9 +328,10 @@ function Test-DockerDisk {
   } catch {}
 }
 
-# what Freefield's container looks like now, or $null: status, image, the env it was made with, and its port
+# what Freefield's container looks like now, or $null: status, image, the env it was made with, and its port.
+# "container inspect": a bare "docker inspect freefield" also finds the volume of that name once the container is gone
 function Get-Box {
-  $r = Dk inspect $Name --format '{{json .}}'
+  $r = Dk container inspect $Name --format '{{json .}}'
   if ($r.Code -ne 0) { return $null }
   $json = First-Line $r.Out '^\{'
   if (-not $json) { return $null }
@@ -587,7 +588,7 @@ function Wait-Ready([string]$Since, [bool]$Attach) {
     $quiet = $false
     if ($ready -and $key) { break }
 
-    $st = First-Line (Dk inspect $Name --format '{{.State.Status}}|{{.State.ExitCode}}|{{.State.OOMKilled}}').Out '^\w+\|'
+    $st = First-Line (Dk container inspect $Name --format '{{.State.Status}}|{{.State.ExitCode}}|{{.State.OOMKilled}}').Out '^\w+\|'
     if ($st -and -not $st.StartsWith('running')) {
       Write-Progress -Activity 'Freefield' -Completed
       $p = $st.Split('|')
@@ -748,7 +749,7 @@ try {
     $box = Get-Box
   }
 
-  $started = First-Line (Dk inspect $Name --format '{{.State.StartedAt}}').Out '^\d{4}-'
+  $started = First-Line (Dk container inspect $Name --format '{{.State.StartedAt}}').Out '^\d{4}-'
   $since = $started
   if ($started.Length -ge 19) { $since = $started.Substring(0, 19) + 'Z' }
   $w = Wait-Ready $since $attach
