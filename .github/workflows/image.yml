@@ -7,7 +7,7 @@ name: image
 
 on:
   push:
-    branches: [main]
+    branches: [main, console-quiet]   # console-quiet: only to try it on a real GPU before merging (publishes :console-quiet)
     tags: ["v*"]
     paths-ignore: ["docs/**", "**/*.md", "lab/**", "test/**", ".github/workflows/validate.yml", "start.ps1"]
   pull_request:
