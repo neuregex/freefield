@@ -91,8 +91,8 @@ def write_packs(apps: list[dict]) -> None:
     d.mkdir(exist_ok=True)
     for name, p in packs.items():
         (d / f"{name}.json").write_text(json.dumps(p, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    # "gated": a file of each repo that asks for a license, so the Windows launcher (start.ps1) can ask Hugging Face
-    # whether a token can read it before anything downloads; "default": what a pod downloads without FREEFIELD_PACKS
+    # "gated": a file of each repo that asks for a license, to ask Hugging Face whether a token can read it before
+    # anything downloads; "default": what a pod downloads without FREEFIELD_PACKS
     defaults = default_packs()
     gated = lambda p: {m["repo"]: m["file"] for m in reversed(p["models"]) if m["gated"]}  # noqa: E731  (the first file wins)
     index = {name: {"apps": p["apps"], "download_gb": p["download_gb"], "needs_hf_token": p["needs_hf_token"],

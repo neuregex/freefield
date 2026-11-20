@@ -4,7 +4,7 @@
 // Nothing here exists on the hosted demo: the server answers models_panel: false there.
 import { el, icon, api, toast } from "./util.js";
 import { t, lang } from "./i18n.js";
-import { apps, byId } from "./catalog.js";
+import { apps, byId, modelsPanel } from "./catalog.js";
 import { hooks } from "./feed.js";
 
 export const models = { data: null, listeners: new Set() };
@@ -68,11 +68,11 @@ export function needTag(a) {
   return el("span", { class: `tag dark need-${n.kind}`, title: needText(a) }, t(key));
 }
 
-/** One sentence for the form: why it cannot run yet. */
+/** One sentence for the form: why it cannot run yet. The catalog already says (a.needs), before /api/models answers. */
 export function needText(a) {
   const n = a.needs ?? (a.missing_pack ? { kind: "pack", pack: a.missing_pack } : null);
   if (!n) return "";
-  if (!models.data?.available) return t("ws.nopack", { pack: n.pack });   // an older backend: as before
+  if (!modelsPanel) return t("ws.nopack", { pack: n.pack });   // an older backend: as before
   if (n.kind === "downloading") return t("ws.need.downloading");
   if (LICENSE_KINDS.includes(n.kind)) return t("ws.need.license");
   if (n.kind === "failed") return t("ws.need.failed");
@@ -84,7 +84,7 @@ export function needNode(a) {
   const n = a.needs ?? (a.missing_pack ? { kind: "pack", pack: a.missing_pack } : null);
   if (!n) return null;
   const text = needText(a);
-  if (!models.data?.available || n.kind === "downloading") return el("span", {}, text);
+  if (!modelsPanel || n.kind === "downloading") return el("span", {}, text);
   return el("span", {}, text, " ",
     el("button", { class: "link-btn", type: "button", onclick: () => openModels({ pack: n.pack }) },
       t(n.kind === "pack" ? "ws.need.get" : "ws.need.fix")));

@@ -18,7 +18,7 @@ trap cleanup EXIT
 fail() { echo "✗ $*" >&2; docker logs --tail 60 "$NAME" >&2 || true; exit 1; }
 
 docker run -d --name "$NAME" -p 3000:3000 -p 8000:8000 \
-  -e FREEFIELD_PACKS=image-flux3 -e HF_ENDPOINT=http://127.0.0.1:9 -e FREEFIELD_COMFY_ARGS=--cpu \
+  -e FREEFIELD_PACKS=image-flux3 -e HF_ENDPOINT=http://127.0.0.1:9 -e FREEFIELD_COMFY_ARGS=--cpu -e FREEFIELD_DESKTOP_ICON=1 \
   -e FREEFIELD_PASSCODE=smoke-pass -e FREEFIELD_TOKEN=smoke-token "$IMAGE" > /dev/null
 
 # up when the studio answers (401: the door is closed without the passcode)
@@ -82,6 +82,15 @@ code=$(curl -s -o /dev/null -w '%{http_code}' --noproxy '*' -b "$JAR" -X POST -H
 [ "$code" = 400 ] || fail "an unknown pack was accepted ($code)"
 [ "$(curl -s -o /dev/null -w '%{http_code}' --noproxy '*' http://127.0.0.1:8000/freefield/downloads)" = 401 ] || fail "the gateway's downloads answered without its token"
 echo "✓ the Models panel refuses a malformed token and unknown packs; the gateway keeps them behind its token"
+
+# as the Windows launcher starts it: the studio asks about the desktop icon, the launcher's window makes it
+icon() { curl -sf --noproxy '*' -b "$JAR" "$STUDIO/api/gpu" | python3 -c 'import json,sys; print(json.load(sys.stdin)["desktop_icon"])'; }
+[ "$(icon)" = ask ] || fail "the studio does not ask about the desktop icon"
+curl -sf --noproxy '*' -b "$JAR" -X POST -H 'content-type: application/json' -d '{"want":true}' "$STUDIO/api/desktop-icon" > /dev/null || fail "the icon answer was refused"
+[ "$(docker exec "$NAME" cat /workspace/freefield/desktop-icon)" = wanted ] || fail "the answer is not in the volume for the launcher"
+docker exec "$NAME" sh -c 'printf created > /workspace/freefield/desktop-icon'
+[ "$(icon)" = created ] || fail "the studio does not see the icon the launcher made"
+echo "✓ the desktop icon: asked in the studio, answered in the volume, made by the launcher"
 
 [ "$(curl -s -o /dev/null -w '%{http_code}' --noproxy '*' http://127.0.0.1:8000/freefield/status)" = 401 ] || fail "the gateway answered without its token"
 curl -sf --noproxy '*' -H "Authorization: Bearer smoke-token" http://127.0.0.1:8000/freefield/status > /dev/null || fail "the gateway refused its own token"

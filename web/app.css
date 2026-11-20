@@ -709,3 +709,11 @@ dl.vals dd { margin: 0; overflow-wrap: anywhere; }
   .mstrip .mbar { width: 90px; }
   .mrow { flex-wrap: wrap; }
 }
+
+/* ------------------------------------------------------------------ the desktop icon card (desktop.js) */
+.iconcard { position: fixed; right: 18px; bottom: 18px; z-index: 70; width: min(360px, calc(100vw - 36px)); display: flex; gap: 12px;
+  padding: 14px; border-radius: var(--r-lg); background: #151517; border: 1px solid var(--line-2); box-shadow: 0 20px 50px rgba(0, 0, 0, .55); }
+.iconcard .mark { width: 34px; height: 34px; flex: none; }
+.iconcard .txt { display: grid; gap: 6px; min-width: 0; }
+.iconcard .txt p { margin: 0; color: var(--dim); font-size: 12.5px; }
+.iconcard .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }

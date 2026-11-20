@@ -20,6 +20,8 @@
 //   PUT    /api/models/token                 JSON { token }: keep a Hugging Face token on the backend (https only)
 //   DELETE /api/models/token                 forget it
 //   GET    /api/models/licenses[?repos=a,b]  which licenses that token can already read
+// On your own Windows PC (start.ps1 sets FREEFIELD_DESKTOP_ICON=1), the desktop icon (server/desktop.ts):
+//   POST   /api/desktop-icon                 JSON { want }: put an icon on the desktop or not (/api/gpu has the state)
 // Everything else is served from web/ when it exists (with byte ranges, so videos seek everywhere).
 // Hosted (server/guard.ts): FREEFIELD_PASSCODE closes every route behind a passcode, FREEFIELD_MAX_RUNS_PER_DAY and
 // FREEFIELD_MAX_ACTIVE cap the runs (429 past them), lab marks become read-only and uploads are capped at
@@ -35,6 +37,7 @@ import { History } from "./history.ts";
 import { Flags } from "./flags.ts";
 import { DOOR_HTML, foreign, Guard, ownerDoor, plainHttpToIp } from "./guard.ts";
 import { needOf, refusal, type Downloads } from "./models.ts";
+import { DesktopIcon } from "./desktop.ts";
 
 const root = repoRoot();
 const { apps, problems } = loadRegistry(root);
@@ -81,6 +84,7 @@ const history = new History(join(outDir, "history"), {
   recheck: (jobId) => getRunner().jobs().get(jobId),
 });
 const flags = new Flags(join(root, "lab", "flags.json"), apps);
+const desktopIcon = DesktopIcon.fromEnv();
 
 const MIME: Record<string, string> = {
   ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8",
@@ -282,7 +286,8 @@ async function gpuStatus(withDevice = false) {
   const host = configured ? (alwaysOn || (guard.hosted ? "Modal" : new URL(process.env.COMFY_BASE_URL!).host)) : null;
   const warm = Boolean(alwaysOn && configured) || Date.now() - lastContact < WARM_MS;
   const running = activeRuns();
-  const base = { configured, host, warm, always_on: Boolean(alwaysOn), problem: gpuProblem, last_contact: lastContact ? new Date(lastContact).toISOString() : null,
+  const base = { configured, host, warm, always_on: Boolean(alwaysOn), problem: gpuProblem, desktop_icon: desktopIcon.state(),
+    last_contact: lastContact ? new Date(lastContact).toISOString() : null,
     waking: waking ? { seconds: Math.round((Date.now() - waking.since) / 1000), error: waking.error ?? null } : null,
     running, demo: guard.hosted ? guard.status(running) : null };
   // only on request and only while warm: looking never starts a GPU, and the background poll never touches it
@@ -439,6 +444,12 @@ const server = createServer(async (req, res) => {
           return relay(await gateway("/freefield/hf-token", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ token: body.token }) }));
         }
         if (id === "token" && req.method === "DELETE") return relay(await gateway("/freefield/hf-token", { method: "DELETE" }));
+      }
+      if (area === "desktop-icon" && req.method === "POST" && parts.length === 2) {
+        const body = await (await toRequest(req)).json().catch(() => null) as { want?: unknown } | null;
+        if (!body || typeof body.want !== "boolean") throw new InputError("expected JSON { want: true | false }");
+        const state = desktopIcon.answer(body.want);
+        return state ? send(res, 200, { desktop_icon: state }) : send(res, 404, { error: "no launcher here to make a desktop icon" });
       }
       if (area === "flags" && parts.length === 2) {
         if (req.method === "GET") return send(res, 200, { mediocre: flags.list() });

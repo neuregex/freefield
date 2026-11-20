@@ -13,6 +13,7 @@ import { openViewer } from "./viewer.js";
 import { openCompare } from "./compare.js";
 import { flags } from "./flags.js";
 import { modelsStrip, startModels, redrawModels } from "./models.js";
+import { desktopIconCard } from "./desktop.js";
 
 const main = el("main", { id: "main", class: "view" });
 let bar = null;
@@ -57,6 +58,8 @@ function buildBar() {
   if (bar) bar.node.replaceWith(next.node); else document.body.prepend(next.node);
   bar = next;
   bar.node.after(strip);
+  gpuState.listeners.add(desktopIconCard);   // the bar clears the listeners when it is rebuilt (a new language)
+  desktopIconCard(gpuState.data);
 }
 
 hooks.open = (items, key) => openViewer(items, key);
