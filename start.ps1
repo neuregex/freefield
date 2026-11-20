@@ -3,11 +3,14 @@
 #   irm https://raw.githubusercontent.com/neuregex/freefield/main/start.ps1 | iex
 #
 # It checks the GPU, its driver and Docker Desktop (and offers to install Docker Desktop), asks for a Hugging Face
-# token the first time and checks it against the FLUX 3 Klein license, runs the ghcr.io/neuregex/freefield image with
-# the models in a Docker volume, shows the download, opens the studio in the browser and offers a desktop icon.
-# Next time: the icon, or the same line. A new image is picked up whenever Freefield is not already running.
+# token the first time and checks it against every license the packs it downloads ask for (packs/index.json), runs
+# the ghcr.io/neuregex/freefield image with the models in a Docker volume, opens the studio in the browser while the
+# models download (the studio shows how it goes) and offers a desktop icon. A token skipped here can be pasted later in
+# the studio's Models panel. Next time: the icon, or the same line. A new image is picked up whenever Freefield is not
+# already running.
 # From the copy it keeps:  powershell -ExecutionPolicy Bypass -File "$env:LOCALAPPDATA\Freefield\start.ps1" stop|logs|uninstall
-# Optional: $env:FREEFIELD_PACKS picks the model packs (packs/index.json), $env:HF_TOKEN skips the token question.
+# Optional: $env:FREEFIELD_PACKS picks the model packs (packs/index.json), $env:HF_TOKEN skips the token question,
+# $env:FREEFIELD_IMAGE runs another image (a branch's, to try it before it is merged).
 # Under the hood these are the same docker commands as in docs/cloud-gpus.md; it runs on Windows PowerShell 5.1 and 7.
 
 & {
@@ -23,9 +26,8 @@ $Ref = 'main'
 if ($env:FREEFIELD_LAUNCHER_REF) { $Ref = $env:FREEFIELD_LAUNCHER_REF }   # to try a branch before it is merged
 $Raw = "https://raw.githubusercontent.com/neuregex/freefield/$Ref"
 $Image = 'ghcr.io/neuregex/freefield:latest'
+if ($env:FREEFIELD_IMAGE) { $Image = $env:FREEFIELD_IMAGE }
 $Name = 'freefield'                       # the container and the volume, as in docs/cloud-gpus.md
-$LicenseRepo = 'black-forest-labs/flux-3-image-klein-comfy'
-$LicenseFile = 'vae/flux2-vae.safetensors'
 $OnWindows = [Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT
 if ($env:LOCALAPPDATA) { $AppDir = Join-Path $env:LOCALAPPDATA 'Freefield' } else { $AppDir = Join-Path $HOME '.freefield' }
 $LocalCopy = Join-Path $AppDir 'start.ps1'
@@ -56,24 +58,25 @@ en = @{
   docker_ok = 'Docker {0}, {1} GB of RAM for its containers'
   hdd = 'Docker keeps Freefield on {0}, which is a hard disk: models load slowly from it, so the first image can take several minutes. On an SSD it takes seconds: Docker Desktop > Settings > Resources > Advanced > Disk image location.'
   docker_lowram = 'Docker can use only {0} GB of RAM: if Freefield closes while it loads a model, give Docker more: https://github.com/neuregex/freefield#on-your-own-pc-in-one-line'
-  token_have = 'Hugging Face token from HF_TOKEN: it works'
-  token_intro1 = 'Most image apps use FLUX 3 Klein. It is free, but Hugging Face asks you to accept its license first:'
-  token_intro2 = '  1. On the first page, sign in (or sign up) and accept the license.'
-  token_intro3 = '  2. On the second, create a token of type Read and copy it.'
-  token_open = 'Press Enter to open both pages'
+  token_have = 'Hugging Face token from HF_TOKEN: it works and the licenses are accepted'
+  token_intro1 = 'Some of the models are free but ask you to accept their license on Hugging Face first, with your account:'
+  token_intro2 = '  1. On each license page, sign in (or sign up) and accept the license.'
+  token_intro3 = '  2. On the tokens page, create a token of type Read and copy it.'
+  token_open = 'Press Enter to open those pages'
   token_prompt = 'Paste the token (it will not show) and press Enter, or just press Enter to go on without it'
   token_shape = 'That does not look like a token: it starts with hf_ and is about 37 characters long. Copy it again.'
   token_invalid = 'Hugging Face did not accept that token. Copy it again from https://huggingface.co/settings/tokens'
-  token_nolicense = 'The token works (account {0}), but that account has not accepted the FLUX 3 Klein license yet, or the token is not of type Read. I opened the license page again: accept it and press Enter.'
-  token_ok = 'The token works and the license is accepted (account {0})'
+  token_nolicense = 'The token works (account {0}), but that account has not accepted these licenses yet, or the token is not of type Read. I opened them again: accept them and press Enter.'
+  token_ok = 'The token works and the licenses are accepted (account {0})'
   token_unknown = 'Could not reach Hugging Face to check the token; going on with it.'
-  token_skip = 'Going on without a token: Z-Image and the upscale apps (9 apps instead of 64). Run this again to add it later.'
-  token_add_q = 'This Freefield has no Hugging Face token, so FLUX 3 Klein is missing (9 apps instead of 64). Add the token now?'
+  token_skip = 'Going on without a token: the apps whose models ask for a license wait for it. The studio shows how to add it later (Models).'
+  token_partial = 'Going on with this token: the apps whose license is not accepted yet wait, and the studio can check again later (Models).'
   pulling = 'Getting the latest Freefield (about 4.5 GB the first time, only the changes after that)...'
   pull_failed = 'Could not check for a new version (no internet?); starting the one you have.'
   pull_none = 'Could not download Freefield. Check your internet connection and run this again.'
   updating = 'There is a new version of Freefield: updating it (your models and history stay)...'
-  first_run = 'Downloading the models ({0:N1} GB, only this once; the bar shows how it goes)...'
+  first_run = 'Downloading the models ({0:N1} GB, only this once). The studio opens in about a minute and shows how it goes.'
+  bg_download = 'The models keep downloading in the background: the studio shows how it goes, and each app works as soon as its files are in.'
   starting = 'Starting Freefield...'
   dl = 'Downloading models: {0:N1} of {1:N1} GB'
   loading = 'Starting ComfyUI and the studio'
@@ -118,24 +121,25 @@ es = @{
   docker_ok = 'Docker {0}, {1} GB de RAM para sus contenedores'
   hdd = 'Docker guarda Freefield en {0}, que es un disco duro: los modelos cargan lento desde ahí y la primera imagen puede tardar varios minutos. En un SSD tarda segundos: Docker Desktop > Settings > Resources > Advanced > Disk image location.'
   docker_lowram = 'Docker solo puede usar {0} GB de RAM: si Freefield se cierra al cargar un modelo, dale más: https://github.com/neuregex/freefield#on-your-own-pc-in-one-line'
-  token_have = 'Token de Hugging Face tomado de HF_TOKEN: funciona'
-  token_intro1 = 'La mayoría de las apps de imagen usan FLUX 3 Klein. Es gratis, pero Hugging Face pide aceptar su licencia primero:'
-  token_intro2 = '  1. En la primera página, inicia sesión (o regístrate) y acepta la licencia.'
-  token_intro3 = '  2. En la segunda, crea un token de tipo Read y cópialo.'
-  token_open = 'Presiona Enter para abrir las dos páginas'
+  token_have = 'Token de Hugging Face tomado de HF_TOKEN: funciona y las licencias están aceptadas'
+  token_intro1 = 'Algunos de los modelos son gratis pero piden aceptar su licencia en Hugging Face primero, con tu cuenta:'
+  token_intro2 = '  1. En cada página de licencia, inicia sesión (o regístrate) y acepta la licencia.'
+  token_intro3 = '  2. En la página de tokens, crea un token de tipo Read y cópialo.'
+  token_open = 'Presiona Enter para abrir esas páginas'
   token_prompt = 'Pega el token (no se va a ver) y presiona Enter, o solo Enter para seguir sin él'
   token_shape = 'Eso no parece un token: empieza con hf_ y tiene unos 37 caracteres. Cópialo otra vez.'
   token_invalid = 'Hugging Face no aceptó ese token. Cópialo otra vez de https://huggingface.co/settings/tokens'
-  token_nolicense = 'El token funciona (cuenta {0}), pero esa cuenta todavía no acepta la licencia de FLUX 3 Klein, o el token no es de tipo Read. Te abrí la página de la licencia otra vez: acéptala y presiona Enter.'
-  token_ok = 'El token funciona y la licencia está aceptada (cuenta {0})'
+  token_nolicense = 'El token funciona (cuenta {0}), pero esa cuenta todavía no acepta estas licencias, o el token no es de tipo Read. Te las abrí otra vez: acéptalas y presiona Enter.'
+  token_ok = 'El token funciona y las licencias están aceptadas (cuenta {0})'
   token_unknown = 'No pude conectar con Hugging Face para revisar el token; sigo con él.'
-  token_skip = 'Sigo sin token: Z-Image y las apps de mejorar imagen (9 apps en vez de 64). Vuelve a correr esto para agregarlo después.'
-  token_add_q = 'Este Freefield no tiene token de Hugging Face, así que le falta FLUX 3 Klein (9 apps en vez de 64). ¿Agregar el token ahora?'
+  token_skip = 'Sigo sin token: las apps cuyos modelos piden licencia lo esperan. El estudio te muestra cómo agregarlo después (Modelos).'
+  token_partial = 'Sigo con este token: las apps cuya licencia falta aceptar esperan, y el estudio puede revisar otra vez después (Modelos).'
   pulling = 'Bajando la versión más nueva de Freefield (unos 4.5 GB la primera vez, después solo lo que cambió)...'
   pull_failed = 'No pude buscar una versión nueva (¿sin internet?); arranco la que tienes.'
   pull_none = 'No pude descargar Freefield. Revisa tu conexión a internet y vuelve a correr esto.'
   updating = 'Hay una versión nueva de Freefield: actualizándolo (tus modelos y tu historial se quedan)...'
-  first_run = 'Descargando los modelos ({0:N1} GB, solo esta vez; la barra muestra cómo va)...'
+  first_run = 'Descargando los modelos ({0:N1} GB, solo esta vez). El estudio abre en más o menos un minuto y muestra cómo va.'
+  bg_download = 'Los modelos se siguen descargando atrás: el estudio muestra cómo va, y cada app funciona en cuanto llegan sus archivos.'
   starting = 'Arrancando Freefield...'
   dl = 'Descargando modelos: {0:N1} de {1:N1} GB'
   loading = 'Arrancando ComfyUI y el estudio'
@@ -372,13 +376,6 @@ function Find-Port {
   return 3000
 }
 
-function Add-Pack($Packs, [string]$Pack) {
-  if (-not "$Packs") { return $null }   # the image's default packs already have it
-  $list = @("$Packs" -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
-  if ($list -notcontains $Pack) { $list += $Pack }
-  return ($list -join ',')
-}
-
 function Get-Http([string]$Url, [string]$Method, [string]$Token) {
   try {
     $req = [Net.WebRequest]::Create($Url)
@@ -409,48 +406,83 @@ function Get-Http([string]$Url, [string]$Method, [string]$Token) {
   }
 }
 
-# 'ok', 'invalid', 'nolicense' or 'unknown' (no answer from Hugging Face), and the account name
-function Test-HfToken([string]$Tok) {
-  $who = Get-Http 'https://huggingface.co/api/whoami-v2' 'GET' $Tok
-  if ($who.Code -eq 401) { return @{ Kind = 'invalid'; User = '' } }
-  if ($who.Code -ne 200) { return @{ Kind = 'unknown'; User = '' } }
-  $user = '?'
-  try { $user = "$(($who.Body | ConvertFrom-Json).name)" } catch {}
-  $f = Get-Http "https://huggingface.co/$LicenseRepo/resolve/main/$LicenseFile" 'HEAD' $Tok
-  if ($f.Code -eq 403) { return @{ Kind = 'nolicense'; User = $user } }
-  if ($f.Code -eq 401) { return @{ Kind = 'invalid'; User = $user } }
-  if ($f.Code -ge 200 -and $f.Code -lt 400) { return @{ Kind = 'ok'; User = $user } }
-  return @{ Kind = 'unknown'; User = $user }
+# the repos whose license the packs Freefield downloads ask for, each with one of its files to ask Hugging Face about,
+# from packs/index.json of this same branch (the image is built from it): the packs in FREEFIELD_PACKS, else the
+# image's default ones. $null when it cannot be read.
+function Get-Gated([string]$Packs) {
+  try { $index = Invoke-RestMethod -Uri "$Raw/packs/index.json" -TimeoutSec 20 -UseBasicParsing } catch { return $null }
+  $all = @($index.PSObject.Properties | ForEach-Object { $_.Name })
+  $names = @("$Packs" -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+  if ($names -contains 'all') { $names = $all }
+  if (-not $names.Count) { $names = @($index.PSObject.Properties | Where-Object { $_.Value.default } | ForEach-Object { $_.Name }) }
+  $out = [ordered]@{}
+  foreach ($n in $names) {
+    if ($all -notcontains $n) { continue }
+    $g = $index.$n.gated
+    if (-not $g) { continue }
+    foreach ($p in @($g.PSObject.Properties)) { if (-not $out.Contains($p.Name)) { $out[$p.Name] = "$($p.Value)" } }
+  }
+  return $out
 }
 
-# a Hugging Face token whose account has accepted the FLUX 3 Klein license, or '' to go on without one
-function Get-Token {
+function Get-Repos($Gated) {
+  if ($Gated) { return @($Gated.Keys) }
+  return @()
+}
+
+# 'ok', 'invalid', 'nolicense' or 'unknown' (no answer from Hugging Face), the account name, and the repos whose
+# license that account has not accepted yet
+function Test-HfToken([string]$Tok, $Gated) {
+  $who = Get-Http 'https://huggingface.co/api/whoami-v2' 'GET' $Tok
+  if ($who.Code -eq 401) { return @{ Kind = 'invalid'; User = ''; Missing = @() } }
+  if ($who.Code -ne 200) { return @{ Kind = 'unknown'; User = ''; Missing = @() } }
+  $user = '?'
+  try { $user = "$(($who.Body | ConvertFrom-Json).name)" } catch {}
+  $missing = @()
+  $unknown = $false
+  foreach ($repo in (Get-Repos $Gated)) {
+    $f = Get-Http "https://huggingface.co/$repo/resolve/main/$($Gated[$repo])" 'HEAD' $Tok
+    if ($f.Code -eq 403) { $missing += $repo }
+    elseif ($f.Code -eq 401) { return @{ Kind = 'invalid'; User = $user; Missing = @() } }
+    elseif (-not ($f.Code -ge 200 -and $f.Code -lt 400)) { $unknown = $true }
+  }
+  if ($missing.Count) { return @{ Kind = 'nolicense'; User = $user; Missing = $missing } }
+  if ($unknown) { return @{ Kind = 'unknown'; User = $user; Missing = @() } }
+  return @{ Kind = 'ok'; User = $user; Missing = @() }
+}
+
+# a Hugging Face token whose account has accepted every license in $Gated, or '' to go on without one (the studio's
+# Models panel takes it later)
+function Get-Token($Gated) {
+  $repos = Get-Repos $Gated
   $tok = "$env:HF_TOKEN".Trim()
   if ($tok) {
-    $r = Test-HfToken $tok
+    $r = Test-HfToken $tok $Gated
     if ($r.Kind -eq 'ok') { Say 'ok' (Msg 'token_have'); return $tok }
   }
   Write-Host ''
   Say 'plain' (Msg 'token_intro1')
+  foreach ($repo in $repos) { Say 'plain' "     https://huggingface.co/$repo" }
   Say 'plain' (Msg 'token_intro2')
   Say 'plain' (Msg 'token_intro3')
   [void](Read-Host (Msg 'token_open'))
-  Open-Url "https://huggingface.co/$LicenseRepo"
-  Start-Sleep -Seconds 2
+  foreach ($repo in $repos) { Open-Url "https://huggingface.co/$repo"; Start-Sleep -Milliseconds 800 }
+  Start-Sleep -Seconds 1
   Open-Url 'https://huggingface.co/settings/tokens'
   for ($try = 0; $try -lt 6; $try++) {
     $tok = "$(Read-Secret (Msg 'token_prompt'))".Trim()
     if (-not $tok) { Say 'warn' (Msg 'token_skip'); return '' }
     if (-not ($tok.StartsWith('hf_') -and $tok.Length -ge 30)) { Say 'warn' (Msg 'token_shape'); continue }
-    $r = Test-HfToken $tok
+    $r = Test-HfToken $tok $Gated
     for ($wait = 0; $r.Kind -eq 'nolicense' -and $wait -lt 4; $wait++) {
       Say 'warn' (Msg 'token_nolicense' $r.User)
-      Open-Url "https://huggingface.co/$LicenseRepo"
+      foreach ($repo in @($r.Missing)) { Say 'plain' "     https://huggingface.co/$repo"; Open-Url "https://huggingface.co/$repo" }
       [void](Read-Host)
-      $r = Test-HfToken $tok
+      $r = Test-HfToken $tok $Gated
     }
     if ($r.Kind -eq 'ok') { Say 'ok' (Msg 'token_ok' $r.User); return $tok }
     if ($r.Kind -eq 'unknown') { Say 'warn' (Msg 'token_unknown'); return $tok }
+    if ($r.Kind -eq 'nolicense') { Say 'warn' (Msg 'token_partial'); return $tok }   # a good token: the studio waits for the rest
     Say 'warn' (Msg 'token_invalid')
   }
   Say 'warn' (Msg 'token_skip')
@@ -491,7 +523,8 @@ function Save-Log {
   } catch {}
 }
 
-# follows the log from $Since: download progress, errors, then the banner's passcode; '' if Freefield stopped.
+# follows the log from $Since: download progress, errors, then the banner's passcode (Key, '' if Freefield stopped)
+# and whether the models keep downloading after it (Downloading: the studio shows that part).
 # With $Attach (Freefield was already running) what the log said before is not told again, only what comes next.
 function Wait-Ready([string]$Since, [bool]$Attach) {
   $down = [string][char]0x2193
@@ -502,6 +535,7 @@ function Wait-Ready([string]$Since, [bool]$Attach) {
   $got = 0.0
   $key = ''
   $ready = $false
+  $bg = $false
   $hint = $false
   $quiet = $Attach
   $t0 = Get-Date
@@ -525,16 +559,18 @@ function Wait-Ready([string]$Since, [bool]$Attach) {
         Say 'bad' $Matches[1]
         $hint = $true
       } elseif ($hint -and $l -match '^\s{4}\S') {
-        Say 'plain' $l.Trim()
+        Say 'plain' ('  ' + $l.Trim())
       } elseif ($l -match '^models ready in (\d+) s') {
         $need = 0.0
         if (-not $quiet) { Say 'ok' (Msg 'models_ok' (Format-Dur ([int]$Matches[1]))) }
         $hint = $false
       } elseif ($l -match '^! (.+)$') {
         $msg = $Matches[1]
-        Say 'warn' $msg
+        if (-not $quiet) { Say 'warn' $msg }
         if ($msg -like '*could not be downloaded*') { $need = 0.0 }
-        $hint = $false
+        $hint = -not $quiet   # the links under it
+      } elseif ($l -match 'The models are still downloading') {
+        $bg = $true
       } elseif ($l -match '^Freefield is ready on') {
         $ready = $true
       } elseif ($l -match '\?key=(\S+)') {
@@ -555,7 +591,7 @@ function Wait-Ready([string]$Since, [bool]$Attach) {
       foreach ($t in @($lines | Select-Object -Last 25)) { Write-Host "    $t" -ForegroundColor DarkGray }
       if ($p[1] -eq '137' -or $p[2] -eq 'true') { Say 'warn' (Msg 'oom' $RamGb) }
       Save-Log
-      return ''
+      return @{ Key = ''; Downloading = $false }
     }
     $elapsed = Format-Dur ([int]((Get-Date) - $t0).TotalSeconds)
     if ($need -gt 0) {
@@ -574,7 +610,7 @@ function Wait-Ready([string]$Since, [bool]$Attach) {
     Start-Sleep -Seconds 2
   }
   Write-Progress -Activity 'Freefield' -Completed
-  return $key
+  return @{ Key = $key; Downloading = ($bg -and -not $Attach) }
 }
 
 # keeps a copy of this launcher (UTF-8 with BOM, which Windows PowerShell 5.1 needs for the accents) and the icon
@@ -662,21 +698,17 @@ try {
     Say 'ok' (Msg 'already')
   } else {
     # the questions come before the long download, so whoever runs this can walk away after answering them
+    # the image decides the packs unless FREEFIELD_PACKS says otherwise; a token skipped now goes in the studio later
     $envs = [ordered]@{}
     $recreate = $false
     if ($box) {
       $envs = $box.Env
-      if (-not $envs['HF_TOKEN'] -and (Ask (Msg 'token_add_q') $false)) {
-        $tok = Get-Token
-        if ($tok) {
-          $envs['HF_TOKEN'] = $tok
-          $envs['FREEFIELD_PACKS'] = Add-Pack $envs['FREEFIELD_PACKS'] 'image-flux3'
-          $recreate = $true
-        }
-      }
     } else {
-      $tok = Get-Token
-      if ($tok) { $envs['HF_TOKEN'] = $tok; $envs['FREEFIELD_PACKS'] = 'image-flux3,upscale' } else { $envs['FREEFIELD_PACKS'] = 'image,upscale' }
+      $gated = Get-Gated "$env:FREEFIELD_PACKS"
+      if (($null -eq $gated) -or $gated.Count -gt 0) {
+        $tok = Get-Token $gated
+        if ($tok) { $envs['HF_TOKEN'] = $tok }
+      }
     }
     if ($env:FREEFIELD_PACKS -and $env:FREEFIELD_PACKS -ne $envs['FREEFIELD_PACKS']) {
       $envs['FREEFIELD_PACKS'] = $env:FREEFIELD_PACKS
@@ -715,7 +747,8 @@ try {
   $started = First-Line (Dk inspect $Name --format '{{.State.StartedAt}}').Out '^\d{4}-'
   $since = $started
   if ($started.Length -ge 19) { $since = $started.Substring(0, 19) + 'Z' }
-  $key = Wait-Ready $since $attach
+  $w = Wait-Ready $since $attach
+  $key = $w.Key
   if (-not $key) { Wait-Close; return }
 
   $url = 'http://127.0.0.1:' + $box.Port
@@ -723,6 +756,7 @@ try {
   Say 'ok' (Msg 'ready' ($url + '/?key=' + $key))
   Say 'plain' (Msg 'opening')
   Open-Url ($url + '/?key=' + $key)
+  if ($w.Downloading) { Say 'plain' (Msg 'bg_download') }
 
   Save-Copy
   if ($OnWindows) {

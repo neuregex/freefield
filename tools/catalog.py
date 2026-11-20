@@ -15,6 +15,7 @@ or vram.peak_gb in its app.json when `lab/review.py --apply-peaks` wrote one.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -78,13 +79,24 @@ def build_packs(apps: list[dict]) -> dict[str, dict]:
     return out
 
 
+def default_packs() -> list[str]:
+    """The packs a pod downloads when FREEFIELD_PACKS is not set, as infra/pod.py says (read, not imported)."""
+    pod = (ROOT / "infra" / "pod.py").read_text(encoding="utf-8")
+    return re.search(r'^DEFAULT_PACKS = "([^"]*)"', pod, re.M)[1].split(",")
+
+
 def write_packs(apps: list[dict]) -> None:
     packs = build_packs(apps)
     d = ROOT / "packs"
     d.mkdir(exist_ok=True)
     for name, p in packs.items():
         (d / f"{name}.json").write_text(json.dumps(p, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    index = {name: {"apps": p["apps"], "download_gb": p["download_gb"], "needs_hf_token": p["needs_hf_token"]}
+    # "gated": a file of each repo that asks for a license, so the Windows launcher (start.ps1) can ask Hugging Face
+    # whether a token can read it before anything downloads; "default": what a pod downloads without FREEFIELD_PACKS
+    defaults = default_packs()
+    gated = lambda p: {m["repo"]: m["file"] for m in reversed(p["models"]) if m["gated"]}  # noqa: E731  (the first file wins)
+    index = {name: {"apps": p["apps"], "download_gb": p["download_gb"], "needs_hf_token": p["needs_hf_token"],
+                    "gated": dict(sorted(gated(p).items())), "default": name in defaults}
              for name, p in packs.items()}
     (d / "index.json").write_text(json.dumps(index, indent=2) + "\n", encoding="utf-8")
     for name, p in packs.items():

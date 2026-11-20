@@ -52,18 +52,21 @@ Freefield users: get CNY 5 free through this link.</td>
 ## One click on RunPod or Vast.ai
 
 No install and no Modal account. Rent a GPU with Freefield's public template: it starts the backend and the studio,
-downloads the models of the default packs (64 apps, 22.9 GB) and prints a link to open.
+prints a link to open, and downloads the models of the default packs (64 apps, 22.9 GB) while the studio shows how it
+goes.
 
 | | **[Deploy on RunPod](https://console.runpod.io/deploy?template=p7g587ry3j&ref=4nye3bcy)** | **[Rent on Vast.ai](https://cloud.vast.ai/?ref_id=865481&creator_id=865481&name=Freefield)** |
 |---|---|---|
-| 1. Hugging Face token (once: accept the [FLUX 3 license](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy) first) | Settings → Secrets → `hf_token`, with your read token | Account → Environment Variables → `HF_TOKEN` |
+| 1. Hugging Face token (once, optional: accept the [FLUX 3 license](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy) first; without it, the studio asks) | Settings → Secrets → `hf_token`, with your read token | Account → Environment Variables → `HF_TOKEN` |
 | 2. GPU | 24 GB or more, CUDA 13.0 or newer, and not a V100 (CUDA 13 dropped it). An L40S (48 GB) runs every app | 24 GB or more, CUDA 13: the link opens Search with these filters set. Sort by price |
 | 3. Storage | **Add volume → Volume disk**, 60 GB at `/workspace`: the deploy page does not add it by itself | 60 GB, already in the template |
 | 4. Open it | Logs: *Freefield is ready on RunPod*, with the link and its passcode | View instance logs → Refresh: a `trycloudflare.com` link with its passcode |
 | 5. When you are done | **Terminate** the pod | **Destroy** the instance |
 
-The first start takes 5 to 10 minutes: the image, then the models. Anyone with the link can use your GPU, so share it
-only with people you trust. Other packs, a volume that outlives the pod, and what to do when something fails are in
+The link comes in a few minutes (the image, then ComfyUI); the models keep downloading inside the studio, and each app
+works as soon as its files are in. When a model asks you to accept its license on Hugging Face, the studio says which
+one and takes your token in its Models panel, with no restart; the same panel downloads more packs. Anyone with the
+link can use your GPU, so share it only with people you trust. Other packs, a volume that outlives the pod, and what to do when something fails are in
 [the guide](docs/cloud-gpus.md).
 
 Both are referral links. They cost you nothing: RunPod and Vast.ai give Freefield a share of the credits, which pays for
@@ -81,9 +84,10 @@ irm https://raw.githubusercontent.com/neuregex/freefield/main/start.ps1 | iex
 
 - It checks the GPU and its driver (CUDA 13), and [Docker Desktop](https://www.docker.com/products/docker-desktop/),
   which it offers to install with winget when it is missing.
-- It asks for a Hugging Face token the first time and checks that the account accepted the FLUX 3 Klein license.
-  Without a token you get Z-Image and the upscale apps.
-- It downloads the default packs (64 apps, 22.9 GB, once) with a progress bar and opens the studio in your browser.
+- It asks for a Hugging Face token the first time and checks that the account accepted every license the models it
+  downloads ask for. You can skip it and paste it later in the studio's Models panel.
+- It opens the studio in your browser while the default packs download (64 apps, 22.9 GB, once): the studio shows how
+  it goes, and its Models panel downloads more packs.
 - It offers a desktop icon for next time. Each start picks up a new version of Freefield.
 
 Press Enter in its window to stop Freefield and free the GPU.
