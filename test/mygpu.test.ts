@@ -35,12 +35,12 @@ test("a reported card size counts as the size on its label, never a bigger one",
 });
 
 test("each app says what it does on a card: as it is, lite, with RAM, or not for lack of RAM", () => {
-  const z = row("z-image"), video = row("video"), music = row("music");
+  const z = row("z-image"), video = row("video"), sfx = row("sfx");
   assert.deepEqual(fitOn(z, { vram: 16, ram: 32 }), { level: "full", measured: false });
   assert.deepEqual(fitOn(z, { vram: 8, ram: 32 }), { level: "lite", measured: false });
   // no lite version: the full one keeps part of its weights in RAM
-  assert.equal(fitOn(music, { vram: 8, ram: 32 }).level, "offload");
-  assert.equal(fitOn(music, { vram: 8, ram: 32 }).variant, "full");
+  assert.equal(fitOn(sfx, { vram: 8, ram: 32 }).level, "offload");
+  assert.equal(fitOn(sfx, { vram: 8, ram: 32 }).variant, "full");
   // the lite version needs less RAM than the full one, so it is the one offered
   const v16 = fitOn(video, { vram: 16, ram: 64 });
   assert.equal(v16.level, "offload");
@@ -87,7 +87,7 @@ test("the version an app runs follows the card unless the form chose one, and on
   setVariant(z, "full");                         // the suited one is not stored: a smaller card picks again
   pickSize({ vram: 8 });
   assert.equal(variantFor(z), "lite");
-  assert.equal(variantFor(row("music")), "full");   // no lite version
+  assert.equal(variantFor(row("sfx")), "full");     // no lite version
 });
 
 test("a backend that never sleeps sets the pick, a hand-picked size stays, a Modal GPU is only offered", () => {

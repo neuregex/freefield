@@ -9,16 +9,16 @@
     "whats-next",
     "zooms"
   ],
-  "download_gb": 28.42,
+  "download_gb": 19.57,
   "needs_hf_token": false,
   "custom_nodes": [],
   "models": [
     {
-      "repo": "Comfy-Org/Qwen-Image-Edit_ComfyUI",
-      "file": "split_files/diffusion_models/qwen_image_edit_2509_fp8_e4m3fn.safetensors",
+      "repo": "neuregex/Qwen-Image-Edit-2509-w4a8-comfy",
+      "file": "diffusion_models/qwen_image_edit_2509_w4a8.safetensors",
       "dir": "diffusion_models",
-      "gb": 20.43,
-      "name": "qwen_image_edit_2509_fp8_e4m3fn.safetensors",
+      "gb": 11.58,
+      "name": "qwen_image_edit_2509_w4a8.safetensors",
       "gated": false,
       "license": "Apache-2.0",
       "used_by": [

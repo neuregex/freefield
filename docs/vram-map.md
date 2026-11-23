@@ -16,8 +16,8 @@ activations, the others 2.5 GB. These are estimates until the lab runs the app w
 |---|---:|---:|---:|---:|
 | 8 GB | 6 | 58 | 54 | 0 |
 | 12 GB | 66 | 2 | 50 | 0 |
-| 16 GB | 68 | 2 | 48 | 0 |
-| 24 GB | 75 | 31 | 12 | 0 |
+| 16 GB | 68 | 11 | 39 | 0 |
+| 24 GB | 75 | 43 | 0 | 0 |
 | 32 GB | 118 | 0 | 0 | 0 |
 | 48 GB | 118 | 0 | 0 | 0 |
 | 80 GB | 118 | 0 | 0 | 0 |
@@ -99,58 +99,58 @@ needs RAM offload.
 | `victory-card` | denoise 5.8 GB | 5.3 GB | lite | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | 11.3 GB (H100) |
 | `z-image` | denoise 6.2 GB | 4.5 GB | lite | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | 12.6 GB (H100) |
 | `moss-image` | encode 7.3 GB | — | RAM | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | 13.0 GB (L40S) |
-| `music` | encode 9.2 GB | — | RAM | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | 37.1 GB (L40S) |
+| `music` | encode 9.2 GB | 5.9 GB | RAM | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | 37.1 GB (L40S) |
 | `sfx` | encode 10.4 GB | — | RAM | RAM | ✓ | ✓ | ✓ | ✓ | ✓ | 9.2 GB (L40S) |
 | `create-image` | encode 11.6 GB | 11.6 GB | RAM | RAM | ✓ | ✓ | ✓ | ✓ | ✓ | 15.4 GB (L40S) |
 | `style-reference` | denoise 13.9 GB | 8.1 GB | RAM | lite | lite | ✓ | ✓ | ✓ | ✓ | 19.8 GB (L40S) |
 | `styles` | denoise 14.0 GB | 8.1 GB | RAM | lite | lite | ✓ | ✓ | ✓ | ✓ | 19.5 GB (L40S) |
-| `camera-moves` | denoise 15.3 GB | — | RAM | RAM | RAM | ✓ | ✓ | ✓ | ✓ | 41.3 GB (L40S) |
-| `bullet-time-scene` | denoise 16.4 GB | — | RAM | RAM | RAM | ✓ | ✓ | ✓ | ✓ | 30.8 GB (H100) |
-| `motion-transfer` | denoise 16.6 GB | — | RAM | RAM | RAM | ✓ | ✓ | ✓ | ✓ | 37.3 GB (L40S) |
-| `effects` | denoise 16.8 GB | — | RAM | RAM | RAM | ✓ | ✓ | ✓ | ✓ | 41.9 GB (H100) |
+| `camera-moves` | denoise 15.3 GB | 9.1 GB | RAM | RAM | lite | ✓ | ✓ | ✓ | ✓ | 41.3 GB (L40S) |
+| `bullet-time-scene` | denoise 16.4 GB | 9.2 GB | RAM | RAM | lite | ✓ | ✓ | ✓ | ✓ | 30.8 GB (H100) |
+| `motion-transfer` | denoise 16.6 GB | 9.6 GB | RAM | RAM | lite | ✓ | ✓ | ✓ | ✓ | 37.3 GB (L40S) |
+| `effects` | denoise 16.8 GB | 9.6 GB | RAM | RAM | lite | ✓ | ✓ | ✓ | ✓ | 41.9 GB (H100) |
 | `recast` | denoise 18.6 GB | 13.0 GB | RAM | RAM | RAM | ✓ | ✓ | ✓ | ✓ | 30.6 GB (L40S) |
-| `asmr-host` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.3 GB (H100) |
-| `asmr-product` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.6 GB (H100) |
-| `asmr-whisper` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.2 GB (H100) |
-| `behind-the-scenes` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.6 GB (H100) |
-| `idol` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.8 GB (H100) |
-| `kick-ad` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.7 GB (H100) |
-| `magic-button` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.3 GB (H100) |
-| `melting-doodle` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.1 GB (H100) |
-| `mukbang` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.1 GB (H100) |
-| `rap-video` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.3 GB (H100) |
-| `speak` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 41.8 GB (H100) |
-| `storm-creature` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 42.8 GB (H100) |
-| `talking` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 43.2 GB (H100) |
-| `truck-ad` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 41.8 GB (H100) |
-| `video` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 41.8 GB (H100) |
-| `video-t2v` | denoise 21.5 GB | 18.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 48.4 GB (H100) |
-| `angles` | denoise 21.5 GB | 21.5 GB | RAM | RAM | RAM | RAM | ✓ | ✓ | ✓ | 38.2 GB (H100) |
-| `relight` | denoise 21.5 GB | 21.5 GB | RAM | RAM | RAM | RAM | ✓ | ✓ | ✓ | 33.0 GB (H100) |
-| `shots` | denoise 21.5 GB | 21.5 GB | RAM | RAM | RAM | RAM | ✓ | ✓ | ✓ | 38.2 GB (H100) |
-| `zooms` | denoise 21.5 GB | 21.5 GB | RAM | RAM | RAM | RAM | ✓ | ✓ | ✓ | 29.3 GB (H100) |
-| `whats-next` | denoise 21.6 GB | 21.6 GB | RAM | RAM | RAM | RAM | ✓ | ✓ | ✓ | 28.7 GB (L40S) |
-| `vfx-clean-plate` | denoise 21.8 GB | 19.1 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 40.6 GB (L40S) |
-| `vfx-day-to-night` | denoise 21.8 GB | 19.1 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 44.0 GB (L40S) |
-| `chameleon` | denoise 21.9 GB | 19.1 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 44.1 GB (L40S) |
-| `cloud-surf` | denoise 21.9 GB | 19.1 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 49.9 GB (H100) |
-| `morph` | denoise 21.9 GB | 19.1 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 50.0 GB (H100) |
-| `roller-coaster` | denoise 21.9 GB | 19.1 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 50.0 GB (H100) |
-| `transitions` | denoise 21.9 GB | 19.1 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 45.5 GB (H100) |
-| `volcano-ad` | denoise 21.9 GB | 19.1 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 50.3 GB (H100) |
-| `camera-copy` | denoise 22.1 GB | 19.4 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 40.6 GB (L40S) |
-| `mixed-media` | denoise 22.1 GB | 19.4 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 44.2 GB (L40S) |
-| `bullet-time-splash` | denoise 22.2 GB | 21.7 GB | RAM | RAM | RAM | RAM | ✓ | ✓ | ✓ | 40.2 GB (H100) |
-| `bullet-time-white` | denoise 22.2 GB | 21.7 GB | RAM | RAM | RAM | RAM | ✓ | ✓ | ✓ | 40.2 GB (H100) |
-| `vfx-water` | denoise 22.4 GB | 19.6 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 44.4 GB (L40S) |
-| `genjutsu` | denoise 22.8 GB | 20.0 GB | RAM | RAM | RAM | RAM | ✓ | ✓ | ✓ | 40.9 GB (H100 NVL) |
-| `reframe` | denoise 22.8 GB | 20.0 GB | RAM | RAM | RAM | RAM | ✓ | ✓ | ✓ | 44.1 GB (H100) |
-| `sdr-hdr` | denoise 22.8 GB | 20.0 GB | RAM | RAM | RAM | RAM | ✓ | ✓ | ✓ | 37.3 GB (H100 NVL) |
-| `dub` | denoise 24.0 GB | 21.2 GB | RAM | RAM | RAM | RAM | ✓ | ✓ | ✓ | 40.9 GB (H100) |
+| `asmr-host` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.3 GB (H100) |
+| `asmr-product` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.6 GB (H100) |
+| `asmr-whisper` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.2 GB (H100) |
+| `behind-the-scenes` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.6 GB (H100) |
+| `idol` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.8 GB (H100) |
+| `kick-ad` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.7 GB (H100) |
+| `magic-button` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.3 GB (H100) |
+| `melting-doodle` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.1 GB (H100) |
+| `mukbang` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.1 GB (H100) |
+| `rap-video` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 46.3 GB (H100) |
+| `speak` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 41.8 GB (H100) |
+| `storm-creature` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 42.8 GB (H100) |
+| `talking` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 43.2 GB (H100) |
+| `truck-ad` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 41.8 GB (H100) |
+| `video` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 41.8 GB (H100) |
+| `video-t2v` | denoise 21.5 GB | 12.7 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 48.4 GB (H100) |
+| `angles` | denoise 21.5 GB | 12.7 GB | RAM | RAM | lite | lite | ✓ | ✓ | ✓ | 38.2 GB (H100) |
+| `relight` | denoise 21.5 GB | 12.7 GB | RAM | RAM | lite | lite | ✓ | ✓ | ✓ | 33.0 GB (H100) |
+| `shots` | denoise 21.5 GB | 12.7 GB | RAM | RAM | lite | lite | ✓ | ✓ | ✓ | 38.2 GB (H100) |
+| `zooms` | denoise 21.5 GB | 12.7 GB | RAM | RAM | lite | lite | ✓ | ✓ | ✓ | 29.3 GB (H100) |
+| `whats-next` | denoise 21.6 GB | 12.7 GB | RAM | RAM | lite | lite | ✓ | ✓ | ✓ | 28.7 GB (L40S) |
+| `vfx-clean-plate` | denoise 21.8 GB | 13.0 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 40.6 GB (L40S) |
+| `vfx-day-to-night` | denoise 21.8 GB | 13.0 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 44.0 GB (L40S) |
+| `chameleon` | denoise 21.9 GB | 13.1 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 44.1 GB (L40S) |
+| `cloud-surf` | denoise 21.9 GB | 13.1 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 49.9 GB (H100) |
+| `morph` | denoise 21.9 GB | 13.1 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 50.0 GB (H100) |
+| `roller-coaster` | denoise 21.9 GB | 13.1 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 50.0 GB (H100) |
+| `transitions` | denoise 21.9 GB | 13.1 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 45.5 GB (H100) |
+| `volcano-ad` | denoise 21.9 GB | 13.1 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 50.3 GB (H100) |
+| `camera-copy` | denoise 22.1 GB | 13.3 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 40.6 GB (L40S) |
+| `mixed-media` | denoise 22.1 GB | 13.3 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 44.2 GB (L40S) |
+| `bullet-time-splash` | denoise 22.2 GB | 14.5 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 40.2 GB (H100) |
+| `bullet-time-white` | denoise 22.2 GB | 14.5 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 40.2 GB (H100) |
+| `vfx-water` | denoise 22.4 GB | 13.6 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 44.4 GB (L40S) |
+| `genjutsu` | denoise 22.8 GB | 14.0 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 40.9 GB (H100 NVL) |
+| `reframe` | denoise 22.8 GB | 14.0 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 44.1 GB (H100) |
+| `sdr-hdr` | denoise 22.8 GB | 14.0 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 37.3 GB (H100 NVL) |
+| `dub` | denoise 24.0 GB | 15.2 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 40.9 GB (H100) |
 | `extend-video` | encode 27.1 GB | 16.0 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 50.5 GB (H100) |
 | `h3-photo` | encode 27.1 GB | 16.0 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 49.5 GB (H100) |
 | `h3-video` | encode 27.1 GB | 16.0 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 48.3 GB (H100) |
 | `reshoot` | encode 27.1 GB | 18.5 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 44.1 GB (L40S) |
-| `cinema-video` | denoise 27.3 GB | 24.0 GB | RAM | RAM | RAM | RAM | ✓ | ✓ | ✓ | 44.3 GB (L40S) |
+| `cinema-video` | denoise 27.3 GB | 18.0 GB | RAM | RAM | RAM | lite | ✓ | ✓ | ✓ | 44.3 GB (L40S) |
 | `smoke` | encode 0.0 GB | — | — | — | — | — | — | — | — | not measured |
 | `smoke-invert` | encode 0.0 GB | — | — | — | — | — | — | — | — | not measured |

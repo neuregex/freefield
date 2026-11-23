@@ -1,0 +1,239 @@
+{
+  "_doc": "The lite copies Freefield makes itself, with tools/quantize.py on Modal (lab/lite_modal.py --step quantize), for the model files without an official 4-bit copy. source: the model in bf16, downloaded to the volume's .sources folder and deleted once quantized. ref: the quantized file of the same model its makers or Comfy-Org published; the layers it quantized are the ones quantized here (dir: where it lives in the volume; the apps load most of them already). replaces: the file the apps load now, the key of the copy in lite/variants.json once it is published. repo: the Hugging Face repo it goes to, under the account of the huggingface-write secret (lab/hf_publish_modal.py), with the card in lite/cards/<repo>.md and the license of the model it comes from (repos: lite/licenses/<file>).",
+  "format": "asym_w4a8_int8",
+  "files": [
+    {
+      "name": "ltx-2.5-22b-distilled-transformer-w4a8.safetensors",
+      "dir": "diffusion_models",
+      "repo": "LTX-2.5-w4a8-comfy",
+      "source": {
+        "repo": "Lightricks/LTX-2.5",
+        "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-bf16.safetensors",
+        "gb": 42.02
+      },
+      "ref": {
+        "repo": "Lightricks/LTX-2.5",
+        "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "dir": "diffusion_models",
+        "gb": 21.5
+      },
+      "replaces": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors"
+    },
+    {
+      "name": "gemma4-12b-with-proj-ltx-2.5-w4a8.safetensors",
+      "dir": "text_encoders",
+      "repo": "LTX-2.5-w4a8-comfy",
+      "source": {
+        "repo": "Lightricks/LTX-2.5",
+        "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-bf16.safetensors",
+        "gb": 26.26
+      },
+      "ref": {
+        "repo": "Lightricks/LTX-2.5",
+        "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+        "dir": "text_encoders",
+        "gb": 15.37
+      },
+      "replaces": "gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors"
+    },
+    {
+      "name": "wan2.1_i2v_480p_14B_w4a8.safetensors",
+      "dir": "diffusion_models",
+      "repo": "Wan2.1-I2V-14B-480P-w4a8-comfy",
+      "source": {
+        "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
+        "file": "split_files/diffusion_models/wan2.1_i2v_480p_14B_bf16.safetensors",
+        "gb": 32.79
+      },
+      "ref": {
+        "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
+        "file": "split_files/diffusion_models/wan2.1_i2v_480p_14B_fp8_scaled.safetensors",
+        "dir": "diffusion_models",
+        "gb": 16.4
+      },
+      "replaces": "wan2.1_i2v_480p_14B_fp8_scaled.safetensors"
+    },
+    {
+      "name": "wan2.2_fun_camera_high_noise_14B_w4a8.safetensors",
+      "dir": "diffusion_models",
+      "repo": "Wan2.2-Fun-A14B-Camera-w4a8-comfy",
+      "source": {
+        "repo": "Comfy-Org/Wan_2.2_ComfyUI_Repackaged",
+        "file": "split_files/diffusion_models/wan2.2_fun_camera_high_noise_14B_bf16.safetensors",
+        "gb": 29.58
+      },
+      "ref": {
+        "repo": "Comfy-Org/Wan_2.2_ComfyUI_Repackaged",
+        "file": "split_files/diffusion_models/wan2.2_fun_camera_high_noise_14B_fp8_scaled.safetensors",
+        "dir": "diffusion_models",
+        "gb": 15.3
+      },
+      "replaces": "wan2.2_fun_camera_high_noise_14B_fp8_scaled.safetensors"
+    },
+    {
+      "name": "wan2.2_fun_camera_low_noise_14B_w4a8.safetensors",
+      "dir": "diffusion_models",
+      "repo": "Wan2.2-Fun-A14B-Camera-w4a8-comfy",
+      "source": {
+        "repo": "Comfy-Org/Wan_2.2_ComfyUI_Repackaged",
+        "file": "split_files/diffusion_models/wan2.2_fun_camera_low_noise_14B_bf16.safetensors",
+        "gb": 29.58
+      },
+      "ref": {
+        "repo": "Comfy-Org/Wan_2.2_ComfyUI_Repackaged",
+        "file": "split_files/diffusion_models/wan2.2_fun_camera_low_noise_14B_fp8_scaled.safetensors",
+        "dir": "diffusion_models",
+        "gb": 15.3
+      },
+      "replaces": "wan2.2_fun_camera_low_noise_14B_fp8_scaled.safetensors"
+    },
+    {
+      "name": "wan_animate_2_distill_w4a8.safetensors",
+      "dir": "diffusion_models",
+      "repo": "Wan-Animate-2-w4a8-comfy",
+      "source": {
+        "repo": "Comfy-Org/Wan-Animate-2",
+        "file": "diffusion_models/wan_animate_2_distill_bf16.safetensors",
+        "gb": 32.79
+      },
+      "ref": {
+        "repo": "Comfy-Org/Wan-Animate-2",
+        "file": "diffusion_models/wan_animate_2_distill_int8_convrot.safetensors",
+        "dir": "diffusion_models",
+        "gb": 16.65
+      },
+      "replaces": "wan_animate_2_distill_int8_convrot.safetensors"
+    },
+    {
+      "name": "qwen_image_edit_2509_w4a8.safetensors",
+      "dir": "diffusion_models",
+      "repo": "Qwen-Image-Edit-2509-w4a8-comfy",
+      "source": {
+        "repo": "Comfy-Org/Qwen-Image-Edit_ComfyUI",
+        "file": "split_files/diffusion_models/qwen_image_edit_2509_bf16.safetensors",
+        "gb": 40.86
+      },
+      "ref": {
+        "repo": "Comfy-Org/Qwen-Image-Edit_ComfyUI",
+        "file": "split_files/diffusion_models/qwen_image_edit_2509_int8_convrot.safetensors",
+        "dir": ".sources",
+        "gb": 20.5
+      },
+      "replaces": "qwen_image_edit_2509_fp8_e4m3fn.safetensors"
+    },
+    {
+      "name": "minimax_music3_text_encoder_pruned_w4a8.safetensors",
+      "dir": "text_encoders",
+      "repo": "MiniMax-Music-3-w4a8-comfy",
+      "source": {
+        "repo": "Comfy-Org/MiniMax-Music-3",
+        "file": "text_encoders/minimax_music3_text_encoder_pruned_bf16.safetensors",
+        "gb": 16.71
+      },
+      "ref": {
+        "repo": "Comfy-Org/MiniMax-Music-3",
+        "file": "text_encoders/minimax_music3_text_encoder_pruned_int8_convrot.safetensors",
+        "dir": "text_encoders",
+        "gb": 9.2
+      },
+      "replaces": "minimax_music3_text_encoder_pruned_int8_convrot.safetensors"
+    }
+  ],
+  "repos": {
+    "LTX-2.5-w4a8-comfy": {
+      "title": "LTX-2.5 22B distilled, w4a8 for ComfyUI",
+      "base_model": [
+        "Lightricks/LTX-2.5"
+      ],
+      "license": {
+        "id": "other",
+        "name": "ltx-2.x-community-license-agreement",
+        "file": "LTX-2.x-Community-License.txt"
+      },
+      "pipeline_tag": "image-to-video",
+      "tags": [
+        "ltx-2",
+        "video",
+        "audio"
+      ]
+    },
+    "Wan2.1-I2V-14B-480P-w4a8-comfy": {
+      "title": "Wan 2.1 I2V 14B 480p, w4a8 for ComfyUI",
+      "base_model": [
+        "Wan-AI/Wan2.1-I2V-14B-480P"
+      ],
+      "license": {
+        "id": "apache-2.0",
+        "file": "Apache-2.0.txt"
+      },
+      "pipeline_tag": "image-to-video",
+      "tags": [
+        "wan",
+        "video"
+      ]
+    },
+    "Wan2.2-Fun-A14B-Camera-w4a8-comfy": {
+      "title": "Wan 2.2 Fun A14B Control Camera, w4a8 for ComfyUI",
+      "base_model": [
+        "alibaba-pai/Wan2.2-Fun-A14B-Control-Camera"
+      ],
+      "license": {
+        "id": "apache-2.0",
+        "file": "Apache-2.0.txt"
+      },
+      "pipeline_tag": "image-to-video",
+      "tags": [
+        "wan",
+        "video",
+        "camera-control"
+      ]
+    },
+    "Wan-Animate-2-w4a8-comfy": {
+      "title": "Wan Animate 2 (distilled), w4a8 for ComfyUI",
+      "base_model": [
+        "Comfy-Org/Wan-Animate-2"
+      ],
+      "license": {
+        "id": "apache-2.0",
+        "file": "Apache-2.0.txt"
+      },
+      "pipeline_tag": "image-to-video",
+      "tags": [
+        "wan",
+        "video",
+        "animation"
+      ]
+    },
+    "Qwen-Image-Edit-2509-w4a8-comfy": {
+      "title": "Qwen-Image-Edit 2509, w4a8 for ComfyUI",
+      "base_model": [
+        "Qwen/Qwen-Image-Edit-2509"
+      ],
+      "license": {
+        "id": "apache-2.0",
+        "file": "Apache-2.0.txt"
+      },
+      "pipeline_tag": "image-to-image",
+      "tags": [
+        "qwen-image",
+        "image-editing"
+      ]
+    },
+    "MiniMax-Music-3-w4a8-comfy": {
+      "title": "MiniMax Music 3 text encoder, w4a8 for ComfyUI",
+      "base_model": [
+        "MiniMaxAI/MiniMax-Music3"
+      ],
+      "license": {
+        "id": "other",
+        "name": "minimax-music3-community-license",
+        "file": "MiniMax-Music3-Community-License.txt"
+      },
+      "pipeline_tag": "text-to-audio",
+      "tags": [
+        "minimax",
+        "music"
+      ]
+    }
+  }
+}

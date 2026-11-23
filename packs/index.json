@@ -7,7 +7,20 @@
     "download_gb": 29.29,
     "needs_hf_token": false,
     "gated": {},
-    "default": false
+    "default": false,
+    "lite": "audio-lite"
+  },
+  "audio-lite": {
+    "apps": [
+      "music",
+      "sfx"
+    ],
+    "download_gb": 26.0,
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false,
+    "variant": "lite",
+    "of": "audio"
   },
   "core": {
     "apps": [
@@ -233,7 +246,7 @@
       "whats-next",
       "zooms"
     ],
-    "download_gb": 28.42,
+    "download_gb": 19.57,
     "needs_hf_token": false,
     "gated": {},
     "default": false,
@@ -384,12 +397,12 @@
       "video-t2v",
       "volcano-ad"
     ],
-    "download_gb": 62.7,
+    "download_gb": 50.41,
     "needs_hf_token": true,
     "gated": {
       "Lightricks/LTX-2.3-22b-IC-LoRA-DubIt": "ltx-2.3-22b-ic-lora-dubit-0.9.safetensors",
       "Lightricks/LTX-2.3-22b-IC-LoRA-In-Outpainting": "ltx-2.3-22b-ic-lora-in-outpainting-0.9.safetensors",
-      "Lightricks/LTX-2.5": "diffusion_models/ltx-2.5-22b-distilled-transformer-nvfp4.safetensors",
+      "Lightricks/LTX-2.5": "latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors",
       "Lightricks/LTX-2.5-22b-IC-LoRA-Clean-Plate": "ltx-2.5-22b-ic-lora-clean-plate-1.0.safetensors",
       "Lightricks/LTX-2.5-22b-IC-LoRA-Day-To-Night": "ltx-2.5-22b-ic-lora-day-to-night-0.9.safetensors",
       "Lightricks/LTX-2.5-22b-IC-LoRA-Ingredients": "ltx-2.5-22b-ic-lora-ingredients-0.9.safetensors",
@@ -429,7 +442,8 @@
     "download_gb": 24.9,
     "needs_hf_token": false,
     "gated": {},
-    "default": false
+    "default": false,
+    "lite": "video-wan-lite"
   },
   "video-wan-camera": {
     "apps": [
@@ -438,7 +452,19 @@
     "download_gb": 40.05,
     "needs_hf_token": false,
     "gated": {},
-    "default": false
+    "default": false,
+    "lite": "video-wan-camera-lite"
+  },
+  "video-wan-camera-lite": {
+    "apps": [
+      "camera-moves"
+    ],
+    "download_gb": 27.57,
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false,
+    "variant": "lite",
+    "of": "video-wan-camera"
   },
   "video-wan-effects": {
     "apps": [
@@ -462,7 +488,7 @@
       "bullet-time-white",
       "effects"
     ],
-    "download_gb": 44.51,
+    "download_gb": 37.35,
     "needs_hf_token": true,
     "gated": {
       "black-forest-labs/flux-3-image-klein-comfy": "diffusion_models/flux3-image-klein-nvfp4.safetensors"
@@ -470,5 +496,16 @@
     "default": false,
     "variant": "lite",
     "of": "video-wan-effects"
+  },
+  "video-wan-lite": {
+    "apps": [
+      "motion-transfer"
+    ],
+    "download_gb": 17.84,
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false,
+    "variant": "lite",
+    "of": "video-wan"
   }
 }

@@ -4,6 +4,9 @@
     python lab/review.py lab/results/<run_id>            → lab/results/<run_id>/review.html
     python lab/review.py lab/results/<run_id> --apply-peaks   also stores each app's highest
                                                            measured peak in apps/<id>/app.json
+    python lab/review.py lab/results/<run_id> --tiers         also writes what each case did at each
+                                                           card size into docs/vram-measured.json
+                                                           (a run of lab/lite_modal.py)
 
 The page plays every output next to its settings. Ratings (good / meh / bad) and notes are
 kept in your browser and can be exported as ratings.json for the next round.
@@ -86,6 +89,7 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("run_dir", type=Path)
     ap.add_argument("--apply-peaks", action="store_true")
+    ap.add_argument("--tiers", action="store_true", help="write the card-size measurements to docs/vram-measured.json")
     a = ap.parse_args(argv)
     lines = (a.run_dir / "results.jsonl").read_text(encoding="utf-8").splitlines()
     results = {}
@@ -111,7 +115,41 @@ def main(argv=None) -> int:
             m["vram"] = {"peak_gb": peak, "measured_on": f"{meta.get('gpu', 'GPU')} · {meta.get('started', '')[:10]}"}
             f.write_text(json.dumps(m, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
             print(f"apps/{app_id}: peak {peak:.1f} GB")
+    if a.tiers:
+        write_tiers(rows, a.run_dir.name, meta)
     return 0
+
+
+MEMORY_FAILURES = ("out of memory", "outofmemory", "allocation on device", "no result after", "timeouterror")
+
+
+def write_tiers(rows: list[dict], run: str, meta: dict) -> None:
+    """docs/vram-measured.json: per app, card size and version, whether it ran, whether ComfyUI kept weights in RAM,
+    the peaks and the time. Only memory says "did not run": out of memory, or past lite/measure.json's time limit.
+    A case skipped for a model that could not be downloaded, or that failed for another reason (a bug to fix, not a
+    card too small), is left out and listed."""
+    out = ROOT / "docs" / "vram-measured.json"
+    doc = json.loads(out.read_text(encoding="utf-8")) if out.exists() else {}
+    apps = doc.get("apps", {})
+    n = 0
+    for r in rows:
+        if not r.get("measure") or r["status"] == "skipped":
+            continue
+        if r["status"] != "ok" and not any(w in (r.get("error") or "").lower() for w in MEMORY_FAILURES):
+            print(f"  left out {r['id']}: {(r.get('error') or r['status'])[:160]}")
+            continue
+        entry = {"ok": r["status"] == "ok", "offloaded": bool(r.get("offloaded")), "peak_gb": r.get("peak_vram_gb"),
+                 "ram_peak_gb": r.get("peak_ram_gb"), "seconds": r.get("seconds"), "case": r.get("case"), "run": run}
+        if r["status"] != "ok":
+            entry["error"] = (r.get("error") or r["status"])[:300]
+        apps.setdefault(r["app"], {}).setdefault(str(r["tier"]), {})[r.get("variant", "full")] = entry
+        n += 1
+    doc = {"how": "lab/lite_modal.py: ComfyUI given each card size's memory on a bigger GPU (--reserve-vram, a PyTorch "
+                  "memory cap, --disable-dynamic-vram); offloaded = ComfyUI loaded part of the weights to RAM",
+           "gpu": meta.get("gpu") or doc.get("gpu"), "runs": sorted(set(doc.get("runs", [])) | {run}),
+           "apps": {k: apps[k] for k in sorted(apps)}}
+    out.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"wrote {n} measurements to {out.relative_to(ROOT)}; run python tools/catalog.py all to update the map")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,21 @@
+{
+  "_doc": "What lab/lite_modal.py --step measure runs: one showcase case of lab/cases.json per base model, in its full and lite versions, with ComfyUI given the memory of each card size (GB). The inputs these cases read are made first, at full size, and not measured. Cheap cases first, so a container that hits its time limit has measured the most it could.",
+  "tiers": [8, 12, 16, 24],
+  "case_timeout_s": 1200,
+  "cases": [
+    "ref-face-a",
+    "cmp-fisher-klx",
+    "styles-tarot",
+    "cmp-fisher-ms",
+    "relight-neon",
+    "sfx-rain",
+    "ref-song",
+    "upscale-video-street",
+    "i2v-portrait",
+    "fx-cakeify",
+    "camera-moves-quality",
+    "motion-transfer-walk",
+    "recast-walk",
+    "h3-video-tacos"
+  ]
+}

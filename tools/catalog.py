@@ -31,6 +31,7 @@ HEADROOM_GB = 4.0        # CUDA context + activations margin used for the "fits"
 EXAMPLES = ROOT / "web" / "examples" / "index.json"
 TIERS = [8, 12, 16, 24, 32, 48, 80]   # card sizes the studio's GPU picker offers, in GB
 RAM_OS_GB = 8.0          # RAM left for the system when ComfyUI keeps offloaded weights in RAM
+RAM_OS_MEASURED_GB = 4.0  # on top of the RAM a lab run measured ComfyUI using (its own overhead is in the measure)
 MEASURED = ROOT / "docs" / "vram-measured.json"   # lab runs with ComfyUI capped to a card size (lab/review.py --tiers)
 README_START, README_END = "<!-- gpu-table:start -->", "<!-- gpu-table:end -->"
 
@@ -237,6 +238,11 @@ def vram_row(a: dict, measured: dict | None = None, tiers_measured: dict | None 
         for v in variants:
             got = (tiers_measured or {}).get(str(t), {}).get(v)
             tiers[str(t)][v] = measured_fit(got) if got else tier_fit(a, versions[v], t)
+    for v in variants:   # what ComfyUI used when it had to keep weights in RAM, once the lab measured it
+        ram = [e["ram_peak_gb"] for sizes in (tiers_measured or {}).values() for vv, e in sizes.items()
+               if vv == v and e.get("ok") and e.get("offloaded") and e.get("ram_peak_gb")]
+        if ram:
+            versions[v]["ram_gb"] = int(-(-(max(ram) + RAM_OS_MEASURED_GB) // 1))
     return {
         "id": a["id"], "name": a["name"], "section": a["section"], "pack": a["pack"], "status": a["status"],
         "versions": {v: {k: r[k] for k in ("whole_gb", "largest_phase", "largest_phase_gb")} for v, r in versions.items()},

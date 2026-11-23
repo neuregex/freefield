@@ -29,15 +29,15 @@
     {
       "tier": 16,
       "full": 68,
-      "lite": 2,
-      "offload": 48,
+      "lite": 11,
+      "offload": 39,
       "no": 0
     },
     {
       "tier": 24,
       "full": 75,
-      "lite": 31,
-      "offload": 12,
+      "lite": 43,
+      "offload": 0,
       "no": 0
     },
     {
@@ -4754,33 +4754,46 @@
           "whole_gb": 14.33,
           "largest_phase": "encode",
           "largest_phase_gb": 9.2
+        },
+        "lite": {
+          "whole_gb": 11.04,
+          "largest_phase": "encode",
+          "largest_phase_gb": 5.91
         }
       },
       "tiers": {
         "8": {
-          "full": "offload"
+          "full": "offload",
+          "lite": "offload"
         },
         "12": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "16": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "24": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "32": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "48": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "80": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         }
       },
       "ram_gb": {
-        "full": 23
+        "full": 23,
+        "lite": 20
       },
       "measured": null,
       "whole_gb": 14.33,
@@ -5093,33 +5106,46 @@
           "whole_gb": 37.59,
           "largest_phase": "denoise",
           "largest_phase_gb": 15.3
+        },
+        "lite": {
+          "whole_gb": 25.11,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 9.06
         }
       },
       "tiers": {
         "8": {
-          "full": "offload"
+          "full": "offload",
+          "lite": "offload"
         },
         "12": {
-          "full": "offload"
+          "full": "offload",
+          "lite": "offload"
         },
         "16": {
-          "full": "offload"
+          "full": "offload",
+          "lite": "fits"
         },
         "24": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "32": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "48": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "80": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         }
       },
       "ram_gb": {
-        "full": 46
+        "full": 46,
+        "lite": 34
       },
       "measured": null,
       "whole_gb": 37.59,
@@ -5153,33 +5179,46 @@
           "whole_gb": 24.65,
           "largest_phase": "denoise",
           "largest_phase_gb": 16.4
+        },
+        "lite": {
+          "whole_gb": 17.49,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 9.24
         }
       },
       "tiers": {
         "8": {
-          "full": "offload"
+          "full": "offload",
+          "lite": "offload"
         },
         "12": {
-          "full": "offload"
+          "full": "offload",
+          "lite": "offload"
         },
         "16": {
-          "full": "offload"
+          "full": "offload",
+          "lite": "fits"
         },
         "24": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "32": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "48": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "80": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         }
       },
       "ram_gb": {
-        "full": 33
+        "full": 33,
+        "lite": 26
       },
       "measured": null,
       "whole_gb": 24.65,
@@ -5213,33 +5252,46 @@
           "whole_gb": 24.9,
           "largest_phase": "denoise",
           "largest_phase_gb": 16.65
+        },
+        "lite": {
+          "whole_gb": 17.84,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 9.59
         }
       },
       "tiers": {
         "8": {
-          "full": "offload"
+          "full": "offload",
+          "lite": "offload"
         },
         "12": {
-          "full": "offload"
+          "full": "offload",
+          "lite": "offload"
         },
         "16": {
-          "full": "offload"
+          "full": "offload",
+          "lite": "fits"
         },
         "24": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "32": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "48": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "80": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         }
       },
       "ram_gb": {
-        "full": 33
+        "full": 33,
+        "lite": 26
       },
       "measured": null,
       "whole_gb": 24.9,
@@ -5273,33 +5325,46 @@
           "whole_gb": 25.01,
           "largest_phase": "denoise",
           "largest_phase_gb": 16.76
+        },
+        "lite": {
+          "whole_gb": 17.85,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 9.6
         }
       },
       "tiers": {
         "8": {
-          "full": "offload"
+          "full": "offload",
+          "lite": "offload"
         },
         "12": {
-          "full": "offload"
+          "full": "offload",
+          "lite": "offload"
         },
         "16": {
-          "full": "offload"
+          "full": "offload",
+          "lite": "fits"
         },
         "24": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "32": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "48": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         },
         "80": {
-          "full": "fits"
+          "full": "fits",
+          "lite": "fits"
         }
       },
       "ram_gb": {
-        "full": 34
+        "full": 34,
+        "lite": 26
       },
       "measured": null,
       "whole_gb": 25.01,
@@ -5408,9 +5473,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -5445,7 +5510,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -5481,9 +5546,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -5518,7 +5583,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -5554,9 +5619,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -5591,7 +5656,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -5627,9 +5692,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -5664,7 +5729,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -5700,9 +5765,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -5737,7 +5802,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -5773,9 +5838,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -5810,7 +5875,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -5846,9 +5911,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -5883,7 +5948,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -5919,9 +5984,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -5956,7 +6021,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -5992,9 +6057,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -6029,7 +6094,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -6065,9 +6130,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -6102,7 +6167,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -6138,9 +6203,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -6175,7 +6240,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -6211,9 +6276,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -6248,7 +6313,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -6284,9 +6349,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -6321,7 +6386,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -6357,9 +6422,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -6394,7 +6459,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -6430,9 +6495,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -6467,7 +6532,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -6503,9 +6568,9 @@
           "largest_phase_gb": 21.5
         },
         "lite": {
-          "whole_gb": 36.92,
+          "whole_gb": 24.63,
           "largest_phase": "denoise",
-          "largest_phase_gb": 18.72
+          "largest_phase_gb": 12.7
         }
       },
       "tiers": {
@@ -6540,7 +6605,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.7,
@@ -6576,9 +6641,9 @@
           "largest_phase_gb": 21.52
         },
         "lite": {
-          "whole_gb": 27.88,
+          "whole_gb": 19.03,
           "largest_phase": "denoise",
-          "largest_phase_gb": 21.52
+          "largest_phase_gb": 12.67
         }
       },
       "tiers": {
@@ -6592,11 +6657,11 @@
         },
         "16": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "24": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "32": {
           "full": "fits",
@@ -6613,7 +6678,7 @@
       },
       "ram_gb": {
         "full": 40,
-        "lite": 36
+        "lite": 28
       },
       "measured": null,
       "whole_gb": 31.15,
@@ -6649,9 +6714,9 @@
           "largest_phase_gb": 21.52
         },
         "lite": {
-          "whole_gb": 27.88,
+          "whole_gb": 19.03,
           "largest_phase": "denoise",
-          "largest_phase_gb": 21.52
+          "largest_phase_gb": 12.67
         }
       },
       "tiers": {
@@ -6665,11 +6730,11 @@
         },
         "16": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "24": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "32": {
           "full": "fits",
@@ -6686,7 +6751,7 @@
       },
       "ram_gb": {
         "full": 40,
-        "lite": 36
+        "lite": 28
       },
       "measured": null,
       "whole_gb": 31.15,
@@ -6722,9 +6787,9 @@
           "largest_phase_gb": 21.52
         },
         "lite": {
-          "whole_gb": 27.88,
+          "whole_gb": 19.03,
           "largest_phase": "denoise",
-          "largest_phase_gb": 21.52
+          "largest_phase_gb": 12.67
         }
       },
       "tiers": {
@@ -6738,11 +6803,11 @@
         },
         "16": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "24": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "32": {
           "full": "fits",
@@ -6759,7 +6824,7 @@
       },
       "ram_gb": {
         "full": 40,
-        "lite": 36
+        "lite": 28
       },
       "measured": null,
       "whole_gb": 31.15,
@@ -6795,9 +6860,9 @@
           "largest_phase_gb": 21.52
         },
         "lite": {
-          "whole_gb": 27.88,
+          "whole_gb": 19.03,
           "largest_phase": "denoise",
-          "largest_phase_gb": 21.52
+          "largest_phase_gb": 12.67
         }
       },
       "tiers": {
@@ -6811,11 +6876,11 @@
         },
         "16": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "24": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "32": {
           "full": "fits",
@@ -6832,7 +6897,7 @@
       },
       "ram_gb": {
         "full": 40,
-        "lite": 36
+        "lite": 28
       },
       "measured": null,
       "whole_gb": 31.15,
@@ -6868,9 +6933,9 @@
           "largest_phase_gb": 21.58
         },
         "lite": {
-          "whole_gb": 27.94,
+          "whole_gb": 19.09,
           "largest_phase": "denoise",
-          "largest_phase_gb": 21.58
+          "largest_phase_gb": 12.73
         }
       },
       "tiers": {
@@ -6884,11 +6949,11 @@
         },
         "16": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "24": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "32": {
           "full": "fits",
@@ -6905,7 +6970,7 @@
       },
       "ram_gb": {
         "full": 40,
-        "lite": 36
+        "lite": 28
       },
       "measured": null,
       "whole_gb": 31.21,
@@ -6941,9 +7006,9 @@
           "largest_phase_gb": 21.83
         },
         "lite": {
-          "whole_gb": 36.25,
+          "whole_gb": 23.96,
           "largest_phase": "denoise",
-          "largest_phase_gb": 19.05
+          "largest_phase_gb": 13.03
         }
       },
       "tiers": {
@@ -6978,7 +7043,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 32
       },
       "measured": null,
       "whole_gb": 39.03,
@@ -7014,9 +7079,9 @@
           "largest_phase_gb": 21.83
         },
         "lite": {
-          "whole_gb": 36.25,
+          "whole_gb": 23.96,
           "largest_phase": "denoise",
-          "largest_phase_gb": 19.05
+          "largest_phase_gb": 13.03
         }
       },
       "tiers": {
@@ -7051,7 +7116,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 32
       },
       "measured": null,
       "whole_gb": 39.03,
@@ -7087,9 +7152,9 @@
           "largest_phase_gb": 21.89
         },
         "lite": {
-          "whole_gb": 46.79,
+          "whole_gb": 34.5,
           "largest_phase": "denoise",
-          "largest_phase_gb": 19.11
+          "largest_phase_gb": 13.09
         }
       },
       "tiers": {
@@ -7124,7 +7189,7 @@
       },
       "ram_gb": {
         "full": 59,
-        "lite": 55
+        "lite": 43
       },
       "measured": null,
       "whole_gb": 50.12,
@@ -7160,9 +7225,9 @@
           "largest_phase_gb": 21.89
         },
         "lite": {
-          "whole_gb": 46.79,
+          "whole_gb": 34.5,
           "largest_phase": "denoise",
-          "largest_phase_gb": 19.11
+          "largest_phase_gb": 13.09
         }
       },
       "tiers": {
@@ -7197,7 +7262,7 @@
       },
       "ram_gb": {
         "full": 59,
-        "lite": 55
+        "lite": 43
       },
       "measured": null,
       "whole_gb": 50.12,
@@ -7233,9 +7298,9 @@
           "largest_phase_gb": 21.89
         },
         "lite": {
-          "whole_gb": 46.79,
+          "whole_gb": 34.5,
           "largest_phase": "denoise",
-          "largest_phase_gb": 19.11
+          "largest_phase_gb": 13.09
         }
       },
       "tiers": {
@@ -7270,7 +7335,7 @@
       },
       "ram_gb": {
         "full": 59,
-        "lite": 55
+        "lite": 43
       },
       "measured": null,
       "whole_gb": 50.12,
@@ -7306,9 +7371,9 @@
           "largest_phase_gb": 21.89
         },
         "lite": {
-          "whole_gb": 46.79,
+          "whole_gb": 34.5,
           "largest_phase": "denoise",
-          "largest_phase_gb": 19.11
+          "largest_phase_gb": 13.09
         }
       },
       "tiers": {
@@ -7343,7 +7408,7 @@
       },
       "ram_gb": {
         "full": 59,
-        "lite": 55
+        "lite": 43
       },
       "measured": null,
       "whole_gb": 50.12,
@@ -7379,9 +7444,9 @@
           "largest_phase_gb": 21.89
         },
         "lite": {
-          "whole_gb": 36.31,
+          "whole_gb": 24.02,
           "largest_phase": "denoise",
-          "largest_phase_gb": 19.11
+          "largest_phase_gb": 13.09
         }
       },
       "tiers": {
@@ -7416,7 +7481,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.09,
@@ -7452,9 +7517,9 @@
           "largest_phase_gb": 21.89
         },
         "lite": {
-          "whole_gb": 46.79,
+          "whole_gb": 34.5,
           "largest_phase": "denoise",
-          "largest_phase_gb": 19.11
+          "largest_phase_gb": 13.09
         }
       },
       "tiers": {
@@ -7489,7 +7554,7 @@
       },
       "ram_gb": {
         "full": 59,
-        "lite": 55
+        "lite": 43
       },
       "measured": null,
       "whole_gb": 50.12,
@@ -7525,9 +7590,9 @@
           "largest_phase_gb": 22.15
         },
         "lite": {
-          "whole_gb": 36.57,
+          "whole_gb": 24.28,
           "largest_phase": "denoise",
-          "largest_phase_gb": 19.37
+          "largest_phase_gb": 13.35
         }
       },
       "tiers": {
@@ -7562,7 +7627,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.35,
@@ -7598,9 +7663,9 @@
           "largest_phase_gb": 22.15
         },
         "lite": {
-          "whole_gb": 48.05,
+          "whole_gb": 35.76,
           "largest_phase": "denoise",
-          "largest_phase_gb": 19.37
+          "largest_phase_gb": 13.35
         }
       },
       "tiers": {
@@ -7635,7 +7700,7 @@
       },
       "ram_gb": {
         "full": 60,
-        "lite": 57
+        "lite": 44
       },
       "measured": null,
       "whole_gb": 51.38,
@@ -7671,9 +7736,9 @@
           "largest_phase_gb": 22.23
         },
         "lite": {
-          "whole_gb": 35.13,
+          "whole_gb": 27.97,
           "largest_phase": "denoise",
-          "largest_phase_gb": 21.68
+          "largest_phase_gb": 14.52
         }
       },
       "tiers": {
@@ -7691,7 +7756,7 @@
         },
         "24": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "32": {
           "full": "fits",
@@ -7708,7 +7773,7 @@
       },
       "ram_gb": {
         "full": 44,
-        "lite": 44
+        "lite": 36
       },
       "measured": null,
       "whole_gb": 35.68,
@@ -7744,9 +7809,9 @@
           "largest_phase_gb": 22.23
         },
         "lite": {
-          "whole_gb": 35.13,
+          "whole_gb": 27.97,
           "largest_phase": "denoise",
-          "largest_phase_gb": 21.68
+          "largest_phase_gb": 14.52
         }
       },
       "tiers": {
@@ -7764,7 +7829,7 @@
         },
         "24": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "32": {
           "full": "fits",
@@ -7781,7 +7846,7 @@
       },
       "ram_gb": {
         "full": 44,
-        "lite": 44
+        "lite": 36
       },
       "measured": null,
       "whole_gb": 35.68,
@@ -7817,9 +7882,9 @@
           "largest_phase_gb": 22.41
         },
         "lite": {
-          "whole_gb": 36.83,
+          "whole_gb": 24.54,
           "largest_phase": "denoise",
-          "largest_phase_gb": 19.63
+          "largest_phase_gb": 13.61
         }
       },
       "tiers": {
@@ -7854,7 +7919,7 @@
       },
       "ram_gb": {
         "full": 48,
-        "lite": 45
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 39.61,
@@ -7890,9 +7955,9 @@
           "largest_phase_gb": 22.81
         },
         "lite": {
-          "whole_gb": 37.23,
+          "whole_gb": 24.94,
           "largest_phase": "denoise",
-          "largest_phase_gb": 20.03
+          "largest_phase_gb": 14.01
         }
       },
       "tiers": {
@@ -7910,7 +7975,7 @@
         },
         "24": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "32": {
           "full": "fits",
@@ -7927,7 +7992,7 @@
       },
       "ram_gb": {
         "full": 49,
-        "lite": 46
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 40.01,
@@ -7963,9 +8028,9 @@
           "largest_phase_gb": 22.81
         },
         "lite": {
-          "whole_gb": 37.23,
+          "whole_gb": 24.94,
           "largest_phase": "denoise",
-          "largest_phase_gb": 20.03
+          "largest_phase_gb": 14.01
         }
       },
       "tiers": {
@@ -7983,7 +8048,7 @@
         },
         "24": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "32": {
           "full": "fits",
@@ -8000,7 +8065,7 @@
       },
       "ram_gb": {
         "full": 49,
-        "lite": 46
+        "lite": 33
       },
       "measured": null,
       "whole_gb": 40.01,
@@ -8036,9 +8101,9 @@
           "largest_phase_gb": 22.81
         },
         "lite": {
-          "whole_gb": 21.87,
+          "whole_gb": 15.85,
           "largest_phase": "denoise",
-          "largest_phase_gb": 20.03
+          "largest_phase_gb": 14.01
         }
       },
       "tiers": {
@@ -8056,7 +8121,7 @@
         },
         "24": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "32": {
           "full": "fits",
@@ -8073,7 +8138,7 @@
       },
       "ram_gb": {
         "full": 33,
-        "lite": 30
+        "lite": 24
       },
       "measured": null,
       "whole_gb": 24.65,
@@ -8109,9 +8174,9 @@
           "largest_phase_gb": 23.97
         },
         "lite": {
-          "whole_gb": 38.39,
+          "whole_gb": 26.1,
           "largest_phase": "denoise",
-          "largest_phase_gb": 21.19
+          "largest_phase_gb": 15.17
         }
       },
       "tiers": {
@@ -8129,7 +8194,7 @@
         },
         "24": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "32": {
           "full": "fits",
@@ -8146,7 +8211,7 @@
       },
       "ram_gb": {
         "full": 50,
-        "lite": 47
+        "lite": 35
       },
       "measured": null,
       "whole_gb": 41.17,
@@ -8474,9 +8539,9 @@
           "largest_phase_gb": 27.33
         },
         "lite": {
-          "whole_gb": 47.4,
+          "whole_gb": 35.11,
           "largest_phase": "denoise",
-          "largest_phase_gb": 24.0
+          "largest_phase_gb": 17.98
         }
       },
       "tiers": {
@@ -8494,7 +8559,7 @@
         },
         "24": {
           "full": "offload",
-          "lite": "offload"
+          "lite": "fits"
         },
         "32": {
           "full": "fits",
@@ -8511,7 +8576,7 @@
       },
       "ram_gb": {
         "full": 59,
-        "lite": 56
+        "lite": 44
       },
       "measured": null,
       "whole_gb": 50.73,

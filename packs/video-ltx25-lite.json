@@ -36,7 +36,7 @@
     "video-t2v",
     "volcano-ad"
   ],
-  "download_gb": 62.7,
+  "download_gb": 50.41,
   "needs_hf_token": true,
   "custom_nodes": [
     {
@@ -64,12 +64,12 @@
       ]
     },
     {
-      "repo": "Lightricks/LTX-2.5",
-      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-nvfp4.safetensors",
+      "repo": "neuregex/LTX-2.5-w4a8-comfy",
+      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-w4a8.safetensors",
       "dir": "diffusion_models",
-      "gb": 18.72,
-      "name": "ltx-2.5-22b-distilled-transformer-nvfp4.safetensors",
-      "gated": true,
+      "gb": 12.7,
+      "name": "ltx-2.5-22b-distilled-transformer-w4a8.safetensors",
+      "gated": false,
       "license": "LTX-2.x Community License",
       "used_by": [
         "asmr-host",
@@ -285,12 +285,12 @@
       ]
     },
     {
-      "repo": "Lightricks/LTX-2.5",
-      "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+      "repo": "neuregex/LTX-2.5-w4a8-comfy",
+      "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-w4a8.safetensors",
       "dir": "text_encoders",
-      "gb": 15.37,
-      "name": "gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
-      "gated": true,
+      "gb": 9.1,
+      "name": "gemma4-12b-with-proj-ltx-2.5-w4a8.safetensors",
+      "gated": false,
       "license": "LTX-2.x Community License",
       "used_by": [
         "asmr-host",
