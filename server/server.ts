@@ -1,7 +1,8 @@
 // Minimal HTTP API for the web UI. Node's built-in http plus the Fetch API types; no framework.
 //   GET    /api/apps                         catalog (what the UI needs to draw cards and forms)
 //   GET    /api/apps/:id/workflow            the app's ComfyUI workflow in API format, as a download (open it in ComfyUI)
-//   POST   /api/apps/:id/run                 multipart form: one field per input id, optional "preset"
+//   POST   /api/apps/:id/run                 multipart form: one field per input id, optional "preset";
+//                                            ?variant=lite runs the lite version (lite/README.md)
 //                                            → 202 with the history entry; the run continues in the background
 //   GET    /api/history[?app=id]             every run started here, newest first (out/history/)
 //   GET    /api/history/:id                  one run, with live progress while it is going
@@ -37,6 +38,7 @@ import { History } from "./history.ts";
 import { Flags } from "./flags.ts";
 import { DOOR_HTML, foreign, Guard, ownerDoor, plainHttpToIp } from "./guard.ts";
 import { needOf, refusal, type Downloads } from "./models.ts";
+import { hasLite, parseVariant, versionGb, type Variant } from "./variants.ts";
 import { DesktopIcon } from "./desktop.ts";
 
 const root = repoRoot();
@@ -45,7 +47,17 @@ for (const p of problems.filter((x) => x.severity === "error")) console.error(`[
 const byId = new Map(apps.map((a) => [a.id, a]));
 
 // VRAM verdicts from tools/catalog.py (optional: the UI just shows less without it)
-type VramRow = { id: string; whole_gb: number; largest_phase_gb: number; verdict_24gb: string; measured_peak_gb: number | null };
+type Fit = "fits" | "offload" | "no";
+type VramRow = {
+  id: string; whole_gb: number; largest_phase_gb: number; verdict_24gb: string; measured_peak_gb: number | null;
+  /** per version: weights on the GPU at once and in the largest phase (tools/catalog.py) */
+  versions?: Record<Variant, { whole_gb: number; largest_phase_gb: number } | undefined>;
+  /** card size in GB → whether each version fits, runs offloading to RAM, or does not run; measured when `measured` says so */
+  tiers?: Record<string, Partial<Record<Variant, Fit>>>;
+  /** RAM each version needs to run with offload */
+  ram_gb?: Partial<Record<Variant, number>>;
+  measured?: Record<string, Partial<Record<Variant, { ok: boolean; peak_gb: number | null; seconds: number | null }>>>;
+};
 const vramFile = join(root, "docs", "vram-map.json");
 const vram = new Map<string, VramRow>(
   existsSync(vramFile) ? (JSON.parse(readFileSync(vramFile, "utf-8")).apps as VramRow[]).map((r) => [r.id, r]) : [],
@@ -69,6 +81,9 @@ const WARM_MS = 9 * 60 * 1000;
 // FREEFIELD_BACKEND_NAME: a backend that never sleeps (your own GPU, a pod on RunPod or Vast), shown by that name;
 // the GPU pill is always ready and says the pod costs money while it runs. Unset: Modal's scale-to-zero, as before.
 const alwaysOn = process.env.FREEFIELD_BACKEND_NAME?.trim() || "";
+// the lite versions run where the backend downloads its own packs (your own GPU, a pod: it knows which files it has);
+// a Modal deploy runs them only once its volume has the -lite packs and FREEFIELD_LITE=1 says so (lite/README.md)
+const liteHere = Boolean(alwaysOn) || process.env.FREEFIELD_LITE === "1";
 let lastContact = 0;
 let waking: { since: number; error?: string } | null = null;
 const contact = () => { lastContact = Date.now(); };
@@ -152,13 +167,19 @@ async function backendState(fresh = false): Promise<Backend> {
 async function modelsView(fresh = false) {
   const { files, downloads } = await backendState(fresh);
   const needs: Record<string, unknown> = {};
+  const needsLite: Record<string, unknown> = {};   // what the lite version of each app lacks (its own -lite pack)
   for (const a of apps) {
     const n = needOf(a, files, downloads);
     if (n) needs[a.id] = n;
+    const l = hasLite(a) ? needOf(a, files, downloads, "lite") : null;
+    if (l) needsLite[a.id] = l;
   }
   const packApps: Record<string, string[]> = {};
-  for (const a of apps) (packApps[a.pack] ??= []).push(a.id);
-  return { available: Boolean(downloads?.enabled), ...(downloads ?? {}), needs, pack_apps: packApps,
+  for (const a of apps) {
+    (packApps[a.pack] ??= []).push(a.id);
+    if (hasLite(a)) (packApps[`${a.pack}-lite`] ??= []).push(a.id);
+  }
+  return { available: Boolean(downloads?.enabled), ...(downloads ?? {}), needs, needs_lite: needsLite, pack_apps: packApps,
     gpu_problem: gpuProblem };
 }
 
@@ -179,10 +200,19 @@ function publicApp(a: App, files: Set<string> | null = null, downloads: Download
     models: a.models.map((m) => ({
       name: m.file.split("/").pop(), repo: m.repo, gb: m.gb, license: m.license ?? null,
       gated: Boolean(m.gated), optional: Boolean(m.optional), phase: m.phase,
+      lite: m.lite ? { name: m.lite.file.split("/").pop(), repo: m.lite.repo, gb: m.lite.gb, format: m.lite.format, source: m.lite.source } : null,
     })),
     vram: vram.has(a.id) ? {
       whole_gb: vram.get(a.id)!.whole_gb, largest_phase_gb: vram.get(a.id)!.largest_phase_gb,
       verdict: vram.get(a.id)!.verdict_24gb, measured_gb: vram.get(a.id)!.measured_peak_gb,
+      versions: vram.get(a.id)!.versions ?? null, tiers: vram.get(a.id)!.tiers ?? null, ram_gb: vram.get(a.id)!.ram_gb ?? null,
+      measured: vram.get(a.id)!.measured ?? null,
+    } : null,
+    // the lite version: its pack, what it downloads and what it still lacks on this backend
+    lite: hasLite(a) ? {
+      pack: `${a.pack}-lite`, gb: versionGb(a, "lite"), full_gb: versionGb(a, "full"),
+      formats: [...new Set(a.models.filter((m) => m.lite && !m.optional).map((m) => m.lite!.format))],
+      needs: needOf(a, files, downloads, "lite"),
     } : null,
     credits: a.credits ?? [],
     notes: a.notes ?? null,
@@ -258,15 +288,15 @@ async function jobView(id: string) {
 }
 
 /** Submit in the background; the entry tells the UI how it goes. */
-function startRun(app: App, values: Values, preset?: string, owner?: string) {
-  const entry = history.start(app, values, preset, owner);
+function startRun(app: App, values: Values, preset?: string, owner?: string, variant: Variant = "full") {
+  const entry = history.start(app, values, preset, owner, variant);
   void (async () => {
     try {
-      const job = await getRunner().submit(app, values, preset);
+      const job = await getRunner().submit(app, values, preset, variant);
       contact();
       await history.follow(entry, job);
     } catch (e) {
-      const explained = explainSubmitError(app, e);
+      const explained = explainSubmitError(app, e, variant);
       const message = explained ?? (e as Error).message ?? String(e);
       console.error(`[${app.id}] ${message}`);
       history.fail(entry, message);
@@ -300,11 +330,15 @@ async function gpuStatus(withDevice = false) {
       headers: r.token ? { authorization: `Bearer ${r.token}` } : {}, signal: AbortSignal.timeout(4000),
     });
     if (res.ok) {
-      const s = (await res.json()) as { app?: string; comfyui?: { devices?: { name?: string; vram_total?: number; vram_free?: number }[] } };
+      const s = (await res.json()) as { app?: string; comfyui?: { system?: { ram_total?: number };
+        devices?: { name?: string; vram_total?: number; vram_free?: number }[] } };
       const d = s.comfyui?.devices?.[0];
+      const ram = s.comfyui?.system?.ram_total;
       device = { app: s.app ?? null, name: d?.name ?? null,
         vram_total_gb: d?.vram_total ? +(d.vram_total / 2 ** 30).toFixed(1) : null,
-        vram_used_gb: d?.vram_total && d.vram_free !== undefined ? +((d.vram_total - d.vram_free) / 2 ** 30).toFixed(1) : null };
+        vram_used_gb: d?.vram_total && d.vram_free !== undefined ? +((d.vram_total - d.vram_free) / 2 ** 30).toFixed(1) : null,
+        // the studio's "My GPU" picks the card size from these on a backend that never sleeps (web/js/mygpu.js)
+        ram_total_gb: ram ? +(ram / 2 ** 30).toFixed(1) : null };
     }
   } catch { /* status is best effort */ }
   gpuCache = { at: Date.now(), body: device };
@@ -357,7 +391,7 @@ const server = createServer(async (req, res) => {
         const examples = loadExamples();
         const { files, downloads } = await backendState();
         return send(res, 200, { apps: sorted.map((a) => ({ ...publicApp(a, files, downloads), example: examples[a.id] ?? null })), drafts: draftsAllowed,
-          hosted: guard.hosted, models_panel: Boolean(downloads?.enabled) });
+          hosted: guard.hosted, models_panel: Boolean(downloads?.enabled), lite_here: liteHere });
       }
       if (req.method === "GET" && area === "apps" && sub === "workflow") {
         // the app's ComfyUI workflow (API format) as a file: drag it onto ComfyUI's canvas to open the app as nodes
@@ -373,8 +407,14 @@ const server = createServer(async (req, res) => {
         if (!app) return send(res, 404, { error: "unknown app" });
         if (!app.workflowPath) throw new InputError(`${app.id} has no workflow yet`);
         if (!runnable(app)) throw new InputError(`${app.id} is a draft; start the server with FREEFIELD_DRAFTS=1 to run it anyway`);
+        // ?variant=lite runs the smaller copies of its models (lite/README.md); an app without them runs full
+        const variant: Variant = hasLite(app) ? parseVariant(url.searchParams.get("variant")) : "full";
+        if (variant === "lite" && !liteHere) {
+          throw new InputError(`${app.id}: this backend runs the full version only. On Modal, download the lite pack `
+            + `(modal run infra/modal_app.py::download --pack ${app.pack}-lite), then set FREEFIELD_LITE=1`);
+        }
         const { files, downloads } = await backendState();
-        const need = needOf(app, files, downloads);
+        const need = needOf(app, files, downloads, variant);
         if (need) throw new InputError(refusal(app.id, need));
         const refused = guard.refuse(activeRuns());
         if (refused) return send(res, 429, { error: refused });
@@ -382,7 +422,7 @@ const server = createServer(async (req, res) => {
         let view;
         try {
           const { values, preset } = await readValues(app, await toRequest(req));
-          view = startRun(app, resolveValues(app, values), preset, me);
+          view = startRun(app, resolveValues(app, values), preset, me, variant);
         } finally {
           admitting--;
         }

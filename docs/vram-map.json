@@ -1,6 +1,67 @@
 {
   "local_gb": 24.0,
   "headroom_gb": 4.0,
+  "tiers": [
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    80
+  ],
+  "ram_os_gb": 8.0,
+  "counts": [
+    {
+      "tier": 8,
+      "full": 6,
+      "lite": 58,
+      "offload": 54,
+      "no": 0
+    },
+    {
+      "tier": 12,
+      "full": 66,
+      "lite": 2,
+      "offload": 50,
+      "no": 0
+    },
+    {
+      "tier": 16,
+      "full": 68,
+      "lite": 2,
+      "offload": 48,
+      "no": 0
+    },
+    {
+      "tier": 24,
+      "full": 75,
+      "lite": 31,
+      "offload": 12,
+      "no": 0
+    },
+    {
+      "tier": 32,
+      "full": 118,
+      "lite": 0,
+      "offload": 0,
+      "no": 0
+    },
+    {
+      "tier": 48,
+      "full": 118,
+      "lite": 0,
+      "offload": 0,
+      "no": 0
+    },
+    {
+      "tier": 80,
+      "full": 118,
+      "lite": 0,
+      "offload": 0,
+      "no": 0
+    }
+  ],
   "apps": [
     {
       "id": "smooth",
@@ -8,6 +69,40 @@
       "section": "utility",
       "pack": "upscale",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 0.07,
+          "largest_phase": "encode",
+          "largest_phase_gb": 0.07
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "fits"
+        },
+        "12": {
+          "full": "fits"
+        },
+        "16": {
+          "full": "fits"
+        },
+        "24": {
+          "full": "fits"
+        },
+        "32": {
+          "full": "fits"
+        },
+        "48": {
+          "full": "fits"
+        },
+        "80": {
+          "full": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 9
+      },
+      "measured": null,
       "whole_gb": 0.07,
       "phases_gb": {
         "encode": 0.07,
@@ -34,6 +129,40 @@
       "section": "image",
       "pack": "upscale",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 0.44,
+          "largest_phase": "encode",
+          "largest_phase_gb": 0.44
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "fits"
+        },
+        "12": {
+          "full": "fits"
+        },
+        "16": {
+          "full": "fits"
+        },
+        "24": {
+          "full": "fits"
+        },
+        "32": {
+          "full": "fits"
+        },
+        "48": {
+          "full": "fits"
+        },
+        "80": {
+          "full": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 9
+      },
+      "measured": null,
       "whole_gb": 0.44,
       "phases_gb": {
         "encode": 0.44,
@@ -60,6 +189,40 @@
       "section": "video",
       "pack": "upscale",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 0.44,
+          "largest_phase": "encode",
+          "largest_phase_gb": 0.44
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "fits"
+        },
+        "12": {
+          "full": "fits"
+        },
+        "16": {
+          "full": "fits"
+        },
+        "24": {
+          "full": "fits"
+        },
+        "32": {
+          "full": "fits"
+        },
+        "48": {
+          "full": "fits"
+        },
+        "80": {
+          "full": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 9
+      },
+      "measured": null,
       "whole_gb": 0.44,
       "phases_gb": {
         "encode": 0.44,
@@ -86,6 +249,40 @@
       "section": "image",
       "pack": "upscale",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 0.66,
+          "largest_phase": "encode",
+          "largest_phase_gb": 0.66
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "fits"
+        },
+        "12": {
+          "full": "fits"
+        },
+        "16": {
+          "full": "fits"
+        },
+        "24": {
+          "full": "fits"
+        },
+        "32": {
+          "full": "fits"
+        },
+        "48": {
+          "full": "fits"
+        },
+        "80": {
+          "full": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 9
+      },
+      "measured": null,
       "whole_gb": 0.66,
       "phases_gb": {
         "encode": 0.66,
@@ -112,6 +309,53 @@
       "section": "image",
       "pack": "upscale",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 3.96,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 3.46
+        },
+        "lite": {
+          "whole_gb": 2.5,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 2.0
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 12,
+        "lite": 11
+      },
+      "measured": null,
       "whole_gb": 3.96,
       "phases_gb": {
         "encode": 0.0,
@@ -138,6 +382,53 @@
       "section": "video",
       "pack": "upscale",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 3.96,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 3.46
+        },
+        "lite": {
+          "whole_gb": 2.5,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 2.0
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 12,
+        "lite": 11
+      },
+      "measured": null,
       "whole_gb": 3.96,
       "phases_gb": {
         "encode": 0.0,
@@ -164,6 +455,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -190,6 +528,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -216,6 +601,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -242,6 +674,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -268,6 +747,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -294,6 +820,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -320,6 +893,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -346,6 +966,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -372,6 +1039,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -398,6 +1112,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -424,6 +1185,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -450,6 +1258,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -476,6 +1331,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -502,6 +1404,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -528,6 +1477,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -554,6 +1550,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -580,6 +1623,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -606,6 +1696,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.04,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.49,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.04,
       "phases_gb": {
         "encode": 4.87,
@@ -632,6 +1769,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -658,6 +1842,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -684,6 +1915,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -710,6 +1988,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -736,6 +2061,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -762,6 +2134,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -788,6 +2207,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -814,6 +2280,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -840,6 +2353,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -866,6 +2426,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -892,6 +2499,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -918,6 +2572,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -944,6 +2645,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -970,6 +2718,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -996,6 +2791,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1022,6 +2864,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1048,6 +2937,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1074,6 +3010,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1100,6 +3083,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1126,6 +3156,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1152,6 +3229,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1178,6 +3302,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1204,6 +3375,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1230,6 +3448,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1256,6 +3521,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1282,6 +3594,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1308,6 +3667,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1334,6 +3740,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1360,6 +3813,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1386,6 +3886,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1412,6 +3959,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1438,6 +4032,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1464,6 +4105,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1490,6 +4178,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1516,6 +4251,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1542,6 +4324,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1568,6 +4397,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1594,6 +4470,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1620,6 +4543,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 11.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.83
+        },
+        "lite": {
+          "whole_gb": 10.48,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 5.28
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 20,
+        "lite": 19
+      },
+      "measured": null,
       "whole_gb": 11.03,
       "phases_gb": {
         "encode": 4.86,
@@ -1646,6 +4616,53 @@
       "section": "image",
       "pack": "image",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 12.17,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 6.2
+        },
+        "lite": {
+          "whole_gb": 8.33,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 4.51
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "12": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 21,
+        "lite": 17
+      },
+      "measured": null,
       "whole_gb": 12.17,
       "phases_gb": {
         "encode": 5.63,
@@ -1672,6 +4689,40 @@
       "section": "image",
       "pack": "image-moss",
       "status": "draft",
+      "versions": {
+        "full": {
+          "whole_gb": 13.0,
+          "largest_phase": "encode",
+          "largest_phase_gb": 7.34
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload"
+        },
+        "12": {
+          "full": "fits"
+        },
+        "16": {
+          "full": "fits"
+        },
+        "24": {
+          "full": "fits"
+        },
+        "32": {
+          "full": "fits"
+        },
+        "48": {
+          "full": "fits"
+        },
+        "80": {
+          "full": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 21
+      },
+      "measured": null,
       "whole_gb": 13.0,
       "phases_gb": {
         "encode": 7.34,
@@ -1698,6 +4749,40 @@
       "section": "audio",
       "pack": "audio",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 14.33,
+          "largest_phase": "encode",
+          "largest_phase_gb": 9.2
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload"
+        },
+        "12": {
+          "full": "fits"
+        },
+        "16": {
+          "full": "fits"
+        },
+        "24": {
+          "full": "fits"
+        },
+        "32": {
+          "full": "fits"
+        },
+        "48": {
+          "full": "fits"
+        },
+        "80": {
+          "full": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 23
+      },
+      "measured": null,
       "whole_gb": 14.33,
       "phases_gb": {
         "encode": 9.2,
@@ -1724,6 +4809,40 @@
       "section": "audio",
       "pack": "audio",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 10.41,
+          "largest_phase": "encode",
+          "largest_phase_gb": 10.41
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload"
+        },
+        "12": {
+          "full": "offload"
+        },
+        "16": {
+          "full": "fits"
+        },
+        "24": {
+          "full": "fits"
+        },
+        "32": {
+          "full": "fits"
+        },
+        "48": {
+          "full": "fits"
+        },
+        "80": {
+          "full": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 19
+      },
+      "measured": null,
       "whole_gb": 10.41,
       "phases_gb": {
         "encode": 10.41,
@@ -1750,6 +4869,53 @@
       "section": "image",
       "pack": "image-flux3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 17.75,
+          "largest_phase": "encode",
+          "largest_phase_gb": 11.58
+        },
+        "lite": {
+          "whole_gb": 17.2,
+          "largest_phase": "encode",
+          "largest_phase_gb": 11.58
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 26,
+        "lite": 26
+      },
+      "measured": null,
       "whole_gb": 17.75,
       "phases_gb": {
         "encode": 11.58,
@@ -1776,6 +4942,53 @@
       "section": "image",
       "pack": "image-krea2",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 19.44,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 13.95
+        },
+        "lite": {
+          "whole_gb": 13.62,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 8.13
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 28,
+        "lite": 22
+      },
+      "measured": null,
       "whole_gb": 19.44,
       "phases_gb": {
         "encode": 5.24,
@@ -1802,6 +5015,53 @@
       "section": "image",
       "pack": "image-krea2",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 19.45,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 13.96
+        },
+        "lite": {
+          "whole_gb": 13.63,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 8.14
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 28,
+        "lite": 22
+      },
+      "measured": null,
       "whole_gb": 19.45,
       "phases_gb": {
         "encode": 5.24,
@@ -1828,6 +5088,40 @@
       "section": "video",
       "pack": "video-wan-camera",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 37.59,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 15.3
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload"
+        },
+        "12": {
+          "full": "offload"
+        },
+        "16": {
+          "full": "offload"
+        },
+        "24": {
+          "full": "fits"
+        },
+        "32": {
+          "full": "fits"
+        },
+        "48": {
+          "full": "fits"
+        },
+        "80": {
+          "full": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 46
+      },
+      "measured": null,
       "whole_gb": 37.59,
       "phases_gb": {
         "encode": 6.74,
@@ -1854,6 +5148,40 @@
       "section": "video",
       "pack": "video-wan-effects",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 24.65,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 16.4
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload"
+        },
+        "12": {
+          "full": "offload"
+        },
+        "16": {
+          "full": "offload"
+        },
+        "24": {
+          "full": "fits"
+        },
+        "32": {
+          "full": "fits"
+        },
+        "48": {
+          "full": "fits"
+        },
+        "80": {
+          "full": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 33
+      },
+      "measured": null,
       "whole_gb": 24.65,
       "phases_gb": {
         "encode": 8.0,
@@ -1880,6 +5208,40 @@
       "section": "video",
       "pack": "video-wan",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 24.9,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 16.65
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload"
+        },
+        "12": {
+          "full": "offload"
+        },
+        "16": {
+          "full": "offload"
+        },
+        "24": {
+          "full": "fits"
+        },
+        "32": {
+          "full": "fits"
+        },
+        "48": {
+          "full": "fits"
+        },
+        "80": {
+          "full": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 33
+      },
+      "measured": null,
       "whole_gb": 24.9,
       "phases_gb": {
         "encode": 8.0,
@@ -1906,6 +5268,40 @@
       "section": "video",
       "pack": "video-wan-effects",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 25.01,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 16.76
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload"
+        },
+        "12": {
+          "full": "offload"
+        },
+        "16": {
+          "full": "offload"
+        },
+        "24": {
+          "full": "fits"
+        },
+        "32": {
+          "full": "fits"
+        },
+        "48": {
+          "full": "fits"
+        },
+        "80": {
+          "full": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 34
+      },
+      "measured": null,
       "whole_gb": 25.01,
       "phases_gb": {
         "encode": 8.0,
@@ -1932,6 +5328,53 @@
       "section": "video",
       "pack": "video-scail",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 28.62,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.62
+        },
+        "lite": {
+          "whole_gb": 22.99,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 12.99
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 37,
+        "lite": 31
+      },
+      "measured": null,
       "whole_gb": 28.62,
       "phases_gb": {
         "encode": 8.0,
@@ -1958,6 +5401,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -1984,6 +5474,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2010,6 +5547,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2036,6 +5620,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2062,6 +5693,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2088,6 +5766,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2114,6 +5839,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2140,6 +5912,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2166,6 +5985,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2192,6 +6058,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2218,6 +6131,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2244,6 +6204,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2270,6 +6277,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2296,6 +6350,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2322,6 +6423,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2348,6 +6496,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.7,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.5
+        },
+        "lite": {
+          "whole_gb": 36.92,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.72
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -2374,6 +6569,53 @@
       "section": "image",
       "pack": "image-qwen-edit",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 31.15,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.52
+        },
+        "lite": {
+          "whole_gb": 27.88,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.52
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 40,
+        "lite": 36
+      },
+      "measured": null,
       "whole_gb": 31.15,
       "phases_gb": {
         "encode": 9.38,
@@ -2400,6 +6642,53 @@
       "section": "image",
       "pack": "image-qwen-edit",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 31.15,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.52
+        },
+        "lite": {
+          "whole_gb": 27.88,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.52
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 40,
+        "lite": 36
+      },
+      "measured": null,
       "whole_gb": 31.15,
       "phases_gb": {
         "encode": 9.38,
@@ -2426,6 +6715,53 @@
       "section": "image",
       "pack": "image-qwen-edit",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 31.15,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.52
+        },
+        "lite": {
+          "whole_gb": 27.88,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.52
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 40,
+        "lite": 36
+      },
+      "measured": null,
       "whole_gb": 31.15,
       "phases_gb": {
         "encode": 9.38,
@@ -2452,6 +6788,53 @@
       "section": "image",
       "pack": "image-qwen-edit",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 31.15,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.52
+        },
+        "lite": {
+          "whole_gb": 27.88,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.52
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 40,
+        "lite": 36
+      },
+      "measured": null,
       "whole_gb": 31.15,
       "phases_gb": {
         "encode": 9.38,
@@ -2478,6 +6861,53 @@
       "section": "image",
       "pack": "image-qwen-edit",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 31.21,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.58
+        },
+        "lite": {
+          "whole_gb": 27.94,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.58
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 40,
+        "lite": 36
+      },
+      "measured": null,
       "whole_gb": 31.21,
       "phases_gb": {
         "encode": 9.38,
@@ -2504,6 +6934,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.83
+        },
+        "lite": {
+          "whole_gb": 36.25,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 19.05
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.03,
       "phases_gb": {
         "encode": 15.37,
@@ -2530,6 +7007,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.03,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.83
+        },
+        "lite": {
+          "whole_gb": 36.25,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 19.05
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.03,
       "phases_gb": {
         "encode": 15.37,
@@ -2556,6 +7080,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 50.12,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.89
+        },
+        "lite": {
+          "whole_gb": 46.79,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 19.11
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 59,
+        "lite": 55
+      },
+      "measured": null,
       "whole_gb": 50.12,
       "phases_gb": {
         "encode": 15.37,
@@ -2582,6 +7153,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 50.12,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.89
+        },
+        "lite": {
+          "whole_gb": 46.79,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 19.11
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 59,
+        "lite": 55
+      },
+      "measured": null,
       "whole_gb": 50.12,
       "phases_gb": {
         "encode": 15.37,
@@ -2608,6 +7226,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 50.12,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.89
+        },
+        "lite": {
+          "whole_gb": 46.79,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 19.11
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 59,
+        "lite": 55
+      },
+      "measured": null,
       "whole_gb": 50.12,
       "phases_gb": {
         "encode": 15.37,
@@ -2634,6 +7299,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 50.12,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.89
+        },
+        "lite": {
+          "whole_gb": 46.79,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 19.11
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 59,
+        "lite": 55
+      },
+      "measured": null,
       "whole_gb": 50.12,
       "phases_gb": {
         "encode": 15.37,
@@ -2660,6 +7372,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.09,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.89
+        },
+        "lite": {
+          "whole_gb": 36.31,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 19.11
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.09,
       "phases_gb": {
         "encode": 15.37,
@@ -2686,6 +7445,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 50.12,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.89
+        },
+        "lite": {
+          "whole_gb": 46.79,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 19.11
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 59,
+        "lite": 55
+      },
+      "measured": null,
       "whole_gb": 50.12,
       "phases_gb": {
         "encode": 15.37,
@@ -2712,6 +7518,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.35,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 22.15
+        },
+        "lite": {
+          "whole_gb": 36.57,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 19.37
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.35,
       "phases_gb": {
         "encode": 15.37,
@@ -2738,6 +7591,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 51.38,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 22.15
+        },
+        "lite": {
+          "whole_gb": 48.05,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 19.37
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 60,
+        "lite": 57
+      },
+      "measured": null,
       "whole_gb": 51.38,
       "phases_gb": {
         "encode": 15.37,
@@ -2764,6 +7664,53 @@
       "section": "video",
       "pack": "video-wan-effects",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 35.68,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 22.23
+        },
+        "lite": {
+          "whole_gb": 35.13,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.68
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 44,
+        "lite": 44
+      },
+      "measured": null,
       "whole_gb": 35.68,
       "phases_gb": {
         "encode": 12.86,
@@ -2790,6 +7737,53 @@
       "section": "video",
       "pack": "video-wan-effects",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 35.68,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 22.23
+        },
+        "lite": {
+          "whole_gb": 35.13,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.68
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 44,
+        "lite": 44
+      },
+      "measured": null,
       "whole_gb": 35.68,
       "phases_gb": {
         "encode": 12.86,
@@ -2816,6 +7810,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 39.61,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 22.41
+        },
+        "lite": {
+          "whole_gb": 36.83,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 19.63
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 48,
+        "lite": 45
+      },
+      "measured": null,
       "whole_gb": 39.61,
       "phases_gb": {
         "encode": 15.37,
@@ -2842,6 +7883,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 40.01,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 22.81
+        },
+        "lite": {
+          "whole_gb": 37.23,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 20.03
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 49,
+        "lite": 46
+      },
+      "measured": null,
       "whole_gb": 40.01,
       "phases_gb": {
         "encode": 15.37,
@@ -2868,6 +7956,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 40.01,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 22.81
+        },
+        "lite": {
+          "whole_gb": 37.23,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 20.03
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 49,
+        "lite": 46
+      },
+      "measured": null,
       "whole_gb": 40.01,
       "phases_gb": {
         "encode": 15.37,
@@ -2894,6 +8029,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 24.65,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 22.81
+        },
+        "lite": {
+          "whole_gb": 21.87,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 20.03
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 33,
+        "lite": 30
+      },
+      "measured": null,
       "whole_gb": 24.65,
       "phases_gb": {
         "encode": 0.01,
@@ -2920,6 +8102,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 41.17,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 23.97
+        },
+        "lite": {
+          "whole_gb": 38.39,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 21.19
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 50,
+        "lite": 47
+      },
+      "measured": null,
       "whole_gb": 41.17,
       "phases_gb": {
         "encode": 15.37,
@@ -2946,6 +8175,53 @@
       "section": "video",
       "pack": "video-h3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 51.53,
+          "largest_phase": "encode",
+          "largest_phase_gb": 27.14
+        },
+        "lite": {
+          "whole_gb": 35.09,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 15.98
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 60,
+        "lite": 44
+      },
+      "measured": null,
       "whole_gb": 51.53,
       "phases_gb": {
         "encode": 27.14,
@@ -2972,6 +8248,53 @@
       "section": "video",
       "pack": "video-h3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 51.53,
+          "largest_phase": "encode",
+          "largest_phase_gb": 27.14
+        },
+        "lite": {
+          "whole_gb": 35.09,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 15.98
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 60,
+        "lite": 44
+      },
+      "measured": null,
       "whole_gb": 51.53,
       "phases_gb": {
         "encode": 27.14,
@@ -2998,6 +8321,53 @@
       "section": "video",
       "pack": "video-h3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 51.53,
+          "largest_phase": "encode",
+          "largest_phase_gb": 27.14
+        },
+        "lite": {
+          "whole_gb": 35.09,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 15.98
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 60,
+        "lite": 44
+      },
+      "measured": null,
       "whole_gb": 51.53,
       "phases_gb": {
         "encode": 27.14,
@@ -3024,6 +8394,53 @@
       "section": "video",
       "pack": "video-h3",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 54.75,
+          "largest_phase": "encode",
+          "largest_phase_gb": 27.14
+        },
+        "lite": {
+          "whole_gb": 38.31,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 18.54
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "fits"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 63,
+        "lite": 47
+      },
+      "measured": null,
       "whole_gb": 54.75,
       "phases_gb": {
         "encode": 27.14,
@@ -3050,6 +8467,53 @@
       "section": "video",
       "pack": "video-ltx25",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 50.73,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 27.33
+        },
+        "lite": {
+          "whole_gb": 47.4,
+          "largest_phase": "denoise",
+          "largest_phase_gb": 24.0
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "12": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "16": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "24": {
+          "full": "offload",
+          "lite": "offload"
+        },
+        "32": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "48": {
+          "full": "fits",
+          "lite": "fits"
+        },
+        "80": {
+          "full": "fits",
+          "lite": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 59,
+        "lite": 56
+      },
+      "measured": null,
       "whole_gb": 50.73,
       "phases_gb": {
         "encode": 20.23,
@@ -3076,6 +8540,40 @@
       "section": "utility",
       "pack": "core",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 0,
+          "largest_phase": "encode",
+          "largest_phase_gb": 0.0
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "fits"
+        },
+        "12": {
+          "full": "fits"
+        },
+        "16": {
+          "full": "fits"
+        },
+        "24": {
+          "full": "fits"
+        },
+        "32": {
+          "full": "fits"
+        },
+        "48": {
+          "full": "fits"
+        },
+        "80": {
+          "full": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 8
+      },
+      "measured": null,
       "whole_gb": 0,
       "phases_gb": {
         "encode": 0.0,
@@ -3099,6 +8597,40 @@
       "section": "utility",
       "pack": "core",
       "status": "ready",
+      "versions": {
+        "full": {
+          "whole_gb": 0,
+          "largest_phase": "encode",
+          "largest_phase_gb": 0.0
+        }
+      },
+      "tiers": {
+        "8": {
+          "full": "fits"
+        },
+        "12": {
+          "full": "fits"
+        },
+        "16": {
+          "full": "fits"
+        },
+        "24": {
+          "full": "fits"
+        },
+        "32": {
+          "full": "fits"
+        },
+        "48": {
+          "full": "fits"
+        },
+        "80": {
+          "full": "fits"
+        }
+      },
+      "ram_gb": {
+        "full": 8
+      },
+      "measured": null,
       "whole_gb": 0,
       "phases_gb": {
         "encode": 0.0,

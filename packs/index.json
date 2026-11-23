@@ -26,7 +26,8 @@
     "download_gb": 12.17,
     "needs_hf_token": false,
     "gated": {},
-    "default": false
+    "default": false,
+    "lite": "image-lite"
   },
   "image-flux3": {
     "apps": [
@@ -94,7 +95,78 @@
     "gated": {
       "black-forest-labs/flux-3-image-klein-comfy": "diffusion_models/flux3-image-klein-int8-convrot.safetensors"
     },
-    "default": true
+    "default": true,
+    "lite": "image-flux3-lite"
+  },
+  "image-flux3-lite": {
+    "apps": [
+      "ai-influencer",
+      "ai-influencer-photo",
+      "billboard",
+      "breakdown",
+      "brick-toy",
+      "burning-sunset",
+      "cafe-60s",
+      "character",
+      "character-3",
+      "character-swap",
+      "cinema-studio",
+      "color-grade",
+      "comic-book",
+      "commercial-faces",
+      "create-image",
+      "edit",
+      "edit-text",
+      "expand-image",
+      "face-swap",
+      "fashion-factory",
+      "figure-3d",
+      "fridge-ad",
+      "game-styles",
+      "giallo",
+      "giant-product",
+      "glitter-sticker",
+      "graffiti-ad",
+      "headshot",
+      "image-effects",
+      "inpaint",
+      "j-magazine",
+      "j-poster",
+      "japanese-show",
+      "macro-product",
+      "macro-scene",
+      "mascot",
+      "meme",
+      "micro-beasts",
+      "moodboard",
+      "mural",
+      "outfit-shot",
+      "outfit-swap",
+      "outfit-vending",
+      "packshot",
+      "paint-app",
+      "photodump",
+      "pixel-game",
+      "plushie",
+      "poster",
+      "product-shot",
+      "renaissance",
+      "render-3d",
+      "sketch-to-real",
+      "skin-enhancer",
+      "style-snap",
+      "try-on",
+      "ugc-shot",
+      "victory-card"
+    ],
+    "download_gb": 17.21,
+    "needs_hf_token": true,
+    "gated": {
+      "black-forest-labs/flux-3-image-klein-comfy": "diffusion_models/flux3-image-klein-nvfp4.safetensors"
+    },
+    "default": false,
+    "variant": "lite",
+    "of": "image-flux3"
   },
   "image-krea2": {
     "apps": [
@@ -104,7 +176,31 @@
     "download_gb": 23.67,
     "needs_hf_token": false,
     "gated": {},
-    "default": false
+    "default": false,
+    "lite": "image-krea2-lite"
+  },
+  "image-krea2-lite": {
+    "apps": [
+      "style-reference",
+      "styles"
+    ],
+    "download_gb": 17.85,
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false,
+    "variant": "lite",
+    "of": "image-krea2"
+  },
+  "image-lite": {
+    "apps": [
+      "z-image"
+    ],
+    "download_gb": 8.33,
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false,
+    "variant": "lite",
+    "of": "image"
   },
   "image-moss": {
     "apps": [
@@ -126,7 +222,23 @@
     "download_gb": 31.69,
     "needs_hf_token": false,
     "gated": {},
-    "default": false
+    "default": false,
+    "lite": "image-qwen-edit-lite"
+  },
+  "image-qwen-edit-lite": {
+    "apps": [
+      "angles",
+      "relight",
+      "shots",
+      "whats-next",
+      "zooms"
+    ],
+    "download_gb": 28.42,
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false,
+    "variant": "lite",
+    "of": "image-qwen-edit"
   },
   "upscale": {
     "apps": [
@@ -140,7 +252,24 @@
     "download_gb": 5.13,
     "needs_hf_token": false,
     "gated": {},
-    "default": true
+    "default": true,
+    "lite": "upscale-lite"
+  },
+  "upscale-lite": {
+    "apps": [
+      "depth-map",
+      "remove-bg",
+      "smooth",
+      "upscale",
+      "upscale-video",
+      "video-remove-bg"
+    ],
+    "download_gb": 3.67,
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false,
+    "variant": "lite",
+    "of": "upscale"
   },
   "video-h3": {
     "apps": [
@@ -152,7 +281,22 @@
     "download_gb": 75.72,
     "needs_hf_token": false,
     "gated": {},
-    "default": false
+    "default": false,
+    "lite": "video-h3-lite"
+  },
+  "video-h3-lite": {
+    "apps": [
+      "extend-video",
+      "h3-photo",
+      "h3-video",
+      "reshoot"
+    ],
+    "download_gb": 54.29,
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false,
+    "variant": "lite",
+    "of": "video-h3"
   },
   "video-ltx25": {
     "apps": [
@@ -202,7 +346,60 @@
       "Lightricks/LTX-2.5-22b-IC-LoRA-Water-Simulation": "ltx-2.5-22b-ic-lora-water-simulation-0.9.safetensors",
       "black-forest-labs/flux-3-image-klein-comfy": "diffusion_models/flux3-image-klein-int8-convrot.safetensors"
     },
-    "default": false
+    "default": false,
+    "lite": "video-ltx25-lite"
+  },
+  "video-ltx25-lite": {
+    "apps": [
+      "asmr-host",
+      "asmr-product",
+      "asmr-whisper",
+      "behind-the-scenes",
+      "camera-copy",
+      "chameleon",
+      "cinema-video",
+      "cloud-surf",
+      "dub",
+      "genjutsu",
+      "idol",
+      "kick-ad",
+      "magic-button",
+      "melting-doodle",
+      "mixed-media",
+      "morph",
+      "mukbang",
+      "rap-video",
+      "reframe",
+      "roller-coaster",
+      "sdr-hdr",
+      "speak",
+      "storm-creature",
+      "talking",
+      "transitions",
+      "truck-ad",
+      "vfx-clean-plate",
+      "vfx-day-to-night",
+      "vfx-water",
+      "video",
+      "video-t2v",
+      "volcano-ad"
+    ],
+    "download_gb": 62.7,
+    "needs_hf_token": true,
+    "gated": {
+      "Lightricks/LTX-2.3-22b-IC-LoRA-DubIt": "ltx-2.3-22b-ic-lora-dubit-0.9.safetensors",
+      "Lightricks/LTX-2.3-22b-IC-LoRA-In-Outpainting": "ltx-2.3-22b-ic-lora-in-outpainting-0.9.safetensors",
+      "Lightricks/LTX-2.5": "diffusion_models/ltx-2.5-22b-distilled-transformer-nvfp4.safetensors",
+      "Lightricks/LTX-2.5-22b-IC-LoRA-Clean-Plate": "ltx-2.5-22b-ic-lora-clean-plate-1.0.safetensors",
+      "Lightricks/LTX-2.5-22b-IC-LoRA-Day-To-Night": "ltx-2.5-22b-ic-lora-day-to-night-0.9.safetensors",
+      "Lightricks/LTX-2.5-22b-IC-LoRA-Ingredients": "ltx-2.5-22b-ic-lora-ingredients-0.9.safetensors",
+      "Lightricks/LTX-2.5-22b-IC-LoRA-SDR-To-HDR": "ltx-2.5-22b-ic-lora-sdr-to-hdr-scene-emb.safetensors",
+      "Lightricks/LTX-2.5-22b-IC-LoRA-Water-Simulation": "ltx-2.5-22b-ic-lora-water-simulation-0.9.safetensors",
+      "black-forest-labs/flux-3-image-klein-comfy": "diffusion_models/flux3-image-klein-nvfp4.safetensors"
+    },
+    "default": false,
+    "variant": "lite",
+    "of": "video-ltx25"
   },
   "video-scail": {
     "apps": [
@@ -211,7 +408,19 @@
     "download_gb": 28.62,
     "needs_hf_token": false,
     "gated": {},
-    "default": false
+    "default": false,
+    "lite": "video-scail-lite"
+  },
+  "video-scail-lite": {
+    "apps": [
+      "recast"
+    ],
+    "download_gb": 22.99,
+    "needs_hf_token": false,
+    "gated": {},
+    "default": false,
+    "variant": "lite",
+    "of": "video-scail"
   },
   "video-wan": {
     "apps": [
@@ -243,6 +452,23 @@
     "gated": {
       "black-forest-labs/flux-3-image-klein-comfy": "diffusion_models/flux3-image-klein-int8-convrot.safetensors"
     },
-    "default": false
+    "default": false,
+    "lite": "video-wan-effects-lite"
+  },
+  "video-wan-effects-lite": {
+    "apps": [
+      "bullet-time-scene",
+      "bullet-time-splash",
+      "bullet-time-white",
+      "effects"
+    ],
+    "download_gb": 44.51,
+    "needs_hf_token": true,
+    "gated": {
+      "black-forest-labs/flux-3-image-klein-comfy": "diffusion_models/flux3-image-klein-nvfp4.safetensors"
+    },
+    "default": false,
+    "variant": "lite",
+    "of": "video-wan-effects"
   }
 }

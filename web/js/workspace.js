@@ -2,7 +2,7 @@
 //   composer: prompt-first apps (image, audio): results fill the page, a floating prompt bar sits at the bottom
 //   sidebar:  upload-first apps (video, tools): controls in a left column, results and examples on the right
 import { el, icon, store, toast, popover, closePopover, fmtSeconds, fmtShort, isMedia, extOf, masonry } from "./util.js";
-import { t } from "./i18n.js";
+import { t, lang } from "./i18n.js";
 import {
   byId, layoutOf, familyOf, VIDEO_TABS, videoTabOf, tagline, iconOf, promptInput, estimate, fitOf, rememberApp, categoryOf, CATEGORIES, apps,
 } from "./catalog.js";
@@ -10,7 +10,9 @@ import { exampleItem, thumb, hoverPlay, fullMedia, playWhenVisible, optionTile, 
 import { flags, flagButton } from "./flags.js";
 import { feed, feedView, hooks } from "./feed.js";
 import { openPainter, maskPreview } from "./paint.js";
-import { needNode, needText } from "./models.js";
+import { needNode, needText, needFor } from "./models.js";
+import { mygpu, variantFor, setVariant, recommendedVariant, versionFit } from "./mygpu.js";
+import { openMyGpu } from "./gpupicker.js";
 
 // ------------------------------------------------------------------ form state (per app, kept while the page is open)
 const forms = new Map();
@@ -143,7 +145,8 @@ async function submit(app, ui) {
   const n = Math.max(1, Math.min(4, f.count || 1));
   persist(app);
   try {
-    for (let k = 0; k < n; k++) await feed.run(app.id, buildForm(app, { randomSeed: n > 1 }));
+    const variant = variantFor(app);   // full or lite (the smaller copies of its models)
+    for (let k = 0; k < n; k++) await feed.run(app.id, buildForm(app, { randomSeed: n > 1 }), variant);
     toast(t("toast.started", { app: app.name }));
     return true;
   } catch (err) {
@@ -171,6 +174,7 @@ export async function recreate(item, { run = false } = {}) {
     if (inp.type === "seed" && item.seed !== null && item.seed !== undefined) f.values[inp.id] = item.seed;
   }
   f.preset = item.preset || "";
+  if (item.variant && app.lite && mygpu.liteHere) setVariant(app, item.variant);   // the version it was made with
   try {
     await Promise.all(item.inputs.map(async (i) => {
       const inp = app.inputs.find((x) => x.id === i.id);
@@ -320,9 +324,11 @@ function seedEditor(app, inp, f, onChange) {
 
 function genButton(app, onClick, { wide = false } = {}) {
   const est = estimate(app);
-  const b = el("button", { class: `generate${wide ? " wide" : ""}`, type: "button", disabled: !app.runnable || Boolean(app.missing_pack),
+  const variant = variantFor(app);
+  const need = needFor(app, variant);   // the version chosen may lack its pack while the other one has it
+  const b = el("button", { class: `generate${wide ? " wide" : ""}`, type: "button", disabled: !app.runnable || Boolean(need),
     title: !app.runnable ? (app.status === "draft" ? t("ws.draft") : t("ws.noworkflow"))
-      : app.missing_pack ? needText(app) : est ? t("ws.est", { gpu: est.gpu }) : null },
+      : need ? needText(app, variant) : est ? t("ws.est", { gpu: est.gpu }) : null },
     t("ws.generate"), est ? el("span", { class: "cost" }, icon("spark"), fmtShort(est.seconds)) : el("span", { class: "cost" }, icon("spark")));
   b.addEventListener("click", async () => {
     if (b.dataset.busy) return;
@@ -345,6 +351,80 @@ function countControl(f) {
   plus.onclick = () => { f.count = Math.min(4, f.count + 1); draw(); };
   draw();
   return el("div", { class: "count", title: t("ws.count") }, minus, label, plus);
+}
+
+// ------------------------------------------------------------------ the version: full or lite (lite/README.md)
+const gbOf = (x) => new Intl.NumberFormat(lang, { maximumFractionDigits: 1 }).format(Number(x) || 0);
+const FP4 = /fp4|mxfp8/;   // formats with fast kernels only on RTX 50 cards and newer
+const BLACKWELL = /RTX 50\d\d|RTX PRO \d+ Blackwell|Blackwell|\bB[12]00\b|GB[23]00/i;
+/** Whether to say that nvfp4 is slower before the RTX 50 series: not when the backend's card is one. */
+const fp4Note = (app) => app.lite.formats.some((f) => FP4.test(f)) && !BLACKWELL.test(mygpu.backend?.name || "");
+
+/** What one version does on the card chosen in "My GPU", in a sentence; null without a card. */
+function versionLine(app, variant) {
+  const pick = mygpu.pick;
+  const f = pick ? versionFit(app, variant, pick) : null;
+  if (!f) return null;
+  if (f.state === "fits") return t("ver.fits", { gb: pick.vram });
+  if (f.state === "offload") return t("ver.offload", { gb: pick.vram, ram: f.ram_gb });
+  return f.reason === "ram" ? t("ver.noram", { gb: pick.vram, ram: f.ram_gb }) : t("ver.nolab", { gb: pick.vram });
+}
+
+/** The same in a few words, for a menu line: "Fits 16 GB", "16 GB + 45 GB RAM, slower". */
+function versionShort(app, variant) {
+  const pick = mygpu.pick;
+  const f = pick ? versionFit(app, variant, pick) : null;
+  if (!f) return null;
+  if (f.state === "fits") return t("fit.on.full", { gb: pick.vram });
+  if (f.state === "offload") return t("fit.on.ram", { gb: pick.vram, ram: f.ram_gb });
+  return f.reason === "ram" ? t("fit.on.noram", { ram: f.ram_gb }) : t("fit.on.no", { gb: pick.vram });
+}
+
+/** "Pick your GPU to see which version fits", the link opening the panel next to `anchor` (or the link itself). */
+function pickGpuLine(anchor = null) {
+  return el("p", { class: "help" }, el("button", { class: "link-btn", type: "button", onclick: (ev) => openMyGpu(anchor || ev.currentTarget, { align: "start" }) },
+    t("ver.pick")), " ", t("ver.pick.d"));
+}
+
+/** Under the switch: what the chosen version does on your card, and what the lite copies are. */
+function versionHelp(app, variant, anchor = null) {
+  const on = versionLine(app, variant);
+  return [on ? el("p", { class: "help" }, on) : pickGpuLine(anchor),
+    variant === "lite" ? el("p", { class: "help" }, t("ver.lite.d", { formats: app.lite.formats.join(", ") }),
+      fp4Note(app) ? ` ${t("ver.fp4")}` : "") : null];
+}
+
+/** Full or lite, in the sidebar: an app with a lite version, on a backend that runs it (your GPU, a pod). */
+function versionField(app, rerender) {
+  if (!app.lite || !mygpu.liteHere) return null;
+  const now = variantFor(app);
+  const suits = mygpu.pick ? recommendedVariant(app) : null;
+  const seg = el("div", { class: "seg ver", role: "group", "aria-label": t("ver.title") }, ...["full", "lite"].map((v) =>
+    el("button", { type: "button", "aria-pressed": String(v === now), title: [v === suits ? t("ver.suits") : null, versionShort(app, v)].filter(Boolean).join(" · ") || null,
+      onclick: () => { if (v !== now) { setVariant(app, v); rerender(); } } },
+      el("span", {}, t(`ver.${v}`)), el("small", {}, `${gbOf(v === "lite" ? app.lite.gb : app.lite.full_gb)} ${t("unit.gb")}`),
+      v === suits ? el("i", { class: "suits", "aria-hidden": "true" }) : null)));
+  return el("div", { class: "field" }, el("span", { class: "lbl" }, t("ver.title")), seg, ...versionHelp(app, now));
+}
+
+/** Full or lite, in the composer: a chip with a menu. */
+function versionChip(app, rerender) {
+  if (!app.lite || !mygpu.liteHere) return null;
+  const now = variantFor(app);
+  const suits = mygpu.pick ? recommendedVariant(app) : null;
+  const chip = el("button", { class: `chip${now === "lite" ? " on" : ""}`, type: "button", "aria-haspopup": "dialog" },
+    el("span", { class: "k" }, t("ver.title")), el("span", { class: "v" }, t(`ver.${now}`)));
+  chip.onclick = () => popover(chip, el("div", {}, el("h4", {}, t("ver.title")),
+    ...["full", "lite"].map((v) => el("button", { class: "opt", type: "button", "aria-selected": String(v === now),
+      onclick: () => { closePopover(); if (v !== now) { setVariant(app, v); rerender(); } } },
+      el("span", { class: "two" },
+        el("span", {}, t(`ver.${v}`), v === suits ? el("span", { class: "tag ghost", style: { marginLeft: "6px" } }, t("ver.suits")) : null),
+        el("small", { class: "dim" }, [`${gbOf(v === "lite" ? app.lite.gb : app.lite.full_gb)} ${t("unit.gb")}`, versionShort(app, v)].filter(Boolean).join(" · "))),
+      el("span", { class: "chk" }, icon("check")))),
+    el("div", { class: "pad", style: { paddingTop: "4px" } }, ...(mygpu.pick ? [] : [pickGpuLine(chip)]),
+      el("p", { class: "help" }, t("ver.lite.d", { formats: app.lite.formats.join(", ") }),
+        fp4Note(app) ? ` ${t("ver.fp4")}` : ""))), { width: 360 });
+  return chip;
 }
 
 // ------------------------------------------------------------------ composer layout
@@ -398,6 +478,8 @@ function composerBar(app, rerenderBar) {
     onclick: (ev) => popover(ev.currentTarget, switcher(app), { width: 360 }) },
     el("span", { class: "thumb" }, appThumb(app)), el("span", { class: "v" }, app.name), icon("chevD"));
   chips.push(model);
+  const version = versionChip(app, rerenderBar);
+  if (version) chips.push(version);
 
   for (const inp of app.inputs) {
     if (isMedia(inp.type) || inp === pi) continue;
@@ -422,7 +504,7 @@ function composerBar(app, rerenderBar) {
   const go = async () => { if (await submit(app, ui) && wsTab !== "history") { wsTab = "history"; hooks.rerender?.(); } };
   const gen = genButton(app, go);
   if (!app.runnable) { hint.hidden = false; hint.textContent = app.status === "draft" ? t("ws.draft") : t("ws.noworkflow"); }
-  else if (app.missing_pack) { hint.hidden = false; hint.replaceChildren(needNode(app)); }
+  else if (needFor(app, variantFor(app))) { hint.hidden = false; hint.replaceChildren(needNode(app, variantFor(app))); }
 
   const bar = el("div", { class: "composer" },
     hint,
@@ -657,9 +739,10 @@ function sidebarPanel(app, rerenderSide) {
   if (app.presets?.length) adv.unshift(presetField(app, f));
   const advanced = adv.length ? el("details", { class: "adv" }, el("summary", {}, t("ws.advanced"), icon("chevD", "i-chev")), el("div", { class: "in" }, ...adv)) : null;
 
-  const scroll = el("div", { class: "side-scroll" }, card, modeSwitch(app), ...main, advanced);
+  const scroll = el("div", { class: "side-scroll" }, card, modeSwitch(app), versionField(app, rerenderSide), ...main, advanced);
+  const variant = variantFor(app);
   const note = el("p", { class: "side-note" }, !app.runnable ? (app.status === "draft" ? t("ws.draft") : t("ws.noworkflow"))
-    : app.missing_pack ? needNode(app) : "");
+    : needFor(app, variant) ? needNode(app, variant) : "");
   ui.clearMissing = () => { scroll.querySelectorAll(".missing").forEach((n) => n.classList.remove("missing")); };
   ui.markMissing = (id) => {
     const n = ui.refs[id] || scroll.querySelector(`[data-slot="${id}"]`);
@@ -775,22 +858,35 @@ function libraryTab(app) {
 function vramBars(app) {
   const v = app.vram;
   if (!v) return null;
+  const lite = v.versions?.lite ?? null;
+  const pick = mygpu.pick;
   const peak = app.example?.peak_vram_gb ?? null;
   const max = Math.max(48, v.whole_gb, peak || 0) * 1.05;
   const pct = (gb) => `${Math.min(100, (gb / max) * 100)}%`;
-  const ticks = [24, 48].map((g) => el("u", { style: { left: pct(g) }, title: `${g} ${t("unit.gb")}` }));
+  const marks = [...new Set([pick?.vram, 24, 48])].filter((g) => g && g <= max).sort((a, b) => a - b);
+  const mine = (g) => (g === pick?.vram ? "mine" : null);
+  const ticks = () => marks.map((g) => el("u", { class: mine(g), style: { left: pct(g) }, title: `${g} ${t("unit.gb")}` }));
   const row = (label, gb, cls) => el("div", { style: { display: "grid", gap: "6px" } },
     el("div", { style: { display: "flex", justifyContent: "space-between", fontSize: "12.5px" } }, el("span", { class: "dim" }, label), el("b", {}, `${gb} ${t("unit.gb")}`)),
-    el("div", { class: "vbar" }, el("i", { class: cls, style: { width: pct(gb) } }), ...ticks));
+    el("div", { class: "vbar" }, el("i", { class: cls, style: { width: pct(gb) } }), ...ticks()));
   const fit = fitOf(app);
-  return el("div", { class: "card" }, el("h3", {}, icon("chip"), t("how.vram"), fit ? el("span", { class: `fit ${fit[1]}`, style: { marginLeft: "auto" } }, t(fit[0])) : null),
-    row(t("how.whole"), v.whole_gb, "whole"), row(t("how.phase"), v.largest_phase_gb, ""),
+  const named = (variant, key) => (lite ? `${t(`ver.${variant}`)} · ${t(key)}` : t(key));
+  const lines = pick ? (lite ? ["full", "lite"] : ["full"]).map((x) => {
+    const line = versionLine(app, x);
+    return line ? el("p", { class: "help" }, lite ? `${t(`ver.${x}`)}: ${line}` : line) : null;
+  }) : [pickGpuLine()];
+  return el("div", { class: "card" }, el("h3", {}, icon("chip"), t("how.vram"), fit ? el("span", { class: `fit ${fit[1]}`, style: { marginLeft: "auto" } }, t(fit[0], fit[2])) : null),
+    row(named("full", "how.whole"), v.whole_gb, "whole"), row(named("full", "how.phase"), v.largest_phase_gb, ""),
+    lite ? row(named("lite", "how.whole"), lite.whole_gb, "whole") : null,
+    lite ? row(named("lite", "how.phase"), lite.largest_phase_gb, "lite") : null,
     peak ? row(`${t("how.measured")} (${(app.example.gpu || "").split(",")[0]})`, peak, "whole") : null,
-    el("div", { class: "vscale" }, el("span", { style: { left: pct(24) } }, `24 ${t("unit.gb")}`), el("span", { style: { left: pct(48) } }, `48 ${t("unit.gb")}`)));
+    el("div", { class: "vscale" }, ...marks.map((g) => el("span", { class: mine(g), style: { left: pct(g) } }, `${g} ${t("unit.gb")}`))),
+    ...lines);
 }
 
 function cliLine(app) {
   const parts = ["npm run app --", app.id];
+  if (variantFor(app) === "lite") parts.push("--lite");
   for (const inp of app.inputs) {
     if (isMedia(inp.type)) { if (inp.required) parts.push(`--file ${inp.id}=my-${inp.type}.${inp.type === "image" ? "jpg" : inp.type === "video" ? "mp4" : "mp3"}`); continue; }
     if (inp.required && inp.type === "textarea") parts.push(`--set ${inp.id}="${String(inp.default || "…").slice(0, 40)}"`);
@@ -800,18 +896,23 @@ function cliLine(app) {
 
 function howTab(app) {
   const total = app.models.filter((m) => !m.optional).reduce((s, m) => s + m.gb, 0);
+  const liteOf = (m) => (m.lite ? el("small", { class: "dim lite-line" }, `${t("ver.lite")}: ${m.lite.name} · ${m.lite.gb} ${t("unit.gb")} · ${m.lite.format} · `
+    + t(m.lite.source === "official" ? "how.official" : "how.ours")) : null);
   return el("div", { class: "how-grid" },
     el("div", { class: "card" }, el("h3", {}, icon("layers"), t("how.pipeline")), el("p", {}, t("how.pipeline.d", { id: app.id })),
       el("div", { class: "statline" }, el("span", {}, `${t("how.pack")}: ${app.pack}`), el("span", {}, app.status === "ready" ? t("status.ready") : t("tag.draft")),
         app.higgsfield_feature ? el("span", {}, `${t("how.equiv")}: ${app.higgsfield_feature}`) : null),
       app.runnable || app.status === "draft" ? el("p", { class: "row" }, el("a", { class: "btn small", href: `/api/apps/${app.id}/workflow`, download: `freefield-${app.id}.json` },
         icon("download"), t("how.workflow")), el("span", { class: "dim", style: { fontSize: "12.5px" } }, t("how.workflow.d"))) : null,
-      el("p", {}, t("how.download")), el("pre", { class: "code" }, `modal run infra/modal_app.py::download --pack ${app.pack}`),
+      el("p", {}, t("how.download")), el("pre", { class: "code" }, `modal run infra/modal_app.py::download --pack ${app.pack}`
+        + (app.lite ? `\nmodal run infra/modal_app.py::download --pack ${app.lite.pack}   # ${t("ver.lite")}` : "")),
       el("p", {}, t("how.cli")), el("pre", { class: "code" }, cliLine(app))),
-    app.models.length ? el("div", { class: "card" }, el("h3", {}, icon("box"), t("how.models"), el("span", { class: "dim", style: { marginLeft: "auto", fontWeight: 500 } }, t("how.total", { gb: total.toFixed(1) }))),
+    app.models.length ? el("div", { class: "card" }, el("h3", {}, icon("box"), t("how.models"), el("span", { class: "dim", style: { marginLeft: "auto", fontWeight: 500 } },
+      t("how.total", { gb: total.toFixed(1) }), app.lite ? ` · ${t("how.total.lite", { gb: gbOf(app.lite.gb) })}` : "")),
       el("table", { class: "models" }, el("tbody", {}, ...app.models.map((m) => el("tr", {},
-        el("td", {}, el("div", {}, m.name), el("small", { class: "dim" }, [m.repo, m.license, m.gated ? t("how.gated") : "", m.optional ? t("how.optional") : ""].filter(Boolean).join(" · "))),
-        el("td", { class: "r" }, `${m.gb} ${t("unit.gb")}`)))))) : null,
+        el("td", {}, el("div", {}, m.name), el("small", { class: "dim" }, [m.repo, m.license, m.gated ? t("how.gated") : "", m.optional ? t("how.optional") : ""].filter(Boolean).join(" · ")),
+          liteOf(m)),
+        el("td", { class: "r" }, `${m.gb} ${t("unit.gb")}`, m.lite ? el("small", { class: "dim lite-line" }, `${m.lite.gb} ${t("unit.gb")}`) : null)))))) : null,
     vramBars(app),
     app.notes || app.credits?.length ? el("div", { class: "card" },
       app.notes ? el("h3", {}, icon("info"), t("how.notes")) : null, app.notes ? el("p", {}, app.notes) : null,

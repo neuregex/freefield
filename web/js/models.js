@@ -31,6 +31,7 @@ export async function pollModels({ fresh = false } = {}) {
       const n = d.needs?.[a.id] ?? null;
       a.needs = n;
       a.missing_pack = n ? n.pack : null;
+      if (a.lite) a.lite.needs = d.needs_lite?.[a.id] ?? null;
     }
     const now = signature(visible(d.needs));
     if (marks !== null && now !== marks) redrawPage();   // a pack arrived, a token unlocked apps: the cards follow
@@ -60,17 +61,24 @@ export function gpuProblemText(p) {
 
 // ------------------------------------------------------------------ what an app's card and form say
 
+/** What a version of an app still lacks on this backend (server/models.ts needOf), or null. The lite version has its
+ *  own pack (<pack>-lite) and so its own answer. */
+export function needFor(a, variant = "full") {
+  if (variant === "lite" && a.lite) return a.lite.needs ?? null;
+  return a.needs ?? (a.missing_pack ? { kind: "pack", pack: a.missing_pack } : null);
+}
+
 /** The tag on an app's card, or null. */
-export function needTag(a) {
-  const n = a.needs ?? (a.missing_pack ? { kind: "pack", pack: a.missing_pack } : null);
+export function needTag(a, variant = "full") {
+  const n = needFor(a, variant);
   if (!n) return null;
   const key = { downloading: "tag.downloading", token: "tag.license", license: "tag.license", failed: "tag.failed" }[n.kind] ?? "tag.nopack";
-  return el("span", { class: `tag dark need-${n.kind}`, title: needText(a) }, t(key));
+  return el("span", { class: `tag dark need-${n.kind}`, title: needText(a, variant) }, t(key));
 }
 
 /** One sentence for the form: why it cannot run yet. The catalog already says (a.needs), before /api/models answers. */
-export function needText(a) {
-  const n = a.needs ?? (a.missing_pack ? { kind: "pack", pack: a.missing_pack } : null);
+export function needText(a, variant = "full") {
+  const n = needFor(a, variant);
   if (!n) return "";
   if (!modelsPanel) return t("ws.nopack", { pack: n.pack });   // an older backend: as before
   if (n.kind === "downloading") return t("ws.need.downloading");
@@ -80,10 +88,10 @@ export function needText(a) {
 }
 
 /** The same sentence with the button that fixes it (opens the Models panel), for the form. */
-export function needNode(a) {
-  const n = a.needs ?? (a.missing_pack ? { kind: "pack", pack: a.missing_pack } : null);
+export function needNode(a, variant = "full") {
+  const n = needFor(a, variant);
   if (!n) return null;
-  const text = needText(a);
+  const text = needText(a, variant);
   if (!modelsPanel || n.kind === "downloading") return el("span", {}, text);
   return el("span", {}, text, " ",
     el("button", { class: "link-btn", type: "button", onclick: () => openModels({ pack: n.pack }) },
@@ -267,36 +275,49 @@ export function openModels(focus = {}) {
 
   function packsSection() {
     const packApps = d().pack_apps || {};
+    const packs = d().packs || {};
     const order = { downloading: 0, queued: 1, license: 2, failed: 3, ready: 4, get: 5 };
-    const rows = Object.entries(d().packs || {})
-      .map(([name, p]) => ({ name, p, apps: (packApps[name] || []).filter((id) => byId.has(id)), state: packState(name, p) }))
+    const isLite = (name) => name.endsWith("-lite") && Boolean(packs[name.slice(0, -5)]);
+    const rowOf = (name) => ({ name, p: packs[name], apps: (packApps[name] || []).filter((id) => byId.has(id)), state: packState(name, packs[name]) });
+    // each lite pack (the smaller copies of its models, lite/README.md) sits under its full pack
+    const rows = Object.keys(packs).filter((name) => !isLite(name)).map(rowOf)
+      .map((r) => ({ ...r, lite: packs[`${r.name}-lite`] ? rowOf(`${r.name}-lite`) : null }))
       .filter((r) => r.apps.length)
-      .sort((a, b) => order[a.state] - order[b.state] || b.apps.length - a.apps.length);
+      .sort((a, b) => Math.min(order[a.state], a.lite ? order[a.lite.state] : 9) - Math.min(order[b.state], b.lite ? order[b.lite.state] : 9)
+        || b.apps.length - a.apps.length);
     const free = d().free_gb ?? 0;
+    const action = ({ name, p, state }) => {
+      if (state === "ready") return el("span", { class: "chip ok" }, icon("check"), t("models.pack.ready"));
+      if (state === "downloading") return el("span", { class: "chip" }, t("models.pack.dl"));
+      if (state === "queued") return el("span", { class: "chip" }, t("models.pack.queued"));
+      if (state === "license") return el("button", { class: "btn small", type: "button", onclick: () => { focus = { pack: name }; draw(); box.querySelector(".msec")?.scrollIntoView({ behavior: "smooth" }); } }, t("models.pack.license"));
+      const fits = p.missing_gb <= free - 2;
+      return el("button", { class: `btn small${state === "failed" ? "" : " lime"}`, type: "button", disabled: !fits || busy,
+        title: fits ? null : t("models.pack.nodisk", { gb: gb(free) }),
+        onclick: () => {
+          if (p.gated.length && !d().token?.source) { focus = { pack: name }; draw(); box.scrollTo({ top: 0, behavior: "smooth" }); tokenInput.focus(); return; }
+          download([name]);
+        } }, icon(state === "failed" ? "redo" : "download"),
+        state === "failed" ? t("models.pack.retry") : t("models.pack.get", { gb: gb(p.missing_gb) }));
+    };
     return el("section", { class: "msec" },
       el("h3", {}, t("models.packs")),
-      ...rows.map(({ name, p, apps: ids, state }) => {
+      ...rows.flatMap((r) => {
+        const { name, apps: ids } = r;
         const names = ids.slice(0, 3).map((id) => byId.get(id).name).join(", ") + (ids.length > 3 ? "…" : "");
-        let right;
-        if (state === "ready") right = el("span", { class: "chip ok" }, icon("check"), t("models.pack.ready"));
-        else if (state === "downloading") right = el("span", { class: "chip" }, t("models.pack.dl"));
-        else if (state === "queued") right = el("span", { class: "chip" }, t("models.pack.queued"));
-        else if (state === "license") right = el("button", { class: "btn small", type: "button", onclick: () => { focus = { pack: name }; draw(); box.querySelector(".msec")?.scrollIntoView({ behavior: "smooth" }); } }, t("models.pack.license"));
-        else {
-          const fits = p.missing_gb <= free - 2;
-          right = el("button", { class: `btn small${state === "failed" ? "" : " lime"}`, type: "button", disabled: !fits || busy,
-            title: fits ? null : t("models.pack.nodisk", { gb: gb(free) }),
-            onclick: () => {
-              if (p.gated.length && !d().token?.source) { focus = { pack: name }; draw(); box.scrollTo({ top: 0, behavior: "smooth" }); tokenInput.focus(); return; }
-              download([name]);
-            } }, icon(state === "failed" ? "redo" : "download"),
-            state === "failed" ? t("models.pack.retry") : t("models.pack.get", { gb: gb(p.missing_gb) }));
-        }
-        return el("div", { class: `mrow${focus.pack === name ? " focus" : ""}` },
+        const main = el("div", { class: `mrow${focus.pack === name ? " focus" : ""}` },
           el("div", { class: "two" },
             el("span", {}, el("b", {}, name), " ", el("span", { class: "dim" }, t(ids.length === 1 ? "models.pack.apps1" : "models.pack.apps", { n: ids.length }))),
             el("small", { class: "dim" }, names)),
-          right);
+          action(r));
+        if (!r.lite?.apps.length) return [main];
+        const l = r.lite;
+        const sub = el("div", { class: `mrow sub${focus.pack === l.name ? " focus" : ""}` },
+          el("div", { class: "two" },
+            el("span", {}, el("span", { class: "tag lite" }, t("tag.lite")), " ", el("span", { class: "dim" }, t("models.pack.lite", { gb: gb(l.p.gb) }))),
+            el("small", { class: "dim" }, l.name)),
+          action(l));
+        return [main, sub];
       }),
       el("p", { class: "help" }, t("models.free", { gb: gb(free) })));
   }

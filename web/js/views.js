@@ -7,6 +7,8 @@ import { feed, feedView, hooks } from "./feed.js";
 import { pickOption, recreate } from "./workspace.js";
 import { flags, flagButton } from "./flags.js";
 import { needTag } from "./models.js";
+import { mygpu, fitOn, variantFor } from "./mygpu.js";
+import { sizeRows, countsRow, openMyGpu } from "./gpupicker.js";
 
 const go = (hash) => () => { location.hash = hash; };
 const appTag = (a) => (a.status === "draft" ? el("span", { class: "tag dark" }, t("tag.draft")) : null);
@@ -114,15 +116,29 @@ export function exploreView() {
 // ------------------------------------------------------------------ Apps
 let appsCat = "all";
 let appsQuery = "";
+let appsFitOnly = false;   // only the apps that fit the chosen card, as they are or in lite
+
+/** The badge of an app's card for the chosen card size: lite, +RAM, needs more RAM, or won't run (nothing when it fits
+ *  as it is). Without a card chosen, only the apps that need more than 24 GB say so. */
+function gpuTag(a) {
+  const on = fitOn(a);
+  const fit = fitOf(a);
+  const title = fit ? t(fit[0], fit[2]) : null;
+  if (!on) return fit && fit[1] === "big" ? el("span", { class: "tag violet" }, `48 ${t("unit.gb")}`) : null;
+  if (on.level === "lite") return el("span", { class: "tag lite", title }, t("tag.lite"));
+  if (on.level === "offload") return el("span", { class: "tag warn", title }, t("tag.ram"));
+  if (on.level === "noram") return el("span", { class: "tag bad", title }, t("tag.noram"));
+  if (on.level === "no") return el("span", { class: "tag bad", title }, t("tag.nofit"));
+  return null;
+}
 
 function appCard(a) {
   const item = exampleItem(a);
   const media = item ? thumb(item, { play: "hover" }) : el("div", { class: "media" }, el("span", { class: "placeholder" }, icon(iconOf(a))));
-  const fit = fitOf(a);
   media.append(el("div", { class: "badges" },
     a.status === "draft" ? el("span", { class: "tag dark" }, t("tag.draft")) : null,
-    needTag(a),
-    fit && fit[1] === "big" ? el("span", { class: "tag violet" }, `48 ${t("unit.gb")}`) : null));
+    needTag(a, variantFor(a)),
+    gpuTag(a)));
   const card = el("a", { class: "app-card", href: `#/app/${a.id}` }, media,
     el("h3", {}, a.name), el("p", {}, a.summary),
     el("span", { class: "btn white small" }, icon("play"), t("apps.try")));
@@ -139,7 +155,8 @@ export function appsView() {
     pills.replaceChildren(...["all", ...cats].map((c) => el("button", { type: "button", "aria-pressed": String(appsCat === c),
       onclick: () => { appsCat = c; draw(); } }, c === "all" ? t("apps.all") : t(`cat.${c}.t`))));
     const q = appsQuery.trim().toLowerCase();
-    const match = (a) => !q || [a.name, a.summary, a.higgsfield_feature, a.id].filter(Boolean).join(" ").toLowerCase().includes(q);
+    const fits = (a) => !appsFitOnly || !mygpu.pick || ["full", "lite"].includes(fitOn(a)?.level ?? "full");
+    const match = (a) => fits(a) && (!q || [a.name, a.summary, a.higgsfield_feature, a.id].filter(Boolean).join(" ").toLowerCase().includes(q));
     const sections = (appsCat === "all" ? cats : [appsCat]).map((c) => {
       const list = (c === "more" ? apps.filter((a) => categoryOf(a.id) === "more") : (CATEGORIES.find((x) => x.id === c)?.apps || []).map((id) => byId.get(id)).filter(Boolean)).filter(match);
       if (!list.length) return null;
@@ -153,13 +170,20 @@ export function appsView() {
     body.replaceChildren(...(sections.length ? sections : [el("div", { class: "empty" }, t("apps.none", { q: appsQuery }))]));
   };
   search.addEventListener("input", () => { appsQuery = search.value; draw(); });
+  // what runs on your GPU: pick the card, then keep only the apps that fit it
+  const p = mygpu.pick;
+  const gpuBtn = p
+    ? el("button", { class: "fitpill", type: "button", "aria-pressed": String(appsFitOnly),
+        onclick: (ev) => { appsFitOnly = !appsFitOnly; ev.currentTarget.setAttribute("aria-pressed", String(appsFitOnly)); draw(); } },
+        icon("chip"), t("apps.fit", { gb: p.vram }))
+    : el("button", { class: "fitpill", type: "button", onclick: (ev) => openMyGpu(ev.currentTarget, { align: "start" }) }, icon("chip"), t("apps.pickgpu"));
   draw();
   const node = el("div", { class: "page" },
     el("header", { class: "apps-head" },
       el("span", { class: "ic" }, icon("grid")),
       el("h1", { class: "display" }, t("apps.title.a"), " ", el("em", {}, t("apps.title.b"))),
       el("p", {}, t("apps.sub")),
-      el("div", { class: "apps-bar" }, el("label", { class: "search" }, icon("search"), search), pills)),
+      el("div", { class: "apps-bar" }, el("label", { class: "search" }, icon("search"), search), gpuBtn, pills)),
     body);
   return { node, active: "apps" };
 }
@@ -219,34 +243,53 @@ export function libraryView() {
 }
 
 // ------------------------------------------------------------------ VRAM map
+/** Every app's memory, the largest phase of each version, and what it does on the card chosen in "My GPU" (24 GB, the
+ *  reference card, until one is chosen). The sizes on the page change the pick itself. */
 export function vramView(gpu) {
+  const pick = mygpu.pick;
+  const mine = pick?.vram ?? 24;
   const list = apps.filter((a) => a.vram).sort((a, b) => b.vram.largest_phase_gb - a.vram.largest_phase_gb);
   const max = Math.max(48, ...list.map((a) => Math.max(a.vram.whole_gb, a.example?.peak_vram_gb || 0))) * 1.04;
   const pct = (gb) => `${Math.min(100, (gb / max) * 100)}%`;
+  const marks = [...new Set([mine, 24, 48])].filter((g) => g <= max).sort((a, b) => a - b);
   const rows = list.map((a) => {
     const fit = fitOf(a);
     const peak = a.example?.peak_vram_gb;
+    const lite = a.vram.versions?.lite;
+    const on = fitOn(a);
+    const tip = [`${t("vram.whole")} ${a.vram.whole_gb} ${t("unit.gb")}`, `${t("vram.phase")} ${a.vram.largest_phase_gb} ${t("unit.gb")}`,
+      lite ? `${t("vram.lite")} ${lite.largest_phase_gb} ${t("unit.gb")}` : null,
+      peak ? `${t("vram.measured")} ${peak} ${t("unit.gb")}` : null,
+      on?.ram_gb ? t("vram.ram", { gb: on.ram_gb }) : null].filter(Boolean).join(" · ");
     return el("a", { class: "vrow", href: `#/app/${a.id}` },
       el("div", { class: "nm" }, el("b", {}, a.name), el("small", {}, `${a.pack} · ${a.vram.whole_gb} ${t("unit.gb")}`)),
-      el("div", { class: "vbar", title: `${t("vram.whole")} ${a.vram.whole_gb} ${t("unit.gb")} · ${t("vram.phase")} ${a.vram.largest_phase_gb} ${t("unit.gb")}${peak ? ` · ${t("vram.measured")} ${peak} ${t("unit.gb")}` : ""}` },
+      el("div", { class: "vbar", title: tip },
         el("i", { class: "whole", style: { width: pct(a.vram.whole_gb) } }),
         el("i", { style: { width: pct(a.vram.largest_phase_gb) } }),
+        lite && lite.largest_phase_gb < a.vram.largest_phase_gb ? el("s", { style: { width: pct(lite.largest_phase_gb) } }) : null,
         peak ? el("b", { style: { left: pct(peak) } }) : null,
-        el("u", { style: { left: pct(24) } }), el("u", { style: { left: pct(48) } })),
-      el("span", { class: `fit ${fit?.[1] || ""}` }, fit ? t(fit[0]) : ""));
+        ...marks.map((g) => el("u", { class: g === mine && pick ? "mine" : null, style: { left: pct(g) } }))),
+      el("span", { class: `fit ${fit?.[1] || ""}` }, fit ? t(fit[0], fit[2]) : "", on?.measured ? el("small", { class: "dim" }, ` · ${t("mygpu.measured")}`) : null));
   });
   const live = gpu?.device?.vram_total_gb ? el("div", { class: "card", style: { marginBottom: "14px" } },
     el("h3", {}, icon("bolt"), t("vram.live", { name: gpu.device.name || "GPU", used: gpu.device.vram_used_gb, total: gpu.device.vram_total_gb })),
     el("div", { class: "vbar" }, el("i", { style: { width: `${(gpu.device.vram_used_gb / gpu.device.vram_total_gb) * 100}%` } }))) : null;
+  const picker = el("div", { class: "card vpick" },
+    el("h3", {}, icon("chip"), pick ? t("mygpu.on", { gb: pick.vram }) : t("vram.pick")),
+    el("div", { class: "vpick-body" }, sizeRows(), pick ? countsRow(pick) : el("p", { class: "help" }, t("mygpu.help"))),
+    pick ? el("p", { class: "help" }, t("mygpu.estimate")) : null);
   const node = el("div", { class: "page" },
     el("div", { class: "sec-head", style: { marginTop: "6px" } }, el("div", {}, el("h2", { class: "display", style: { fontSize: "34px" } }, t("vram.title")), el("p", { style: { maxWidth: "80ch" } }, t("vram.sub")))),
+    picker,
     live,
     el("div", { class: "legend", style: { margin: "0 0 12px" } },
       el("span", {}, el("i", { style: { background: "rgba(255,255,255,.14)" } }), t("vram.whole")),
       el("span", {}, el("i", { style: { background: "var(--accent)" } }), t("vram.phase")),
-      el("span", {}, el("i", { style: { background: "var(--pink)", width: "3px" } }), t("vram.measured"))),
+      el("span", {}, el("i", { style: { background: "var(--lite)", height: "4px" } }), t("vram.lite")),
+      el("span", {}, el("i", { style: { background: "var(--pink)", width: "3px" } }), t("vram.measured")),
+      pick ? el("span", {}, el("i", { style: { background: "var(--accent)", width: "2px" } }), t("vram.mine", { gb: pick.vram })) : null),
     el("div", { class: "vrow", style: { background: "transparent", border: 0, cursor: "default", padding: "0 12px" } }, el("span"),
-      el("div", { class: "vscale" }, el("span", { style: { left: pct(24) } }, `24 ${t("unit.gb")}`), el("span", { style: { left: pct(48) } }, `48 ${t("unit.gb")}`)), el("span")),
+      el("div", { class: "vscale" }, ...marks.map((g) => el("span", { class: g === mine && pick ? "mine" : null, style: { left: pct(g) } }, `${g} ${t("unit.gb")}`))), el("span")),
     el("div", { class: "vtable" }, ...rows));
   return { node, active: "vram" };
 }

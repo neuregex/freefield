@@ -3,6 +3,7 @@
 import { api, store } from "./util.js";
 import { lang } from "./i18n.js";
 import { localizeApp } from "./app-locale.js";
+import { mygpu, fitOn } from "./mygpu.js";
 
 export let apps = [];
 export const byId = new Map();
@@ -17,6 +18,7 @@ export async function loadCatalog() {
   draftsAllowed = Boolean(d.drafts);
   hosted = Boolean(d.hosted);
   modelsPanel = Boolean(d.models_panel);
+  mygpu.liteHere = Boolean(d.lite_here);
   apps = d.apps.filter((a) => DEV || !a.id.startsWith("smoke")).map((a) => localizeApp(a, () => lang));
   byId.clear();
   for (const a of apps) byId.set(a.id, a);
@@ -281,11 +283,21 @@ export function estimate(app) {
   return s ? { seconds: s, gpu: (app.example.gpu || "").split(",")[0] || "GPU" } : null;
 }
 
-/** "fits whole" → [label key, css class] */
+/** The verdict an app's card and form show: [label key, css class, vars for t()]. With a card chosen in "My GPU",
+ *  for that card (mygpu.js); otherwise for the 24 GB reference card of docs/vram-map.json. */
 export function fitOf(app) {
   const v = app.vram?.verdict;
+  if (v === "no models") return ["fit.none", "", null];
+  const on = fitOn(app);
+  if (on) {
+    const vars = { gb: mygpu.pick.vram, ram: on.ram_gb };
+    if (on.level === "full") return ["fit.on.full", "ok", vars];
+    if (on.level === "lite") return ["fit.on.lite", "lite", vars];
+    if (on.level === "offload") return ["fit.on.ram", "tight", vars];
+    return [on.level === "noram" ? "fit.on.noram" : "fit.on.no", "big", vars];
+  }
   if (!v) return null;
   const map = { "fits whole": ["fit.whole", "ok"], "fits by phases": ["fit.phases", "ok"], "tight (by phases)": ["fit.tight", "tight"],
-    "needs Modal": ["fit.big", "big"], "no models": ["fit.none", ""] };
-  return map[v] || [v, ""];
+    "needs Modal": ["fit.big", "big"] };
+  return [...(map[v] || [v, ""]), null];
 }

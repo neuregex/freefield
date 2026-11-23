@@ -47,8 +47,9 @@ class Feed {
     this.emit();
     this.schedule();
   }
-  async run(appId, formData) {
-    const entry = await api(`/api/apps/${appId}/run`, { method: "POST", body: formData });
+  /** variant "lite" runs the smaller copies of the app's models (lite/README.md) */
+  async run(appId, formData, variant = "full") {
+    const entry = await api(`/api/apps/${appId}/run${variant === "lite" ? "?variant=lite" : ""}`, { method: "POST", body: formData });
     this.entries.set(entry.id, entry);
     this.emit();
     this.schedule();
@@ -163,7 +164,8 @@ function doneCard(e, list) {
     onclick: open, onkeydown: (ev) => { if (ev.key === "Enter") open(); } },
     media,
     el("div", { class: "ov" },
-      el("div", { class: "row" }, el("span", { class: "tag dark" }, app?.name ?? e.app),
+      el("div", { class: "row" }, el("span", { class: "tags" }, el("span", { class: "tag dark" }, app?.name ?? e.app),
+          e.variant === "lite" ? el("span", { class: "tag lite", title: t("ver.ran.lite") }, t("tag.lite")) : null),
         el("div", { class: "acts" }, dl,
           item.type !== "audio" && hooks.useIn ? el("button", { class: "mini", type: "button", title: t("act.usein"), "aria-label": t("act.usein"),
             onclick: (ev) => { ev.stopPropagation(); hooks.useIn(ev.currentTarget, item); } }, icon("send")) : null,
