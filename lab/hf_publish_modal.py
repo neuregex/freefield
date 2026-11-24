@@ -29,10 +29,19 @@ image = build_image().add_local_python_source("infra")
 hf_write = modal.Secret.from_name("huggingface-write")
 
 
+def hf_token() -> str:
+    """The secret's token, without the spaces or line breaks a paste can bring along."""
+    token = os.environ.get("HF_TOKEN", "").strip()
+    if not token:
+        raise RuntimeError('the "huggingface-write" secret has an empty HF_TOKEN: create it again with a write token '
+                           "(modal secret create --force huggingface-write HF_TOKEN=...)")
+    return token
+
+
 @app.function(image=image, secrets=[hf_write], timeout=300)
 def whoami() -> dict:
     from huggingface_hub import HfApi
-    info = HfApi(token=os.environ["HF_TOKEN"]).whoami()
+    info = HfApi(token=hf_token()).whoami()
     auth = info.get("auth", {}).get("accessToken", {})
     return {"name": info.get("name"), "orgs": [o.get("name") for o in info.get("orgs", [])],
             "token_role": auth.get("role"), "token_name": auth.get("displayName")}
@@ -41,7 +50,7 @@ def whoami() -> dict:
 @app.function(image=image, volumes={"/models": models_volume}, secrets=[hf_write], timeout=4 * 3600, cpu=4, memory=8192)
 def upload(repo: str, files: list[dict], card: str, license_text: str, cards_only: bool = False) -> dict:
     from huggingface_hub import HfApi
-    api = HfApi(token=os.environ["HF_TOKEN"])
+    api = HfApi(token=hf_token())
     repo_id = f"{api.whoami()['name']}/{repo}"
     for f in [] if cards_only else files:
         if not (Path(MODELS_DIR) / f["dir"] / f["name"]).exists():
