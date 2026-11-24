@@ -10,7 +10,8 @@ A case is an app from apps/ plus values, optional preset, raw overrides and extr
 
 File values can be "asset:<name>" (a file in lab/assets) or "@case:<id>" (the first output
 of an earlier case, so a text-to-video case can feed an IC-LoRA case). "variant": "lite" runs
-the app's lite version: the smaller copies of lite/variants.json in place of its model files,
+the app's lite version: the smaller copies of lite/variants.json in place of its model files
+(with "swap": [full file names], only those),
 as the studio does. For every case the lab records status, seconds, peak VRAM (polled with
 nvidia-smi) and copies the outputs into results/<run_id>/<case_id>/; given ComfyUI's process
 and log, also its peak RAM and whether it offloaded weights to RAM. Between cases whose model
@@ -242,6 +243,8 @@ def build_case(apps_dir: Path, case: dict, file_value) -> tuple[dict, dict, dict
         add_loras(api, case["loras"])
     if case.get("variant") == "lite":   # the same swap as server/runner.ts: every input naming a full file
         names = lite_names()
+        if case.get("swap") is not None:   # lab/lite_modal.py --step compare: only these full files
+            names = {full: lite for full, lite in names.items() if full in case["swap"]}
         for node in api.values():
             for k, v in node.get("inputs", {}).items():
                 if isinstance(v, str) and v in names:
@@ -287,8 +290,10 @@ def models_for_cases(cases: list[dict], apps_dir: Path) -> list[dict]:
         extra = lora_models(c.get("loras", [])) + lora_models(c.get("loras_download", []))  # files swapped in by overrides
         models = manifest.get("models", [])
         if c.get("variant") == "lite":
+            swap = c.get("swap")   # None: every file with a lite copy
             models = [{**m, "repo": copies[b]["repo"], "file": copies[b]["file"], "gb": copies[b]["gb"]}
-                      if (b := m["file"].rsplit("/", 1)[-1]) in copies else m for m in models]
+                      if (b := m["file"].rsplit("/", 1)[-1]) in copies and (swap is None or b in swap) else m
+                      for m in models]
         for m in models + extra:
             key = (m["dir"], m["file"].rsplit("/", 1)[-1])
             if key not in seen:
@@ -410,8 +415,9 @@ class Lab:
                "files": [], "error": None, "values": {}, "inputs": {}, "web": None, "loras": case.get("loras", []),
                "overrides": case.get("overrides", []), "note": case.get("note", ""), "showcase": bool(case.get("showcase")),
                "variant": case.get("variant", "full")}
-        # lab/lite_modal.py: the card size this ran at, the case it measures, and whether its ComfyUI was started for it
-        for k in ("tier", "measure", "case", "own_comfyui"):
+        # lab/lite_modal.py: the card size this ran at, the case it measures, whether its ComfyUI was started for it,
+        # and for --step compare the variant's name and the full files it swapped
+        for k in ("tier", "measure", "case", "own_comfyui", "compare", "swap"):
             if k in case:
                 res[k] = case[k]
         log_from = self.comfy_log.stat().st_size if self.comfy_log and self.comfy_log.exists() else 0

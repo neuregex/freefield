@@ -201,15 +201,21 @@ def measure_cases(spec_path: Path) -> tuple[list[dict], list[int], int]:
     return inputs + measured, conf["tiers"], len(measured)
 
 
-def measure_all(run_id: str) -> str:
-    import core  # lab/core.py
-    cases, tiers, n = measure_cases(ROOT / "lite" / "measure.json")
+def case_assets(cases: list[dict]) -> dict[str, bytes]:
+    """The lab/assets files the cases name ("asset:<name>"), to send to the container."""
     assets = {}
     for c in cases:
         for v in c.get("values", {}).values():
             if isinstance(v, str) and v.startswith("asset:"):
                 name = v[len("asset:"):]
                 assets[name] = (ROOT / "lab" / "assets" / name).read_bytes()
+    return assets
+
+
+def measure_all(run_id: str) -> str:
+    import core  # lab/core.py
+    cases, tiers, n = measure_cases(ROOT / "lite" / "measure.json")
+    assets = case_assets(cases)
     needed = core.models_for_cases(cases, ROOT / "apps")
     print(f"measure {run_id}: {n} measured runs (full and lite) at {tiers} GB, "
           f"{len(cases) - n} inputs; making sure {len(needed)} model files are in the volume (CPU)")
@@ -242,15 +248,89 @@ def measure_all(run_id: str) -> str:
     return run_id
 
 
+@app.function(image=image, gpu=GPU, volumes={"/models": models_volume, "/lab": lab_volume},
+              secrets=[hf_secret], timeout=2 * 3600, memory=65536)
+def compare(cases: list[dict], run_id: str, assets: dict[str, bytes], missing: dict[str, str]) -> list[dict]:
+    """lite/compare.json's runs in one ComfyUI with all the GPU's memory: here only the outputs matter."""
+    sys.path.insert(0, "/freefield/lab")
+    from core import Lab  # noqa: E402
+
+    assets_dir = Path("/tmp/lab-assets")
+    assets_dir.mkdir(exist_ok=True)
+    for name, data in assets.items():
+        (assets_dir / name).write_bytes(data)
+    lab = Lab("http://127.0.0.1:8188", Path("/comfyui/input"), Path("/comfyui/output"), Path("/lab") / run_id,
+              apps_dir=Path("/freefield/apps"), assets_dir=assets_dir, on_case_done=lab_volume.commit, missing=missing)
+    proc = start_comfyui(8188)
+    try:
+        results = lab.run_all(cases)
+    finally:
+        proc.terminate()
+    lab_volume.commit()
+    return results
+
+
+def compare_cases(spec_path: Path) -> list[dict]:
+    """lite/compare.json → the inputs the compared cases read, then every case per variant and seed."""
+    import core  # lab/core.py
+    from lab_modal import with_dependencies   # lab/lab_modal.py
+    conf = json.loads(spec_path.read_text(encoding="utf-8"))
+    spec = json.loads((ROOT / "lab" / "cases.json").read_text(encoding="utf-8"))["cases"]
+    by_id = {c["id"]: c for c in spec}
+    unknown = [c for c in conf["cases"] if c not in by_id]
+    if unknown:
+        raise SystemExit(f"lite/compare.json names cases lab/cases.json does not have: {', '.join(unknown)}")
+    read = {src for cid in conf["cases"] for src in core.reads(by_id[cid])}
+    inputs = with_dependencies(spec, read) if read else []   # what the compared cases read, and what that reads
+    copies = core.lite_copies()
+    runs = []
+    for cid, variants in conf["cases"].items():
+        c = by_id[cid]
+        manifest = json.loads((ROOT / "apps" / c["app"] / "app.json").read_text(encoding="utf-8"))
+        swappable = {m["file"].rsplit("/", 1)[-1] for m in manifest.get("models", [])} & set(copies)
+        for name, swap in variants.items():
+            if swap != "*" and not set(swap) <= swappable:
+                raise SystemExit(f"lite/compare.json: {cid} {name} swaps {sorted(set(swap) - swappable)}, which "
+                                 f"{c['app']} does not load or has no lite copy of (it has {sorted(swappable)})")
+            for seed in conf["seeds"]:
+                runs.append({**c, "id": f"{cid}@{name}@s{seed}", "case": cid, "compare": name,
+                             "variant": "lite" if swap else "full", "swap": None if swap == "*" else (swap or None),
+                             "values": {**c.get("values", {}), "seed": seed},
+                             "timeout": conf.get("case_timeout_s", 900), "showcase": False})
+    return inputs + runs
+
+
+def compare_all(run_id: str) -> str:
+    import core  # lab/core.py
+    cases = compare_cases(ROOT / "lite" / "compare.json")
+    n = sum(1 for c in cases if c.get("compare"))
+    needed = core.models_for_cases(cases, ROOT / "apps")
+    print(f"compare {run_id}: {n} runs and {len(cases) - n} inputs on one {GPU}; "
+          f"making sure {len(needed)} model files are in the volume (CPU)")
+    missing = fetch.remote(needed)
+    for name, reason in missing.items():
+        print(f"  ✗ {name}: {reason} (the cases that load it are skipped)")
+    got = compare.remote(cases, run_id, case_assets(cases), missing)
+    ok = sum(r["status"] == "ok" for r in got if r.get("compare"))
+    print(f"  {ok}/{n} runs finished")
+    return run_id
+
+
 def pull(run_id: str) -> None:
-    """lab/results/<run_id>: every card size side by side, review.html, and docs/vram-measured.json."""
+    """lab/results/<run_id>: every card size side by side, review.html, and docs/vram-measured.json;
+    for a --step compare run, its runs and review.html."""
     from lab_modal import merge_shards   # lab/lab_modal.py
     import review                         # lab/review.py
-    parts = sorted({e.path.strip("/").rsplit("/", 1)[-1] for e in lab_volume.listdir("/")
-                    if e.path.strip("/").rsplit("/", 1)[-1].startswith(f"{run_id}-t")})
+    names = {e.path.strip("/").rsplit("/", 1)[-1] for e in lab_volume.listdir("/")}
+    parts = sorted(n for n in names if n.startswith(f"{run_id}-t"))
+    dest = ROOT / "lab" / "results" / run_id
+    if not parts and run_id in names:   # --step compare: one container, no card sizes
+        print(f"downloading {run_id} to {dest} ...")
+        merge_shards([run_id], dest)
+        review.main([str(dest)])
+        return
     if not parts:
         raise SystemExit(f"nothing on the lab volume for {run_id}")
-    dest = ROOT / "lab" / "results" / run_id
     print(f"downloading {', '.join(parts)} to {dest} ...")
     merge_shards(parts, dest)
     review.main([str(dest), "--tiers"])
@@ -258,10 +338,15 @@ def pull(run_id: str) -> None:
 
 @app.local_entrypoint()
 def main(step: str = "all", only: str = "", run_id: str = ""):
-    """--step all | quantize | measure | pull. --only names (a piece of) the files to quantize."""
+    """--step all | quantize | measure | compare | pull. --only names (a piece of) the files to quantize."""
     if step == "pull":
         if not run_id:
             raise SystemExit("--step pull needs --run-id")
+        pull(run_id)
+        return
+    if step == "compare":
+        run_id = run_id or time.strftime("%Y%m%d-%H%M%S") + "-compare"
+        compare_all(run_id)
         pull(run_id)
         return
     if step in ("all", "quantize"):
