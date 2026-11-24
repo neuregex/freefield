@@ -410,7 +410,8 @@ class Lab:
                "files": [], "error": None, "values": {}, "inputs": {}, "web": None, "loras": case.get("loras", []),
                "overrides": case.get("overrides", []), "note": case.get("note", ""), "showcase": bool(case.get("showcase")),
                "variant": case.get("variant", "full")}
-        for k in ("tier", "measure", "case"):   # lab/lite_modal.py: the card size this ran at, and the case it measures
+        # lab/lite_modal.py: the card size this ran at, the case it measures, and whether its ComfyUI was started for it
+        for k in ("tier", "measure", "case", "own_comfyui"):
             if k in case:
                 res[k] = case[k]
         log_from = self.comfy_log.stat().st_size if self.comfy_log and self.comfy_log.exists() else 0

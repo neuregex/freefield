@@ -36,7 +36,7 @@
     "video-t2v",
     "volcano-ad"
   ],
-  "download_gb": 50.41,
+  "download_gb": 51.73,
   "needs_hf_token": true,
   "custom_nodes": [
     {
@@ -67,7 +67,7 @@
       "repo": "neuregex/LTX-2.5-w4a8-comfy",
       "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-w4a8.safetensors",
       "dir": "diffusion_models",
-      "gb": 12.7,
+      "gb": 12.52,
       "name": "ltx-2.5-22b-distilled-transformer-w4a8.safetensors",
       "gated": false,
       "license": "LTX-2.x Community License",
@@ -288,7 +288,7 @@
       "repo": "neuregex/LTX-2.5-w4a8-comfy",
       "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-w4a8.safetensors",
       "dir": "text_encoders",
-      "gb": 9.1,
+      "gb": 10.6,
       "name": "gemma4-12b-with-proj-ltx-2.5-w4a8.safetensors",
       "gated": false,
       "license": "LTX-2.x Community License",

@@ -11,7 +11,7 @@
     "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors": {
       "repo": "neuregex/LTX-2.5-w4a8-comfy",
       "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-w4a8.safetensors",
-      "gb": 12.7,
+      "gb": 12.52,
       "format": "w4a8",
       "source": "freefield",
       "license": "LTX-2.x Community License",
@@ -83,7 +83,7 @@
     "gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors": {
       "repo": "neuregex/LTX-2.5-w4a8-comfy",
       "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-w4a8.safetensors",
-      "gb": 9.1,
+      "gb": 10.6,
       "format": "w4a8",
       "source": "freefield",
       "license": "LTX-2.x Community License",

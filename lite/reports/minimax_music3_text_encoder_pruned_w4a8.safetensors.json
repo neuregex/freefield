@@ -1,0 +1,57 @@
+{
+  "source": "minimax_music3_text_encoder_pruned_bf16.safetensors",
+  "reference": "minimax_music3_text_encoder_pruned_int8_convrot.safetensors",
+  "output": "minimax_music3_text_encoder_pruned_w4a8.safetensors",
+  "format": "asym_w4a8_int8",
+  "group_size": 16,
+  "rotation_groups": {
+    "256": 160
+  },
+  "layers_w4a8": 160,
+  "layers_from_reference": [],
+  "layers_kept": [],
+  "gb_in": 16.71,
+  "gb_out": 5.91,
+  "tensors_gb_out": 5.91,
+  "relative_error": {
+    "mean": 0.0731,
+    "median": 0.0731,
+    "p95": 0.0732,
+    "max": 0.0732,
+    "worst": [
+      [
+        "model.layers.11.mlp.down_proj",
+        0.0732
+      ],
+      [
+        "model.layers.8.mlp.down_proj",
+        0.0732
+      ],
+      [
+        "model.audio_decoder.layers.3.mlp.gate_up_proj",
+        0.0732
+      ],
+      [
+        "model.layers.27.mlp.down_proj",
+        0.0732
+      ],
+      [
+        "model.layers.17.mlp.down_proj",
+        0.0732
+      ],
+      [
+        "model.layers.15.mlp.down_proj",
+        0.0732
+      ],
+      [
+        "model.layers.33.mlp.down_proj",
+        0.0732
+      ],
+      [
+        "model.layers.31.mlp.down_proj",
+        0.0732
+      ]
+    ]
+  },
+  "seconds": 21.3
+}

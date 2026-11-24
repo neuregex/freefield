@@ -127,6 +127,7 @@ def measure(cases: list[dict], run_id: str, assets: dict[str, bytes], tier: int,
     sys.path.insert(0, "/freefield/lab")
     from core import Lab  # noqa: E402
 
+    started = time.strftime("%Y-%m-%d %H:%M:%S")
     assets_dir = Path("/tmp/lab-assets")
     assets_dir.mkdir(exist_ok=True)
     for name, data in assets.items():
@@ -143,7 +144,9 @@ def measure(cases: list[dict], run_id: str, assets: dict[str, bytes], tier: int,
         finally:
             proc.terminate()
             proc.wait(timeout=60)
-    # the same ComfyUI, as if the card had `tier` GB
+    # ComfyUI as if the card had `tier` GB, started anew for every measured case: in one process, the models of the
+    # case before stay in VRAM or in pinned RAM (/free is only a flag ComfyUI reads between prompts), and a run that
+    # follows another measures both (the first lite run, 2026-11-23, used more RAM than the full one it followed)
     total = gpu_total_gib()
     card = tier - 0.1                                  # a "16 GB" card reports a little under 16 GiB
     reserve = total - card + COMFY_RESERVE_GB          # ComfyUI plans with the card's memory, less its usual reserve
@@ -151,13 +154,25 @@ def measure(cases: list[dict], run_id: str, assets: dict[str, bytes], tier: int,
     Path("/comfyui/custom_nodes/freefield_vram_cap.py").write_text(CAP_NODE)
     log = Path(f"/tmp/comfyui-{tier}.log")
     print(f"card size {tier} GB on a {total:.1f} GiB GPU: --reserve-vram {reserve:.2f}, PyTorch cap {cap:.2f} GiB")
-    proc = start_comfyui(8188, f"--disable-dynamic-vram --reserve-vram {reserve:.2f}",
-                         env={"FREEFIELD_VRAM_CAP_GB": f"{cap:.2f}"}, log_path=log)
-    lab.attach(proc.pid, log)
-    try:
-        results += lab.run_all(measured)
-    finally:
-        proc.terminate()
+    for case in measured:
+        proc = start_comfyui(8188, f"--disable-dynamic-vram --reserve-vram {reserve:.2f}",
+                             env={"FREEFIELD_VRAM_CAP_GB": f"{cap:.2f}"}, log_path=log)
+        lab.attach(proc.pid, log)
+        lab.last_key = None                            # nothing loaded yet: nothing to unload
+        try:
+            results += lab.run_all([{**case, "own_comfyui": True}], last=False)
+        finally:
+            proc.terminate()
+            try:
+                proc.wait(timeout=60)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait(timeout=30)
+    lab.vram.stop()
+    lab.ram.stop()
+    # run_all wrote run.json for its last case alone: the whole container's run, for merge_shards
+    (lab.results_dir / "run.json").write_text(json.dumps({"gpu": lab.vram.gpu_name, "started": started,
+                                                         "cases": len(results)}, indent=2), encoding="utf-8")
     lab_volume.commit()
     return results
 

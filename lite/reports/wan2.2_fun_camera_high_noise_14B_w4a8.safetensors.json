@@ -1,0 +1,57 @@
+{
+  "source": "wan2.2_fun_camera_high_noise_14B_bf16.safetensors",
+  "reference": "wan2.2_fun_camera_high_noise_14B_fp8_scaled.safetensors",
+  "output": "wan2.2_fun_camera_high_noise_14B_w4a8.safetensors",
+  "format": "asym_w4a8_int8",
+  "group_size": 16,
+  "rotation_groups": {
+    "256": 406
+  },
+  "layers_w4a8": 406,
+  "layers_from_reference": [],
+  "layers_kept": [],
+  "gb_in": 29.58,
+  "gb_out": 9.06,
+  "tensors_gb_out": 9.06,
+  "relative_error": {
+    "mean": 0.0732,
+    "median": 0.0732,
+    "p95": 0.0732,
+    "max": 0.0732,
+    "worst": [
+      [
+        "blocks.36.cross_attn.v",
+        0.0732
+      ],
+      [
+        "blocks.20.cross_attn.o",
+        0.0732
+      ],
+      [
+        "blocks.34.cross_attn.v",
+        0.0732
+      ],
+      [
+        "blocks.31.cross_attn.q",
+        0.0732
+      ],
+      [
+        "blocks.28.cross_attn.v",
+        0.0732
+      ],
+      [
+        "blocks.26.cross_attn.v",
+        0.0732
+      ],
+      [
+        "blocks.32.cross_attn.q",
+        0.0732
+      ],
+      [
+        "blocks.33.cross_attn.k",
+        0.0732
+      ]
+    ]
+  },
+  "seconds": 32.0
+}

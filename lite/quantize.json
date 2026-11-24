@@ -1,5 +1,5 @@
 {
-  "_doc": "The lite copies Freefield makes itself, with tools/quantize.py on Modal (lab/lite_modal.py --step quantize), for the model files without an official 4-bit copy. source: the model in bf16, downloaded to the volume's .sources folder and deleted once quantized. ref: the quantized file of the same model its makers or Comfy-Org published; the layers it quantized are the ones quantized here (dir: where it lives in the volume; the apps load most of them already). replaces: the file the apps load now, the key of the copy in lite/variants.json once it is published. repo: the Hugging Face repo it goes to, under the account of the huggingface-write secret (lab/hf_publish_modal.py), with the card in lite/cards/<repo>.md and the license of the model it comes from (repos: lite/licenses/<file>).",
+  "_doc": "The lite copies Freefield makes itself, with tools/quantize.py on Modal (lab/lite_modal.py --step quantize), for the model files without an official 4-bit copy. source: the model in bf16, downloaded to the volume's .sources folder and deleted once quantized. ref: the quantized file of the same model its makers or Comfy-Org published; the layers it quantized are the ones quantized here (dir: where it lives in the volume; the apps load most of them already). replaces: the file the apps load now, the key of the copy in lite/variants.json once it is published. repo: the Hugging Face repo it goes to, under the account of the huggingface-write secret (lab/hf_publish_modal.py), with the card in lite/cards/<repo>.md and the license of the model it comes from (repos: lite/licenses/<file>). checked: what was compared with the original file before publishing, a line in the card.",
   "format": "asym_w4a8_int8",
   "files": [
     {
@@ -155,7 +155,8 @@
         "ltx-2",
         "video",
         "audio"
-      ]
+      ],
+      "checked": "the same image-to-video workflow and seed as with the int8 files these replace (a portrait turning her head, 4 s with audio, on an L40S): the same motion and framing, small differences in hair and skin detail."
     },
     "Wan2.1-I2V-14B-480P-w4a8-comfy": {
       "title": "Wan 2.1 I2V 14B 480p, w4a8 for ComfyUI",
@@ -170,7 +171,8 @@
       "tags": [
         "wan",
         "video"
-      ]
+      ],
+      "checked": "the same workflow and seed as with the fp8 file this replaces (image to video with the Cakeify effect LoRA, 81 frames, on an L40S): the effect plays out the same way; the cut and the cake inside differ in detail."
     },
     "Wan2.2-Fun-A14B-Camera-w4a8-comfy": {
       "title": "Wan 2.2 Fun A14B Control Camera, w4a8 for ComfyUI",
@@ -186,7 +188,8 @@
         "wan",
         "video",
         "camera-control"
-      ]
+      ],
+      "checked": "the same workflow and seed as with the fp8 files these replace (a zoom-in camera move through a library, 81 frames at 832×480, on an L40S): the same move and scene, the frames almost identical."
     },
     "Wan-Animate-2-w4a8-comfy": {
       "title": "Wan Animate 2 (distilled), w4a8 for ComfyUI",
@@ -202,7 +205,8 @@
         "wan",
         "video",
         "animation"
-      ]
+      ],
+      "checked": "a motion transfer (a character photo moved by a walking clip, on an L40S) gave a coherent clip; not compared side by side with the original file yet."
     },
     "Qwen-Image-Edit-2509-w4a8-comfy": {
       "title": "Qwen-Image-Edit 2509, w4a8 for ComfyUI",

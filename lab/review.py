@@ -120,6 +120,9 @@ def main(argv=None) -> int:
     return 0
 
 
+# 2: every measured case in a freshly started ComfyUI (lab/lite_modal.py). Version 1 files (2026-11-23) ran
+# the cases of a card size one after another in one ComfyUI, so a run also carried the models of the one before.
+MEASURED_VERSION = 2
 MEMORY_FAILURES = ("out of memory", "outofmemory", "allocation on device", "no result after", "timeouterror")
 
 
@@ -130,10 +133,15 @@ def write_tiers(rows: list[dict], run: str, meta: dict) -> None:
     card too small), is left out and listed."""
     out = ROOT / "docs" / "vram-measured.json"
     doc = json.loads(out.read_text(encoding="utf-8")) if out.exists() else {}
+    if doc.get("version", 1) < MEASURED_VERSION:   # runs that shared one ComfyUI between cases: start over
+        doc = {}
     apps = doc.get("apps", {})
     n = 0
     for r in rows:
         if not r.get("measure") or r["status"] == "skipped":
+            continue
+        if not r.get("own_comfyui"):   # a run from before 2026-11-24, in a ComfyUI shared with the case before it
+            print(f"  left out {r['id']}: measured in a ComfyUI that had run another case first")
             continue
         if r["status"] != "ok" and not any(w in (r.get("error") or "").lower() for w in MEMORY_FAILURES):
             print(f"  left out {r['id']}: {(r.get('error') or r['status'])[:160]}")
@@ -144,8 +152,10 @@ def write_tiers(rows: list[dict], run: str, meta: dict) -> None:
             entry["error"] = (r.get("error") or r["status"])[:300]
         apps.setdefault(r["app"], {}).setdefault(str(r["tier"]), {})[r.get("variant", "full")] = entry
         n += 1
-    doc = {"how": "lab/lite_modal.py: ComfyUI given each card size's memory on a bigger GPU (--reserve-vram, a PyTorch "
-                  "memory cap, --disable-dynamic-vram); offloaded = ComfyUI loaded part of the weights to RAM",
+    doc = {"version": MEASURED_VERSION,
+           "how": "lab/lite_modal.py: ComfyUI given each card size's memory on a bigger GPU (--reserve-vram, a PyTorch "
+                  "memory cap, --disable-dynamic-vram), started anew for every case; offloaded = ComfyUI loaded part "
+                  "of the weights to RAM",
            "gpu": meta.get("gpu") or doc.get("gpu"), "runs": sorted(set(doc.get("runs", [])) | {run}),
            "apps": {k: apps[k] for k in sorted(apps)}}
     out.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

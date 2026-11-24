@@ -397,7 +397,7 @@
       "video-t2v",
       "volcano-ad"
     ],
-    "download_gb": 50.41,
+    "download_gb": 51.73,
     "needs_hf_token": true,
     "gated": {
       "Lightricks/LTX-2.3-22b-IC-LoRA-DubIt": "ltx-2.3-22b-ic-lora-dubit-0.9.safetensors",

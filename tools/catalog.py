@@ -33,6 +33,7 @@ TIERS = [8, 12, 16, 24, 32, 48, 80]   # card sizes the studio's GPU picker offer
 RAM_OS_GB = 8.0          # RAM left for the system when ComfyUI keeps offloaded weights in RAM
 RAM_OS_MEASURED_GB = 4.0  # on top of the RAM a lab run measured ComfyUI using (its own overhead is in the measure)
 MEASURED = ROOT / "docs" / "vram-measured.json"   # lab runs with ComfyUI capped to a card size (lab/review.py --tiers)
+MEASURED_VERSION = 2    # lab/review.py: version 1 files ran a card size's cases in one ComfyUI and are not used
 README_START, README_END = "<!-- gpu-table:start -->", "<!-- gpu-table:end -->"
 
 
@@ -308,9 +309,21 @@ def write_readme_table(counts: list[dict], with_models: int) -> None:
     readme.write_text(head + "\n".join(lines) + tail, encoding="utf-8")
 
 
+def load_measured() -> dict:
+    """docs/vram-measured.json's apps, if the lab wrote it with every case in a fresh ComfyUI."""
+    if not MEASURED.exists():
+        return {}
+    doc = json.loads(MEASURED.read_text(encoding="utf-8"))
+    if doc.get("version", 1) < MEASURED_VERSION:
+        print(f"ignoring {MEASURED.relative_to(ROOT)}: version {doc.get('version', 1)}, measured before each case got "
+              "its own ComfyUI; measure again with lab/lite_modal.py --step measure")
+        return {}
+    return doc.get("apps", {})
+
+
 def write_vram(apps: list[dict], quiet: bool = False) -> None:
     peaks = example_peaks()
-    measured = json.loads(MEASURED.read_text(encoding="utf-8")).get("apps", {}) if MEASURED.exists() else {}
+    measured = load_measured()
     rows = [vram_row(a, peaks.get(a["id"]), measured.get(a["id"])) for a in apps]
     order = {"fits whole": 0, "fits by phases": 1, "tight (by phases)": 2, "needs Modal": 3, "no models": 4}
     rows.sort(key=lambda r: (order[r["verdict_24gb"]], r["largest_phase_gb"], r["id"]))

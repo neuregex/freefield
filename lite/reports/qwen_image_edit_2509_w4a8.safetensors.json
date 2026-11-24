@@ -1,0 +1,57 @@
+{
+  "source": "qwen_image_edit_2509_bf16.safetensors",
+  "reference": "qwen_image_edit_2509_int8_convrot.safetensors",
+  "output": "qwen_image_edit_2509_w4a8.safetensors",
+  "format": "asym_w4a8_int8",
+  "group_size": 16,
+  "rotation_groups": {
+    "256": 840
+  },
+  "layers_w4a8": 840,
+  "layers_from_reference": [],
+  "layers_kept": [],
+  "gb_in": 40.86,
+  "gb_out": 11.58,
+  "tensors_gb_out": 11.58,
+  "relative_error": {
+    "mean": 0.0727,
+    "median": 0.0731,
+    "p95": 0.0732,
+    "max": 0.0734,
+    "worst": [
+      [
+        "transformer_blocks.59.img_mlp.net.0.proj",
+        0.0734
+      ],
+      [
+        "transformer_blocks.59.attn.to_out.0",
+        0.0732
+      ],
+      [
+        "transformer_blocks.16.img_mlp.net.2",
+        0.0732
+      ],
+      [
+        "transformer_blocks.48.attn.to_add_out",
+        0.0732
+      ],
+      [
+        "transformer_blocks.30.txt_mlp.net.2",
+        0.0732
+      ],
+      [
+        "transformer_blocks.29.txt_mlp.net.2",
+        0.0732
+      ],
+      [
+        "transformer_blocks.39.txt_mlp.net.2",
+        0.0732
+      ],
+      [
+        "transformer_blocks.38.txt_mlp.net.2",
+        0.0732
+      ]
+    ]
+  },
+  "seconds": 40.3
+}
