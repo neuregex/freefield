@@ -79,12 +79,10 @@ def verdict(e: dict | None) -> str:
     if not e:
         return "—"
     if not e.get("ok"):
-        return "✗ did not run" + (" (out of memory)" if "memory" in (e.get("error") or "").lower() else "")
-    what = "✓ RAM offload" if e.get("offloaded") else "✓ fits"
+        return "✗ out of memory" if "memory" in (e.get("error") or "").lower() else "✗ did not run"
     extra = [f"{e['seconds']:.0f} s" if e.get("seconds") else None,
-             f"{e['peak_gb']:.1f} GB VRAM" if e.get("peak_gb") else None,
-             f"{e['ram_peak_gb']:.0f} GB RAM" if e.get("ram_peak_gb") and e.get("offloaded") else None]
-    return f"{what} · " + " · ".join(x for x in extra if x)
+             f"{e['ram_peak_gb']:.0f} GB RAM" if e.get("ram_peak_gb") else None]
+    return "✓ runs · " + " · ".join(x for x in extra if x)
 
 
 def memory_section(files: list[dict], measured: dict, measure_cases: list[str]) -> str:
@@ -109,10 +107,12 @@ def memory_section(files: list[dict], measured: dict, measure_cases: list[str]) 
         out.append(f"**{WORKLOAD.get(cid, cid)}**{'.' if not note else ''}{note}\n\n" + "\n".join(rows))
     if not out:
         return ""
-    return ("## Memory\n\nMeasured on an NVIDIA L40S with ComfyUI given each card size's memory (`--reserve-vram`, "
-            "a PyTorch memory cap and `--disable-dynamic-vram`, so ComfyUI says when it keeps part of the weights in "
-            "RAM). Times are for the L40S: a smaller card is slower, but the ratios hold. ✓ fits: everything stays in "
-            "VRAM; ✓ RAM offload: it runs, moving weights from RAM at each step.\n\n" + "\n\n".join(out) + "\n")
+    return ("## Memory\n\nMeasured on an NVIDIA L40S with ComfyUI limited to each card size (`--reserve-vram`, a "
+            "PyTorch memory cap and `--disable-dynamic-vram`), each run in a freshly started ComfyUI. RAM is the most "
+            "the ComfyUI process used: below a certain card size it keeps part of the weights there. Times are for "
+            "the L40S; a smaller card is slower. On a real card the CUDA context and some kernels also take memory "
+            "outside that cap, so close to the limit ComfyUI keeps a little more in RAM.\n\n"
+            + "\n\n".join(out) + "\n")
 
 
 def size_line(files: list[dict], reports: dict) -> str:
@@ -204,6 +204,8 @@ def main() -> int:
     out = ROOT / "lite" / "cards"
     out.mkdir(exist_ok=True)
     for repo, info in spec["repos"].items():
+        if info.get("publish") is False:   # a copy that did not pass: no card to publish
+            continue
         files = [f for f in spec["files"] if f["repo"] == repo]
         (out / f"{repo}.md").write_text(card(repo, info, files, reports, measured, measure_cases), encoding="utf-8")
         print(f"lite/cards/{repo}.md")

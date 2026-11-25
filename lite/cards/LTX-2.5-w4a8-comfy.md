@@ -34,6 +34,19 @@ tags:
 - `gemma4-12b-with-proj-ltx-2.5-w4a8.safetensors`: 328 layers in w4a8, the ones `gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors` quantized. Weight error per layer after a round trip, ‖W − Ŵ‖ / ‖W‖: mean 0.073, max 0.073.
 - Checked: the same image-to-video workflow and seed as with the int8 files these replace (a portrait turning her head, 4 s with audio, on an L40S): the same motion and framing, small differences in hair and skin detail.
 
+## Memory
+
+Measured on an NVIDIA L40S with ComfyUI limited to each card size (`--reserve-vram`, a PyTorch memory cap and `--disable-dynamic-vram`), each run in a freshly started ComfyUI. RAM is the most the ComfyUI process used: below a certain card size it keeps part of the weights there. Times are for the L40S; a smaller card is slower. On a real card the CUDA context and some kernels also take memory outside that cap, so close to the limit ComfyUI keeps a little more in RAM.
+
+**image to video, 4 s with audio, two stages**.
+
+| Card | Original files | With these files |
+|---|---|---|
+| 8 GB | ✓ runs · 64 s · 50 GB RAM | ✓ runs · 60 s · 39 GB RAM |
+| 12 GB | ✓ runs · 69 s · 52 GB RAM | ✓ runs · 64 s · 40 GB RAM |
+| 16 GB | ✓ runs · 232 s · 61 GB RAM | ✓ runs · 70 s · 42 GB RAM |
+| 24 GB | ✓ runs · 71 s · 57 GB RAM | ✓ runs · 60 s · 33 GB RAM |
+
 ## Use
 
 1. Put each file in the folder of the table above.

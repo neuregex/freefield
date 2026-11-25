@@ -29,6 +29,19 @@ tags:
 - `wan2.1_i2v_480p_14B_w4a8.safetensors`: 488 layers in w4a8, the ones `wan2.1_i2v_480p_14B_fp8_scaled.safetensors` quantized. Weight error per layer after a round trip, ‖W − Ŵ‖ / ‖W‖: mean 0.073, max 0.073.
 - Checked: the same workflow and seed as with the fp8 file this replaces (image to video with the Cakeify effect LoRA, 81 frames, on an L40S): the effect plays out the same way; the cut and the cake inside differ in detail.
 
+## Memory
+
+Measured on an NVIDIA L40S with ComfyUI limited to each card size (`--reserve-vram`, a PyTorch memory cap and `--disable-dynamic-vram`), each run in a freshly started ComfyUI. RAM is the most the ComfyUI process used: below a certain card size it keeps part of the weights there. Times are for the L40S; a smaller card is slower. On a real card the CUDA context and some kernels also take memory outside that cap, so close to the limit ComfyUI keeps a little more in RAM.
+
+**image to video with an effect LoRA (Cakeify), 81 frames, landscape**.
+
+| Card | Original files | With these files |
+|---|---|---|
+| 8 GB | ✓ runs · 416 s · 32 GB RAM | ✓ runs · 422 s · 26 GB RAM |
+| 12 GB | ✓ runs · 413 s · 30 GB RAM | ✓ runs · 348 s · 24 GB RAM |
+| 16 GB | ✓ runs · 426 s · 30 GB RAM | ✓ runs · 316 s · 24 GB RAM |
+| 24 GB | ✓ runs · 414 s · 30 GB RAM | ✓ runs · 319 s · 24 GB RAM |
+
 ## Use
 
 1. Put each file in the folder of the table above.

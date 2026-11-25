@@ -192,10 +192,16 @@ def tier_fit(a: dict, v: dict, tier: int) -> str:
     return "fits" if v["largest_phase_gb"] <= tier - headroom(a) else "offload"
 
 
-def measured_fit(entry: dict) -> str:
+def measured_fit(entry: dict, tier: int | None = None) -> str:
     if not entry.get("ok"):
         return "no"
-    return "offload" if entry.get("offloaded") else "fits"
+    if entry.get("offloaded"):
+        return "offload"
+    # the peak is what nvidia-smi saw on the bigger GPU, the CUDA context and kernels' own memory included: past the
+    # card's size, a real card that size would have had to keep part of the weights in RAM
+    if tier is not None and (entry.get("peak_gb") or 0) > tier:
+        return "offload"
+    return "fits"
 
 
 def vram_row(a: dict, measured: dict | None = None, tiers_measured: dict | None = None) -> dict:
@@ -238,7 +244,7 @@ def vram_row(a: dict, measured: dict | None = None, tiers_measured: dict | None 
         tiers[str(t)] = {}
         for v in variants:
             got = (tiers_measured or {}).get(str(t), {}).get(v)
-            tiers[str(t)][v] = measured_fit(got) if got else tier_fit(a, versions[v], t)
+            tiers[str(t)][v] = measured_fit(got, t) if got else tier_fit(a, versions[v], t)
     for v in variants:   # what ComfyUI used when it had to keep weights in RAM, once the lab measured it
         ram = [e["ram_peak_gb"] for sizes in (tiers_measured or {}).values() for vv, e in sizes.items()
                if vv == v and e.get("ok") and e.get("offloaded") and e.get("ram_peak_gb")]

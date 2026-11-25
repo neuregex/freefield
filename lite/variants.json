@@ -125,15 +125,6 @@
       "license": "Apache-2.0",
       "gated": false
     },
-    "qwen_image_edit_2509_fp8_e4m3fn.safetensors": {
-      "repo": "neuregex/Qwen-Image-Edit-2509-w4a8-comfy",
-      "file": "diffusion_models/qwen_image_edit_2509_w4a8.safetensors",
-      "gb": 11.58,
-      "format": "w4a8",
-      "source": "freefield",
-      "license": "Apache-2.0",
-      "gated": false
-    },
     "minimax_music3_text_encoder_pruned_int8_convrot.safetensors": {
       "repo": "neuregex/MiniMax-Music-3-w4a8-comfy",
       "file": "text_encoders/minimax_music3_text_encoder_pruned_w4a8.safetensors",

@@ -32,6 +32,19 @@ tags:
 - `wan2.2_fun_camera_low_noise_14B_w4a8.safetensors`: 406 layers in w4a8, the ones `wan2.2_fun_camera_low_noise_14B_fp8_scaled.safetensors` quantized. Weight error per layer after a round trip, ‖W − Ŵ‖ / ‖W‖: mean 0.073, max 0.073.
 - Checked: the same workflow and seed as with the fp8 files these replace (a zoom-in camera move through a library, 81 frames at 832×480, on an L40S): the same move and scene, the frames almost identical.
 
+## Memory
+
+Measured on an NVIDIA L40S with ComfyUI limited to each card size (`--reserve-vram`, a PyTorch memory cap and `--disable-dynamic-vram`), each run in a freshly started ComfyUI. RAM is the most the ComfyUI process used: below a certain card size it keeps part of the weights there. Times are for the L40S; a smaller card is slower. On a real card the CUDA context and some kernels also take memory outside that cap, so close to the limit ComfyUI keeps a little more in RAM.
+
+**image to video with a zoom-in camera move, 81 frames at 832×480**.
+
+| Card | Original files | With these files |
+|---|---|---|
+| 8 GB | ✗ out of memory | ✓ runs · 337 s · 37 GB RAM |
+| 12 GB | ✗ out of memory | ✓ runs · 327 s · 37 GB RAM |
+| 16 GB | ✗ out of memory | ✓ runs · 330 s · 32 GB RAM |
+| 24 GB | ✓ runs · 364 s · 42 GB RAM | ✓ runs · 324 s · 31 GB RAM |
+
 ## Use
 
 1. Put each file in the folder of the table above.

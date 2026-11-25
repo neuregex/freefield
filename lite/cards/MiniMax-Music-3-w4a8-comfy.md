@@ -30,6 +30,19 @@ tags:
 - Layers: only those the official quantized file quantized; every other tensor is the bf16 original.
 - `minimax_music3_text_encoder_pruned_w4a8.safetensors`: 160 layers in w4a8, the ones `minimax_music3_text_encoder_pruned_int8_convrot.safetensors` quantized. Weight error per layer after a round trip, ‖W − Ŵ‖ / ‖W‖: mean 0.073, max 0.073.
 
+## Memory
+
+Measured on an NVIDIA L40S with ComfyUI limited to each card size (`--reserve-vram`, a PyTorch memory cap and `--disable-dynamic-vram`), each run in a freshly started ComfyUI. RAM is the most the ComfyUI process used: below a certain card size it keeps part of the weights there. Times are for the L40S; a smaller card is slower. On a real card the CUDA context and some kernels also take memory outside that cap, so close to the limit ComfyUI keeps a little more in RAM.
+
+**a 10-second song with vocals**.
+
+| Card | Original files | With these files |
+|---|---|---|
+| 8 GB | ✓ runs · 80 s · 24 GB RAM | ✓ runs · 30 s · 16 GB RAM |
+| 12 GB | ✓ runs · 39 s · 15 GB RAM | ✓ runs · 35 s · 14 GB RAM |
+| 16 GB | ✓ runs · 50 s · 15 GB RAM | ✓ runs · 37 s · 14 GB RAM |
+| 24 GB | ✓ runs · 45 s · 14 GB RAM | ✓ runs · 42 s · 14 GB RAM |
+
 ## Use
 
 1. Put each file in the folder of the table above.

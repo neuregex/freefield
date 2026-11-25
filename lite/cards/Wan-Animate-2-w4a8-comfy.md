@@ -30,6 +30,19 @@ tags:
 - `wan_animate_2_distill_w4a8.safetensors`: 480 layers in w4a8, the ones `wan_animate_2_distill_int8_convrot.safetensors` quantized. Weight error per layer after a round trip, ‖W − Ŵ‖ / ‖W‖: mean 0.073, max 0.073.
 - Checked: a motion transfer (a character photo moved by a walking clip, on an L40S) gave a coherent clip; not compared side by side with the original file yet.
 
+## Memory
+
+Measured on an NVIDIA L40S with ComfyUI limited to each card size (`--reserve-vram`, a PyTorch memory cap and `--disable-dynamic-vram`), each run in a freshly started ComfyUI. RAM is the most the ComfyUI process used: below a certain card size it keeps part of the weights there. Times are for the L40S; a smaller card is slower. On a real card the CUDA context and some kernels also take memory outside that cap, so close to the limit ComfyUI keeps a little more in RAM.
+
+**a character image animated with the motion of a driving clip**.
+
+| Card | Original files | With these files |
+|---|---|---|
+| 8 GB | ✗ out of memory | ✗ out of memory |
+| 12 GB | ✗ out of memory | ✗ out of memory |
+| 16 GB | ✗ out of memory | ✗ out of memory |
+| 24 GB | ✗ out of memory | ✓ runs · 145 s · 25 GB RAM |
+
 ## Use
 
 1. Put each file in the folder of the table above.

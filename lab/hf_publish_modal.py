@@ -80,9 +80,13 @@ def main(publish: bool = False, only: str = "", cards: bool = False):
           f"token {me['token_name']!r} with role {me['token_role']}")
     spec = json.loads((ROOT / "lite" / "quantize.json").read_text(encoding="utf-8"))
     pieces = [p.strip().lower() for p in only.split(",") if p.strip()]
-    repos = [r for r in spec["repos"] if not pieces or any(p in r.lower() for p in pieces)]
+    chosen = [r for r in spec["repos"] if not pieces or any(p in r.lower() for p in pieces)]
+    for r in chosen:
+        if spec["repos"][r].get("publish") is False:   # lite/quantize.json: a copy that did not pass
+            print(f"  skipping {r}: {spec['repos'][r].get('why_not', 'publish is false in lite/quantize.json')}")
+    repos = [r for r in chosen if spec["repos"][r].get("publish", True)]
     if not repos:
-        raise SystemExit(f"--only {only!r} matches none of: {', '.join(spec['repos'])}")
+        raise SystemExit(f"--only {only!r} matches nothing to publish among: {', '.join(spec['repos'])}")
     elsewhere = sorted({o for r, o in owners().items() if r in repos and o != me["name"]})
     if elsewhere:
         raise SystemExit(f"lite/variants.json downloads these repos from {', '.join(elsewhere)}, but the token is "

@@ -36,8 +36,10 @@ test("a reported card size counts as the size on its label, never a bigger one",
 
 test("each app says what it does on a card: as it is, lite, with RAM, or not for lack of RAM", () => {
   const z = row("z-image"), video = row("video"), sfx = row("sfx");
-  assert.deepEqual(fitOn(z, { vram: 16, ram: 32 }), { level: "full", measured: false });
-  assert.deepEqual(fitOn(z, { vram: 8, ram: 32 }), { level: "lite", measured: false });
+  // measured (lab/lite_modal.py): on 24 GB Z-Image runs as it is; on 16 GB its full version keeps weights in RAM and
+  // the lite one fits, so lite is what that card gets
+  assert.deepEqual(fitOn(z, { vram: 24, ram: 32 }), { level: "full", measured: true });
+  assert.deepEqual(fitOn(z, { vram: 16, ram: 32 }), { level: "lite", measured: true });
   // no lite version: the full one keeps part of its weights in RAM
   assert.equal(fitOn(sfx, { vram: 8, ram: 32 }).level, "offload");
   assert.equal(fitOn(sfx, { vram: 8, ram: 32 }).variant, "full");
@@ -49,7 +51,8 @@ test("each app says what it does on a card: as it is, lite, with RAM, or not for
   const short = fitOn(video, { vram: 16, ram: 16 });
   assert.equal(short.level, "noram");
   assert.equal(short.variant, "lite");
-  assert.equal(fitOn(video, { vram: 24, ram: 16 }).level, "lite");
+  // LTX-2.5 keeps weights in RAM even on 24 GB (measured), so 16 GB of RAM falls short there too
+  assert.equal(fitOn(video, { vram: 24, ram: 16 }).level, "noram");
   assert.equal(fitOn(video, null), null);
 });
 

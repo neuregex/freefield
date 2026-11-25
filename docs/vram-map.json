@@ -14,30 +14,30 @@
   "counts": [
     {
       "tier": 8,
-      "full": 6,
-      "lite": 58,
+      "full": 5,
+      "lite": 57,
       "offload": 54,
-      "no": 0
+      "no": 2
     },
     {
       "tier": 12,
-      "full": 66,
-      "lite": 2,
-      "offload": 50,
-      "no": 0
+      "full": 62,
+      "lite": 1,
+      "offload": 53,
+      "no": 2
     },
     {
       "tier": 16,
-      "full": 68,
-      "lite": 11,
-      "offload": 39,
-      "no": 0
+      "full": 63,
+      "lite": 3,
+      "offload": 50,
+      "no": 2
     },
     {
       "tier": 24,
-      "full": 75,
-      "lite": 43,
-      "offload": 0,
+      "full": 72,
+      "lite": 38,
+      "offload": 8,
       "no": 0
     },
     {
@@ -396,20 +396,20 @@
       },
       "tiers": {
         "8": {
-          "full": "fits",
-          "lite": "fits"
+          "full": "no",
+          "lite": "no"
         },
         "12": {
-          "full": "fits",
-          "lite": "fits"
+          "full": "no",
+          "lite": "no"
         },
         "16": {
-          "full": "fits",
-          "lite": "fits"
+          "full": "no",
+          "lite": "no"
         },
         "24": {
-          "full": "fits",
-          "lite": "fits"
+          "full": "offload",
+          "lite": "offload"
         },
         "32": {
           "full": "fits",
@@ -425,10 +425,97 @@
         }
       },
       "ram_gb": {
-        "full": 12,
-        "lite": 11
+        "full": 30,
+        "lite": 28
       },
-      "measured": null,
+      "measured": {
+        "12": {
+          "full": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 10.89,
+            "ram_peak_gb": 24.56,
+            "seconds": 108.2,
+            "case": "upscale-video-street",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: KSampler: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 9.38 GiB\nRequested               : 5.04 GiB\nDevice limit            : 44.42 GiB\nFree (according to CUDA): 33.53 GiB\nPyTorch limit (set by user-supplied memory fraction)\n             "
+          },
+          "lite": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 10.04,
+            "ram_peak_gb": 22.56,
+            "seconds": 110.0,
+            "case": "upscale-video-street",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: KSampler: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 9.38 GiB\nRequested               : 5.04 GiB\nDevice limit            : 44.42 GiB\nFree (according to CUDA): 34.38 GiB\nPyTorch limit (set by user-supplied memory fraction)\n             "
+          }
+        },
+        "16": {
+          "full": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 16.79,
+            "ram_peak_gb": 22.22,
+            "seconds": 160.5,
+            "case": "upscale-video-street",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: KSampler: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 14.42 GiB\nRequested               : 1.72 GiB\nDevice limit            : 44.44 GiB\nFree (according to CUDA): 27.65 GiB\nPyTorch limit (set by user-supplied memory fraction)\n            "
+          },
+          "lite": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 16.76,
+            "ram_peak_gb": 22.95,
+            "seconds": 156.7,
+            "case": "upscale-video-street",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: KSampler: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 14.42 GiB\nRequested               : 1.72 GiB\nDevice limit            : 44.44 GiB\nFree (according to CUDA): 27.68 GiB\nPyTorch limit (set by user-supplied memory fraction)\n            "
+          }
+        },
+        "24": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 20.33,
+            "ram_peak_gb": 25.24,
+            "seconds": 563.3,
+            "case": "upscale-video-street",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 18.95,
+            "ram_peak_gb": 23.15,
+            "seconds": 559.3,
+            "case": "upscale-video-street",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "8": {
+          "full": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 5.86,
+            "ram_peak_gb": 24.5,
+            "seconds": 104.2,
+            "case": "upscale-video-street",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: KSampler: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 5.20 GiB\nRequested               : 5.04 GiB\nDevice limit            : 47.42 GiB\nFree (according to CUDA): 41.56 GiB\nPyTorch limit (set by user-supplied memory fraction)\n             "
+          },
+          "lite": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 4.51,
+            "ram_peak_gb": 22.5,
+            "seconds": 103.4,
+            "case": "upscale-video-street",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: KSampler: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 4.38 GiB\nRequested               : 5.04 GiB\nDevice limit            : 47.42 GiB\nFree (according to CUDA): 42.41 GiB\nPyTorch limit (set by user-supplied memory fraction)\n             "
+          }
+        }
+      },
       "whole_gb": 3.96,
       "phases_gb": {
         "encode": 0.0,
@@ -4631,14 +4718,14 @@
       "tiers": {
         "8": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "12": {
-          "full": "fits",
-          "lite": "fits"
+          "full": "offload",
+          "lite": "offload"
         },
         "16": {
-          "full": "fits",
+          "full": "offload",
           "lite": "fits"
         },
         "24": {
@@ -4659,10 +4746,91 @@
         }
       },
       "ram_gb": {
-        "full": 21,
+        "full": 25,
         "lite": 17
       },
-      "measured": null,
+      "measured": {
+        "12": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 9.08,
+            "ram_peak_gb": 13.74,
+            "seconds": 9.2,
+            "case": "ref-face-a",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 9.66,
+            "ram_peak_gb": 9.33,
+            "seconds": 11.0,
+            "case": "ref-face-a",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "16": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 13.47,
+            "ram_peak_gb": 10.49,
+            "seconds": 7.4,
+            "case": "ref-face-a",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 10.82,
+            "ram_peak_gb": 9.21,
+            "seconds": 11.1,
+            "case": "ref-face-a",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "24": {
+          "full": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 14.22,
+            "ram_peak_gb": 10.49,
+            "seconds": 7.0,
+            "case": "ref-face-a",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 10.82,
+            "ram_peak_gb": 9.2,
+            "seconds": 10.1,
+            "case": "ref-face-a",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "8": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 6.67,
+            "ram_peak_gb": 20.11,
+            "seconds": 13.2,
+            "case": "ref-face-a",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 5.48,
+            "ram_peak_gb": 12.58,
+            "seconds": 10.1,
+            "case": "ref-face-a",
+            "run": "20261124-104136-lite"
+          }
+        }
+      },
       "whole_gb": 12.17,
       "phases_gb": {
         "encode": 5.63,
@@ -4701,10 +4869,10 @@
           "full": "offload"
         },
         "12": {
-          "full": "fits"
+          "full": "offload"
         },
         "16": {
-          "full": "fits"
+          "full": "offload"
         },
         "24": {
           "full": "fits"
@@ -4720,9 +4888,54 @@
         }
       },
       "ram_gb": {
-        "full": 21
+        "full": 22
       },
-      "measured": null,
+      "measured": {
+        "12": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 8.21,
+            "ram_peak_gb": 15.71,
+            "seconds": 26.1,
+            "case": "cmp-fisher-ms",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "16": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 12.89,
+            "ram_peak_gb": 11.59,
+            "seconds": 35.4,
+            "case": "cmp-fisher-ms",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "24": {
+          "full": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 14.63,
+            "ram_peak_gb": 11.59,
+            "seconds": 30.3,
+            "case": "cmp-fisher-ms",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "8": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 6.08,
+            "ram_peak_gb": 17.67,
+            "seconds": 74.1,
+            "case": "cmp-fisher-ms",
+            "run": "20261124-104136-lite"
+          }
+        }
+      },
       "whole_gb": 13.0,
       "phases_gb": {
         "encode": 7.34,
@@ -4767,12 +4980,12 @@
           "lite": "offload"
         },
         "12": {
-          "full": "fits",
-          "lite": "fits"
+          "full": "offload",
+          "lite": "offload"
         },
         "16": {
-          "full": "fits",
-          "lite": "fits"
+          "full": "offload",
+          "lite": "offload"
         },
         "24": {
           "full": "fits",
@@ -4792,10 +5005,91 @@
         }
       },
       "ram_gb": {
-        "full": 23,
-        "lite": 20
+        "full": 29,
+        "lite": 21
       },
-      "measured": null,
+      "measured": {
+        "12": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 9.24,
+            "ram_peak_gb": 15.36,
+            "seconds": 38.7,
+            "case": "ref-song",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 9.8,
+            "ram_peak_gb": 14.1,
+            "seconds": 34.8,
+            "case": "ref-song",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "16": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 13.89,
+            "ram_peak_gb": 14.64,
+            "seconds": 50.4,
+            "case": "ref-song",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 12.11,
+            "ram_peak_gb": 13.8,
+            "seconds": 37.0,
+            "case": "ref-song",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "24": {
+          "full": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 16.26,
+            "ram_peak_gb": 14.11,
+            "seconds": 45.4,
+            "case": "ref-song",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 13.39,
+            "ram_peak_gb": 14.09,
+            "seconds": 42.1,
+            "case": "ref-song",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "8": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 6.22,
+            "ram_peak_gb": 24.06,
+            "seconds": 80.5,
+            "case": "ref-song",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 6.37,
+            "ram_peak_gb": 16.01,
+            "seconds": 30.4,
+            "case": "ref-song",
+            "run": "20261124-104136-lite"
+          }
+        }
+      },
       "whole_gb": 14.33,
       "phases_gb": {
         "encode": 9.2,
@@ -4853,9 +5147,54 @@
         }
       },
       "ram_gb": {
-        "full": 19
+        "full": 30
       },
-      "measured": null,
+      "measured": {
+        "12": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 9.67,
+            "ram_peak_gb": 25.8,
+            "seconds": 16.6,
+            "case": "sfx-rain",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "16": {
+          "full": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 9.73,
+            "ram_peak_gb": 25.64,
+            "seconds": 22.4,
+            "case": "sfx-rain",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "24": {
+          "full": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 9.76,
+            "ram_peak_gb": 25.47,
+            "seconds": 21.7,
+            "case": "sfx-rain",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "8": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 5.77,
+            "ram_peak_gb": 24.93,
+            "seconds": 16.2,
+            "case": "sfx-rain",
+            "run": "20261124-104136-lite"
+          }
+        }
+      },
       "whole_gb": 10.41,
       "phases_gb": {
         "encode": 10.41,
@@ -4904,8 +5243,8 @@
           "lite": "offload"
         },
         "16": {
-          "full": "fits",
-          "lite": "fits"
+          "full": "offload",
+          "lite": "offload"
         },
         "24": {
           "full": "fits",
@@ -4925,10 +5264,91 @@
         }
       },
       "ram_gb": {
-        "full": 26,
-        "lite": 26
+        "full": 31,
+        "lite": 27
       },
-      "measured": null,
+      "measured": {
+        "12": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 9.94,
+            "ram_peak_gb": 20.23,
+            "seconds": 38.5,
+            "case": "cmp-fisher-klx",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 9.94,
+            "ram_peak_gb": 19.36,
+            "seconds": 36.8,
+            "case": "cmp-fisher-klx",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "16": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 13.76,
+            "ram_peak_gb": 16.98,
+            "seconds": 51.8,
+            "case": "cmp-fisher-klx",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 13.26,
+            "ram_peak_gb": 16.7,
+            "seconds": 44.4,
+            "case": "cmp-fisher-klx",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "24": {
+          "full": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 19.66,
+            "ram_peak_gb": 16.98,
+            "seconds": 43.3,
+            "case": "cmp-fisher-klx",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 19.19,
+            "ram_peak_gb": 16.7,
+            "seconds": 36.8,
+            "case": "cmp-fisher-klx",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "8": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 6.21,
+            "ram_peak_gb": 26.48,
+            "seconds": 169.4,
+            "case": "cmp-fisher-klx",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 6.21,
+            "ram_peak_gb": 22.07,
+            "seconds": 162.3,
+            "case": "cmp-fisher-klx",
+            "run": "20261124-104136-lite"
+          }
+        }
+      },
       "whole_gb": 17.75,
       "phases_gb": {
         "encode": 11.58,
@@ -5047,11 +5467,11 @@
         },
         "12": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "16": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "24": {
           "full": "fits",
@@ -5071,10 +5491,91 @@
         }
       },
       "ram_gb": {
-        "full": 28,
-        "lite": 22
+        "full": 29,
+        "lite": 24
       },
-      "measured": null,
+      "measured": {
+        "12": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 10.96,
+            "ram_peak_gb": 24.1,
+            "seconds": 36.6,
+            "case": "styles-tarot",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 11.1,
+            "ram_peak_gb": 19.76,
+            "seconds": 28.6,
+            "case": "styles-tarot",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "16": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 13.89,
+            "ram_peak_gb": 23.85,
+            "seconds": 35.3,
+            "case": "styles-tarot",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 13.95,
+            "ram_peak_gb": 16.72,
+            "seconds": 30.5,
+            "case": "styles-tarot",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "24": {
+          "full": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 20.85,
+            "ram_peak_gb": 18.97,
+            "seconds": 31.3,
+            "case": "styles-tarot",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 14.63,
+            "ram_peak_gb": 14.47,
+            "seconds": 34.1,
+            "case": "styles-tarot",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "8": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 7.38,
+            "ram_peak_gb": 23.85,
+            "seconds": 32.2,
+            "case": "styles-tarot",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 8.33,
+            "ram_peak_gb": 19.77,
+            "seconds": 26.2,
+            "case": "styles-tarot",
+            "run": "20261124-104136-lite"
+          }
+        }
+      },
       "whole_gb": 19.45,
       "phases_gb": {
         "encode": 5.24,
@@ -5115,20 +5616,20 @@
       },
       "tiers": {
         "8": {
-          "full": "offload",
+          "full": "no",
           "lite": "offload"
         },
         "12": {
-          "full": "offload",
+          "full": "no",
           "lite": "offload"
         },
         "16": {
-          "full": "offload",
-          "lite": "fits"
+          "full": "no",
+          "lite": "offload"
         },
         "24": {
           "full": "fits",
-          "lite": "fits"
+          "lite": "offload"
         },
         "32": {
           "full": "fits",
@@ -5145,9 +5646,93 @@
       },
       "ram_gb": {
         "full": 46,
-        "lite": 34
+        "lite": 42
       },
-      "measured": null,
+      "measured": {
+        "12": {
+          "full": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 13.05,
+            "ram_peak_gb": 33.04,
+            "seconds": 25.0,
+            "case": "camera-moves-quality",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: KSamplerAdvanced: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 11.35 GiB\nRequested               : 1.69 GiB\nDevice limit            : 44.42 GiB\nFree (according to CUDA): 31.37 GiB\nPyTorch limit (set by user-supplied memory fraction)\n    "
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 13.38,
+            "ram_peak_gb": 37.4,
+            "seconds": 327.3,
+            "case": "camera-moves-quality",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "16": {
+          "full": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 16.32,
+            "ram_peak_gb": 37.06,
+            "seconds": 32.5,
+            "case": "camera-moves-quality",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: KSamplerAdvanced: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 15.44 GiB\nRequested               : 1.69 GiB\nDevice limit            : 44.44 GiB\nFree (according to CUDA): 28.12 GiB\nPyTorch limit (set by user-supplied memory fraction)\n    "
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 18.72,
+            "ram_peak_gb": 31.59,
+            "seconds": 330.4,
+            "case": "camera-moves-quality",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "24": {
+          "full": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 23.5,
+            "ram_peak_gb": 42.33,
+            "seconds": 364.4,
+            "case": "camera-moves-quality",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 19.8,
+            "ram_peak_gb": 30.77,
+            "seconds": 324.5,
+            "case": "camera-moves-quality",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "8": {
+          "full": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 8.47,
+            "ram_peak_gb": 31.53,
+            "seconds": 23.3,
+            "case": "camera-moves-quality",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: KSamplerAdvanced: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 7.19 GiB\nRequested               : 1.69 GiB\nDevice limit            : 47.42 GiB\nFree (according to CUDA): 38.95 GiB\nPyTorch limit (set by user-supplied memory fraction)\n     "
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 10.18,
+            "ram_peak_gb": 36.88,
+            "seconds": 337.3,
+            "case": "camera-moves-quality",
+            "run": "20261124-104136-lite"
+          }
+        }
+      },
       "whole_gb": 37.59,
       "phases_gb": {
         "encode": 6.74,
@@ -5261,19 +5846,19 @@
       },
       "tiers": {
         "8": {
-          "full": "offload",
-          "lite": "offload"
+          "full": "no",
+          "lite": "no"
         },
         "12": {
-          "full": "offload",
-          "lite": "offload"
+          "full": "no",
+          "lite": "no"
         },
         "16": {
-          "full": "offload",
-          "lite": "fits"
+          "full": "no",
+          "lite": "no"
         },
         "24": {
-          "full": "fits",
+          "full": "no",
           "lite": "fits"
         },
         "32": {
@@ -5293,7 +5878,95 @@
         "full": 33,
         "lite": 26
       },
-      "measured": null,
+      "measured": {
+        "12": {
+          "full": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 12.91,
+            "ram_peak_gb": 34.85,
+            "seconds": 41.2,
+            "case": "motion-transfer-walk",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: SamplerCustom: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 11.18 GiB\nRequested               : 326.07 MiB\nDevice limit            : 44.42 GiB\nFree (according to CUDA): 31.51 GiB\nPyTorch limit (set by user-supplied memory fraction)\n     "
+          },
+          "lite": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 12.7,
+            "ram_peak_gb": 29.41,
+            "seconds": 30.1,
+            "case": "motion-transfer-walk",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: SamplerCustom: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 11.07 GiB\nRequested               : 440.20 MiB\nDevice limit            : 44.42 GiB\nFree (according to CUDA): 31.72 GiB\nPyTorch limit (set by user-supplied memory fraction)\n     "
+          }
+        },
+        "16": {
+          "full": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 16.58,
+            "ram_peak_gb": 38.82,
+            "seconds": 39.6,
+            "case": "motion-transfer-walk",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: SamplerCustom: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 15.18 GiB\nRequested               : 326.07 MiB\nDevice limit            : 44.44 GiB\nFree (according to CUDA): 27.86 GiB\nPyTorch limit (set by user-supplied memory fraction)\n     "
+          },
+          "lite": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 16.67,
+            "ram_peak_gb": 32.44,
+            "seconds": 37.3,
+            "case": "motion-transfer-walk",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: SamplerCustom: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 15.09 GiB\nRequested               : 440.20 MiB\nDevice limit            : 44.44 GiB\nFree (according to CUDA): 27.78 GiB\nPyTorch limit (set by user-supplied memory fraction)\n     "
+          }
+        },
+        "24": {
+          "full": {
+            "ok": false,
+            "offloaded": false,
+            "peak_gb": 25.13,
+            "ram_peak_gb": 30.69,
+            "seconds": 43.1,
+            "case": "motion-transfer-walk",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: SamplerCustom: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 23.18 GiB\nRequested               : 326.07 MiB\nDevice limit            : 44.44 GiB\nFree (according to CUDA): 19.31 GiB\nPyTorch limit (set by user-supplied memory fraction)\n     "
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 23.42,
+            "ram_peak_gb": 25.09,
+            "seconds": 145.0,
+            "case": "motion-transfer-walk",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "8": {
+          "full": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 8.92,
+            "ram_peak_gb": 33.09,
+            "seconds": 37.2,
+            "case": "motion-transfer-walk",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: SamplerCustom: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 7.25 GiB\nRequested               : 326.07 MiB\nDevice limit            : 47.42 GiB\nFree (according to CUDA): 38.51 GiB\nPyTorch limit (set by user-supplied memory fraction)\n      "
+          },
+          "lite": {
+            "ok": false,
+            "offloaded": true,
+            "peak_gb": 8.53,
+            "ram_peak_gb": 27.88,
+            "seconds": 31.7,
+            "case": "motion-transfer-walk",
+            "run": "20261124-104136-lite",
+            "error": "RuntimeError: SamplerCustom: Allocation on device 0 would exceed allowed memory. (out of memory)\nCurrently allocated     : 7.12 GiB\nRequested               : 440.20 MiB\nDevice limit            : 47.42 GiB\nFree (according to CUDA): 38.89 GiB\nPyTorch limit (set by user-supplied memory fraction)\n      "
+          }
+        }
+      },
       "whole_gb": 24.9,
       "phases_gb": {
         "encode": 8.0,
@@ -5343,11 +6016,11 @@
         },
         "16": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "24": {
           "full": "fits",
-          "lite": "fits"
+          "lite": "offload"
         },
         "32": {
           "full": "fits",
@@ -5363,10 +6036,91 @@
         }
       },
       "ram_gb": {
-        "full": 34,
-        "lite": 26
+        "full": 36,
+        "lite": 30
       },
-      "measured": null,
+      "measured": {
+        "12": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 12.48,
+            "ram_peak_gb": 29.94,
+            "seconds": 413.0,
+            "case": "fx-cakeify",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 12.09,
+            "ram_peak_gb": 24.28,
+            "seconds": 348.4,
+            "case": "fx-cakeify",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "16": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 16.88,
+            "ram_peak_gb": 29.75,
+            "seconds": 426.3,
+            "case": "fx-cakeify",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 16.8,
+            "ram_peak_gb": 23.96,
+            "seconds": 316.0,
+            "case": "fx-cakeify",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "24": {
+          "full": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 22.86,
+            "ram_peak_gb": 29.67,
+            "seconds": 414.0,
+            "case": "fx-cakeify",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 16.21,
+            "ram_peak_gb": 24.38,
+            "seconds": 318.9,
+            "case": "fx-cakeify",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "8": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 7.65,
+            "ram_peak_gb": 31.6,
+            "seconds": 415.9,
+            "case": "fx-cakeify",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 8.54,
+            "ram_peak_gb": 25.95,
+            "seconds": 422.2,
+            "case": "fx-cakeify",
+            "run": "20261124-104136-lite"
+          }
+        }
+      },
       "whole_gb": 25.01,
       "phases_gb": {
         "encode": 8.0,
@@ -5419,8 +6173,8 @@
           "lite": "offload"
         },
         "24": {
-          "full": "fits",
-          "lite": "fits"
+          "full": "offload",
+          "lite": "offload"
         },
         "32": {
           "full": "fits",
@@ -5436,10 +6190,91 @@
         }
       },
       "ram_gb": {
-        "full": 37,
-        "lite": 31
+        "full": 43,
+        "lite": 39
       },
-      "measured": null,
+      "measured": {
+        "12": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 10.48,
+            "ram_peak_gb": 36.64,
+            "seconds": 152.7,
+            "case": "recast-walk",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 10.61,
+            "ram_peak_gb": 32.67,
+            "seconds": 158.5,
+            "case": "recast-walk",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "16": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 10.98,
+            "ram_peak_gb": 36.22,
+            "seconds": 158.9,
+            "case": "recast-walk",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 10.98,
+            "ram_peak_gb": 32.25,
+            "seconds": 150.5,
+            "case": "recast-walk",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "24": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 13.87,
+            "ram_peak_gb": 36.22,
+            "seconds": 140.1,
+            "case": "recast-walk",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 16.49,
+            "ram_peak_gb": 32.28,
+            "seconds": 148.9,
+            "case": "recast-walk",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "8": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 6.24,
+            "ram_peak_gb": 38.18,
+            "seconds": 155.4,
+            "case": "recast-walk",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 6.1,
+            "ram_peak_gb": 34.22,
+            "seconds": 151.0,
+            "case": "recast-walk",
+            "run": "20261124-104136-lite"
+          }
+        }
+      },
       "whole_gb": 28.62,
       "phases_gb": {
         "encode": 8.0,
@@ -6515,7 +7350,7 @@
         },
         "24": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "32": {
           "full": "fits",
@@ -6531,10 +7366,91 @@
         }
       },
       "ram_gb": {
-        "full": 48,
-        "lite": 34
+        "full": 65,
+        "lite": 46
       },
-      "measured": null,
+      "measured": {
+        "12": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 10.82,
+            "ram_peak_gb": 52.28,
+            "seconds": 68.7,
+            "case": "i2v-portrait",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 11.86,
+            "ram_peak_gb": 40.25,
+            "seconds": 63.7,
+            "case": "i2v-portrait",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "16": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 15.32,
+            "ram_peak_gb": 60.8,
+            "seconds": 231.7,
+            "case": "i2v-portrait",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 16.23,
+            "ram_peak_gb": 41.66,
+            "seconds": 69.8,
+            "case": "i2v-portrait",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "24": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 23.17,
+            "ram_peak_gb": 57.21,
+            "seconds": 71.4,
+            "case": "i2v-portrait",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 22.49,
+            "ram_peak_gb": 33.23,
+            "seconds": 59.7,
+            "case": "i2v-portrait",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "8": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 7.2,
+            "ram_peak_gb": 49.86,
+            "seconds": 63.6,
+            "case": "i2v-portrait",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 7.25,
+            "ram_peak_gb": 39.3,
+            "seconds": 60.0,
+            "case": "i2v-portrait",
+            "run": "20261124-104136-lite"
+          }
+        }
+      },
       "whole_gb": 39.7,
       "phases_gb": {
         "encode": 15.37,
@@ -6641,9 +7557,9 @@
           "largest_phase_gb": 21.52
         },
         "lite": {
-          "whole_gb": 19.03,
+          "whole_gb": 27.88,
           "largest_phase": "denoise",
-          "largest_phase_gb": 12.67
+          "largest_phase_gb": 21.52
         }
       },
       "tiers": {
@@ -6657,11 +7573,11 @@
         },
         "16": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "24": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "32": {
           "full": "fits",
@@ -6678,7 +7594,7 @@
       },
       "ram_gb": {
         "full": 40,
-        "lite": 28
+        "lite": 36
       },
       "measured": null,
       "whole_gb": 31.15,
@@ -6714,9 +7630,9 @@
           "largest_phase_gb": 21.52
         },
         "lite": {
-          "whole_gb": 19.03,
+          "whole_gb": 27.88,
           "largest_phase": "denoise",
-          "largest_phase_gb": 12.67
+          "largest_phase_gb": 21.52
         }
       },
       "tiers": {
@@ -6730,7 +7646,7 @@
         },
         "16": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "24": {
           "full": "offload",
@@ -6750,10 +7666,91 @@
         }
       },
       "ram_gb": {
-        "full": 40,
-        "lite": 28
+        "full": 56,
+        "lite": 30
       },
-      "measured": null,
+      "measured": {
+        "12": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 10.59,
+            "ram_peak_gb": 43.55,
+            "seconds": 37.6,
+            "case": "relight-neon",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 10.79,
+            "ram_peak_gb": 25.33,
+            "seconds": 29.6,
+            "case": "relight-neon",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "16": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 14.61,
+            "ram_peak_gb": 43.01,
+            "seconds": 43.3,
+            "case": "relight-neon",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 12.23,
+            "ram_peak_gb": 24.6,
+            "seconds": 31.0,
+            "case": "relight-neon",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "24": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 20.66,
+            "ram_peak_gb": 43.33,
+            "seconds": 46.1,
+            "case": "relight-neon",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": false,
+            "peak_gb": 18.5,
+            "ram_peak_gb": 19.28,
+            "seconds": 25.8,
+            "case": "relight-neon",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "8": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 6.64,
+            "ram_peak_gb": 51.6,
+            "seconds": 35.5,
+            "case": "relight-neon",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 6.93,
+            "ram_peak_gb": 24.48,
+            "seconds": 27.4,
+            "case": "relight-neon",
+            "run": "20261124-104136-lite"
+          }
+        }
+      },
       "whole_gb": 31.15,
       "phases_gb": {
         "encode": 9.38,
@@ -6787,9 +7784,9 @@
           "largest_phase_gb": 21.52
         },
         "lite": {
-          "whole_gb": 19.03,
+          "whole_gb": 27.88,
           "largest_phase": "denoise",
-          "largest_phase_gb": 12.67
+          "largest_phase_gb": 21.52
         }
       },
       "tiers": {
@@ -6803,11 +7800,11 @@
         },
         "16": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "24": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "32": {
           "full": "fits",
@@ -6824,7 +7821,7 @@
       },
       "ram_gb": {
         "full": 40,
-        "lite": 28
+        "lite": 36
       },
       "measured": null,
       "whole_gb": 31.15,
@@ -6860,9 +7857,9 @@
           "largest_phase_gb": 21.52
         },
         "lite": {
-          "whole_gb": 19.03,
+          "whole_gb": 27.88,
           "largest_phase": "denoise",
-          "largest_phase_gb": 12.67
+          "largest_phase_gb": 21.52
         }
       },
       "tiers": {
@@ -6876,11 +7873,11 @@
         },
         "16": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "24": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "32": {
           "full": "fits",
@@ -6897,7 +7894,7 @@
       },
       "ram_gb": {
         "full": 40,
-        "lite": 28
+        "lite": 36
       },
       "measured": null,
       "whole_gb": 31.15,
@@ -6933,9 +7930,9 @@
           "largest_phase_gb": 21.58
         },
         "lite": {
-          "whole_gb": 19.09,
+          "whole_gb": 27.94,
           "largest_phase": "denoise",
-          "largest_phase_gb": 12.73
+          "largest_phase_gb": 21.58
         }
       },
       "tiers": {
@@ -6949,11 +7946,11 @@
         },
         "16": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "24": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "32": {
           "full": "fits",
@@ -6970,7 +7967,7 @@
       },
       "ram_gb": {
         "full": 40,
-        "lite": 28
+        "lite": 36
       },
       "measured": null,
       "whole_gb": 31.21,
@@ -8413,7 +9410,7 @@
         },
         "24": {
           "full": "offload",
-          "lite": "fits"
+          "lite": "offload"
         },
         "32": {
           "full": "fits",
@@ -8429,10 +9426,91 @@
         }
       },
       "ram_gb": {
-        "full": 60,
-        "lite": 44
+        "full": 79,
+        "lite": 58
       },
-      "measured": null,
+      "measured": {
+        "12": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 11.27,
+            "ram_peak_gb": 63.13,
+            "seconds": 100.2,
+            "case": "h3-video-tacos",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 10.69,
+            "ram_peak_gb": 49.22,
+            "seconds": 88.8,
+            "case": "h3-video-tacos",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "16": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 15.17,
+            "ram_peak_gb": 67.25,
+            "seconds": 121.6,
+            "case": "h3-video-tacos",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 15.25,
+            "ram_peak_gb": 53.24,
+            "seconds": 101.7,
+            "case": "h3-video-tacos",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "24": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 23.53,
+            "ram_peak_gb": 74.38,
+            "seconds": 116.1,
+            "case": "h3-video-tacos",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 19.63,
+            "ram_peak_gb": 39.61,
+            "seconds": 102.0,
+            "case": "h3-video-tacos",
+            "run": "20261124-104136-lite"
+          }
+        },
+        "8": {
+          "full": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 6.61,
+            "ram_peak_gb": 56.69,
+            "seconds": 98.9,
+            "case": "h3-video-tacos",
+            "run": "20261124-104136-lite"
+          },
+          "lite": {
+            "ok": true,
+            "offloaded": true,
+            "peak_gb": 6.7,
+            "ram_peak_gb": 45.34,
+            "seconds": 93.4,
+            "case": "h3-video-tacos",
+            "run": "20261124-104136-lite"
+          }
+        }
+      },
       "whole_gb": 51.53,
       "phases_gb": {
         "encode": 27.14,

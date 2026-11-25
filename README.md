@@ -293,15 +293,15 @@ runs as it is, in its lite version, or offloading part of its weights to RAM (sl
 the copies come from: [`lite/README.md`](lite/README.md).
 
 <!-- gpu-table:start -->
-| Your card | Runs as it is | Runs in its lite version | Runs offloading to RAM (slower) |
-|---|---:|---:|---:|
-| 8 GB | 6 | 58 | 54 |
-| 12 GB | 66 | 2 | 50 |
-| 16 GB | 68 | 11 | 39 |
-| 24 GB | 75 | 43 | 0 |
-| 32 GB | 118 | 0 | 0 |
-| 48 GB | 118 | 0 | 0 |
-| 80 GB | 118 | 0 | 0 |
+| Your card | Runs as it is | Runs in its lite version | Runs offloading to RAM (slower) | Failed in the lab |
+|---|---:|---:|---:|---:|
+| 8 GB | 5 | 57 | 54 | 2 |
+| 12 GB | 62 | 1 | 53 | 2 |
+| 16 GB | 63 | 3 | 50 | 2 |
+| 24 GB | 72 | 38 | 8 | 0 |
+| 32 GB | 118 | 0 | 0 | 0 |
+| 48 GB | 118 | 0 | 0 | 0 |
+| 80 GB | 118 | 0 | 0 | 0 |
 
 Of the 118 apps that load models; estimates from the weight sizes until the lab measures them ([`docs/vram-map.md`](docs/vram-map.md)). Offloading needs about the app's weights plus 8 GB of RAM. The studio's GPU picker says it app by app, for your card and your RAM.
 <!-- gpu-table:end -->

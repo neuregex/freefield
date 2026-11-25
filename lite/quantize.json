@@ -1,5 +1,5 @@
 {
-  "_doc": "The lite copies Freefield makes itself, with tools/quantize.py on Modal (lab/lite_modal.py --step quantize), for the model files without an official 4-bit copy. source: the model in bf16, downloaded to the volume's .sources folder and deleted once quantized. ref: the quantized file of the same model its makers or Comfy-Org published; the layers it quantized are the ones quantized here (dir: where it lives in the volume; the apps load most of them already). replaces: the file the apps load now, the key of the copy in lite/variants.json once it is published. repo: the Hugging Face repo it goes to, under the account of the huggingface-write secret (lab/hf_publish_modal.py), with the card in lite/cards/<repo>.md and the license of the model it comes from (repos: lite/licenses/<file>). checked: what was compared with the original file before publishing, a line in the card.",
+  "_doc": "The lite copies Freefield makes itself, with tools/quantize.py on Modal (lab/lite_modal.py --step quantize), for the model files without an official 4-bit copy. source: the model in bf16, downloaded to the volume's .sources folder and deleted once quantized. ref: the quantized file of the same model its makers or Comfy-Org published; the layers it quantized are the ones quantized here (dir: where it lives in the volume; the apps load most of them already). replaces: the file the apps load now, the key of the copy in lite/variants.json once it is published. repo: the Hugging Face repo it goes to, under the account of the huggingface-write secret (lab/hf_publish_modal.py), with the card in lite/cards/<repo>.md and the license of the model it comes from (repos: lite/licenses/<file>). checked: what was compared with the original file before publishing, a line in the card. publish: false keeps a repo off Hugging Face (why_not says why); lab/hf_publish_modal.py skips it.",
   "format": "asym_w4a8_int8",
   "files": [
     {
@@ -221,7 +221,9 @@
       "tags": [
         "qwen-image",
         "image-editing"
-      ]
+      ],
+      "publish": false,
+      "why_not": "lab/lite_modal.py --step compare, 2026-11-24: with this file in place of the fp8 one, relight-neon lost almost all of the neon light its prompt and LoRAs give (magenta on 2-3% of the pixels against 12-14%) and got halos and grain, on all three seeds; the official nvfp4 Qwen 2.5 VL alone changed nothing visible."
     },
     "MiniMax-Music-3-w4a8-comfy": {
       "title": "MiniMax Music 3 text encoder, w4a8 for ComfyUI",
