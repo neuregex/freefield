@@ -239,7 +239,8 @@
       "tags": [
         "minimax",
         "music"
-      ]
+      ],
+      "checked": "the same workflow and seeds as with the int8 file this replaces (a 10-second folk song with a female vocal, seeds 42, 7 and 1234, on an L40S), listened to side by side: the songs made with it sound as good; with the same seed the song comes out different, about as different as another seed makes it."
     }
   }
 }

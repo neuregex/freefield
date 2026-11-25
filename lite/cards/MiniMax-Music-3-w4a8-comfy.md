@@ -29,6 +29,7 @@ tags:
 - Format: `asym_w4a8_int8` from ComfyUI's QUANTIZATION.md: 4-bit codes on a Lloyd-Max codebook, fp8 (E4M3) scales every 16 weights, an fp32 scale per output row and a Hadamard rotation in groups of 256, made with Comfy Kitchen 0.2.39, the library ComfyUI runs them with.
 - Layers: only those the official quantized file quantized; every other tensor is the bf16 original.
 - `minimax_music3_text_encoder_pruned_w4a8.safetensors`: 160 layers in w4a8, the ones `minimax_music3_text_encoder_pruned_int8_convrot.safetensors` quantized. Weight error per layer after a round trip, ‖W − Ŵ‖ / ‖W‖: mean 0.073, max 0.073.
+- Checked: the same workflow and seeds as with the int8 file this replaces (a 10-second folk song with a female vocal, seeds 42, 7 and 1234, on an L40S), listened to side by side: the songs made with it sound as good; with the same seed the song comes out different, about as different as another seed makes it.
 
 ## Memory
 
