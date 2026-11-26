@@ -2,7 +2,7 @@
 
 Open-source Higgsfield on ComfyUI: every app is one folder, every model is open weights.
 
-**[Watch the 2-minute demo video](https://youtu.be/N7mv2v3Txeo)**
+**[Watch the 2-minute demo video](https://youtu.be/N7mv2v3Txeo)** · **[Join the Discord](https://discord.gg/HxfP9TnctJ)**
 
 ![The web app: the Video menu, Cinema Studio Video with the lab's example loaded and its camera moves, then the result playing in the Library tab](docs/media/ui-demo.webp)
 
@@ -516,6 +516,12 @@ file. Then it runs the validator on the new app and prints what to check by hand
 `tools/comfy_validate.py` creates empty model files and tiny inputs so ComfyUI's own validator can check a workflow on
 any machine, CPU included. `tools/ui2api.py` converts UI workflows (with subgraphs and dynamic widgets) to API format
 using the node definitions in `tools/object_info.json`.
+
+## Community
+
+Questions, errors and what you made with Freefield: the [Discord](https://discord.gg/HxfP9TnctJ). In #help, say your
+GPU, its VRAM and where you run it (your PC, RunPod, Vast.ai or Modal); #showcase is for results. Bugs and pull
+requests are welcome here on GitHub too.
 
 ## Credits and licenses
 
