@@ -1,10 +1,13 @@
-// The top bar: studios (with a menu of their apps on hover, menu.js), featured apps, the VRAM map, language, and the GPU pill that tells
-// whether the backend is warm (and wakes it on request; looking never starts it).
+// The top bar: studios (with a menu of their apps on hover, menu.js), featured apps, the "My GPU" chip (the card size
+// every app is judged against, gpupicker.js), language, and the GPU pill that tells whether the backend is warm (and
+// wakes it on request; looking never starts it).
 import { el, icon, logoMark, api, popover, closePopover, toast, live } from "./util.js";
 import { t, lang, LANGS, setLang } from "./i18n.js";
 import { byId, FEATURED } from "./catalog.js";
 import { attachMenus } from "./menu.js";
 import { models, openModels, gpuProblemText } from "./models.js";
+import { detect, noteDevice } from "./mygpu.js";
+import { gpuChip } from "./gpupicker.js";
 
 export const gpuState = { data: null, listeners: new Set() };
 let pollTimer = null;
@@ -18,6 +21,7 @@ async function pollGpu() {
   }
   live.gpuWarm = Boolean(gpuState.data?.warm);
   for (const fn of gpuState.listeners) fn(gpuState.data);
+  detect(gpuState.data);   // your own GPU or a pod: its card size becomes "My GPU" (asked once)
   const busy = gpuState.data?.waking || gpuState.data?.running;
   pollTimer = setTimeout(pollGpu, busy ? 3000 : 15000);
 }
@@ -40,7 +44,7 @@ function gpuPill() {
   pill.onclick = async () => {
     // VRAM in use is asked for only now, and the server only asks a backend that is already warm
     if (gpuState.data?.warm) {
-      try { gpuState.data = await api("/api/gpu?device=1"); draw(gpuState.data); } catch { /* keep what we had */ }
+      try { gpuState.data = await api("/api/gpu?device=1"); draw(gpuState.data); noteDevice(gpuState.data); } catch { /* keep what we had */ }
     }
     const g = gpuState.data;
     const wake = el("button", { class: "btn lime small", type: "button", onclick: async () => {
@@ -97,7 +101,7 @@ export function topbar({ onLang }) {
     links.set(app.id, a);
     nav.append(a);
   }
-  const vram = el("a", { class: "icon-btn", href: "#/vram", title: t("nav.vram"), "aria-label": t("nav.vram") }, icon("chip"));
+  const vram = gpuChip();   // its panel links to the VRAM map
   links.set("vram", vram);
   const langBtn = el("button", { class: "icon-btn", type: "button", title: t("nav.lang"), "aria-label": t("nav.lang") }, icon("globe"));
   langBtn.onclick = () => popover(langBtn, el("div", {}, ...LANGS.map(([code, name]) => el("button", { class: "opt", type: "button", "aria-selected": String(code === lang),

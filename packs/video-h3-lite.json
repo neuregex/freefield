@@ -1,0 +1,128 @@
+{
+  "pack": "video-h3-lite",
+  "variant": "lite",
+  "of": "video-h3",
+  "apps": [
+    "extend-video",
+    "h3-photo",
+    "h3-video",
+    "reshoot"
+  ],
+  "download_gb": 54.29,
+  "needs_hf_token": false,
+  "custom_nodes": [
+    {
+      "repo": "https://github.com/comfyrob/ComfyUI-CrossViewWarp",
+      "commit": "fbb1e93c7193329ff3ce7c17f95166b539687876"
+    }
+  ],
+  "models": [
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "diffusion_models/minimax_h3_fl2va_pruned_w6a8.safetensors",
+      "dir": "diffusion_models",
+      "gb": 15.98,
+      "name": "minimax_h3_fl2va_pruned_w6a8.safetensors",
+      "gated": false,
+      "license": "MiniMax H3 Community License",
+      "used_by": [
+        "extend-video",
+        "h3-photo",
+        "h3-video"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "diffusion_models/minimax_h3_ref2va_pruned_w6a8.safetensors",
+      "dir": "diffusion_models",
+      "gb": 15.98,
+      "name": "minimax_h3_ref2va_pruned_w6a8.safetensors",
+      "gated": false,
+      "license": "MiniMax H3 Community License",
+      "used_by": [
+        "reshoot"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MoGe",
+      "file": "geometry_estimation/moge_2_vitl_normal_fp16.safetensors",
+      "dir": "geometry_estimation",
+      "gb": 0.66,
+      "name": "moge_2_vitl_normal_fp16.safetensors",
+      "gated": false,
+      "license": "MIT",
+      "used_by": [
+        "reshoot"
+      ]
+    },
+    {
+      "repo": "Cseti/MiniMax-H3_Ref2VA-LoRA-CrossView-Warp_v1",
+      "file": "MiniMax-H3_Ref2VA-LoRA-CrossView-Warp_v1_3500.safetensors",
+      "dir": "loras",
+      "gb": 0.6,
+      "name": "MiniMax-H3_Ref2VA-LoRA-CrossView-Warp_v1_3500.safetensors",
+      "gated": false,
+      "license": "MiniMax H3 Community License",
+      "used_by": [
+        "reshoot"
+      ]
+    },
+    {
+      "repo": "lightx2v/Minimax-h3-Turbo",
+      "file": "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+      "dir": "loras",
+      "gb": 1.96,
+      "name": "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+      "gated": false,
+      "license": "Not stated on the model card (its code, ModelTC/Minimax-H3-Turbo, is Apache-2.0)",
+      "used_by": [
+        "reshoot"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "dir": "text_encoders",
+      "gb": 15.69,
+      "name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "gated": false,
+      "license": "MiniMax H3 Community License",
+      "used_by": [
+        "extend-video",
+        "h3-photo",
+        "h3-video",
+        "reshoot"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "vae/minimax_h3_audio_vae_fp32.safetensors",
+      "dir": "vae",
+      "gb": 0.61,
+      "name": "minimax_h3_audio_vae_fp32.safetensors",
+      "gated": false,
+      "license": "MiniMax H3 Community License",
+      "used_by": [
+        "extend-video",
+        "h3-photo",
+        "h3-video",
+        "reshoot"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "vae/minimax_h3_video_vae_int8_convrot.safetensors",
+      "dir": "vae",
+      "gb": 2.81,
+      "name": "minimax_h3_video_vae_int8_convrot.safetensors",
+      "gated": false,
+      "license": "MiniMax H3 Community License",
+      "used_by": [
+        "extend-video",
+        "h3-photo",
+        "h3-video",
+        "reshoot"
+      ]
+    }
+  ]
+}

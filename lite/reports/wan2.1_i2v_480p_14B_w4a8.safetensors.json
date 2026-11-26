@@ -1,0 +1,57 @@
+{
+  "source": "wan2.1_i2v_480p_14B_bf16.safetensors",
+  "reference": "wan2.1_i2v_480p_14B_fp8_scaled.safetensors",
+  "output": "wan2.1_i2v_480p_14B_w4a8.safetensors",
+  "format": "asym_w4a8_int8",
+  "group_size": 16,
+  "rotation_groups": {
+    "256": 488
+  },
+  "layers_w4a8": 488,
+  "layers_from_reference": [],
+  "layers_kept": [],
+  "gb_in": 32.79,
+  "gb_out": 9.24,
+  "tensors_gb_out": 9.24,
+  "relative_error": {
+    "mean": 0.0732,
+    "median": 0.0732,
+    "p95": 0.0732,
+    "max": 0.0732,
+    "worst": [
+      [
+        "blocks.29.cross_attn.k_img",
+        0.0732
+      ],
+      [
+        "blocks.21.cross_attn.k_img",
+        0.0732
+      ],
+      [
+        "blocks.36.cross_attn.v",
+        0.0732
+      ],
+      [
+        "blocks.16.cross_attn.v",
+        0.0732
+      ],
+      [
+        "blocks.25.cross_attn.v",
+        0.0732
+      ],
+      [
+        "blocks.2.cross_attn.k_img",
+        0.0732
+      ],
+      [
+        "blocks.28.cross_attn.k_img",
+        0.0732
+      ],
+      [
+        "blocks.37.cross_attn.k",
+        0.0732
+      ]
+    ]
+  },
+  "seconds": 32.2
+}

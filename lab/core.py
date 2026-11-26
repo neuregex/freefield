@@ -9,10 +9,13 @@ A case is an app from apps/ plus values, optional preset, raw overrides and extr
      "loras": [{"repo": "WepeNerd/LTX-Ripple", "file": "LTX25_Ripple_v11.safetensors", "strength": 1.0}]}
 
 File values can be "asset:<name>" (a file in lab/assets) or "@case:<id>" (the first output
-of an earlier case, so a text-to-video case can feed an IC-LoRA case). For every case the
-lab records status, seconds, peak VRAM (polled with nvidia-smi) and copies the outputs
-into results/<run_id>/<case_id>/. Between cases whose model sets differ it asks ComfyUI to
-unload everything, the same policy as the gateway.
+of an earlier case, so a text-to-video case can feed an IC-LoRA case). "variant": "lite" runs
+the app's lite version: the smaller copies of lite/variants.json in place of its model files
+(with "swap": [full file names], only those),
+as the studio does. For every case the lab records status, seconds, peak VRAM (polled with
+nvidia-smi) and copies the outputs into results/<run_id>/<case_id>/; given ComfyUI's process
+and log, also its peak RAM and whether it offloaded weights to RAM. Between cases whose model
+sets differ it asks ComfyUI to unload everything, the same policy as the gateway.
 
 Local check against any running ComfyUI (CPU is fine for the smoke cases):
     python lab/core.py --url http://127.0.0.1:8188 --comfy-dir /path/to/ComfyUI --cases lab/cases.smoke.json --out lab/results/local
@@ -33,6 +36,16 @@ from pathlib import Path
 
 FILE_TYPES = {"image", "video", "audio"}
 ROOT = Path(__file__).resolve().parent.parent
+
+
+def lite_copies() -> dict[str, dict]:
+    """Base name of a model file → its lite copy {repo, file, gb, …} (lite/variants.json)."""
+    f = ROOT / "lite" / "variants.json"
+    return json.loads(f.read_text(encoding="utf-8")).get("variants", {}) if f.exists() else {}
+
+
+def lite_names() -> dict[str, str]:
+    return {full: c["file"].rsplit("/", 1)[-1] for full, c in lite_copies().items()}
 
 
 # ---------------------------------------------------------------- HTTP
@@ -79,6 +92,37 @@ class VramSampler(threading.Thread):
 
     def peak_gb(self) -> float | None:
         return round(self.peak_mib / 1024, 2) if self.available else None
+
+    def stop(self) -> None:
+        self._halt.set()
+
+
+class RamSampler(threading.Thread):
+    """Peak resident memory (RSS) of one process in GB since the last reset, every 0.5 s (Linux /proc)."""
+
+    def __init__(self, pid: int | None = None):
+        super().__init__(daemon=True)
+        self.pid = pid
+        self.peak_kb = 0
+        self._halt = threading.Event()
+
+    def run(self):
+        while not self._halt.is_set():
+            if self.pid:
+                try:
+                    for line in Path(f"/proc/{self.pid}/status").read_text().splitlines():
+                        if line.startswith("VmRSS:"):
+                            self.peak_kb = max(self.peak_kb, int(line.split()[1]))
+                            break
+                except (OSError, ValueError):
+                    pass
+            time.sleep(0.5)
+
+    def reset(self) -> None:
+        self.peak_kb = 0
+
+    def peak_gb(self) -> float | None:
+        return round(self.peak_kb / 1024 / 1024, 2) if self.pid and self.peak_kb else None
 
     def stop(self) -> None:
         self._halt.set()
@@ -197,6 +241,14 @@ def build_case(apps_dir: Path, case: dict, file_value) -> tuple[dict, dict, dict
         api[o["node"]]["inputs"][o["field"]] = o["value"]
     if case.get("loras"):
         add_loras(api, case["loras"])
+    if case.get("variant") == "lite":   # the same swap as server/runner.ts: every input naming a full file
+        names = lite_names()
+        if case.get("swap") is not None:   # lab/lite_modal.py --step compare: only these full files
+            names = {full: lite for full, lite in names.items() if full in case["swap"]}
+        for node in api.values():
+            for k, v in node.get("inputs", {}).items():
+                if isinstance(v, str) and v in names:
+                    node["inputs"][k] = names[v]
     return manifest, api, {k: v for k, v in values.items() if types.get(k) not in FILE_TYPES}
 
 
@@ -232,10 +284,17 @@ def in_run_order(spec: list[dict]) -> list[dict]:
 
 def models_for_cases(cases: list[dict], apps_dir: Path) -> list[dict]:
     seen, out = set(), []
+    copies = lite_copies()
     for c in cases:
         manifest = json.loads((apps_dir / c["app"] / "app.json").read_text(encoding="utf-8"))
         extra = lora_models(c.get("loras", [])) + lora_models(c.get("loras_download", []))  # files swapped in by overrides
-        for m in manifest.get("models", []) + extra:
+        models = manifest.get("models", [])
+        if c.get("variant") == "lite":
+            swap = c.get("swap")   # None: every file with a lite copy
+            models = [{**m, "repo": copies[b]["repo"], "file": copies[b]["file"], "gb": copies[b]["gb"]}
+                      if (b := m["file"].rsplit("/", 1)[-1]) in copies and (swap is None or b in swap) else m
+                      for m in models]
+        for m in models + extra:
             key = (m["dir"], m["file"].rsplit("/", 1)[-1])
             if key not in seen:
                 seen.add(key)
@@ -314,7 +373,7 @@ def web_versions(src: Path, dest: Path) -> dict:
 class Lab:
     def __init__(self, url: str, input_dir: Path, output_dir: Path, results_dir: Path,
                  apps_dir: Path = ROOT / "apps", assets_dir: Path = ROOT / "lab" / "assets", on_case_done=None,
-                 missing: dict[str, str] | None = None):
+                 missing: dict[str, str] | None = None, comfy_pid: int | None = None, comfy_log: Path | None = None):
         self.url = url.rstrip("/")
         self.missing = missing or {}   # model files that could not be downloaded → reason
         self.input_dir, self.output_dir, self.results_dir = input_dir, output_dir, results_dir
@@ -324,6 +383,14 @@ class Lab:
         self.last_key: str | None = None
         self.vram = VramSampler()
         self.vram.start()
+        self.ram = RamSampler(comfy_pid)   # ComfyUI's own process: its weights in RAM, offloaded or cached
+        self.ram.start()
+        self.comfy_log = comfy_log         # its output: "loaded partially" means it kept weights in RAM
+
+    def attach(self, comfy_pid: int, comfy_log: Path | None) -> None:
+        """A restarted ComfyUI (another --reserve-vram, say): follow the new process and log."""
+        self.ram.pid = comfy_pid
+        self.comfy_log = comfy_log
 
     def _file_value(self, case_id: str, raw: str, kind: str = "") -> str:
         if raw.startswith("@case:"):
@@ -346,7 +413,14 @@ class Lab:
         cid = case["id"]
         res = {"id": cid, "app": case["app"], "status": "error", "seconds": None, "peak_vram_gb": None,
                "files": [], "error": None, "values": {}, "inputs": {}, "web": None, "loras": case.get("loras", []),
-               "overrides": case.get("overrides", []), "note": case.get("note", ""), "showcase": bool(case.get("showcase"))}
+               "overrides": case.get("overrides", []), "note": case.get("note", ""), "showcase": bool(case.get("showcase")),
+               "variant": case.get("variant", "full")}
+        # lab/lite_modal.py: the card size this ran at, the case it measures, whether its ComfyUI was started for it,
+        # and for --step compare the variant's name and the full files it swapped
+        for k in ("tier", "measure", "case", "own_comfyui", "compare", "swap"):
+            if k in case:
+                res[k] = case[k]
+        log_from = self.comfy_log.stat().st_size if self.comfy_log and self.comfy_log.exists() else 0
         try:
             manifest, api, res["values"] = build_case(self.apps_dir, case, self._file_value)
             # where each file input came from ("@case:<id>", "asset:<name>" or a path), for the gallery
@@ -365,6 +439,7 @@ class Lab:
                 _req(f"{self.url}/free", {"unload_models": True, "free_memory": True})
             self.last_key = key
             self.vram.reset()
+            self.ram.reset()
             t0 = time.time()
             pid = _req(f"{self.url}/prompt", {"prompt": api, "client_id": f"lab-{uuid.uuid4().hex[:8]}"})["prompt_id"]
             deadline = t0 + case.get("timeout", 1800)
@@ -378,6 +453,12 @@ class Lab:
                 time.sleep(1)
             res["seconds"] = round(time.time() - t0, 1)
             res["peak_vram_gb"] = self.vram.peak_gb()
+            res["peak_ram_gb"] = self.ram.peak_gb()
+            if self.comfy_log and self.comfy_log.exists():
+                with open(self.comfy_log, encoding="utf-8", errors="replace") as lf:
+                    lf.seek(log_from)
+                    said = lf.read()
+                res["offloaded"] = "loaded partially" in said
             if not entry:
                 raise TimeoutError(f"no result after {case.get('timeout', 1800)} s")
             st = entry.get("status", {})
@@ -415,7 +496,8 @@ class Lab:
             res["error"] = f"{type(e).__name__}: {e}"
         return res
 
-    def run_all(self, cases: list[dict]) -> list[dict]:
+    def run_all(self, cases: list[dict], last: bool = True) -> list[dict]:
+        """last=False keeps the samplers going for another batch (lab/lite_modal.py runs two per container)."""
         self.results_dir.mkdir(parents=True, exist_ok=True)
         results = []
         meta = {"gpu": self.vram.gpu_name, "started": time.strftime("%Y-%m-%d %H:%M:%S"), "cases": len(cases)}
@@ -430,7 +512,9 @@ class Lab:
                 vram = f"{r['peak_vram_gb']:.1f} GB" if r["peak_vram_gb"] is not None else "n/a"
                 print(f"{flag} {r['id']:<34} {r['app']:<18} {r['seconds'] or 0:>7.1f}s  peak {vram:>8}  {r['error'] or ''}")
                 self.on_case_done()
-        self.vram.stop()
+        if last:
+            self.vram.stop()
+            self.ram.stop()
         return results
 
 

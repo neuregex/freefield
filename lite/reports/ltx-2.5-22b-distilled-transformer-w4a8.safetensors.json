@@ -1,0 +1,57 @@
+{
+  "source": "ltx-2.5-22b-distilled-transformer-bf16.safetensors",
+  "reference": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+  "output": "ltx-2.5-22b-distilled-transformer-w4a8.safetensors",
+  "format": "asym_w4a8_int8",
+  "group_size": 16,
+  "rotation_groups": {
+    "256": 1440
+  },
+  "layers_w4a8": 1440,
+  "layers_from_reference": [],
+  "layers_kept": [],
+  "gb_in": 42.02,
+  "gb_out": 12.52,
+  "tensors_gb_out": 12.52,
+  "relative_error": {
+    "mean": 0.0731,
+    "median": 0.0731,
+    "p95": 0.0732,
+    "max": 0.0736,
+    "worst": [
+      [
+        "model.diffusion_model.video_embeddings_connector.transformer_1d_blocks.4.attn1.to_out.0",
+        0.0736
+      ],
+      [
+        "model.diffusion_model.video_embeddings_connector.transformer_1d_blocks.5.attn1.to_out.0",
+        0.0736
+      ],
+      [
+        "model.diffusion_model.video_embeddings_connector.transformer_1d_blocks.6.attn1.to_out.0",
+        0.0735
+      ],
+      [
+        "model.diffusion_model.video_embeddings_connector.transformer_1d_blocks.2.attn1.to_out.0",
+        0.0734
+      ],
+      [
+        "model.diffusion_model.transformer_blocks.47.attn2.to_out.0",
+        0.0734
+      ],
+      [
+        "model.diffusion_model.transformer_blocks.20.attn2.to_out.0",
+        0.0733
+      ],
+      [
+        "model.diffusion_model.video_embeddings_connector.transformer_1d_blocks.7.attn1.to_out.0",
+        0.0733
+      ],
+      [
+        "model.diffusion_model.video_embeddings_connector.transformer_1d_blocks.3.attn1.to_out.0",
+        0.0733
+      ]
+    ]
+  },
+  "seconds": 54.8
+}

@@ -14,6 +14,7 @@ import { openCompare } from "./compare.js";
 import { flags } from "./flags.js";
 import { modelsStrip, startModels, redrawModels } from "./models.js";
 import { desktopIconCard } from "./desktop.js";
+import { mygpu } from "./mygpu.js";
 
 const main = el("main", { id: "main", class: "view" });
 let bar = null;
@@ -39,8 +40,8 @@ function route() {
   return exploreView();
 }
 
-function render({ keepScroll = false } = {}) {
-  closePopover();
+function render({ keepScroll = false, keepPopover = false } = {}) {
+  if (!keepPopover) closePopover();
   const view = route();
   if (!view) return;   // redirected
   current?.dispose?.();
@@ -68,6 +69,8 @@ hooks.retry = (item) => recreate(item, { run: true });
 hooks.compare = (item) => openCompare(item);
 hooks.useIn = (anchor, item, done) => useIn(anchor, item, done);
 hooks.rerender = () => render({ keepScroll: true });
+// another card size in "My GPU": every card, form and the VRAM map say again what fits (its panel stays open)
+mygpu.on(() => render({ keepScroll: true, keepPopover: true }));
 
 // a run starting or ending changes what the GPU pill should say
 let activeRuns = 0;

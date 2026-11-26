@@ -74,7 +74,9 @@ def build_image() -> modal.Image:
     # code last, so editing it does not rebuild the layers above
     return (img.add_local_dir(ROOT / "apps", "/freefield/apps")
                .add_local_dir(ROOT / "packs", "/freefield/packs")
+               .add_local_dir(ROOT / "lite", "/freefield/lite")
                .add_local_dir(ROOT / "infra", "/freefield/infra")
+               .add_local_dir(ROOT / "tools", "/freefield/tools", ignore=["object_info*.json"])
                .add_local_dir(ROOT / "lab", "/freefield/lab", ignore=["results", "assets"]))
 
 
@@ -115,10 +117,28 @@ def ensure_models(models: list[dict], token: str | None = None) -> tuple[list[st
     return fetched, failed
 
 
-def start_comfyui(port: int = 8188, extra_args: str = "") -> subprocess.Popen:
+def start_comfyui(port: int = 8188, extra_args: str = "", env: dict[str, str] | None = None,
+                  log_path: str | Path | None = None) -> subprocess.Popen:
+    """ComfyUI on 127.0.0.1:port. env adds variables; log_path also writes its output to that file
+    (the lab reads it to see what ComfyUI offloaded), while it still goes to the container's log."""
     cmd = ["python", "main.py", "--listen", "127.0.0.1", "--port", str(port), "--disable-auto-launch",
            "--extra-model-paths-config", f"{COMFY_DIR}/extra_model_paths.yaml"] + extra_args.split()
-    proc = subprocess.Popen(cmd, cwd=COMFY_DIR)
+    full_env = {**os.environ, **(env or {})}
+    if log_path is None:
+        proc = subprocess.Popen(cmd, cwd=COMFY_DIR, env=full_env)
+    else:
+        import sys
+        import threading
+        proc = subprocess.Popen(cmd, cwd=COMFY_DIR, env=full_env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                text=True, bufsize=1, errors="replace")
+        log = open(log_path, "a", encoding="utf-8")
+
+        def tee() -> None:
+            for line in proc.stdout:
+                sys.stdout.write(line)
+                log.write(line)
+                log.flush()
+        threading.Thread(target=tee, daemon=True).start()
     wait_http(f"http://127.0.0.1:{port}/system_stats", proc=proc)
     return proc
 

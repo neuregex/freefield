@@ -1,0 +1,57 @@
+{
+  "source": "wan_animate_2_distill_bf16.safetensors",
+  "reference": "wan_animate_2_distill_int8_convrot.safetensors",
+  "output": "wan_animate_2_distill_w4a8.safetensors",
+  "format": "asym_w4a8_int8",
+  "group_size": 16,
+  "rotation_groups": {
+    "256": 480
+  },
+  "layers_w4a8": 480,
+  "layers_from_reference": [],
+  "layers_kept": [],
+  "gb_in": 32.79,
+  "gb_out": 9.59,
+  "tensors_gb_out": 9.59,
+  "relative_error": {
+    "mean": 0.0732,
+    "median": 0.0732,
+    "p95": 0.0732,
+    "max": 0.0732,
+    "worst": [
+      [
+        "blocks.29.cross_attn.k_img",
+        0.0732
+      ],
+      [
+        "blocks.20.cross_attn.o",
+        0.0732
+      ],
+      [
+        "blocks.21.cross_attn.k_img",
+        0.0732
+      ],
+      [
+        "blocks.36.cross_attn.v",
+        0.0732
+      ],
+      [
+        "blocks.37.cross_attn.k",
+        0.0732
+      ],
+      [
+        "blocks.16.cross_attn.v",
+        0.0732
+      ],
+      [
+        "blocks.25.cross_attn.v",
+        0.0732
+      ],
+      [
+        "blocks.11.cross_attn.k_img",
+        0.0732
+      ]
+    ]
+  },
+  "seconds": 36.6
+}

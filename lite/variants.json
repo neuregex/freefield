@@ -1,0 +1,138 @@
+{
+  "_doc": "Smaller copies of model files, in quantized formats that ComfyUI loads with the same node (see lite/README.md). Key: the base name of the file an app.json loads. The registry attaches each one to that model as `lite`; tools/catalog.py builds packs/<pack>-lite.json and the VRAM map from them; the runner swaps the names when an app runs lite. source \"freefield\": made with tools/quantize.py (lite/quantize.json) and published under the Freefield account; until a run of lab/lite_modal.py measures them, their sizes are estimates.",
+  "variants": {
+    "flux3-image-klein-int8-convrot.safetensors": {
+      "repo": "black-forest-labs/flux-3-image-klein-comfy",
+      "file": "diffusion_models/flux3-image-klein-nvfp4.safetensors",
+      "gb": 5.28,
+      "format": "nvfp4",
+      "source": "official"
+    },
+    "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors": {
+      "repo": "neuregex/LTX-2.5-w4a8-comfy",
+      "file": "diffusion_models/ltx-2.5-22b-distilled-transformer-w4a8.safetensors",
+      "gb": 12.52,
+      "format": "w4a8",
+      "source": "freefield",
+      "license": "LTX-2.x Community License",
+      "gated": false
+    },
+    "krea2_turbo_int8_convrot.safetensors": {
+      "repo": "Comfy-Org/Krea-2",
+      "file": "diffusion_models/krea2_turbo_nvfp4.safetensors",
+      "gb": 7.67,
+      "format": "nvfp4",
+      "source": "official"
+    },
+    "z_image_turbo_int8_convrot.safetensors": {
+      "repo": "Comfy-Org/z_image_turbo",
+      "file": "split_files/diffusion_models/z_image_turbo_nvfp4.safetensors",
+      "gb": 4.51,
+      "format": "nvfp4",
+      "source": "official"
+    },
+    "qwen_3_4b_fp8_mixed.safetensors": {
+      "repo": "Comfy-Org/z_image_turbo",
+      "file": "split_files/text_encoders/qwen_3_4b_fp4_mixed.safetensors",
+      "gb": 3.48,
+      "format": "fp4 mixed",
+      "source": "official"
+    },
+    "seedvr2_3b_int8_convrot.safetensors": {
+      "repo": "Comfy-Org/SeedVR2",
+      "file": "diffusion_models/seedvr2_3b_nvfp4.safetensors",
+      "gb": 2.0,
+      "format": "nvfp4",
+      "source": "official"
+    },
+    "wan2.1_14B_SCAIL_2_int8_convrot.safetensors": {
+      "repo": "Comfy-Org/SCAIL-2",
+      "file": "diffusion_models/wan2.1_14B_SCAIL_2_nvfp4_mxpf8_mix.safetensors",
+      "gb": 11.02,
+      "format": "nvfp4 + mxfp8",
+      "source": "official"
+    },
+    "minimax_h3_fl2va_pruned_int8_convrot.safetensors": {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "diffusion_models/minimax_h3_fl2va_pruned_w6a8.safetensors",
+      "gb": 15.98,
+      "format": "w6a8",
+      "source": "official"
+    },
+    "minimax_h3_ref2va_pruned_int8_convrot.safetensors": {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "diffusion_models/minimax_h3_ref2va_pruned_w6a8.safetensors",
+      "gb": 15.98,
+      "format": "w6a8",
+      "source": "official"
+    },
+    "qwen3vl_32b_minimax_h3_int8_convrot.safetensors": {
+      "repo": "Comfy-Org/MiniMax-H3",
+      "file": "text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "gb": 15.69,
+      "format": "nvfp4 (AWQ)",
+      "source": "official"
+    },
+    "qwen_2.5_vl_7b_fp8_scaled.safetensors": {
+      "repo": "Comfy-Org/Qwen-Image_ComfyUI",
+      "file": "split_files/text_encoders/qwen_2.5_vl_7b_nvfp4.safetensors",
+      "gb": 6.11,
+      "format": "nvfp4",
+      "source": "official"
+    },
+    "gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors": {
+      "repo": "neuregex/LTX-2.5-w4a8-comfy",
+      "file": "text_encoders/gemma4-12b-with-proj-ltx-2.5-w4a8.safetensors",
+      "gb": 10.6,
+      "format": "w4a8",
+      "source": "freefield",
+      "license": "LTX-2.x Community License",
+      "gated": false
+    },
+    "wan2.1_i2v_480p_14B_fp8_scaled.safetensors": {
+      "repo": "neuregex/Wan2.1-I2V-14B-480P-w4a8-comfy",
+      "file": "diffusion_models/wan2.1_i2v_480p_14B_w4a8.safetensors",
+      "gb": 9.24,
+      "format": "w4a8",
+      "source": "freefield",
+      "license": "Apache-2.0",
+      "gated": false
+    },
+    "wan2.2_fun_camera_high_noise_14B_fp8_scaled.safetensors": {
+      "repo": "neuregex/Wan2.2-Fun-A14B-Camera-w4a8-comfy",
+      "file": "diffusion_models/wan2.2_fun_camera_high_noise_14B_w4a8.safetensors",
+      "gb": 9.06,
+      "format": "w4a8",
+      "source": "freefield",
+      "license": "Apache-2.0",
+      "gated": false
+    },
+    "wan2.2_fun_camera_low_noise_14B_fp8_scaled.safetensors": {
+      "repo": "neuregex/Wan2.2-Fun-A14B-Camera-w4a8-comfy",
+      "file": "diffusion_models/wan2.2_fun_camera_low_noise_14B_w4a8.safetensors",
+      "gb": 9.06,
+      "format": "w4a8",
+      "source": "freefield",
+      "license": "Apache-2.0",
+      "gated": false
+    },
+    "wan_animate_2_distill_int8_convrot.safetensors": {
+      "repo": "neuregex/Wan-Animate-2-w4a8-comfy",
+      "file": "diffusion_models/wan_animate_2_distill_w4a8.safetensors",
+      "gb": 9.59,
+      "format": "w4a8",
+      "source": "freefield",
+      "license": "Apache-2.0",
+      "gated": false
+    },
+    "minimax_music3_text_encoder_pruned_int8_convrot.safetensors": {
+      "repo": "neuregex/MiniMax-Music-3-w4a8-comfy",
+      "file": "text_encoders/minimax_music3_text_encoder_pruned_w4a8.safetensors",
+      "gb": 5.91,
+      "format": "w4a8",
+      "source": "freefield",
+      "license": "MiniMax-Music3 Community License",
+      "gated": false
+    }
+  }
+}

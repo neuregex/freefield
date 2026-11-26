@@ -136,10 +136,17 @@ def one_at_a_time(lock: Path):
 
 def download(models: Path, names: list[str], dry_run: bool) -> None:
     all_packs = packs()
-    unknown = [n for n in names if n != "all" and n not in all_packs]
+    unknown = [n for n in names if n not in ("all", "all-lite") and n not in all_packs]
     if unknown:
         sys.exit(f"unknown pack {unknown}; packs: {', '.join(all_packs)}")
-    wanted = list(all_packs) if "all" in names else names
+    # all: every full pack; all-lite: the lite pack of each pack that has one (lite/README.md), the full pack otherwise
+    full = [n for n in all_packs if not all_packs[n].get("variant")]
+    if "all" in names:
+        wanted = full
+    elif "all-lite" in names:
+        wanted = [f"{n}-lite" if f"{n}-lite" in all_packs else n for n in full]
+    else:
+        wanted = names
     files = {(m["repo"], m["file"]): m for n in wanted for m in all_packs[n]["models"]}
     missing = lambda: [m for m in files.values() if not (models / m["dir"] / m["name"]).exists()]  # noqa: E731
     todo = missing()
@@ -365,7 +372,7 @@ def main() -> None:
         p.add_argument("dir", type=Path, help="where ComfyUI lives (setup clones it there)")
         p.add_argument("--models", type=Path, help="model folder (default: <dir>/models)")
         if name == "download":
-            p.add_argument("packs", nargs="+", help="pack names from packs/index.json, or all")
+            p.add_argument("packs", nargs="+", help="pack names from packs/index.json (<pack>-lite for the lite version), all or all-lite")
             p.add_argument("--dry-run", action="store_true", help="list the missing files and stop")
         if name == "serve":
             p.add_argument("--port", type=int, default=8000, help="gateway port (default 8000)")

@@ -33,7 +33,7 @@ export function entryItem(e) {
     outputs: e.outputs.map((o) => ({ type: o.type, url: o.url, name: o.name })),
     inputs: e.inputs.map((i) => ({ id: i.id, label: labels[i.id]?.label || i.id, type: i.type, thumb: i.type === "image" ? i.url : null, file: i.url,
       play: i.type === "image" ? null : i.url, name: i.name })),
-    values: e.values || {}, seed: e.values?.seed ?? null, preset: e.preset, seconds: e.seconds, total: e.total, created: e.created,
+    values: e.values || {}, seed: e.values?.seed ?? null, preset: e.preset, variant: e.variant ?? "full", seconds: e.seconds, total: e.total, created: e.created,
     started: e.started, error: e.error, progress: e.progress, queue: e.queue, preview: e.preview, gpu: null, peak: null,
   };
 }

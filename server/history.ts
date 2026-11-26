@@ -37,6 +37,8 @@ export type Entry = {
   error: { message: string; class_type?: string | null; node?: string | null } | null;
   /** the visitor who started it, on a hosted demo; never sent to the browser */
   owner?: string;
+  /** "lite" when it ran the lite version (lite/README.md); absent for the full one */
+  variant?: "lite";
 };
 
 /** The part of the SDK's Job the history uses (tests pass a fake). */
@@ -226,7 +228,7 @@ export class History {
   }
 
   /** Record a run before it is submitted. `values` are the resolved values (defaults filled, seed picked). */
-  start(app: App, values: Values, preset?: string, owner?: string): Entry {
+  start(app: App, values: Values, preset?: string, owner?: string, variant: "full" | "lite" = "full"): Entry {
     const id = newId();
     const folder = join(this.dir, id);
     mkdirSync(folder);
@@ -247,7 +249,7 @@ export class History {
     const entry: Entry = {
       id, app: app.id, status: "starting", job: null, created: new Date().toISOString(), started: null, finished: null,
       seconds: null, total: null, values: shown, preset: preset ?? null, inputs, outputs: [], error: null,
-      ...(owner ? { owner } : {}),
+      ...(owner ? { owner } : {}), ...(variant === "lite" ? { variant } : {}),
     };
     this.save(entry);
     this.live.set(id, { progress: null, queue: null, preview: null });

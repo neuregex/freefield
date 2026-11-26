@@ -11,7 +11,8 @@ cancelled right away so nothing heavy runs.
     python tools/comfy_validate.py --url ... apps/z-image/workflow.api.json other.api.json
 
 With no workflow paths, it checks every apps/*/app.json that has a workflow, applying the
-app's test values, with no preset and with each preset. With --lab, it checks the prompts a lab run would submit
+app's test values, with no preset and with each preset, and once more in its lite version (the smaller copies of its
+models, lite/variants.json) when it has one. With --lab, it checks the prompts a lab run would submit
 (values, overrides and inserted LoRAs included), with tiny placeholders for chained inputs:
 
     python tools/comfy_validate.py --url ... --comfy-dir ... --placeholders --lab lab/cases.json
@@ -36,6 +37,9 @@ MODEL_DIRS = ["diffusion_models", "text_encoders", "vae", "loras", "checkpoints"
 IMAGE_EXT = (".png", ".jpg", ".jpeg", ".webp")
 VIDEO_EXT = (".mp4", ".webm", ".mov", ".mkv")
 AUDIO_EXT = (".wav", ".mp3", ".flac", ".ogg", ".m4a")
+# the base name of a model file → the base name of its lite copy (lite/README.md)
+LITE = {full: Path(v["file"]).name for full, v in
+        json.loads((ROOT / "lite" / "variants.json").read_text(encoding="utf-8"))["variants"].items()}
 
 
 def _post(url: str, payload: dict) -> tuple[int, dict]:
@@ -140,6 +144,18 @@ def validate(url: str, api: dict, label: str) -> bool:
     return False
 
 
+def lite_of(api: dict) -> dict | None:
+    """The same prompt loading the lite copies, as server/runner.ts swaps them; None when it loads none of them."""
+    out = json.loads(json.dumps(api))
+    hit = False
+    for node in out.values():
+        for k, v in node.get("inputs", {}).items():
+            if isinstance(v, str) and v in LITE:
+                node["inputs"][k] = LITE[v]
+                hit = True
+    return out if hit else None
+
+
 def app_variants(app_dir: Path) -> list[tuple[str, dict]]:
     """The app's workflow with its test values applied, once per preset (or once with none)."""
     manifest = json.loads((app_dir / "app.json").read_text(encoding="utf-8"))
@@ -180,8 +196,10 @@ def app_variants(app_dir: Path) -> list[tuple[str, dict]]:
         return api
 
     # no preset is a valid choice in the UI too, so check it alongside every preset
+    lite = lite_of(apply(base, None))
     return [(manifest["id"], apply(base, None))] + \
-        [(f"{manifest['id']} [{p['id']}]", apply(base, p)) for p in manifest.get("presets") or []]
+        [(f"{manifest['id']} [{p['id']}]", apply(base, p)) for p in manifest.get("presets") or []] + \
+        ([(f"{manifest['id']} [lite]", lite)] if lite else [])
 
 
 def lab_variants(cases_path: Path) -> list[tuple[str, dict]]:

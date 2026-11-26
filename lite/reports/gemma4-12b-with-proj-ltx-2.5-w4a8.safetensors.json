@@ -1,0 +1,57 @@
+{
+  "source": "gemma4-12b-with-proj-ltx-2.5-bf16.safetensors",
+  "reference": "gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+  "output": "gemma4-12b-with-proj-ltx-2.5-w4a8.safetensors",
+  "format": "asym_w4a8_int8",
+  "group_size": 16,
+  "rotation_groups": {
+    "256": 328
+  },
+  "layers_w4a8": 328,
+  "layers_from_reference": [],
+  "layers_kept": [],
+  "gb_in": 26.26,
+  "gb_out": 10.6,
+  "tensors_gb_out": 10.6,
+  "relative_error": {
+    "mean": 0.0731,
+    "median": 0.0731,
+    "p95": 0.0732,
+    "max": 0.0734,
+    "worst": [
+      [
+        "model.layers.0.self_attn.o_proj",
+        0.0734
+      ],
+      [
+        "model.layers.11.self_attn.o_proj",
+        0.0733
+      ],
+      [
+        "model.layers.15.self_attn.o_proj",
+        0.0733
+      ],
+      [
+        "model.layers.35.self_attn.o_proj",
+        0.0732
+      ],
+      [
+        "model.layers.17.self_attn.o_proj",
+        0.0732
+      ],
+      [
+        "model.layers.28.self_attn.o_proj",
+        0.0732
+      ],
+      [
+        "model.layers.41.self_attn.o_proj",
+        0.0732
+      ],
+      [
+        "model.layers.22.self_attn.o_proj",
+        0.0732
+      ]
+    ]
+  },
+  "seconds": 31.8
+}

@@ -12,7 +12,8 @@ A model that asks you to accept its license on Hugging Face waits for a token: t
 licenses to accept, takes the token and downloads what was waiting, without a restart. It also downloads more packs.
 
 Environment, all optional:
-  FREEFIELD_PACKS       packs to download, comma-separated, or `all` or `none` (default: image-flux3,upscale)
+  FREEFIELD_PACKS       packs to download, comma-separated, or `all`, `all-lite` or `none` (default: image-flux3,upscale);
+                        `<pack>-lite` downloads the lite version of a pack's apps (lite/README.md), for cards under 24 GB
   HF_TOKEN              for models with a license to accept on Hugging Face (FLUX 3 Klein, LTX-2.5); a token pasted
                         in the studio is kept in FREEFIELD_DATA/hf_token and used instead
   FREEFIELD_PASSCODE    the studio's passcode (default: a random one, kept in FREEFIELD_DATA/passcode)
@@ -69,13 +70,21 @@ def packs() -> dict[str, dict]:
             if p.name != "index.json"}
 
 
+def expand_all(word: str, known: dict[str, dict]) -> list[str]:
+    """all: every full pack; all-lite: the lite pack of each pack that has one, the full pack of the others."""
+    full = [p for p in known if p != "core" and not known[p].get("variant")]
+    if word == "all":
+        return full
+    return [f"{p}-lite" if f"{p}-lite" in known else p for p in full]
+
+
 def wanted_packs() -> list[str]:
     raw = os.environ.get("FREEFIELD_PACKS", DEFAULT_PACKS).replace(" ", "")
     if raw.lower() in ("", "none", "0"):
         return []
     known = packs()
-    if raw.lower() == "all":
-        return [p for p in known if p != "core"]
+    if raw.lower() in ("all", "all-lite"):
+        return expand_all(raw.lower(), known)
     names = [n for n in raw.split(",") if n]
     unknown = [n for n in names if n not in known]
     if unknown:

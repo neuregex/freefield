@@ -1,11 +1,13 @@
 // Command line for the registry and the runner.
 //   npm run validate                          check every app.json and its bindings
 //   npm run apps                              list apps with status and pack
-//   npm run app -- <id> [--set k=v] [--file k=path] [--preset id] [--out dir] [--draft]
+//   npm run app -- <id> [--set k=v] [--file k=path] [--preset id] [--out dir] [--draft] [--lite]
+//                                             --lite: the smaller copies of its models (lite/README.md)
 import { mkdirSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { loadRegistry } from "./registry.ts";
 import { explainSubmitError, Runner, type Values } from "./runner.ts";
+import { hasLite, type Variant } from "./variants.ts";
 
 const [cmd, ...rest] = process.argv.slice(2);
 const { apps, problems } = loadRegistry();
@@ -37,10 +39,19 @@ if (cmd === "validate") {
   let preset: string | undefined;
   let out = "out";
   let allowDrafts: boolean | undefined;
+  let variant: Variant = "full";
   for (let i = 1; i < rest.length; i++) {
     const flag = rest[i];
     if (flag === "--draft") {
       allowDrafts = true;
+      continue;
+    }
+    if (flag === "--lite") {
+      if (!hasLite(app)) {
+        console.error(`${app.id} has no lite version: none of its models has a smaller copy in lite/variants.json`);
+        process.exit(2);
+      }
+      variant = "lite";
       continue;
     }
     const arg = rest[++i] ?? "";
@@ -58,12 +69,12 @@ if (cmd === "validate") {
   const t0 = Date.now();
   let job;
   try {
-    job = await runner.submit(app, values, preset);
+    job = await runner.submit(app, values, preset, variant);
   } catch (e) {
-    console.error(`could not submit ${app.id}: ${explainSubmitError(app, e) ?? (e as Error).message}`);
+    console.error(`could not submit ${app.id}: ${explainSubmitError(app, e, variant) ?? (e as Error).message}`);
     process.exit(1);
   }
-  console.log(`submitted ${app.id} → job ${job.id}`);
+  console.log(`submitted ${app.id}${variant === "lite" ? " (lite)" : ""} → job ${job.id}`);
   try {
     await job.wait();
   } catch (e) {
@@ -86,6 +97,6 @@ if (cmd === "validate") {
     }
   }
 } else {
-  console.log("usage: cli.ts validate | apps | app <id> [--set k=v] [--file k=path] [--preset id] [--out dir] [--draft]");
+  console.log("usage: cli.ts validate | apps | app <id> [--set k=v] [--file k=path] [--preset id] [--out dir] [--draft] [--lite]");
   process.exit(cmd ? 2 : 0);
 }

@@ -1,0 +1,17 @@
+{
+  "_doc": "lab/lite_modal.py --step compare: lab/cases.json cases run again with only some of their files swapped for the lite copies, on every seed, to see which copy changes the result. Per case, variant name → the full files it swaps: [] none (the full version), \"*\" all of them (the lite version), or the base names of some. One GPU, no memory cap: this looks at the outputs, not at memory. The first lab run (2026-11-23, seed 42) gave relight-neon a much weaker neon light with halos at the edges in its lite version, which swaps two files, and ref-song a different song.",
+  "seeds": [42, 7, 1234],
+  "case_timeout_s": 900,
+  "cases": {
+    "relight-neon": {
+      "full": [],
+      "dit-w4a8": ["qwen_image_edit_2509_fp8_e4m3fn.safetensors"],
+      "encoder-nvfp4": ["qwen_2.5_vl_7b_fp8_scaled.safetensors"],
+      "lite": "*"
+    },
+    "ref-song": {
+      "full": [],
+      "lite": "*"
+    }
+  }
+}

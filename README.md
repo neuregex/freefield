@@ -284,6 +284,28 @@ The sizes above are weights only. Full table, with the peak VRAM measured on eac
 on: [`docs/vram-map.md`](docs/vram-map.md) (`python tools/catalog.py vram`). Between two apps with different base
 models the gateway calls ComfyUI's `POST /free`, so nothing from the previous app stays in VRAM.
 
+### Which apps run on your GPU
+
+Many apps have a **lite version**: the same workflow with some model files swapped for smaller copies of the same
+models (`nvfp4`, `w4a8`, `w6a8`…) that ComfyUI loads with the same node, no extra custom nodes. Download
+`<pack>-lite` instead of `<pack>` and pick your card in the studio (**My GPU** in the top bar): each app says whether it
+runs as it is, in its lite version, or offloading part of its weights to RAM (slower). What the formats are and where
+the copies come from: [`lite/README.md`](lite/README.md).
+
+<!-- gpu-table:start -->
+| Your card | Runs as it is | Runs in its lite version | Runs offloading to RAM (slower) | Failed in the lab |
+|---|---:|---:|---:|---:|
+| 8 GB | 5 | 57 | 54 | 2 |
+| 12 GB | 62 | 1 | 53 | 2 |
+| 16 GB | 63 | 3 | 50 | 2 |
+| 24 GB | 72 | 38 | 8 | 0 |
+| 32 GB | 118 | 0 | 0 | 0 |
+| 48 GB | 118 | 0 | 0 | 0 |
+| 80 GB | 118 | 0 | 0 | 0 |
+
+Of the 118 apps that load models; estimates from the weight sizes until the lab measures them ([`docs/vram-map.md`](docs/vram-map.md)). Offloading needs about the app's weights plus 8 GB of RAM. The studio's GPU picker says it app by app, for your card and your RAM.
+<!-- gpu-table:end -->
+
 ## Run it
 
 Three ways, the same 120 apps:
@@ -350,7 +372,8 @@ Without `--studio`, `serve` runs only the backend: then `COMFY_BASE_URL=http://1
 `npm run serve` in another terminal, as before.
 
 Models go to `<dir>/models`; `--models` points at a model folder you already have instead. Which apps fit your card:
-the *On a 24 GB card* column of [the app table](#apps) and the [VRAM map](docs/vram-map.md). Checked on 27 Oct on a
+[the GPU table](#which-apps-run-on-your-gpu), the studio's **My GPU** picker and the [VRAM map](docs/vram-map.md); on a
+card under 24 GB, download the `-lite` packs (`python tools/local_backend.py download ~/freefield-comfy image-flux3-lite`). Checked on 27 Oct on a
 CPU-only machine, setup to a finished run of the model-free `smoke` app through the gateway; the GPU apps send the
 same workflows as on Modal.
 

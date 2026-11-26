@@ -1,0 +1,119 @@
+{
+  "pack": "image-qwen-edit-lite",
+  "variant": "lite",
+  "of": "image-qwen-edit",
+  "apps": [
+    "angles",
+    "relight",
+    "shots",
+    "whats-next",
+    "zooms"
+  ],
+  "download_gb": 28.42,
+  "needs_hf_token": false,
+  "custom_nodes": [],
+  "models": [
+    {
+      "repo": "Comfy-Org/Qwen-Image-Edit_ComfyUI",
+      "file": "split_files/diffusion_models/qwen_image_edit_2509_fp8_e4m3fn.safetensors",
+      "dir": "diffusion_models",
+      "gb": 20.43,
+      "name": "qwen_image_edit_2509_fp8_e4m3fn.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "angles",
+        "relight",
+        "shots",
+        "whats-next",
+        "zooms"
+      ]
+    },
+    {
+      "repo": "lightx2v/Qwen-Image-Lightning",
+      "file": "Qwen-Image-Edit-2509/Qwen-Image-Edit-2509-Lightning-4steps-V1.0-bf16.safetensors",
+      "dir": "loras",
+      "gb": 0.85,
+      "name": "Qwen-Image-Edit-2509-Lightning-4steps-V1.0-bf16.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "angles",
+        "relight",
+        "shots",
+        "whats-next",
+        "zooms"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Qwen-Image-Edit_ComfyUI",
+      "file": "split_files/loras/Qwen-Image-Edit-2509-Relight.safetensors",
+      "dir": "loras",
+      "gb": 0.24,
+      "name": "Qwen-Image-Edit-2509-Relight.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "relight"
+      ]
+    },
+    {
+      "repo": "lovis93/next-scene-qwen-image-lora-2509",
+      "file": "next-scene_lora-v2-3000.safetensors",
+      "dir": "loras",
+      "gb": 0.3,
+      "name": "next-scene_lora-v2-3000.safetensors",
+      "gated": false,
+      "license": "MIT",
+      "used_by": [
+        "whats-next"
+      ]
+    },
+    {
+      "repo": "dx8152/Qwen-Edit-2509-Multiple-angles",
+      "file": "镜头转换.safetensors",
+      "dir": "loras",
+      "gb": 0.24,
+      "name": "镜头转换.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "angles",
+        "shots",
+        "zooms"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Qwen-Image_ComfyUI",
+      "file": "split_files/text_encoders/qwen_2.5_vl_7b_nvfp4.safetensors",
+      "dir": "text_encoders",
+      "gb": 6.11,
+      "name": "qwen_2.5_vl_7b_nvfp4.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "angles",
+        "relight",
+        "shots",
+        "whats-next",
+        "zooms"
+      ]
+    },
+    {
+      "repo": "Comfy-Org/Qwen-Image_ComfyUI",
+      "file": "split_files/vae/qwen_image_vae.safetensors",
+      "dir": "vae",
+      "gb": 0.25,
+      "name": "qwen_image_vae.safetensors",
+      "gated": false,
+      "license": "Apache-2.0",
+      "used_by": [
+        "angles",
+        "relight",
+        "shots",
+        "whats-next",
+        "zooms"
+      ]
+    }
+  ]
+}

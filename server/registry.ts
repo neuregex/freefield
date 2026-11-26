@@ -4,6 +4,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Ajv2020 } from "ajv/dist/2020.js";
+import { loadLite, modelsFor, type Lite, type Variant } from "./variants.ts";
 
 export type Bind = { node: string; field: string; template?: string };
 export type SetField = { node: string; field: string; value: unknown };
@@ -38,6 +39,8 @@ export type Model = {
   gated?: boolean;
   license?: string;
   optional?: boolean;
+  /** a smaller copy in a quantized format the same node loads, from lite/variants.json (not written in app.json) */
+  lite?: Lite;
 };
 export type ApiNode = { class_type: string; inputs: Record<string, unknown>; _meta?: { title?: string } };
 export type ApiWorkflow = Record<string, ApiNode>;
@@ -87,8 +90,8 @@ export function templateVars(template: string): string[] {
  * everything when this changes. LoRAs are left out: ComfyUI re-patches them without
  * reloading the base model, so switching LoRAs is no reason to empty the GPU.
  */
-export function modelKey(app: AppManifest): string {
-  return app.models
+export function modelKey(app: AppManifest, variant: Variant = "full"): string {
+  return modelsFor(app, variant)
     .filter((m) => !m.optional && m.dir !== "loras")
     .map((m) => `${m.dir}/${basename(m.file)}`)
     .sort()
@@ -176,6 +179,7 @@ export function loadRegistry(root = repoRoot()): { apps: App[]; problems: Proble
   const schema = JSON.parse(readFileSync(join(root, "schema", "app.schema.json"), "utf-8"));
   const ajv = new Ajv2020({ allErrors: true, strict: false });
   const validate = ajv.compile(schema);
+  const lites = loadLite(root);
   const apps: App[] = [];
   const problems: Problem[] = [];
   const appsDir = join(root, "apps");
@@ -204,6 +208,11 @@ export function loadRegistry(root = repoRoot()): { apps: App[]; problems: Proble
       problems.push({ app: folder, severity: "error", message: `id "${manifest.id}" must match its folder name` });
     }
     const app: App = { ...manifest, dir };
+    // the lite copies are attached after validation: app.json never names them (lite/variants.json does)
+    app.models = manifest.models.map((m) => {
+      const lite = lites.get(basename(m.file));
+      return lite ? { ...m, lite } : m;
+    });
     const severity: Problem["severity"] = manifest.status === "ready" ? "error" : "warning";
     if (manifest.workflow) {
       const wp = join(dir, manifest.workflow);

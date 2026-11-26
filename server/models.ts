@@ -3,6 +3,7 @@
 // Hugging Face token, download a pack, try again). The gateway knows (infra/gateway.py, /freefield/downloads); Modal
 // is never asked, since it has every pack and asking would wake a GPU.
 import type { App, Model } from "./registry.ts";
+import { modelsFor, type Variant } from "./variants.ts";
 
 export type Failure = {
   repo: string; file: string; gated: boolean;
@@ -39,12 +40,14 @@ export type Need =
 export const fileKey = (m: Pick<Model, "dir" | "file">) => `${m.dir}/${m.file.split("/").pop()}`;
 const uniq = <T>(xs: T[]) => [...new Set(xs)];
 
-/** Why `app` cannot run on this backend yet, or null when it can (or when nobody can tell: files === null). */
-export function needOf(app: Pick<App, "models" | "pack">, files: Set<string> | null, dl: Downloads | null): Need | null {
+/** Why `app` cannot run on this backend yet, or null when it can (or when nobody can tell: files === null). The lite
+ *  version asks for its own pack (packs/<pack>-lite.json), which has the lite copies and the files they share. */
+export function needOf(app: Pick<App, "models" | "pack">, files: Set<string> | null, dl: Downloads | null,
+  variant: Variant = "full"): Need | null {
   if (!files) return null;
-  const lacking = app.models.filter((m) => !m.optional && !files.has(fileKey(m))).map(fileKey);
+  const lacking = modelsFor(app, variant).filter((m) => !m.optional && !files.has(fileKey(m))).map(fileKey);
   if (!lacking.length) return null;
-  const pack = app.pack ?? "?";
+  const pack = variant === "lite" ? `${app.pack ?? "?"}-lite` : app.pack ?? "?";
   const job = dl?.job?.state === "running" ? dl.job : null;
   // a failure from before the download running now, which is trying that file again, no longer counts
   const failure = (k: string) => {
