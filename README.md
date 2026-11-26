@@ -2,7 +2,7 @@
 
 Open-source Higgsfield on ComfyUI: every app is one folder, every model is open weights.
 
-**[Watch the 2-minute demo video](https://youtu.be/N7mv2v3Txeo)** · **[Join the Discord](https://discord.gg/HxfP9TnctJ)**
+**[Watch the 2-minute demo video](https://youtu.be/N7mv2v3Txeo)** · [![Discord: join the community](https://img.shields.io/badge/Discord-Join%20the%20community-5865F2?logo=discord&logoColor=white)](https://discord.gg/HxfP9TnctJ)
 
 ![The web app: the Video menu, Cinema Studio Video with the lab's example loaded and its camera moves, then the result playing in the Library tab](docs/media/ui-demo.webp)
 
