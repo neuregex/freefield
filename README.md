@@ -42,8 +42,8 @@ Freefield runs open-weights models on your own GPU and stays free. Sponsors help
 
 <table>
 <tr>
-<td width="76" align="center"><a href="https://www.infistar.cc/register?aff=VG7JCDCN&amp;ref_source=link"><img src="docs/media/sponsors/infistar.png" width="56" height="56" alt="Infistar"></a></td>
-<td><b><a href="https://www.infistar.cc/register?aff=VG7JCDCN&amp;ref_source=link">Infistar.cc</a></b> · <sub>Sponsored</sub><br>
+<td><a href="https://www.infistar.cc/register?aff=VG7JCDCN&amp;ref_source=link"><img src="docs/media/sponsors/infistar-strip.png" width="600" alt="Infistar.cc"></a><br>
+<b><a href="https://www.infistar.cc/register?aff=VG7JCDCN&amp;ref_source=link">Infistar.cc</a></b> · <sub>Sponsored</sub><br>
 Stop overpaying for AI: up to 99% off official API prices. 100% genuine models for text, image and video, one API key.
 Freefield users: get CNY 5 free through this link.</td>
 </tr>
