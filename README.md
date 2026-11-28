@@ -104,6 +104,20 @@ all; `stop` and `logs` work the same way. If Freefield closes while it loads a m
 it gets half of yours): put `[wsl2]` and `memory=40GB` on two lines in `%UserProfile%\.wslconfig`, run `wsl --shutdown`
 and start it again.
 
+On Linux with an NVIDIA card, [Docker Engine](https://docs.docker.com/engine/install/) and the
+[NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html),
+in a terminal:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/neuregex/freefield/main/start.sh | bash
+```
+
+[`start.sh`](start.sh) does the same as `start.ps1`: it checks the GPU, its driver, Docker and the toolkit, warns when
+Docker keeps its data on a hard disk, and opens the studio while the models download; Enter in the terminal stops
+Freefield. It never runs sudo: when something is missing, it says what and where to get it. Later,
+`bash ~/.local/share/freefield/start.sh stop` (or `logs`, `uninstall`). There is no desktop icon on Linux yet: run the
+same line again.
+
 ## Status
 
 | | |
@@ -314,7 +328,7 @@ Three ways, the same 120 apps:
 |---|---|---|
 | **A rented GPU**: [RunPod](https://runpod.io?ref=4nye3bcy), [Vast.ai](https://cloud.vast.ai/?ref_id=865481) or any Docker host | an account there; nothing to install. A public template [in one click](#one-click-on-runpod-or-vastai), or the image `ghcr.io/neuregex/freefield`: [guide](docs/cloud-gpus.md) | trying it, or a 48 GB GPU by the hour |
 | **[Modal](https://modal.com)** | Node, Python and a Modal account ([below](#on-modal)) | a GPU that scales to zero between runs, so you pay per second of work |
-| **Your own GPU** | an NVIDIA card with 24 GB for most apps: on Windows, [one line](#on-your-own-pc-in-one-line) in PowerShell; Docker anywhere ([guide](docs/cloud-gpus.md#any-docker-host-with-an-nvidia-gpu)); or Python ([below](#on-your-own-gpu-without-modal)) | no hourly bill |
+| **Your own GPU** | an NVIDIA card with 24 GB for most apps: on Windows or Linux, [one line](#on-your-own-pc-in-one-line); Docker anywhere ([guide](docs/cloud-gpus.md#any-docker-host-with-an-nvidia-gpu)); or Python ([below](#on-your-own-gpu-without-modal)) | no hourly bill |
 
 The RunPod and Vast.ai links are referral links: signing up through them costs you nothing and gives Freefield a small
 share of the credits, which pays for the lab's GPU runs.

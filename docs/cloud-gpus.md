@@ -134,8 +134,9 @@ quick session prefer an offer with a low download price.
 On Windows, [`start.ps1`](../start.ps1) does all of this in one line of PowerShell: it checks the GPU, the driver and
 Docker Desktop and opens the studio while the models download; the studio asks for the Hugging Face token when a model
 needs one, as on a rented GPU
-([README](../README.md#on-your-own-pc-in-one-line)). By hand, on your own Linux machine or Windows with Docker Desktop
-(WSL 2), with the NVIDIA Container Toolkit:
+([README](../README.md#on-your-own-pc-in-one-line)). On Linux, [`start.sh`](../start.sh) does the same:
+`curl -fsSL https://raw.githubusercontent.com/neuregex/freefield/main/start.sh | bash`. By hand, on your own Linux
+machine or Windows with Docker Desktop (WSL 2), with the NVIDIA Container Toolkit:
 
 ```sh
 docker run --gpus all -p 3000:3000 -v freefield:/workspace \
