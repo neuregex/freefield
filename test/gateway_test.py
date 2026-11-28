@@ -43,6 +43,15 @@ async def main():
         async with s.get("http://127.0.0.1:18000/api/v2/jobs/j1", headers={**h, "Host": "192.168.1.20:8000"}) as r:
             body = await r.json()
         assert body["urls"]["self"] == "http://192.168.1.20:8000/api/v2/jobs/j1", body["urls"]
+        # behind RunPod's proxy the Host is the machine's own address: FREEFIELD_PUBLIC_URL wins, a local client keeps its own
+        gateway.PUBLIC_URL = "https://pod1-8000.proxy.runpod.net"
+        async with s.get("http://127.0.0.1:18000/api/v2/jobs/j1", headers={**h, "Host": "100.65.35.32:60021"}) as r:
+            body = await r.json()
+        assert body["outputs"][0]["url"] == "https://pod1-8000.proxy.runpod.net/api/v2/jobs/j1/outputs/o1", body["outputs"]
+        async with s.get("http://127.0.0.1:18000/api/v2/jobs/j1", headers=h) as r:
+            body = await r.json()
+        assert body["urls"]["self"] == "http://127.0.0.1:18000/api/v2/jobs/j1", body["urls"]
+        gateway.PUBLIC_URL = ""
         async with s.get("http://127.0.0.1:18000/api/v2/jobs/j1/events", headers=h) as r:
             text = await r.text(); assert r.headers["Content-Type"].startswith("text/event-stream")
         assert "http://127.0.0.1:18189/x" in text, "streams are passed through untouched"

@@ -41,6 +41,9 @@ PROXY_URL = os.environ.get("PROXY_URL", "http://127.0.0.1:8189")
 TOKEN = os.environ.get("FREEFIELD_TOKEN", "")
 ALLOW_OPEN = os.environ.get("FREEFIELD_ALLOW_OPEN") == "1"
 MODELS_DIR = os.environ.get("FREEFIELD_MODELS", "").strip()
+# The gateway's public address, when a proxy in front sends another Host. RunPod's proxy sends the host's own
+# address (100.65.x.x:600xx, 28 Nov: a studio on a Mac got output links it could not reach, "fetch failed").
+PUBLIC_URL = os.environ.get("FREEFIELD_PUBLIC_URL", "").strip().rstrip("/")
 COMFY_DIR = os.environ.get("FREEFIELD_COMFY_DIR", "/comfyui")
 ROOT = Path(__file__).resolve().parent.parent
 HOP_HEADERS = {"host", "authorization", "content-length", "transfer-encoding", "connection", "keep-alive"}
@@ -360,6 +363,8 @@ def external_base(request: web.Request) -> str:
     host = request.host
     name = host.rsplit(":", 1)[0] if not host.startswith("[") else host.split("]")[0] + "]"
     private = name in LOCAL_HOSTS or is_private(name)
+    if PUBLIC_URL and not private:   # the studio in the pod comes on 127.0.0.1 and keeps that address
+        return PUBLIC_URL
     scheme = forwarded or (request.scheme if private else "https")
     return f"{scheme}://{host}"
 
