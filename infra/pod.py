@@ -250,6 +250,7 @@ def main() -> None:
            "FREEFIELD_SHARED_HISTORY": "1",   # one owner: every browser with the passcode sees the same history
            "FREEFIELD_BACKEND_NAME": os.environ.get("FREEFIELD_BACKEND_NAME", provider),
            "FREEFIELD_MAX_UPLOAD_MB": os.environ.get("FREEFIELD_MAX_UPLOAD_MB", "1024"),
+           "FREEFIELD_PUBLIC_URL": os.environ.get("FREEFIELD_PUBLIC_URL", gateway_url or ""),   # links a studio elsewhere can open
            "FREEFIELD_GPU_PROBLEM": json.dumps(problem) if problem else ""}   # the studio shows it too
     serve = subprocess.Popen([sys.executable, str(ROOT / "tools" / "local_backend.py"), "serve", str(COMFY),
                               "--models", str(MODELS),
